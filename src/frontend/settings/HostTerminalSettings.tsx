@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  useConfirm,
 } from "@termix/plugin-sdk/ui";
 import {
   useSettings,
@@ -60,6 +61,8 @@ export function HostTerminalSettings({
   updateForm,
 }: Pick<HostEditorSectionProps, "form" | "setField" | "updateForm" | "host">) {
   const { t } = useTranslation();
+  const confirm = useConfirm();
+  const [themeName, setThemeName] = useState("");
   const userSettings = useSettings("user");
   // The preview ends when the editor section goes away.
   useEffect(() => () => setThemePreview(null), []);
@@ -104,8 +107,8 @@ export function HostTerminalSettings({
   const handleSaveAsGlobalTheme = async () => {
     const colors = form.customThemeColors;
     if (!colors) return;
-    const name = window.prompt(t("hosts.saveGlobalThemeNamePrompt"));
-    if (!name || !name.trim()) return;
+    const name = themeName;
+    if (!name.trim()) return;
     setSavingTheme(true);
     try {
       await saveThemes([
@@ -121,6 +124,7 @@ export function HostTerminalSettings({
         },
       ]);
       toast.success(t("hosts.saveGlobalThemeSuccess"));
+      setThemeName("");
     } catch {
       toast.error(t("hosts.saveGlobalThemeError"));
     } finally {
@@ -129,6 +133,11 @@ export function HostTerminalSettings({
   };
 
   const handleDeleteGlobalTheme = async (id: string) => {
+    const theme = savedThemes.find((entry) => entry.id === id);
+    const ok = await confirm({
+      title: t("hosts.deleteGlobalThemeConfirm", { name: theme?.name ?? "" }),
+    });
+    if (!ok) return;
     try {
       await saveThemes(savedThemes.filter((theme) => theme.id !== id));
     } catch {
@@ -361,16 +370,33 @@ export function HostTerminalSettings({
           {form.theme === "custom" && (
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <label className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     {t("hosts.savedThemesLabel")}
                   </label>
+                  <Input
+                    value={themeName}
+                    onChange={(e) => setThemeName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        void handleSaveAsGlobalTheme();
+                      }
+                    }}
+                    placeholder={t("hosts.saveGlobalThemeNamePrompt")}
+                    disabled={!form.customThemeColors}
+                    className="h-7 min-w-0 flex-1 text-xs"
+                  />
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     className="h-7 text-[10px]"
-                    disabled={savingTheme || !form.customThemeColors}
+                    disabled={
+                      savingTheme ||
+                      !form.customThemeColors ||
+                      !themeName.trim()
+                    }
                     onClick={handleSaveAsGlobalTheme}
                   >
                     {t("hosts.saveAsGlobalTheme")}

@@ -14,7 +14,6 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import { createPortal } from "react-dom";
 import { useXTerm } from "react-xtermjs";
 import { FitAddon } from "@xterm/addon-fit";
 import { ClipboardAddon } from "@xterm/addon-clipboard";
@@ -107,11 +106,12 @@ import {
   useAppTheme as useTheme,
   globalShortcutHandler,
   isTabJumpHotkey,
-  useConfirmation,
+  useConfirm,
   ComponentSlot,
   ConnectionLogProvider,
   useConnectionLog,
   ConnectionScreen,
+  PanePrompt,
   Button,
   hydrateLocalSharedHostAuth,
   findMatchingKeybinding,
@@ -209,7 +209,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const api = usePluginApi();
     const { instance: terminal, ref: xtermRef } = useXTerm();
     const commandHistoryContext = useCommandHistory();
-    const { confirmWithToast } = useConfirmation();
+    const confirm = useConfirm();
     const { theme: appTheme } = useTheme();
     const { addLog } = useConnectionLog();
     // An embedded terminal (a widget, another plugin's window) gets only a
@@ -1332,30 +1332,33 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       passwordPromptShownRef.current = true;
       passwordPromptBufferRef.current = "";
 
-      confirmWithToast(
-        t("terminal.passwordPromptFillTitle"),
-        async () => {
-          const passwordToFill = await resolvePasswordForPrompt(isSudoPrompt);
-          if (
-            passwordToFill &&
-            webSocketRef.current &&
-            webSocketRef.current.readyState === WebSocket.OPEN
-          ) {
-            webSocketRef.current.send(
-              JSON.stringify({
-                type: "input",
-                data: passwordToFill + "\n",
-              }),
-            );
-          }
-          setTimeout(() => {
-            passwordPromptShownRef.current = false;
-          }, 3000);
-        },
-        t("common.confirm"),
-        t("common.cancel"),
-        { confirmOnEnter: true },
-      );
+      void confirm({
+        title: t("terminal.passwordPromptFillTitle"),
+        confirmLabel: t("common.confirm"),
+        cancelLabel: t("common.cancel"),
+        destructive: false,
+      }).then((ok) => {
+        if (ok)
+          void (async () => {
+            const passwordToFill = await resolvePasswordForPrompt(isSudoPrompt);
+            if (
+              passwordToFill &&
+              webSocketRef.current &&
+              webSocketRef.current.readyState === WebSocket.OPEN
+            ) {
+              webSocketRef.current.send(
+                JSON.stringify({
+                  type: "input",
+                  data: passwordToFill + "\n",
+                }),
+              );
+            }
+            setTimeout(() => {
+              passwordPromptShownRef.current = false;
+            }, 3000);
+          })();
+        return ok;
+      });
       setTimeout(() => {
         passwordPromptShownRef.current = false;
       }, 15000);
@@ -3768,6 +3771,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                   : "connected"
           }
           message={t("terminal.connecting")}
+          detail={
+            hostConfig.ip
+              ? `${hostConfig.username ? `${hostConfig.username}@` : ""}${hostConfig.ip}${hostConfig.port ? `:${hostConfig.port}` : ""}`
+              : undefined
+          }
+          errorDetail={connectionError}
           backgroundColor={backgroundColor}
           attempt={reconnectAttempts.current}
           maxAttempts={maxReconnectAttempts}
@@ -3950,60 +3959,54 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           inputRef={searchInputRef}
         />
 
-        {linkClickDialog &&
-          createPortal(
-            <div
-              className="fixed inset-0 flex items-center justify-center z-[10000]"
-              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-              onClick={() => setLinkClickDialog(null)}
-            >
-              <div
-                className="flex flex-col gap-3 p-4 rounded shadow-lg max-w-sm w-full mx-4"
-                style={{ backgroundColor }}
-                onClick={(event) => event.stopPropagation()}
+        <PanePrompt
+          open={!!linkClickDialog}
+          title={t("terminal.linkDialogTitle")}
+          description={
+            <span className="select-all break-all font-mono text-foreground">
+              {linkClickDialog?.url}
+            </span>
+          }
+          onCancel={() => setLinkClickDialog(null)}
+          actions={
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLinkClickDialog(null)}
               >
-                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("terminal.linkDialogTitle")}
-                </p>
-                <p className="text-sm break-all text-foreground select-all">
-                  {linkClickDialog.url}
-                </p>
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      writeTextToClipboard(linkClickDialog.url);
-                      setLinkClickDialog(null);
-                    }}
-                  >
-                    {t("terminal.linkDialogCopy")}
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      window.open(
-                        linkClickDialog.url,
-                        "_blank",
-                        "noopener,noreferrer",
-                      );
-                      setLinkClickDialog(null);
-                    }}
-                  >
-                    {t("terminal.linkDialogOpen")}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setLinkClickDialog(null)}
-                  >
-                    {t("common.cancel")}
-                  </Button>
-                </div>
-              </div>
-            </div>,
-            document.body,
-          )}
+                {t("common.cancel")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (linkClickDialog)
+                    writeTextToClipboard(linkClickDialog.url);
+                  setLinkClickDialog(null);
+                }}
+              >
+                {t("terminal.linkDialogCopy")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
+                onClick={() => {
+                  if (linkClickDialog)
+                    window.open(
+                      linkClickDialog.url,
+                      "_blank",
+                      "noopener,noreferrer",
+                    );
+                  setLinkClickDialog(null);
+                }}
+              >
+                {t("terminal.linkDialogOpen")}
+              </Button>
+            </>
+          }
+        />
       </div>
     );
   },

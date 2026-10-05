@@ -33,14 +33,8 @@ import {
   Textarea,
   Checkbox,
   EmptyState,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  useConfirm,
+  PanelSearch,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -378,8 +372,8 @@ function StepList({
                       onChange={(then) => update(index, { ...step, then })}
                     />
                   </div>
-                  <div className="border-l-2 border-amber-500/40 pl-2">
-                    <div className="mb-1 text-[11px] font-medium text-amber-500">
+                  <div className="border-l-2 border-warning/40 pl-2">
+                    <div className="mb-1 text-[11px] font-medium text-warning">
                       {t("macros.ifStep.else")}
                     </div>
                     <StepList
@@ -450,10 +444,16 @@ function StepList({
  * working in, waiting for and branching on what the server sends back.
  * They are the user's own setting, so they follow them to every browser.
  */
-export function MacrosPanel({ targetTab }: PanelProps) {
+export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
   const { t } = useTranslation();
   const settings = useSettings("user");
   const [draft, setDraft] = useState<TerminalMacro | null>(null);
+  const [search, setSearch] = useState("");
+  const editing = draft !== null;
+  useEffect(() => {
+    if (active) setEditing?.(editing);
+  }, [active, editing, setEditing]);
+  useEffect(() => () => setEditing?.(false), [setEditing]);
   const [dirty, setDirty] = useState(false);
   const [runningId, setRunningId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<TerminalMacro | null>(
@@ -536,6 +536,40 @@ export function MacrosPanel({ targetTab }: PanelProps) {
       toast.error(getErrorMessage(error) || t("macros.saveFailed"));
     }
   };
+
+  const confirm = useConfirm();
+  useEffect(() => {
+    if (!pendingDelete) return;
+    void confirm({
+      title: t("macros.deleteTitle"),
+      description: t("macros.deleteBody", { name: pendingDelete.name }),
+      confirmLabel: t("macros.delete"),
+    }).then((ok) => {
+      if (ok) void confirmDelete();
+      else setPendingDelete(null);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingDelete]);
+  useEffect(() => {
+    if (!pendingRun) return;
+    const macro = pendingRun;
+    void confirm({
+      title: t("macros.confirmRunTitle"),
+      description: t("macros.confirmRunBody", {
+        name: macro.name,
+        host: targetLabel,
+      }),
+      confirmLabel: t("macros.confirmRunAction"),
+      destructive: false,
+    }).then((ok) => {
+      setPendingRun(null);
+      if (ok) {
+        confirmedRef.current.add(macro.id);
+        void execute(macro);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingRun]);
 
   const confirmDelete = async () => {
     if (!pendingDelete) return;
@@ -645,6 +679,17 @@ export function MacrosPanel({ targetTab }: PanelProps) {
         )}
       </div>
 
+      {!draft && macros.length > 0 && (
+        <div className="shrink-0 border-b border-border px-3 py-2">
+          <PanelSearch
+            value={search}
+            onChange={setSearch}
+            placeholder={t("macros.search")}
+            fill
+          />
+        </div>
+      )}
+
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         {!draft ? (
           macros.length === 0 ? (
@@ -666,52 +711,59 @@ export function MacrosPanel({ targetTab }: PanelProps) {
             />
           ) : (
             <div className="flex flex-col gap-1">
-              {macros.map((macro) => {
-                const isRunning = runningId === macro.id;
-                return (
-                  <div
-                    key={macro.id}
-                    className="group flex items-center gap-2 border border-border bg-muted/20 px-2 py-1.5 hover:bg-muted/40"
-                  >
-                    <button
-                      type="button"
-                      className="min-w-0 flex-1 text-left"
-                      onClick={() => {
-                        setDraft(structuredClone(macro));
-                        setDirty(false);
-                      }}
+              {macros
+                .filter((macro) =>
+                  [macro.name, macro.description ?? ""]
+                    .join(" ")
+                    .toLowerCase()
+                    .includes(search.trim().toLowerCase()),
+                )
+                .map((macro) => {
+                  const isRunning = runningId === macro.id;
+                  return (
+                    <div
+                      key={macro.id}
+                      className="group flex items-center gap-2 border border-border bg-muted/20 px-2 py-1.5 hover:bg-muted/40"
                     >
-                      <div className="truncate text-xs font-medium">
-                        {macro.name}
-                      </div>
-                      {macro.description && (
-                        <div className="truncate text-[11px] text-muted-foreground">
-                          {macro.description}
+                      <button
+                        type="button"
+                        className="min-w-0 flex-1 text-left"
+                        onClick={() => {
+                          setDraft(structuredClone(macro));
+                          setDirty(false);
+                        }}
+                      >
+                        <div className="truncate text-xs font-medium">
+                          {macro.name}
                         </div>
-                      )}
-                    </button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="size-6 shrink-0 rounded-none"
-                      aria-label={
-                        isRunning ? t("macros.stop") : t("macros.run")
-                      }
-                      onClick={() =>
-                        isRunning
-                          ? abortRef.current?.abort()
-                          : requestRun(macro)
-                      }
-                    >
-                      {isRunning ? (
-                        <Square className="size-3" />
-                      ) : (
-                        <Play className="size-3" />
-                      )}
-                    </Button>
-                  </div>
-                );
-              })}
+                        {macro.description && (
+                          <div className="truncate text-[11px] text-muted-foreground">
+                            {macro.description}
+                          </div>
+                        )}
+                      </button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-6 shrink-0 rounded-none"
+                        aria-label={
+                          isRunning ? t("macros.stop") : t("macros.run")
+                        }
+                        onClick={() =>
+                          isRunning
+                            ? abortRef.current?.abort()
+                            : requestRun(macro)
+                        }
+                      >
+                        {isRunning ? (
+                          <Square className="size-3" />
+                        ) : (
+                          <Play className="size-3" />
+                        )}
+                      </Button>
+                    </div>
+                  );
+                })}
             </div>
           )
         ) : (
@@ -795,70 +847,13 @@ export function MacrosPanel({ targetTab }: PanelProps) {
               </Button>
             </div>
             {dirty && (
-              <div className="text-[11px] text-amber-500">
+              <div className="text-[11px] text-warning">
                 {t("macros.unsaved")}
               </div>
             )}
           </div>
         )}
       </div>
-
-      <AlertDialog
-        open={pendingDelete !== null}
-        onOpenChange={(open) => !open && setPendingDelete(null)}
-      >
-        <AlertDialogContent className="rounded-none">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("macros.deleteTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("macros.deleteBody", { name: pendingDelete?.name ?? "" })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-none">
-              {t("macros.cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction className="rounded-none" onClick={confirmDelete}>
-              {t("macros.delete")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog
-        open={pendingRun !== null}
-        onOpenChange={(open) => !open && setPendingRun(null)}
-      >
-        <AlertDialogContent className="rounded-none">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("macros.confirmRunTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("macros.confirmRunBody", {
-                name: pendingRun?.name ?? "",
-                host: targetLabel,
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-none">
-              {t("macros.cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="rounded-none"
-              onClick={() => {
-                const macro = pendingRun;
-                setPendingRun(null);
-                if (macro) {
-                  confirmedRef.current.add(macro.id);
-                  void execute(macro);
-                }
-              }}
-            >
-              {t("macros.confirmRunAction")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

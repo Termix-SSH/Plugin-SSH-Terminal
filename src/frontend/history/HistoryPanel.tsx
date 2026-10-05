@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
-import { Copy, Search, Terminal, Trash2 } from "lucide-react";
-import { copyToClipboard, Button, Input } from "@termix/plugin-sdk/ui";
+import { Copy, Terminal, Trash2 } from "lucide-react";
+import {
+  copyToClipboard,
+  Button,
+  PanelSearch,
+  useConfirm,
+} from "@termix/plugin-sdk/ui";
 import {
   usePluginApi,
   useTranslation,
@@ -16,6 +21,7 @@ import {
 /** Command history for the terminal the user is working in. */
 export function HistoryPanel({ targetTab }: PanelProps) {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const api = usePluginApi();
   const [search, setSearch] = useState("");
   const [commands, setCommands] = useState<string[]>([]);
@@ -81,6 +87,11 @@ export function HistoryPanel({ targetTab }: PanelProps) {
 
   async function handleDelete(cmd: string) {
     if (!hostId) return;
+    const ok = await confirm({
+      title: t("history.deleteConfirm"),
+      description: cmd,
+    });
+    if (!ok) return;
     try {
       await deleteCommandFromHistory(api, hostId, cmd);
       setCommands((prev) => prev.filter((c) => c !== cmd));
@@ -97,15 +108,12 @@ export function HistoryPanel({ targetTab }: PanelProps) {
           {activeTab.label}
         </span>
       </div>
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
-        <Input
-          placeholder={t("history.searchPlaceholder")}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-8"
-        />
-      </div>
+      <PanelSearch
+        value={search}
+        onChange={setSearch}
+        placeholder={t("history.searchPlaceholder")}
+        fill
+      />
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">
           {t("history.commandCount", { count: filtered.length })}
