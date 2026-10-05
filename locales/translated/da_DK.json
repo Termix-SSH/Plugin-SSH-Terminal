@@ -161,8 +161,7 @@
       "group": {
         "touch": "Berøringsinput",
         "images": "Billedlagring",
-        "sessions": "Sessioner",
-        "newHosts": "Nye værter"
+        "sessions": "Sessioner"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminalsessionens persistens",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Kommandohistorik",
         "description": "Tillad optagelse af kommandohistorik. Når den er deaktiveret, gemmes historikken ikke uanset indstillingerne for den enkelte vært."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Kommandohistorik for nye værter",
-        "description": "Om nye værter starter med kommandohistorik aktiveret."
       },
       "imageStorageMode": {
         "label": "Lagringstilstand",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Behold sessioner efter afbrydelse",
         "description": "Hold en frakoblet terminal aktiv på serveren i ovenstående periode, så genåbning af fanen fortsætter, hvor den slap."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Kør nye værters terminaler inde i tmux, så sessioner overlever afbrydelser (kræver tmux på værten)"
-      },
-      "newHostTheme": {
-        "label": "Tema for nye værter",
-        "description": "Terminaltemaet en ny vært starter med."
-      },
-      "newHostFontFamily": {
-        "label": "Skrifttype til nye værter",
-        "description": "Terminalfonten, som en ny vært starter med."
-      },
-      "newHostFontSize": {
-        "label": "Skriftstørrelse for nye værter",
-        "description": "Terminalens skriftstørrelse, som en ny vært starter med, i pixels."
-      },
-      "newHostCursorStyle": {
-        "label": "Markørstil for nye værter"
-      },
-      "newHostCursorBlink": {
-        "label": "Blinkende markør for nye værter"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Aktivér terminal",
         "description": "Tilbyd en SSH-terminal til denne vært."
-      },
-      "inheritAppearance": {
-        "label": "Brug brugerstandarder"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Kommando Autofuldførelse",
         "description": "Vis autofuldførelse under indtastning, hvis du trykker på tabulatortasten"
-      },
-      "localEcho": {
-        "label": "Lokalt ekko",
-        "description": "Reducer opfattet inputforsinkelse ved hjælp af sikker lokal tastetrykforudsigelse"
-      },
-      "linkClickBehavior": {
-        "label": "Klik på terminallink",
-        "description": "Standardadfærd ved klik på links i terminalen"
       },
       "customThemes": {
         "label": "Gemte temaer"

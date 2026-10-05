@@ -161,8 +161,7 @@
       "group": {
         "touch": "Dotykový vstup",
         "images": "Ukládání obrázků",
-        "sessions": "Relace",
-        "newHosts": "Noví hostitelé"
+        "sessions": "Relace"
       },
       "sessionTimeoutMinutes": {
         "label": "Perzistence terminálové relace",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Historie příkazů",
         "description": "Povolit záznam historie příkazů. Pokud je tato možnost zakázána, historie se neukládá bez ohledu na nastavení pro jednotlivé hostitele."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Historie příkazů pro nové hostitele",
-        "description": "Zda se u nových hostitelů má zapnout historie příkazů."
       },
       "imageStorageMode": {
         "label": "Režim úložiště",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Zachovat relace i po odpojení",
         "description": "Udržujte odpojený terminál aktivní na serveru po výše uvedenou dobu, aby opětovné otevření jeho karty pokračovalo tam, kde skončilo."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Spouštět terminály nových hostitelů uvnitř tmuxu, aby relace přežily odpojení (vyžaduje tmux na hostiteli)"
-      },
-      "newHostTheme": {
-        "label": "Téma pro nové hostitele",
-        "description": "Terminální šablona, se kterou začíná nový hostitel."
-      },
-      "newHostFontFamily": {
-        "label": "Písmo pro nové hostitele",
-        "description": "Terminální písmo, se kterým začíná nový hostitel."
-      },
-      "newHostFontSize": {
-        "label": "Velikost písma pro nové hostitele",
-        "description": "Velikost písma terminálu, s níž začíná nový hostitel, v pixelech."
-      },
-      "newHostCursorStyle": {
-        "label": "Styl kurzoru pro nové hostitele"
-      },
-      "newHostCursorBlink": {
-        "label": "Blikající kurzor pro nové hostitele"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Povolit terminál",
         "description": "Nabídněte SSH terminál pro tohoto hostitele."
-      },
-      "inheritAppearance": {
-        "label": "Použít výchozí nastavení uživatele"
       },
       "theme": {
         "label": "Téma"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Automatické dokončování příkazů",
         "description": "Zobrazit automatické dokončování při psaní po stisknutí klávesy Tab"
-      },
-      "localEcho": {
-        "label": "Místní ozvěna",
-        "description": "Snižte vnímanou latenci vstupu pomocí bezpečné lokální predikce stisků kláves"
-      },
-      "linkClickBehavior": {
-        "label": "Kliknutí na odkaz terminálu",
-        "description": "Výchozí chování při kliknutí na odkazy v terminálu"
       },
       "customThemes": {
         "label": "Uložená témata"

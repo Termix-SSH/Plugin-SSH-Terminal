@@ -154,10 +154,9 @@ describe("terminal settings routes", () => {
       true,
     );
     const { body } = await server.request("GET", "/client-settings");
-    expect(body.user).toMatchObject({
+    expect(body.user).toEqual({
+      customThemes: [],
       commandAutocomplete: true,
-      localEcho: "auto",
-      linkClickBehavior: "confirm",
     });
     expect(body).not.toHaveProperty("newHostDefaults");
     const other = await server.request("GET", "/client-settings", {
@@ -169,15 +168,18 @@ describe("terminal settings routes", () => {
   it("saves the browser preferences a user moves over, for that user only", async () => {
     server = await startServer();
     const saved = await server.request("PUT", "/user-settings", {
-      body: { localEcho: "on", linkClickBehavior: "direct", theme: "x" },
+      body: { commandAutocomplete: true, localEcho: "on", theme: "x" },
     });
     expect(saved.status).toBe(200);
-    expect(await server.mock.ctx.settings.getUser("user-1", "localEcho")).toBe(
-      "on",
-    );
     expect(
-      await server.mock.ctx.settings.getUser("user-2", "localEcho"),
-    ).not.toBe("on");
+      await server.mock.ctx.settings.getUser("user-1", "commandAutocomplete"),
+    ).toBe(true);
+    expect(
+      await server.mock.ctx.settings.getUser("user-1", "localEcho"),
+    ).toBeUndefined();
+    expect(
+      await server.mock.ctx.settings.getUser("user-2", "commandAutocomplete"),
+    ).not.toBe(true);
   });
 
   it("turns auto tmux on for a host the user can edit", async () => {

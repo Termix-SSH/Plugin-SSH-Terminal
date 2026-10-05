@@ -161,8 +161,7 @@
       "group": {
         "touch": "Érintéses bevitel",
         "images": "Képtárolás",
-        "sessions": "Munkamenetek",
-        "newHosts": "Új házigazdák"
+        "sessions": "Munkamenetek"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminál munkamenet-megőrző",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Parancsnoki előzmények",
         "description": "Parancselőzmények rögzítésének engedélyezése. Ha le van tiltva, az előzmények nem kerülnek mentésre, függetlenül a gazdagép beállításaitól."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Új hosztok parancselőzményei",
-        "description": "Az új hosztok bekapcsolt parancselőzményekkel indulnak-e."
       },
       "imageStorageMode": {
         "label": "Tárolási mód",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Munkamenetek megtartása a leválasztás után",
         "description": "Tartsa életben a leválasztott terminált a szerveren a fenti ideig, így a fülének újranyitása ott folytatja, ahol abbahagyta."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Új hosztok termináljait a tmuxon belül kell futtatni, hogy a munkamenetek túléljék a kapcsolatmegszakadásokat (tmux szükséges a hoszton)"
-      },
-      "newHostTheme": {
-        "label": "Téma új házigazdáknak",
-        "description": "A termináltéma, amellyel egy új host indul."
-      },
-      "newHostFontFamily": {
-        "label": "Betűtípus új házigazdáknak",
-        "description": "Az új hoszt által használt terminálbetűtípus."
-      },
-      "newHostFontSize": {
-        "label": "Betűméret új házigazdáknak",
-        "description": "Az új hoszt kezdőbetűmérete pixelben."
-      },
-      "newHostCursorStyle": {
-        "label": "Kurzorstílus új házigazdáknak"
-      },
-      "newHostCursorBlink": {
-        "label": "Villogó kurzor új gazdagépek esetén"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Terminál engedélyezése",
         "description": "Kínálj fel egy SSH terminált ehhez a hoszthoz."
-      },
-      "inheritAppearance": {
-        "label": "Felhasználói alapértelmezett beállítások használata"
       },
       "theme": {
         "label": "Téma"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Parancs automatikus kiegészítése",
         "description": "Automatikus kiegészítés megjelenítése gépelés közben, ha megnyomja a Tab billentyűt"
-      },
-      "localEcho": {
-        "label": "Helyi visszhang",
-        "description": "Csökkentse az érzékelt bemeneti késleltetést biztonságos helyi billentyűleütés-előrejelzéssel"
-      },
-      "linkClickBehavior": {
-        "label": "Terminálkapcsolat kattintása",
-        "description": "Alapértelmezett viselkedés hivatkozásokra kattintva a terminálban"
       },
       "customThemes": {
         "label": "Mentett témák"

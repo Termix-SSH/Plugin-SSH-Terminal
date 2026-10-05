@@ -161,8 +161,7 @@
       "group": {
         "touch": "Wprowadzanie dotykowe",
         "images": "Przechowywanie obrazów",
-        "sessions": "Sesje",
-        "newHosts": "Nowi gospodarze"
+        "sessions": "Sesje"
       },
       "sessionTimeoutMinutes": {
         "label": "Trwałość sesji terminalowej",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Historia poleceń",
         "description": "Zezwól na rejestrowanie historii poleceń. Po wyłączeniu historia nie jest zapisywana, niezależnie od ustawień poszczególnych hostów."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Historia poleceń dla nowych hostów",
-        "description": "Czy nowi gospodarze rozpoczynają pracę z włączoną historią poleceń."
       },
       "imageStorageMode": {
         "label": "Tryb przechowywania",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Zachowaj sesje po rozłączeniu",
         "description": "Utrzymuj odłączony terminal aktywny na serwerze przez podany powyżej czas, tak aby ponowne otwarcie jego karty powodowało kontynuację pracy od miejsca, w którym została przerwana."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Uruchom nowe terminale hostów w tmux, aby sesje przetrwały rozłączenia (wymaga tmux na hoście)"
-      },
-      "newHostTheme": {
-        "label": "Motyw dla nowych gospodarzy",
-        "description": "Motyw terminala, z którym rozpoczyna pracę nowy host."
-      },
-      "newHostFontFamily": {
-        "label": "Czcionka dla nowych gospodarzy",
-        "description": "Czcionka terminala, od której zaczyna nowy host."
-      },
-      "newHostFontSize": {
-        "label": "Rozmiar czcionki dla nowych gospodarzy",
-        "description": "Rozmiar czcionki terminala, od którego zaczyna nowy host (w pikselach)."
-      },
-      "newHostCursorStyle": {
-        "label": "Styl kursora dla nowych hostów"
-      },
-      "newHostCursorBlink": {
-        "label": "Migający kursor dla nowych hostów"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Włącz terminal",
         "description": "Zaoferuj terminal SSH dla tego hosta."
-      },
-      "inheritAppearance": {
-        "label": "Użyj domyślnych ustawień użytkownika"
       },
       "theme": {
         "label": "Motyw"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Automatyczne uzupełnianie poleceń",
         "description": "Pokazuj autouzupełnianie podczas pisania po naciśnięciu Tab"
-      },
-      "localEcho": {
-        "label": "Lokalne echo",
-        "description": "Zmniejsz odczuwalne opóźnienie wpisywania dzięki bezpiecznemu lokalnemu przewidywaniu naciśnięć klawiszy"
-      },
-      "linkClickBehavior": {
-        "label": "Kliknięcie linku w terminalu",
-        "description": "Domyślne zachowanie po kliknięciu linków w terminalu"
       },
       "customThemes": {
         "label": "Zapisane motywy"

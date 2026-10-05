@@ -161,8 +161,7 @@
       "group": {
         "touch": "Entrada tàctil",
         "images": "Emmagatzematge d'imatges",
-        "sessions": "Sessions",
-        "newHosts": "Nous amfitrions"
+        "sessions": "Sessions"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistència de la sessió terminal",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Historial de comandaments",
         "description": "Permet l'enregistrament de l'historial d'ordres. Quan està desactivat, l'historial no es desa independentment de la configuració de cada host."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Historial d'ordres per a nous amfitrions",
-        "description": "Si els nous hosts comencen amb l'historial d'ordres activat."
       },
       "imageStorageMode": {
         "label": "Mode d'emmagatzematge",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Mantenir les sessions després de la desconnexió",
         "description": "Mantingueu un terminal desconnectat actiu al servidor durant el temps indicat anteriorment, de manera que la reobertura de la seva pestanya es reprengui on s'havia quedat."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Executa els terminals dels nous hosts dins de tmux perquè les sessions sobrevisquin a les desconnexions (necessita tmux al host)"
-      },
-      "newHostTheme": {
-        "label": "Tema per a nous amfitrions",
-        "description": "El tema del terminal amb què comença un nou amfitrió."
-      },
-      "newHostFontFamily": {
-        "label": "Font per a nous amfitrions",
-        "description": "La font de terminal amb què comença un nou host."
-      },
-      "newHostFontSize": {
-        "label": "Mida de la lletra per als nous amfitrions",
-        "description": "La mida de la lletra del terminal amb què comença un nou host, en píxels."
-      },
-      "newHostCursorStyle": {
-        "label": "Estil del cursor per a nous amfitrions"
-      },
-      "newHostCursorBlink": {
-        "label": "Cursor intermitent per a nous amfitrions"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Habilita el terminal",
         "description": "Ofereix un terminal SSH per a aquest host."
-      },
-      "inheritAppearance": {
-        "label": "Utilitza els valors predeterminats de l'usuari"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Autocompletar ordres",
         "description": "Mostra l'autocompleció mentre escrius si premes el tabulador"
-      },
-      "localEcho": {
-        "label": "Eco local",
-        "description": "Reduir la latència d'entrada percebuda mitjançant la predicció segura de pulsacions de tecles locals"
-      },
-      "linkClickBehavior": {
-        "label": "Clic d'enllaç del terminal",
-        "description": "Comportament predeterminat en fer clic a enllaços al terminal"
       },
       "customThemes": {
         "label": "Temes desats"

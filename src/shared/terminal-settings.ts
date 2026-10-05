@@ -85,10 +85,7 @@ export interface TerminalBehavior {
 }
 
 /** Everything the host editor's Terminal tab edits. */
-export interface HostTerminalSettings
-  extends TerminalAppearance, TerminalBehavior {
-  inheritAppearance: boolean;
-}
+export type HostTerminalSettings = TerminalAppearance & TerminalBehavior;
 
 export const APPEARANCE_KEYS = [
   "theme",
@@ -124,8 +121,6 @@ export const BEHAVIOR_KEYS = [
   "sudoPasswordAutoFill",
   "autoReconnect",
 ] as const satisfies readonly (keyof TerminalBehavior)[];
-
-export const INHERIT_APPEARANCE_KEY = "inheritAppearance";
 
 export const DEFAULT_MOSH_COMMAND = "mosh-server new -s -l LANG=en_US.UTF-8";
 export const DEFAULT_FONT_FAMILY = "Caskaydia Cove Nerd Font Mono";
@@ -177,7 +172,6 @@ export const DEFAULT_BEHAVIOR: TerminalBehavior = {
 export const DEFAULT_HOST_TERMINAL_SETTINGS: HostTerminalSettings = {
   ...DEFAULT_APPEARANCE,
   ...DEFAULT_BEHAVIOR,
-  inheritAppearance: true,
 };
 
 export interface SavedCustomTheme {
@@ -190,15 +184,11 @@ export interface SavedCustomTheme {
 export interface TerminalUserSettings {
   customThemes: SavedCustomTheme[];
   commandAutocomplete: boolean;
-  localEcho: "off" | "auto" | "on";
-  linkClickBehavior: "confirm" | "direct";
 }
 
 export const DEFAULT_USER_SETTINGS: TerminalUserSettings = {
   customThemes: [],
   commandAutocomplete: false,
-  localEcho: "auto",
-  linkClickBehavior: "confirm",
 };
 
 const ENUMS: Record<string, readonly string[]> = {
@@ -296,23 +286,13 @@ export function pickTerminalValues(
   return values;
 }
 
-/**
- * The host settings a 2.8 `terminalConfig` carried: every behavior key it
- * set, and the appearance keys only when it set any, which is also what
- * turns `inheritAppearance` off (2.8 stripped them to follow the user).
- */
+/** The host settings a 2.8 `terminalConfig` carried, each one typed. */
 export function hostSettingsFromTerminalConfig(
   terminalConfig: unknown,
 ): Record<string, unknown> {
   const config = asObject(terminalConfig);
   if (!config) return {};
-  const behavior = pickTerminalValues(config, BEHAVIOR_KEYS);
-  const appearance = pickTerminalValues(config, APPEARANCE_KEYS);
-  const values: Record<string, unknown> = { ...behavior };
-  if (APPEARANCE_KEYS.some((key) => key in config)) {
-    Object.assign(values, appearance, { [INHERIT_APPEARANCE_KEY]: false });
-  }
-  return values;
+  return pickTerminalValues(config, [...BEHAVIOR_KEYS, ...APPEARANCE_KEYS]);
 }
 
 /** Stored host values over the defaults, each one typed. */
@@ -323,11 +303,9 @@ export function readHostTerminalSettings(
     ...APPEARANCE_KEYS,
     ...BEHAVIOR_KEYS,
   ]);
-  const inherit = values?.[INHERIT_APPEARANCE_KEY];
   return {
     ...DEFAULT_HOST_TERMINAL_SETTINGS,
     ...typed,
-    inheritAppearance: typeof inherit === "boolean" ? inherit : true,
   } as HostTerminalSettings;
 }
 
@@ -356,12 +334,6 @@ export function readUserSettings(
         isObject(theme.colors),
     ),
     commandAutocomplete: source.commandAutocomplete === true,
-    localEcho:
-      source.localEcho === "off" || source.localEcho === "on"
-        ? source.localEcho
-        : "auto",
-    linkClickBehavior:
-      source.linkClickBehavior === "direct" ? "direct" : "confirm",
   };
 }
 

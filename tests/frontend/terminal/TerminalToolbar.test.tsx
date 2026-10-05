@@ -821,7 +821,6 @@ describe("TerminalToolbar Phase 1", () => {
     "does not mount or run desktop side effects when mobile is %s",
     (isMobile) => {
       mobileApi.isMobile = isMobile;
-      localStorage.setItem("termix-terminal-toolbar-density", "expanded");
       const writes = vi.spyOn(Storage.prototype, "setItem");
       const addWindowListener = vi.spyOn(window, "addEventListener");
       const resizeObserver = vi.fn();
@@ -1059,16 +1058,6 @@ describe("TerminalToolbar Phase 1", () => {
       renderToolbar({ host: withSettings({ terminalToolbarDisplay: "icon" }) });
       expect(screen.queryByText("Upload image")).toBeNull();
       expect(uiPrefs.set).not.toHaveBeenCalled();
-    });
-
-    it("moves a density saved in this browser into the plugin preferences", () => {
-      localStorage.setItem("termix-terminal-toolbar-density", "icon");
-      uiPrefs.set.mockClear();
-      renderToolbar();
-      expect(uiPrefs.set).toHaveBeenCalledWith("toolbarDensity", "icon");
-      expect(
-        localStorage.getItem("termix-terminal-toolbar-density"),
-      ).toBeNull();
     });
 
     it("stays fully visible when fading is off", () => {

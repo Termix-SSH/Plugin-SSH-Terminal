@@ -95,10 +95,6 @@ export class TerminalLocalEcho {
 
 export function resolveLocalEchoMode(
   hostMode: "default" | LocalEchoMode | undefined,
-  storedMode: string | null,
 ): LocalEchoMode {
-  if (hostMode && hostMode !== "default") return hostMode;
-  return storedMode === "on" || storedMode === "off" || storedMode === "auto"
-    ? storedMode
-    : "auto";
+  return hostMode && hostMode !== "default" ? hostMode : "auto";
 }

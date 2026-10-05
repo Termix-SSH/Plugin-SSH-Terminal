@@ -161,8 +161,7 @@
       "group": {
         "touch": "Input Sentuh",
         "images": "Penyimpanan Gambar",
-        "sessions": "Sesi",
-        "newHosts": "Pembawa Acara Baru"
+        "sessions": "Sesi"
       },
       "sessionTimeoutMinutes": {
         "label": "Ketahanan Sesi Terminal",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Riwayat Perintah",
         "description": "Izinkan perekaman riwayat perintah. Jika dinonaktifkan, riwayat tidak akan disimpan terlepas dari pengaturan per host."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Riwayat perintah untuk host baru",
-        "description": "Apakah host baru memulai dengan riwayat perintah diaktifkan."
       },
       "imageStorageMode": {
         "label": "Mode Penyimpanan",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Pertahankan sesi setelah terputus.",
         "description": "Pertahankan agar terminal yang terputus tetap aktif di server selama waktu yang disebutkan di atas, sehingga saat dibuka kembali, tab-nya akan melanjutkan dari tempat terakhir kali berhenti."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Jalankan terminal host baru di dalam tmux agar sesi tetap berjalan meskipun terjadi pemutusan koneksi (membutuhkan tmux pada host)."
-      },
-      "newHostTheme": {
-        "label": "Tema untuk host baru",
-        "description": "Tema terminal yang ditampilkan saat host baru dimulai."
-      },
-      "newHostFontFamily": {
-        "label": "Font untuk host baru",
-        "description": "Font terminal yang digunakan saat host baru pertama kali dijalankan."
-      },
-      "newHostFontSize": {
-        "label": "Ukuran font untuk host baru",
-        "description": "Ukuran font terminal yang digunakan oleh host baru saat pertama kali dijalankan, dalam piksel."
-      },
-      "newHostCursorStyle": {
-        "label": "Gaya kursor untuk host baru"
-      },
-      "newHostCursorBlink": {
-        "label": "Kursor berkedip untuk host baru"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Aktifkan Terminal",
         "description": "Sediakan terminal SSH untuk host ini."
-      },
-      "inheritAppearance": {
-        "label": "Gunakan pengaturan default pengguna."
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Pelengkapan Otomatis Perintah",
         "description": "Tampilkan fitur pelengkapan otomatis saat mengetik jika Anda menekan tombol Tab."
-      },
-      "localEcho": {
-        "label": "Gema Lokal",
-        "description": "Kurangi latensi input yang dirasakan menggunakan prediksi penekanan tombol lokal yang aman."
-      },
-      "linkClickBehavior": {
-        "label": "Klik Tautan Terminal",
-        "description": "Perilaku default saat mengklik tautan di terminal"
       },
       "customThemes": {
         "label": "Tema yang tersimpan"

@@ -147,80 +147,6 @@
           "default": true
         },
         {
-          "key": "commandHistoryForNewHosts",
-          "type": "boolean",
-          "labelKey": "settings.admin.commandHistoryForNewHosts.label",
-          "descriptionKey": "settings.admin.commandHistoryForNewHosts.description",
-          "default": true,
-          "hidden": true
-        },
-        {
-          "key": "newHostTheme",
-          "type": "custom",
-          "component": "newHostTheme",
-          "group": "settings.admin.group.newHosts",
-          "default": "termix",
-          "hidden": true
-        },
-        {
-          "key": "newHostFontFamily",
-          "type": "custom",
-          "component": "newHostFontFamily",
-          "group": "settings.admin.group.newHosts",
-          "default": "Caskaydia Cove Nerd Font Mono",
-          "hidden": true
-        },
-        {
-          "key": "newHostFontSize",
-          "type": "number",
-          "labelKey": "settings.admin.newHostFontSize.label",
-          "descriptionKey": "settings.admin.newHostFontSize.description",
-          "group": "settings.admin.group.newHosts",
-          "min": 8,
-          "max": 36,
-          "default": 14,
-          "hidden": true
-        },
-        {
-          "key": "newHostCursorStyle",
-          "type": "select",
-          "labelKey": "settings.admin.newHostCursorStyle.label",
-          "group": "settings.admin.group.newHosts",
-          "default": "bar",
-          "options": [
-            {
-              "value": "block",
-              "labelKey": "hosts.cursorStyleBlock"
-            },
-            {
-              "value": "underline",
-              "labelKey": "hosts.cursorStyleUnderline"
-            },
-            {
-              "value": "bar",
-              "labelKey": "hosts.cursorStyleBar"
-            }
-          ],
-          "hidden": true
-        },
-        {
-          "key": "newHostCursorBlink",
-          "type": "boolean",
-          "labelKey": "settings.admin.newHostCursorBlink.label",
-          "group": "settings.admin.group.newHosts",
-          "default": true,
-          "hidden": true
-        },
-        {
-          "key": "newHostAutoTmux",
-          "type": "boolean",
-          "labelKey": "settings.admin.newHostAutoTmux.label",
-          "descriptionKey": "settings.admin.newHostAutoTmux.description",
-          "group": "settings.admin.group.newHosts",
-          "default": false,
-          "hidden": true
-        },
-        {
           "key": "touchInput",
           "type": "custom",
           "component": "touchInput",
@@ -407,14 +333,6 @@
             "labelKey": "settings.host.enableCommandHistory.label",
             "descriptionKey": "settings.host.enableCommandHistory.description",
             "default": true
-          },
-          {
-            "key": "inheritAppearance",
-            "type": "boolean",
-            "labelKey": "settings.host.inheritAppearance.label",
-            "hidden": true,
-            "default": true,
-            "defaultable": false
           },
           {
             "key": "theme",
@@ -714,13 +632,6 @@
       },
       "user": [
         {
-          "key": "terminalDefaults",
-          "type": "custom",
-          "component": "terminalDefaults",
-          "default": {},
-          "hidden": true
-        },
-        {
           "key": "customThemes",
           "type": "json",
           "labelKey": "settings.user.customThemes.label",
@@ -733,46 +644,6 @@
           "labelKey": "settings.user.commandAutocomplete.label",
           "descriptionKey": "settings.user.commandAutocomplete.description",
           "default": false
-        },
-        {
-          "key": "localEcho",
-          "type": "select",
-          "labelKey": "settings.user.localEcho.label",
-          "descriptionKey": "settings.user.localEcho.description",
-          "default": "auto",
-          "options": [
-            {
-              "value": "off",
-              "labelKey": "hosts.localEchoOff"
-            },
-            {
-              "value": "auto",
-              "labelKey": "hosts.localEchoAuto"
-            },
-            {
-              "value": "on",
-              "labelKey": "hosts.localEchoOn"
-            }
-          ],
-          "hidden": true
-        },
-        {
-          "key": "linkClickBehavior",
-          "type": "select",
-          "labelKey": "settings.user.linkClickBehavior.label",
-          "descriptionKey": "settings.user.linkClickBehavior.description",
-          "default": "confirm",
-          "options": [
-            {
-              "value": "confirm",
-              "labelKey": "hosts.linkClickBehaviorConfirm"
-            },
-            {
-              "value": "direct",
-              "labelKey": "hosts.linkClickBehaviorDirect"
-            }
-          ],
-          "hidden": true
         },
         {
           "key": "macros",

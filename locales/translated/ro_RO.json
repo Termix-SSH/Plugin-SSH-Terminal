@@ -161,8 +161,7 @@
       "group": {
         "touch": "Intrare tactilă",
         "images": "Stocarea imaginilor",
-        "sessions": "Sesiuni",
-        "newHosts": "Gazde noi"
+        "sessions": "Sesiuni"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistența sesiunii terminale",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Istoricul comenzilor",
         "description": "Permite înregistrarea istoricului comenzilor. Când este dezactivată, istoricul nu este salvat, indiferent de setările pentru fiecare gazdă."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Istoricul comenzilor pentru gazde noi",
-        "description": "Dacă noile gazde încep cu istoricul comenzilor activat."
       },
       "imageStorageMode": {
         "label": "Mod de stocare",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Păstrați sesiunile după deconectare",
         "description": "Mențineți un terminal deconectat activ pe server pentru timpul indicat mai sus, astfel încât redeschiderea filei sale să reia de unde a rămas."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Rulează terminalele noilor gazde în interiorul tmux, astfel încât sesiunile să supraviețuiască deconectărilor (necesită tmux pe gazdă)"
-      },
-      "newHostTheme": {
-        "label": "Temă pentru gazde noi",
-        "description": "Tema terminalului cu care începe o nouă gazdă."
-      },
-      "newHostFontFamily": {
-        "label": "Font pentru gazde noi",
-        "description": "Fontul terminalului cu care începe o nouă gazdă."
-      },
-      "newHostFontSize": {
-        "label": "Dimensiunea fontului pentru gazdele noi",
-        "description": "Dimensiunea fontului terminalului cu care începe o nouă gazdă, în pixeli."
-      },
-      "newHostCursorStyle": {
-        "label": "Stilul cursorului pentru gazde noi"
-      },
-      "newHostCursorBlink": {
-        "label": "Cursor intermitent pentru gazde noi"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Activează terminalul",
         "description": "Oferiți un terminal SSH pentru această gazdă."
-      },
-      "inheritAppearance": {
-        "label": "Folosește setările implicite ale utilizatorului"
       },
       "theme": {
         "label": "Temă"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Completare automată a comenzilor",
         "description": "Afișează completarea automată în timpul tastării dacă apeși pe Tab"
-      },
-      "localEcho": {
-        "label": "Ecou local",
-        "description": "Reduceți latența percepută a intrării folosind predicția sigură a apăsărilor de taste locale"
-      },
-      "linkClickBehavior": {
-        "label": "Clic pe linkul terminalului",
-        "description": "Comportament implicit la clic pe linkuri în terminal"
       },
       "customThemes": {
         "label": "Teme salvate"

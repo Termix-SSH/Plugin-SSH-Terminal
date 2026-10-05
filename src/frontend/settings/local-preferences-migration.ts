@@ -15,16 +15,6 @@ const LOCAL_KEYS: Array<{
   parse: (raw: string) => unknown;
 }> = [
   {
-    storageKey: "terminalLocalEchoMode",
-    setting: "localEcho",
-    parse: (raw) => (["off", "auto", "on"].includes(raw) ? raw : undefined),
-  },
-  {
-    storageKey: "terminalLinkClickBehavior",
-    setting: "linkClickBehavior",
-    parse: (raw) => (["confirm", "direct"].includes(raw) ? raw : undefined),
-  },
-  {
     storageKey: "commandAutocomplete",
     setting: "commandAutocomplete",
     parse: (raw) =>

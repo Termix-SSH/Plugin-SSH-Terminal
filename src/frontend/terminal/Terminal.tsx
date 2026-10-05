@@ -1804,10 +1804,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         }
         terminalInputDisposableRef.current?.dispose();
         localEchoRef.current = new TerminalLocalEcho(
-          resolveLocalEchoMode(
-            termSettingsRef.current.localEcho,
-            termUserRef.current.localEcho,
-          ),
+          resolveLocalEchoMode(termSettingsRef.current.localEcho),
         );
         terminalInputDisposableRef.current = terminal.onData((data) => {
           if (ws.readyState !== WebSocket.OPEN) return;
@@ -2714,11 +2711,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             ? uri
             : `https://${uri}`;
 
-        const hostBehavior = termSettingsRef.current.linkClickBehavior;
-        const behavior =
-          hostBehavior && hostBehavior !== "default"
-            ? hostBehavior
-            : termUserRef.current.linkClickBehavior;
+        const behavior = termSettingsRef.current.linkClickBehavior;
 
         if (behavior === "direct") {
           window.open(url, "_blank");

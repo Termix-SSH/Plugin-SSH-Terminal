@@ -161,8 +161,7 @@
       "group": {
         "touch": "터치 입력",
         "images": "이미지 저장",
-        "sessions": "세션",
-        "newHosts": "새로운 호스트"
+        "sessions": "세션"
       },
       "sessionTimeoutMinutes": {
         "label": "터미널 세션 지속성",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "명령어 히스토리",
         "description": "명령어 히스토리 기록 허용. 비활성화 시 호스트별 설정과 무관하게 히스토리가 저장되지 않습니다."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "새 호스트에 대한 명령 기록",
-        "description": "새 호스트가 명령 기록을 활성화한 상태로 시작할지 여부."
       },
       "imageStorageMode": {
         "label": "저장 모드",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "연결이 끊어진 후에도 세션을 유지합니다.",
         "description": "위에 명시된 시간 동안 서버에서 연결이 끊긴 터미널을 활성화 상태로 유지하십시오. 그러면 해당 탭을 다시 열었을 때 이전에 작업하던 부분부터 이어서 작업할 수 있습니다."
-      },
-      "newHostAutoTmux": {
-        "label": "자동 Tmux",
-        "description": "새 호스트의 터미널을 tmux 내에서 실행하여 연결이 끊어져도 세션이 유지되도록 합니다(호스트에 tmux가 설치되어 있어야 함)."
-      },
-      "newHostTheme": {
-        "label": "새로운 호스트를 위한 테마",
-        "description": "새 호스트가 시작할 때 표시되는 터미널 테마입니다."
-      },
-      "newHostFontFamily": {
-        "label": "새 호스트를 위한 글꼴",
-        "description": "새 호스트가 시작할 때 사용하는 터미널 글꼴입니다."
-      },
-      "newHostFontSize": {
-        "label": "새 호스트의 글꼴 크기",
-        "description": "새 호스트가 시작할 때 사용하는 터미널 글꼴 크기(픽셀 단위)."
-      },
-      "newHostCursorStyle": {
-        "label": "새 호스트를 위한 커서 스타일"
-      },
-      "newHostCursorBlink": {
-        "label": "새로운 호스트를 위한 깜빡이는 커서"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "터미널 활성화",
         "description": "이 호스트에 SSH 터미널을 제공하십시오."
-      },
-      "inheritAppearance": {
-        "label": "사용자 기본 설정을 사용합니다."
       },
       "theme": {
         "label": "테마"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "명령어 자동 완성",
         "description": "탭 키를 누르면 입력 중 자동 완성 기능이 표시됩니다."
-      },
-      "localEcho": {
-        "label": "로컬 에코",
-        "description": "안전한 로컬 키 입력 예측을 사용하여 인지되는 입력 지연 시간을 줄입니다."
-      },
-      "linkClickBehavior": {
-        "label": "터미널 링크 클릭",
-        "description": "터미널에서 링크 클릭 시 기본 동작"
       },
       "customThemes": {
         "label": "저장된 테마"

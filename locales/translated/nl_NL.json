@@ -161,8 +161,7 @@
       "group": {
         "touch": "Aanraakinvoer",
         "images": "Afbeeldingsopslag",
-        "sessions": "Sessies",
-        "newHosts": "Nieuwe hosts"
+        "sessions": "Sessies"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminalsessiepersistentie",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Commandogeschiedenis",
         "description": "Sta het vastleggen van de opdrachtgeschiedenis toe. Indien uitgeschakeld, wordt de geschiedenis niet opgeslagen, ongeacht de instellingen per host."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Opdrachtgeschiedenis voor nieuwe hosts",
-        "description": "Of nieuwe hosts starten met de opdrachtgeschiedenis ingeschakeld."
       },
       "imageStorageMode": {
         "label": "Opslagmodus",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Sessies behouden na ontkoppeling",
         "description": "Houd een losgekoppelde terminal gedurende de bovengenoemde tijd actief op de server, zodat het heropenen van het tabblad verdergaat waar het was gebleven."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Start de terminals van nieuwe hosts binnen tmux, zodat sessies behouden blijven bij verbroken verbindingen (tmux moet op de host geïnstalleerd zijn)."
-      },
-      "newHostTheme": {
-        "label": "Thema voor nieuwe hosts",
-        "description": "Het terminalthema waarmee een nieuwe host opstart."
-      },
-      "newHostFontFamily": {
-        "label": "Lettertype voor nieuwe hosts",
-        "description": "Het terminallettertype waarmee een nieuwe host opstart."
-      },
-      "newHostFontSize": {
-        "label": "Lettergrootte voor nieuwe hosts",
-        "description": "De lettergrootte waarmee een nieuwe host in de terminal begint, in pixels."
-      },
-      "newHostCursorStyle": {
-        "label": "Cursorstijl voor nieuwe hosts"
-      },
-      "newHostCursorBlink": {
-        "label": "Knipperende cursor voor nieuwe hosts"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Terminal inschakelen",
         "description": "Bied een SSH-terminal aan voor deze host."
-      },
-      "inheritAppearance": {
-        "label": "Gebruik de standaardinstellingen van de gebruiker."
       },
       "theme": {
         "label": "Thema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Opdracht automatisch aanvullen",
         "description": "Toon automatisch aanvullen tijdens het typen als je op tab drukt."
-      },
-      "localEcho": {
-        "label": "Local Echo",
-        "description": "Verminder de waargenomen invoerlatentie met behulp van veilige lokale toetsaanslagvoorspelling."
-      },
-      "linkClickBehavior": {
-        "label": "Terminallink Klik",
-        "description": "Standaardgedrag bij het klikken op links in de terminal"
       },
       "customThemes": {
         "label": "Opgeslagen thema's"

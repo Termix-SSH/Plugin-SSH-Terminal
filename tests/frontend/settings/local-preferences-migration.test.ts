@@ -24,32 +24,27 @@ describe("moveLocalTerminalPreferences", () => {
   });
 
   it("moves the browser's values into settings still at their default, once", async () => {
-    localStorage.setItem("terminalLocalEchoMode", "on");
-    localStorage.setItem("terminalLinkClickBehavior", "direct");
     localStorage.setItem("commandAutocomplete", "true");
     const client = api({ commandAutocomplete: false });
 
     await moveLocalTerminalPreferences({ api: client as never });
 
     expect(client.put).toHaveBeenCalledWith("/user-settings", {
-      localEcho: "on",
-      linkClickBehavior: "direct",
       commandAutocomplete: true,
     });
-    expect(localStorage.getItem("terminalLocalEchoMode")).toBeNull();
     expect(localStorage.getItem("commandAutocomplete")).toBeNull();
   });
 
   it("keeps a value the user already changed on the server", async () => {
-    localStorage.setItem("terminalLocalEchoMode", "off");
-    const client = api({ localEcho: "on" });
+    localStorage.setItem("commandAutocomplete", "false");
+    const client = api({ commandAutocomplete: true });
     await moveLocalTerminalPreferences({ api: client as never });
     expect(client.put).not.toHaveBeenCalled();
-    expect(localStorage.getItem("terminalLocalEchoMode")).toBeNull();
+    expect(localStorage.getItem("commandAutocomplete")).toBeNull();
   });
 
   it("keeps the browser values for next time when the server is unreachable", async () => {
-    localStorage.setItem("terminalLocalEchoMode", "on");
+    localStorage.setItem("commandAutocomplete", "true");
     const client = {
       get: vi.fn(async () => {
         throw new Error("offline");
@@ -57,6 +52,6 @@ describe("moveLocalTerminalPreferences", () => {
       put: vi.fn(),
     };
     await moveLocalTerminalPreferences({ api: client as never });
-    expect(localStorage.getItem("terminalLocalEchoMode")).toBe("on");
+    expect(localStorage.getItem("commandAutocomplete")).toBe("true");
   });
 });

@@ -18,7 +18,6 @@ describe("hostImportNormalizer", () => {
       }),
     ).toEqual({
       enableTerminal: false,
-      inheritAppearance: false,
       fontSize: 16,
       autoTmux: true,
     });
@@ -50,7 +49,6 @@ describe("hostPayloadLegacy", () => {
   it("puts the settings back in the 2.8 terminalConfig shape", () => {
     const { terminalConfig } = hostPayloadLegacy({
       autoTmux: true,
-      inheritAppearance: true,
       fontSize: 20,
     }) as { terminalConfig: Record<string, unknown> };
     expect(terminalConfig.autoTmux).toBe(true);
@@ -59,9 +57,8 @@ describe("hostPayloadLegacy", () => {
     expect(terminalConfig.localEcho).toBe("auto");
   });
 
-  it("includes the look of a host that has its own", () => {
+  it("fills the look a host does not set with the built-in one", () => {
     const { terminalConfig } = hostPayloadLegacy({
-      inheritAppearance: false,
       fontSize: 20,
     }) as { terminalConfig: Record<string, unknown> };
     expect(terminalConfig.fontSize).toBe(20);

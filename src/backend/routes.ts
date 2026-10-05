@@ -530,7 +530,7 @@ export function registerTerminalRoutes(
    * /plugin-api/ssh-terminal/user-settings:
    *   put:
    *     summary: Save some of the caller's terminal settings
-   *     description: Writes the caller's local echo, link click and command autocomplete settings. The terminal uses it once, to move values a browser kept before 2.9.0.
+   *     description: Writes the caller's command autocomplete setting. The terminal uses it once, to move a value a browser kept before 2.9.0.
    *     tags:
    *       - Terminal
    *     requestBody:
@@ -540,10 +540,6 @@ export function registerTerminalRoutes(
    *           schema:
    *             type: object
    *             properties:
-   *               localEcho:
-   *                 type: string
-   *               linkClickBehavior:
-   *                 type: string
    *               commandAutocomplete:
    *                 type: boolean
    *     responses:

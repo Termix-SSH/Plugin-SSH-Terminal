@@ -161,8 +161,7 @@
       "group": {
         "touch": "Kosketussyöttö",
         "images": "Kuvien tallennus",
-        "sessions": "Istunnot",
-        "newHosts": "Uudet isännät"
+        "sessions": "Istunnot"
       },
       "sessionTimeoutMinutes": {
         "label": "Pääteistunnon pysyvyys",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Komentohistoria",
         "description": "Salli komentohistorian tallennus. Kun tämä on poistettu käytöstä, historiaa ei tallenneta isäntäkohtaisista asetuksista riippumatta."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Uusien isäntien komentohistoria",
-        "description": "Aloittavatko uudet isännät komentohistorian ollessa käytössä."
       },
       "imageStorageMode": {
         "label": "Tallennustila",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Säilytä istunnot katkaisun jälkeen",
         "description": "Pidä irrotettu päätelaite toiminnassa palvelimella yllä mainitun ajan, jotta sen välilehden uudelleen avaaminen jatkaa siitä, mihin se jäi."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Aja uusien isäntien päätteitä tmuxin sisällä, jotta istunnot selviävät katkaisuista (tarvitsee tmuxin isännässä)"
-      },
-      "newHostTheme": {
-        "label": "Teema uusille isännille",
-        "description": "Pääteteema, jolla uusi isäntä aloittaa."
-      },
-      "newHostFontFamily": {
-        "label": "Fontti uusille isännille",
-        "description": "Uuden isännän aloittama päätefontti."
-      },
-      "newHostFontSize": {
-        "label": "Uusien isäntien fonttikoko",
-        "description": "Uuden isännän aloittama päätefonttikoko pikseleinä."
-      },
-      "newHostCursorStyle": {
-        "label": "Kohdistimen tyyli uusille isännille"
-      },
-      "newHostCursorBlink": {
-        "label": "Vilkkuva kursori uusille isännille"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Ota terminaali käyttöön",
         "description": "Tarjoa SSH-terminaalia tälle isännälle."
-      },
-      "inheritAppearance": {
-        "label": "Käytä käyttäjän oletusasetuksia"
       },
       "theme": {
         "label": "Teema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Komennon automaattinen täydennys",
         "description": "Näytä automaattinen täydennys kirjoitettaessa, jos painat sarkainnäppäintä"
-      },
-      "localEcho": {
-        "label": "Paikallinen kaiku",
-        "description": "Vähennä havaittua syöttöviivettä käyttämällä turvallista paikallista näppäinpainalluksen ennustusta"
-      },
-      "linkClickBehavior": {
-        "label": "Päätelinkin napsautus",
-        "description": "Oletuskäyttäytyminen linkkejä napsautettaessa terminaalissa"
       },
       "customThemes": {
         "label": "Tallennetut teemat"

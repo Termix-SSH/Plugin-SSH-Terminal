@@ -161,8 +161,7 @@
       "group": {
         "touch": "タッチ入力",
         "images": "画像ストレージ",
-        "sessions": "セッション",
-        "newHosts": "新しいホスト"
+        "sessions": "セッション"
       },
       "sessionTimeoutMinutes": {
         "label": "端末セッションの永続性",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "コマンド履歴",
         "description": "コマンド履歴の記録を許可します。無効にすると、ホストごとの設定に関わらず履歴は保存されません。"
-      },
-      "commandHistoryForNewHosts": {
-        "label": "新規ホストのコマンド履歴",
-        "description": "新しいホストがコマンド履歴を有効にした状態で起動するかどうか。"
       },
       "imageStorageMode": {
         "label": "ストレージモード",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "切断後もセッションを維持する",
         "description": "上記時間の間、サーバー上で切断された端末をアクティブな状態にしておくことで、そのタブを再度開いたときに、前回中断したところから作業が再開されます。"
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "tmux内で新しいホストのターミナルを実行することで、セッションが切断後も維持されます（ホストにtmuxがインストールされている必要があります）。"
-      },
-      "newHostTheme": {
-        "label": "新規ホスト向けテーマ",
-        "description": "新しいホストが起動時に使用するターミナルテーマ。"
-      },
-      "newHostFontFamily": {
-        "label": "新規ホスト用のフォント",
-        "description": "新しいホストが起動時に使用するターミナルフォント。"
-      },
-      "newHostFontSize": {
-        "label": "新規ホスト向けのフォントサイズ",
-        "description": "新しいホストが最初に使用する端末のフォントサイズ（ピクセル単位）。"
-      },
-      "newHostCursorStyle": {
-        "label": "新規ホスト向けのカーソルスタイル"
-      },
-      "newHostCursorBlink": {
-        "label": "新規ホストの場合はカーソルが点滅します"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "ターミナルを有効化",
         "description": "このホストにSSHターミナルを提供します。"
-      },
-      "inheritAppearance": {
-        "label": "ユーザーデフォルトを使用する"
       },
       "theme": {
         "label": "テーマ"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "コマンド補完",
         "description": "タブキーを押すと入力中にオートコンプリートを表示する"
-      },
-      "localEcho": {
-        "label": "ローカルエコー",
-        "description": "安全なローカルキーストローク予測を使用して、体感入力遅延を低減する"
-      },
-      "linkClickBehavior": {
-        "label": "ターミナルリンククリック",
-        "description": "ターミナル内のリンクをクリックしたときのデフォルト動作"
       },
       "customThemes": {
         "label": "保存されたテーマ"

@@ -161,8 +161,7 @@
       "group": {
         "touch": "Entrée tactile",
         "images": "Stockage d'images",
-        "sessions": "Sessions",
-        "newHosts": "Nouveaux hôtes"
+        "sessions": "Sessions"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistance de session terminale",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Historique des commandes",
         "description": "Autoriser l'enregistrement de l'historique des commandes. Lorsque désactivé, l'historique n'est pas sauvegardé, indépendamment des paramètres par hôte."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Historique des commandes pour les nouveaux hôtes",
-        "description": "Indique si les nouveaux hôtes doivent démarrer avec l'historique des commandes activé."
       },
       "imageStorageMode": {
         "label": "Mode de stockage",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Conserver les sessions après la déconnexion",
         "description": "Maintenez un terminal déconnecté actif sur le serveur pendant la durée indiquée ci-dessus, afin que la réouverture de son onglet reprenne là où elle s'était arrêtée."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Exécutez les terminaux des nouveaux hôtes à l'intérieur de tmux afin que les sessions persistent après les déconnexions (nécessite tmux sur l'hôte)."
-      },
-      "newHostTheme": {
-        "label": "Thème pour les nouveaux hôtes",
-        "description": "Le thème du terminal avec lequel un nouvel hôte démarre."
-      },
-      "newHostFontFamily": {
-        "label": "Police de caractères pour les nouveaux hôtes",
-        "description": "La police de caractères du terminal avec laquelle un nouvel hôte démarre."
-      },
-      "newHostFontSize": {
-        "label": "Taille de police pour les nouveaux hôtes",
-        "description": "La taille de la police du terminal par défaut d'un nouvel hôte, en pixels."
-      },
-      "newHostCursorStyle": {
-        "label": "Style de curseur pour les nouveaux hôtes"
-      },
-      "newHostCursorBlink": {
-        "label": "Curseur clignotant pour les nouveaux hôtes"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Activer le terminal",
         "description": "Fournir un terminal SSH pour cet hôte."
-      },
-      "inheritAppearance": {
-        "label": "Utiliser les paramètres par défaut de l'utilisateur"
       },
       "theme": {
         "label": "Thème"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Autocomplétion des commandes",
         "description": "Afficher la saisie semi-automatique pendant la saisie si vous appuyez sur Tab"
-      },
-      "localEcho": {
-        "label": "Écho local",
-        "description": "Réduisez la latence perçue grâce à une prédiction locale et sécurisée des frappes au clavier"
-      },
-      "linkClickBehavior": {
-        "label": "Clic lien terminal",
-        "description": "Comportement par défaut lors du clic sur un lien dans le terminal"
       },
       "customThemes": {
         "label": "Thèmes enregistrés"

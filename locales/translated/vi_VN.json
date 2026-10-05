@@ -161,8 +161,7 @@
       "group": {
         "touch": "Nhập liệu cảm ứng",
         "images": "Lưu trữ hình ảnh",
-        "sessions": "Phiên",
-        "newHosts": "Người dẫn chương trình mới"
+        "sessions": "Phiên"
       },
       "sessionTimeoutMinutes": {
         "label": "Duy trì phiên đầu cuối",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Lịch sử lệnh",
         "description": "Cho phép ghi lịch sử lệnh. Khi tắt, lịch sử sẽ không được lưu bất kể cài đặt từng máy chủ."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Lịch sử lệnh cho máy chủ mới",
-        "description": "Liệu các máy chủ mới có bật lịch sử lệnh ngay từ đầu hay không."
       },
       "imageStorageMode": {
         "label": "Chế độ lưu trữ",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Giữ lại các phiên sau khi ngắt kết nối",
         "description": "Giữ cho cửa sổ terminal đang kết nối với máy chủ hoạt động trong khoảng thời gian nêu trên, để khi mở lại tab đó sẽ tiếp tục từ chỗ đã dừng lại."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Chạy các cửa sổ terminal của máy chủ mới bên trong tmux để đảm bảo phiên làm việc vẫn hoạt động sau khi ngắt kết nối (cần cài đặt tmux trên máy chủ)."
-      },
-      "newHostTheme": {
-        "label": "Giao diện dành cho người dẫn chương trình mới",
-        "description": "Giao diện dòng lệnh mà một máy chủ mới khởi động sử dụng."
-      },
-      "newHostFontFamily": {
-        "label": "Phông chữ dành cho máy chủ mới",
-        "description": "Phông chữ giao diện dòng lệnh mà một máy chủ mới khởi động."
-      },
-      "newHostFontSize": {
-        "label": "Kích thước phông chữ cho người dùng mới",
-        "description": "Kích thước phông chữ của thiết bị đầu cuối mà một máy chủ mới bắt đầu sử dụng, tính bằng pixel."
-      },
-      "newHostCursorStyle": {
-        "label": "Kiểu con trỏ dành cho máy chủ mới"
-      },
-      "newHostCursorBlink": {
-        "label": "Con trỏ nhấp nháy khi có máy chủ mới."
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Bật Terminal",
         "description": "Cung cấp giao diện dòng lệnh SSH cho máy chủ này."
-      },
-      "inheritAppearance": {
-        "label": "Sử dụng cài đặt mặc định của người dùng"
       },
       "theme": {
         "label": "Giao diện"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Tự động hoàn thành lệnh",
         "description": "Hiển thị tính năng tự động hoàn thành khi gõ nếu bạn nhấn phím Tab"
-      },
-      "localEcho": {
-        "label": "Tiếng vọng địa phương",
-        "description": "Giảm độ trễ đầu vào cảm nhận được bằng cách sử dụng tính năng dự đoán thao tác gõ phím cục bộ an toàn."
-      },
-      "linkClickBehavior": {
-        "label": "Hành vi khi nhấp liên kết trong Terminal",
-        "description": "Hành vi mặc định khi nhấp vào liên kết trong terminal"
       },
       "customThemes": {
         "label": "Chủ đề đã lưu"

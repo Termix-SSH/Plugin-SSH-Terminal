@@ -93,9 +93,9 @@ describe("TerminalLocalEcho", () => {
     expect(echo.handleOutput("a")).toBe("");
   });
 
-  it("uses an explicit host mode before the global mode", () => {
-    expect(resolveLocalEchoMode("off", "on")).toBe("off");
-    expect(resolveLocalEchoMode("default", "on")).toBe("on");
-    expect(resolveLocalEchoMode(undefined, null)).toBe("auto");
+  it("uses the host mode, and auto for default", () => {
+    expect(resolveLocalEchoMode("off")).toBe("off");
+    expect(resolveLocalEchoMode("default")).toBe("auto");
+    expect(resolveLocalEchoMode(undefined)).toBe("auto");
   });
 });

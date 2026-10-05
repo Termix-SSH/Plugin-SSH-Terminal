@@ -161,8 +161,7 @@
       "group": {
         "touch": "Dokunmatik Giriş",
         "images": "Görüntü Depolama",
-        "sessions": "Oturumlar",
-        "newHosts": "Yeni Sunucular"
+        "sessions": "Oturumlar"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminal Oturum Kalıcılığı",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Komut Geçmişi",
         "description": "Komut geçmişi kaydına izin ver. Devre dışı bırakıldığında, host başına ayarlara bakılmaksızın geçmiş kaydedilmez."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Yeni sunucular için komut geçmişi",
-        "description": "Yeni sunucuların komut geçmişi açık olarak başlatılıp başlatılmadığı."
       },
       "imageStorageMode": {
         "label": "Depolama Modu",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Bağlantı kesildikten sonra oturumları sürdürün.",
         "description": "Sunucuda bağlantısı kesilmiş bir terminali yukarıda belirtilen süre boyunca açık tutun, böylece sekme yeniden açıldığında kaldığı yerden devam eder."
-      },
-      "newHostAutoTmux": {
-        "label": "Otomatik Tmux",
-        "description": "Yeni sunucuların terminallerini tmux içinde çalıştırın, böylece oturumlar bağlantı kesintilerinden etkilenmeden devam eder (sunucuda tmux kurulu olması gerekir)."
-      },
-      "newHostTheme": {
-        "label": "Yeni ev sahipleri için tema",
-        "description": "Yeni bir sunucunun başlattığı terminal teması."
-      },
-      "newHostFontFamily": {
-        "label": "Yeni sunucular için yazı tipi",
-        "description": "Yeni bir sunucunun başlatıldığı terminal yazı tipi."
-      },
-      "newHostFontSize": {
-        "label": "Yeni sunucular için yazı tipi boyutu",
-        "description": "Yeni bir sunucunun başlangıçta kullandığı terminal yazı tipi boyutu, piksel cinsinden."
-      },
-      "newHostCursorStyle": {
-        "label": "Yeni sunucular için imleç stili"
-      },
-      "newHostCursorBlink": {
-        "label": "Yeni sunucular için yanıp sönen imleç"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Terminali Etkinleştir",
         "description": "Bu sunucu için bir SSH terminali sunun."
-      },
-      "inheritAppearance": {
-        "label": "Kullanıcı varsayılanlarını kullanın"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Komut Otomatik Tamamlama",
         "description": "Sekme tuşuna bastığınızda yazarken otomatik tamamlama özelliğini göster."
-      },
-      "localEcho": {
-        "label": "Yerel Yankı",
-        "description": "Güvenli yerel tuş vuruşu tahmini kullanarak algılanan giriş gecikmesini azaltın."
-      },
-      "linkClickBehavior": {
-        "label": "Terminal Bağlantı Tıklama",
-        "description": "Terminalde bağlantılara tıklandığında varsayılan davranış"
       },
       "customThemes": {
         "label": "Kaydedilen temalar"

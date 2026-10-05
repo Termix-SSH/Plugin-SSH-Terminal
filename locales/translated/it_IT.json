@@ -161,8 +161,7 @@
       "group": {
         "touch": "Input tattile",
         "images": "Archiviazione delle immagini",
-        "sessions": "Sessioni",
-        "newHosts": "Nuovi host"
+        "sessions": "Sessioni"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistenza della sessione terminale",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Cronologia comandi",
         "description": "Consenti la registrazione della cronologia comandi. Se disabilitato, la cronologia non viene salvata indipendentemente dalle impostazioni per host."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Cronologia dei comandi per i nuovi host",
-        "description": "Indica se i nuovi host si avviano con la cronologia dei comandi attiva."
       },
       "imageStorageMode": {
         "label": "Modalità di archiviazione",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Mantieni le sessioni anche dopo la disconnessione",
         "description": "Mantieni attivo un terminale disconnesso sul server per il tempo indicato sopra, in modo che alla riapertura della scheda la sessione riprenda da dove si era interrotta."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Eseguire i terminali dei nuovi host all'interno di tmux in modo che le sessioni sopravvivano alle disconnessioni (richiede tmux sull'host)."
-      },
-      "newHostTheme": {
-        "label": "Tema per i nuovi host",
-        "description": "Il tema del terminale con cui si avvia un nuovo host."
-      },
-      "newHostFontFamily": {
-        "label": "Carattere per i nuovi host",
-        "description": "Il font del terminale con cui si avvia un nuovo host."
-      },
-      "newHostFontSize": {
-        "label": "Dimensione del carattere per i nuovi host",
-        "description": "La dimensione del carattere del terminale con cui un nuovo host inizia, in pixel."
-      },
-      "newHostCursorStyle": {
-        "label": "Stile del cursore per i nuovi host"
-      },
-      "newHostCursorBlink": {
-        "label": "Cursore lampeggiante per i nuovi host"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Abilita Terminal",
         "description": "Offri un terminale SSH per questo host."
-      },
-      "inheritAppearance": {
-        "label": "Utilizza le impostazioni predefinite dell'utente"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Completamento comandi",
         "description": "Mostra il completamento automatico durante la digitazione se premi il tasto Tab."
-      },
-      "localEcho": {
-        "label": "Eco locale",
-        "description": "Riduci la latenza di input percepita utilizzando la predizione sicura della pressione dei tasti a livello locale."
-      },
-      "linkClickBehavior": {
-        "label": "Clic su link nel terminale",
-        "description": "Comportamento predefinito quando si fa clic su un collegamento nel terminale"
       },
       "customThemes": {
         "label": "Temi salvati"

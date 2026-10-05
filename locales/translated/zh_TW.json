@@ -161,8 +161,7 @@
       "group": {
         "touch": "觸摸輸入",
         "images": "影像儲存",
-        "sessions": "工作階段",
-        "newHosts": "新主持人"
+        "sessions": "工作階段"
       },
       "sessionTimeoutMinutes": {
         "label": "終端會話持久性",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "指令歷程",
         "description": "允許記錄指令歷史記錄。停用時，無論各主機設定如何，都不會儲存歷史記錄。"
-      },
-      "commandHistoryForNewHosts": {
-        "label": "新主機的命令歷史記錄",
-        "description": "是否開啟新主機的命令歷史記錄功能。"
       },
       "imageStorageMode": {
         "label": "儲存模式",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "斷開連線後仍保持會話",
         "description": "在上述時間內，保持伺服器上斷開連線的終端機處於活動狀態，以便重新開啟其標籤頁時可以從上次中斷的地方繼續操作。"
-      },
-      "newHostAutoTmux": {
-        "label": "自動 Tmux",
-        "description": "在 tmux 中執行新主機的終端，以便在斷開連線後會話仍然存在（主機上需要安裝 tmux）。"
-      },
-      "newHostTheme": {
-        "label": "新主持人主題",
-        "description": "新主機啟動時所使用的終端主題。"
-      },
-      "newHostFontFamily": {
-        "label": "新主機字體",
-        "description": "新主機啟動時所使用的終端字體。"
-      },
-      "newHostFontSize": {
-        "label": "新主機字體大小",
-        "description": "新主機啟動時所使用的終端字體大小，以像素為單位。"
-      },
-      "newHostCursorStyle": {
-        "label": "新主機的遊標樣式"
-      },
-      "newHostCursorBlink": {
-        "label": "新主機閃爍遊標"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "啟用終端機",
         "description": "為該主機提供 SSH 終端。"
-      },
-      "inheritAppearance": {
-        "label": "使用用戶預設設定"
       },
       "theme": {
         "label": "主題"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "指令自動完成",
         "description": "輸入時按 Tab 鍵可顯示自動完成功能。"
-      },
-      "localEcho": {
-        "label": "本地迴聲",
-        "description": "利用安全的本地按鍵預測來降低感知輸入延遲"
-      },
-      "linkClickBehavior": {
-        "label": "終端機連結點選",
-        "description": "在終端機中點選連結時的預設行為"
       },
       "customThemes": {
         "label": "已儲存的主題"

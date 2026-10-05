@@ -161,8 +161,7 @@
       "group": {
         "touch": "Berøringsinndata",
         "images": "Bildelagring",
-        "sessions": "Økter",
-        "newHosts": "Nye verter"
+        "sessions": "Økter"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminaløktpersistens",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Kommandohistorikk",
         "description": "Tillat opptak av kommandohistorikk. Når den er deaktivert, lagres ikke historikken uavhengig av innstillinger per vert."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Kommandohistorikk for nye verter",
-        "description": "Om nye verter starter med kommandohistorikk aktivert."
       },
       "imageStorageMode": {
         "label": "Lagringsmodus",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Behold økter etter frakobling",
         "description": "Hold en frakoblet terminal aktiv på serveren i perioden ovenfor, slik at gjenåpning av fanen fortsetter der den slapp."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Kjør nye verters terminaler inne i tmux slik at økter overlever frakoblinger (trenger tmux på verten)"
-      },
-      "newHostTheme": {
-        "label": "Tema for nye verter",
-        "description": "Terminaltemaet en ny vert starter med."
-      },
-      "newHostFontFamily": {
-        "label": "Skrifttype for nye verter",
-        "description": "Terminalfonten en ny vert starter med."
-      },
-      "newHostFontSize": {
-        "label": "Skriftstørrelse for nye verter",
-        "description": "Terminalens skriftstørrelse en ny vert starter med, i piksler."
-      },
-      "newHostCursorStyle": {
-        "label": "Markørstil for nye verter"
-      },
-      "newHostCursorBlink": {
-        "label": "Blinkende markør for nye verter"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Aktiver terminal",
         "description": "Tilby en SSH-terminal for denne verten."
-      },
-      "inheritAppearance": {
-        "label": "Bruk brukerstandarder"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Kommandoautofullføring",
         "description": "Vis autofullføring mens du skriver hvis du trykker på tabulatortasten"
-      },
-      "localEcho": {
-        "label": "Lokalt ekko",
-        "description": "Reduser opplevd input latency ved hjelp av sikker lokal tastetrykkprediksjon"
-      },
-      "linkClickBehavior": {
-        "label": "Klikk på terminallenken",
-        "description": "Standardoppførsel når du klikker på lenker i terminalen"
       },
       "customThemes": {
         "label": "Lagrede temaer"

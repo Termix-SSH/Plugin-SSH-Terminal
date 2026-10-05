@@ -161,8 +161,7 @@
       "group": {
         "touch": "Aanraakinvoer",
         "images": "Beeldberging",
-        "sessions": "Sessies",
-        "newHosts": "Nuwe gashere"
+        "sessions": "Sessies"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminale Sessie Persistensie",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Opdraggeskiedenis",
         "description": "Laat die opname van opdraggeskiedenis toe. Wanneer dit gedeaktiveer is, word geskiedenis nie gestoor nie, ongeag die instellings per gasheer."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Opdraggeskiedenis vir nuwe gashere",
-        "description": "Of nuwe gashere begin met opdraggeskiedenis aan."
       },
       "imageStorageMode": {
         "label": "Bergingsmodus",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Hou sessies na ontkoppeling",
         "description": "Hou 'n ontkoppelde terminaal vir die bogenoemde tydperk op die bediener aan die gang, sodat die heropening van die oortjie voortgaan waar dit opgehou het."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Laat nuwe gashere se terminale binne tmux loop sodat sessies ontkoppelings oorleef (benodig tmux op die gasheer)"
-      },
-      "newHostTheme": {
-        "label": "Tema vir nuwe gashere",
-        "description": "Die terminaaltema waarmee 'n nuwe gasheer begin."
-      },
-      "newHostFontFamily": {
-        "label": "Lettertipe vir nuwe gashere",
-        "description": "Die terminaalfont waarmee 'n nuwe gasheer begin."
-      },
-      "newHostFontSize": {
-        "label": "Lettergrootte vir nuwe gashere",
-        "description": "Die terminaallettergrootte waarmee 'n nuwe gasheer begin, in pixels."
-      },
-      "newHostCursorStyle": {
-        "label": "Wyserstyl vir nuwe gashere"
-      },
-      "newHostCursorBlink": {
-        "label": "Knipperende wyser vir nuwe gashere"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Aktiveer Terminaal",
         "description": "Bied 'n SSH-terminaal vir hierdie gasheer aan."
-      },
-      "inheritAppearance": {
-        "label": "Gebruik gebruikersverstekwaardes"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Opdrag Outomatiese Voltooiing",
         "description": "Wys outovoltooiing terwyl jy tik as jy Tab druk"
-      },
-      "localEcho": {
-        "label": "Plaaslike Eggo",
-        "description": "Verminder waargenome invoervertraging deur veilige plaaslike toetsaanslagvoorspelling te gebruik"
-      },
-      "linkClickBehavior": {
-        "label": "Klik op die terminaalskakel",
-        "description": "Standaardgedrag wanneer op skakels in die terminaal geklik word"
       },
       "customThemes": {
         "label": "Gestoorde temas"

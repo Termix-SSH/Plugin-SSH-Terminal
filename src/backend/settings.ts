@@ -45,11 +45,7 @@ export const HOST_KEYS = {
 } as const;
 
 /** User settings a browser kept in localStorage before 2.9.0. */
-export const MOVABLE_USER_KEYS = [
-  "localEcho",
-  "linkClickBehavior",
-  "commandAutocomplete",
-] as const;
+export const MOVABLE_USER_KEYS = ["commandAutocomplete"] as const;
 
 const IMAGE_FIELD_BY_LEGACY_KEY: Record<string, string> = {
   [TERMINAL_IMAGE_STORAGE_KEYS.mode]: ADMIN_KEYS.imageStorageMode,

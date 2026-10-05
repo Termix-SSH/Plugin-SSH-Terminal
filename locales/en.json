@@ -161,8 +161,7 @@
       "group": {
         "touch": "Touch Input",
         "images": "Image Storage",
-        "sessions": "Sessions",
-        "newHosts": "New Hosts"
+        "sessions": "Sessions"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminal Session Persistence",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Command History",
         "description": "Allow command history recording. When disabled, history is not saved regardless of per-host settings."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Command history for new hosts",
-        "description": "Whether new hosts start with command history on."
       },
       "imageStorageMode": {
         "label": "Storage Mode",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Keep sessions after disconnect",
         "description": "Keep a disconnected terminal alive on the server for the time above, so reopening its tab picks up where it left off."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Run new hosts' terminals inside tmux so sessions survive disconnects (needs tmux on the host)"
-      },
-      "newHostTheme": {
-        "label": "Theme for new hosts",
-        "description": "The terminal theme a new host starts with."
-      },
-      "newHostFontFamily": {
-        "label": "Font for new hosts",
-        "description": "The terminal font a new host starts with."
-      },
-      "newHostFontSize": {
-        "label": "Font size for new hosts",
-        "description": "The terminal font size a new host starts with, in pixels."
-      },
-      "newHostCursorStyle": {
-        "label": "Cursor style for new hosts"
-      },
-      "newHostCursorBlink": {
-        "label": "Blinking cursor for new hosts"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Enable Terminal",
         "description": "Offer an SSH terminal for this host."
-      },
-      "inheritAppearance": {
-        "label": "Use user defaults"
       },
       "theme": {
         "label": "Theme"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Command Autocomplete",
         "description": "Show autocomplete while typing if you press tab"
-      },
-      "localEcho": {
-        "label": "Local Echo",
-        "description": "Reduce perceived input latency using safe local keystroke prediction"
-      },
-      "linkClickBehavior": {
-        "label": "Terminal Link Click",
-        "description": "Default behavior when clicking links in the terminal"
       },
       "customThemes": {
         "label": "Saved themes"

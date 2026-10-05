@@ -159,7 +159,7 @@ describe(`${manifest.id} activate`, () => {
       manifest,
       locales,
       api: {
-        get: async () => ({ data: { user: { terminalDefaults: {} } } }),
+        get: async () => ({ data: { user: {} } }),
       } as never,
     });
     const look = (await rendered.app.invokeAction("terminal.resolveTheme", {
@@ -169,7 +169,7 @@ describe(`${manifest.id} activate`, () => {
         ip: "10.0.0.1",
         port: 22,
         pluginSettings: {
-          "ssh-terminal": { inheritAppearance: false, theme: "dracula" },
+          "ssh-terminal": { theme: "dracula" },
         },
       },
       appTheme: "dark",

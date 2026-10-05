@@ -71,13 +71,13 @@ describe("HostTerminalSettings", () => {
     });
   });
 
-  it("takes the host off the user's look when the look changes", () => {
+  it("writes a look change next to the host's other values", () => {
     const { current } = renderSettings({
-      pluginSettings: { "ssh-terminal": { inheritAppearance: false } },
+      pluginSettings: { "ssh-terminal": { autoTmux: true } },
     });
     fireEvent.click(switchFor("hosts.cursorBlinking"));
     expect(
       (current().pluginSettings as Record<string, Form>)["ssh-terminal"],
-    ).toMatchObject({ cursorBlink: false, inheritAppearance: false });
+    ).toMatchObject({ cursorBlink: false, autoTmux: true });
   });
 });

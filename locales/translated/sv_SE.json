@@ -161,8 +161,7 @@
       "group": {
         "touch": "Pekinmatning",
         "images": "Bildlagring",
-        "sessions": "Sessioner",
-        "newHosts": "Nya värdar"
+        "sessions": "Sessioner"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminalsessionens persistens",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Kommandohistorik",
         "description": "Tillåt inspelning av kommandohistorik. När det är inaktiverat sparas inte historiken oavsett inställningarna per värd."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Kommandohistorik för nya värdar",
-        "description": "Om nya värdar börjar med kommandohistorik aktiverad."
       },
       "imageStorageMode": {
         "label": "Lagringsläge",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Behåll sessioner efter frånkoppling",
         "description": "Håll en frånkopplad terminal aktiv på servern under ovanstående tid, så att öppnandet av fliken fortsätter där den slutade."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Kör nya värdars terminaler inuti tmux så att sessioner överlever frånkopplingar (kräver tmux på värden)"
-      },
-      "newHostTheme": {
-        "label": "Tema för nya värdar",
-        "description": "Terminaltemat som en ny värd börjar med."
-      },
-      "newHostFontFamily": {
-        "label": "Typsnitt för nya värdar",
-        "description": "Terminaltypsnittet som en ny värd börjar med."
-      },
-      "newHostFontSize": {
-        "label": "Teckenstorlek för nya värdar",
-        "description": "Terminalens teckenstorlek som en ny värd börjar med, i pixlar."
-      },
-      "newHostCursorStyle": {
-        "label": "Markörstil för nya värdar"
-      },
-      "newHostCursorBlink": {
-        "label": "Blinkande markör för nya värdar"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Aktivera terminalen",
         "description": "Erbjud en SSH-terminal för den här värden."
-      },
-      "inheritAppearance": {
-        "label": "Använd användarstandarder"
       },
       "theme": {
         "label": "Tema"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Kommando Autokomplettering",
         "description": "Visa autokomplettering medan du skriver om du trycker på tabbtangenten"
-      },
-      "localEcho": {
-        "label": "Lokalt eko",
-        "description": "Minska upplevd inmatningsfördröjning med hjälp av säker lokal tangenttryckningsprediktion"
-      },
-      "linkClickBehavior": {
-        "label": "Klicka på terminallänken",
-        "description": "Standardbeteende vid klick på länkar i terminalen"
       },
       "customThemes": {
         "label": "Sparade teman"

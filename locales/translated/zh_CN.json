@@ -161,8 +161,7 @@
       "group": {
         "touch": "触摸输入",
         "images": "图像存储",
-        "sessions": "会话",
-        "newHosts": "新主持人"
+        "sessions": "会话"
       },
       "sessionTimeoutMinutes": {
         "label": "终端会话持久性",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "命令历史",
         "description": "允许记录命令历史。禁用后，无论各主机设置如何，均不保存历史记录。"
-      },
-      "commandHistoryForNewHosts": {
-        "label": "新主机的命令历史记录",
-        "description": "是否开启新主机的命令历史记录功能。"
       },
       "imageStorageMode": {
         "label": "存储模式",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "断开连接后仍保持会话",
         "description": "在上述时间内，保持服务器上断开连接的终端处于活动状态，以便重新打开其标签页时可以从上次中断的地方继续操作。"
-      },
-      "newHostAutoTmux": {
-        "label": "自动 Tmux",
-        "description": "在 tmux 中运行新主机的终端，以便会话在断开连接后仍然存在（主机上需要安装 tmux）。"
-      },
-      "newHostTheme": {
-        "label": "新主持人主题",
-        "description": "新主机启动时使用的终端主题。"
-      },
-      "newHostFontFamily": {
-        "label": "新主机字体",
-        "description": "新主机启动时使用的终端字体。"
-      },
-      "newHostFontSize": {
-        "label": "新主机字体大小",
-        "description": "新主机启动时使用的终端字体大小，以像素为单位。"
-      },
-      "newHostCursorStyle": {
-        "label": "新主机的光标样式"
-      },
-      "newHostCursorBlink": {
-        "label": "新主机闪烁光标"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "启用终端",
         "description": "为该主机提供 SSH 终端。"
-      },
-      "inheritAppearance": {
-        "label": "使用用户默认设置"
       },
       "theme": {
         "label": "主题"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "命令自动补全",
         "description": "输入时按 Tab 键可显示自动完成功能。"
-      },
-      "localEcho": {
-        "label": "本地回声",
-        "description": "利用安全的本地按键预测来降低感知输入延迟"
-      },
-      "linkClickBehavior": {
-        "label": "终端链接点击",
-        "description": "点击终端内链接时的默认行为"
       },
       "customThemes": {
         "label": "已保存的主题"

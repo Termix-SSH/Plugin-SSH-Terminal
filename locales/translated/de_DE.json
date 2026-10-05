@@ -161,8 +161,7 @@
       "group": {
         "touch": "Berührungseingabe",
         "images": "Bildspeicherung",
-        "sessions": "Sitzungen",
-        "newHosts": "Neue Gastgeber"
+        "sessions": "Sitzungen"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminal-Sitzungspersistenz",
@@ -171,10 +170,6 @@
       "commandHistoryEnabled": {
         "label": "Befehlshistorie",
         "description": "Aufzeichnung des Befehlsverlaufs erlauben. Wenn deaktiviert, wird der Verlauf unabhängig von Host-Einstellungen nicht gespeichert."
-      },
-      "commandHistoryForNewHosts": {
-        "label": "Befehlsverlauf für neue Hosts",
-        "description": "Ob neue Hosts mit aktiviertem Befehlsverlauf starten."
       },
       "imageStorageMode": {
         "label": "Speichermodus",
@@ -206,28 +201,6 @@
       "sessionPersistence": {
         "label": "Sitzungen nach Verbindungsabbruch beibehalten",
         "description": "Halten Sie ein getrenntes Terminal auf dem Server für die oben genannte Zeit aktiv, sodass beim erneuten Öffnen des zugehörigen Tabs genau dort weitergemacht wird, wo es unterbrochen wurde."
-      },
-      "newHostAutoTmux": {
-        "label": "Auto-Tmux",
-        "description": "Neue Host-Terminals müssen innerhalb von tmux ausgeführt werden, damit die Sitzungen auch bei Verbindungsabbrüchen erhalten bleiben (tmux muss auf dem Host installiert sein)."
-      },
-      "newHostTheme": {
-        "label": "Thema für neue Gastgeber",
-        "description": "Das Terminal-Theme, mit dem ein neuer Host startet."
-      },
-      "newHostFontFamily": {
-        "label": "Schriftart für neue Hosts",
-        "description": "Die Terminal-Schriftart, mit der ein neuer Host startet."
-      },
-      "newHostFontSize": {
-        "label": "Schriftgröße für neue Hosts",
-        "description": "Die Terminal-Schriftgröße, mit der ein neuer Host startet, in Pixeln."
-      },
-      "newHostCursorStyle": {
-        "label": "Cursor-Stil für neue Hosts"
-      },
-      "newHostCursorBlink": {
-        "label": "Blinkender Cursor für neue Hosts"
       }
     },
     "host": {
@@ -274,9 +247,6 @@
       "enableTerminal": {
         "label": "Terminal aktivieren",
         "description": "Bieten Sie ein SSH-Terminal für diesen Host an."
-      },
-      "inheritAppearance": {
-        "label": "Benutzereinstellungen verwenden"
       },
       "theme": {
         "label": "Design"
@@ -370,14 +340,6 @@
       "commandAutocomplete": {
         "label": "Befehlsautovervollständigung",
         "description": "Die Autovervollständigung wird während der Eingabe durch Drücken der Tabulatortaste angezeigt."
-      },
-      "localEcho": {
-        "label": "Lokales Echo",
-        "description": "Reduzieren Sie die wahrgenommene Eingabeverzögerung durch sichere lokale Tastenanschlagvorhersage."
-      },
-      "linkClickBehavior": {
-        "label": "Terminal-Link-Klick",
-        "description": "Standardverhalten beim Klicken auf Links im Terminal"
       },
       "customThemes": {
         "label": "Gespeicherte Designs"

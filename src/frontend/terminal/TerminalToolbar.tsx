@@ -68,8 +68,6 @@ const DENSITY_OPTIONS: { value: ToolbarDensity }[] = [
 ];
 const DENSITIES = DENSITY_OPTIONS.map((option) => option.value);
 
-const LEGACY_DENSITY_KEY = "termix-terminal-toolbar-density";
-
 function asDensity(value: unknown): ToolbarDensity {
   return DENSITIES.includes(value as ToolbarDensity)
     ? (value as ToolbarDensity)
@@ -157,20 +155,6 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
     toolbarDensity: ToolbarDensity;
   }>();
   const preferredDensity = asDensity(uiPrefs.toolbarDensity);
-  useEffect(() => {
-    // Before 2.9 the density lived in this browser's localStorage.
-    try {
-      const legacy = window.localStorage.getItem(LEGACY_DENSITY_KEY);
-      if (legacy === null) return;
-      window.localStorage.removeItem(LEGACY_DENSITY_KEY);
-      if (DENSITIES.includes(legacy as ToolbarDensity)) {
-        setUiPref("toolbarDensity", legacy as ToolbarDensity);
-      }
-    } catch {
-      // Storage can be unavailable in hardened browser contexts.
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const [density, setDensity] = useState<SelectedToolbarDensity>(
     () => settings.density ?? preferredDensity,
   );
