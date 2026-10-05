@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button, Input } from "@termix/plugin-sdk/ui";
+import { Button, Input } from "@termix-ssh/plugin-sdk/ui";
 import {
   usePluginApi,
   useTranslation,
   type SettingsComponentProps,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 
 interface TestResult {
   mode: string;

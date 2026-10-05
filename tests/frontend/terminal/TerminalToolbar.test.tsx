@@ -46,7 +46,7 @@ const labels: Record<string, string> = {
   "ai.assistant": "AI Assistant",
 };
 
-vi.mock("@termix/plugin-sdk/frontend", async (importOriginal) => ({
+vi.mock("@termix-ssh/plugin-sdk/frontend", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useTranslation: () => ({
     t: (key: string) => labels[key] ?? key,
@@ -72,7 +72,7 @@ const uiPrefs = vi.hoisted(() => {
   };
 });
 
-vi.mock("@termix/plugin-sdk/ui", async (importOriginal) => ({
+vi.mock("@termix-ssh/plugin-sdk/ui", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useIsMobile: () => mobileApi.isMobile,
   // The real slot reads the action registry; the toolbar only decides where

@@ -1,5 +1,5 @@
-import type { HostEditorSectionProps } from "@termix/plugin-sdk/frontend";
-import { HostFeatureFields } from "@termix/plugin-sdk/ui";
+import type { HostEditorSectionProps } from "@termix-ssh/plugin-sdk/frontend";
+import { HostFeatureFields } from "@termix-ssh/plugin-sdk/ui";
 import { HostTerminalSettings } from "./HostTerminalSettings";
 
 /** The host editor's Terminal tab: this plugin's switches, then the look. */

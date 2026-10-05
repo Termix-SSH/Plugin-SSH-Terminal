@@ -4,7 +4,7 @@ import type {
   PluginKeyboardInteractiveDecision,
   PluginKeyboardInteractivePrompt,
   PluginSshHost,
-} from "@termix/plugin-sdk/backend";
+} from "@termix-ssh/plugin-sdk/backend";
 import { SSHAuthManager } from "../../src/backend/keyboard-prompt.js";
 
 /**

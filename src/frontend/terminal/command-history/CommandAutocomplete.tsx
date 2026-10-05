@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { cn } from "@termix/plugin-sdk/ui";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+import { cn } from "@termix-ssh/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 interface CommandAutocompleteProps {
   suggestions: string[];

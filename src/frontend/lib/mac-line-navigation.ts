@@ -1,4 +1,4 @@
-import { isMacPlatform } from "@termix/plugin-sdk/ui";
+import { isMacPlatform } from "@termix-ssh/plugin-sdk/ui";
 
 export function getMacLineNavigationSequence(e: KeyboardEvent): string | null {
   if (e.type !== "keydown" || !isMacPlatform()) return null;

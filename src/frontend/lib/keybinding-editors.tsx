@@ -1,8 +1,8 @@
 import {
   useTranslation,
   type KeybindingActionEditorProps,
-} from "@termix/plugin-sdk/frontend";
-import { Input } from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/frontend";
+import { Input } from "@termix-ssh/plugin-sdk/ui";
 
 export function PasteNote() {
   const { t } = useTranslation();

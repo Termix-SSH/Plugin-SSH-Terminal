@@ -46,7 +46,7 @@ import {
   ActionSlot,
   ComponentSlot,
   useIsMobile,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import {
   usePluginUiPreferences,
   useHostActions,
@@ -55,7 +55,7 @@ import {
   useSlotContributions,
   type PluginHostRecord,
   type ShellApi,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 type SelectedToolbarDensity = ToolbarDensity;
 
 /** Plugins contribute toolbar buttons here. Declared by the ssh-terminal plugin. */

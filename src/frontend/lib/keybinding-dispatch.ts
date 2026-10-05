@@ -2,7 +2,7 @@ import type { Terminal } from "@xterm/xterm";
 import type {
   KeybindingAction,
   KeybindingDefaultContribution,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 
 export interface KeybindingDispatchContext {
   terminal: Terminal;

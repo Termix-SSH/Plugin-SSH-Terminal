@@ -6,7 +6,7 @@ import express, {
 } from "express";
 import { randomUUID } from "crypto";
 import multer from "multer";
-import type { PluginContext } from "@termix/plugin-sdk/backend";
+import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import { getErrorMessage, type TerminalLogger } from "./helpers.js";
 import type { HistoryRepository } from "./history-repository.js";
 import type { TerminalSessionManager } from "./session-manager.js";

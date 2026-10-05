@@ -3,7 +3,7 @@ import type { Terminal } from "@xterm/xterm";
 
 const getCookieMock = vi.fn<(name: string) => string | undefined>();
 
-vi.mock("@termix/plugin-sdk/frontend", () => ({
+vi.mock("@termix-ssh/plugin-sdk/frontend", () => ({
   getClientPreference: (name: string) => getCookieMock(name),
 }));
 

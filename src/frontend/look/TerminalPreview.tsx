@@ -1,4 +1,4 @@
-import { useAppTheme } from "@termix/plugin-sdk/ui";
+import { useAppTheme } from "@termix-ssh/plugin-sdk/ui";
 import { TERMINAL_THEMES, resolveTerminalFontFamily } from "./terminal-themes";
 import type { TerminalThemeColors } from "../../shared/terminal-settings";
 

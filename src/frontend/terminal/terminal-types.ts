@@ -1,4 +1,4 @@
-import type { HostSshOptions } from "@termix/plugin-sdk/frontend";
+import type { HostSshOptions } from "@termix-ssh/plugin-sdk/frontend";
 
 export interface TerminalHostConfig {
   id?: number;

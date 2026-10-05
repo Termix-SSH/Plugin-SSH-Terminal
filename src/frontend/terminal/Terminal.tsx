@@ -117,7 +117,7 @@ import {
   findMatchingKeybinding,
   type CustomKeybinding,
   isElectron,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import {
   notifyHostsChanged,
   useTranslation,
@@ -131,7 +131,7 @@ import {
   getHostPassword,
   patchOpenTab,
   useHost,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 
 type HostKeyVerificationData = Omit<
   React.ComponentProps<typeof HostKeyVerificationDialog>,

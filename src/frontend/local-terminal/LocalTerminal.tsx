@@ -13,14 +13,14 @@ import {
   RobustClipboardProvider,
   copyToClipboard,
   readFromClipboard,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import { resolveTermixThemeColors } from "../look/terminal-theme";
 import {
   DEFAULT_TERMINAL_CONFIG,
   TERMINAL_FONTS,
 } from "../look/terminal-themes";
 import { ensureTerminalFontsLoaded } from "../look/terminal-global-styles";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 export function LocalTerminal({
   instanceId,

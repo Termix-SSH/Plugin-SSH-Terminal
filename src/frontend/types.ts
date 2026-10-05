@@ -1,4 +1,4 @@
-import type { HostSshOptions } from "@termix/plugin-sdk/frontend";
+import type { HostSshOptions } from "@termix-ssh/plugin-sdk/frontend";
 
 /**
  * Host shapes as the terminal reads them. The plugin keeps its

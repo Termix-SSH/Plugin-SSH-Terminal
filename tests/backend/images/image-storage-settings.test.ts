@@ -12,7 +12,7 @@ import {
   resolveTerminalImageStorageSettings,
   TERMINAL_IMAGE_STORAGE_KEYS,
 } from "../../../src/backend/images/image-storage-settings.js";
-import { createFakeContext } from "@termix/plugin-sdk/testing";
+import { createFakeContext } from "@termix-ssh/plugin-sdk/testing";
 import { readImageStorageSettings } from "../../../src/backend/settings.js";
 
 // parseImageLocalDir resolves against the host platform, so a POSIX literal

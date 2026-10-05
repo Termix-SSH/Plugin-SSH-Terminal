@@ -1,4 +1,4 @@
-import { getClientPreference } from "@termix/plugin-sdk/frontend";
+import { getClientPreference } from "@termix-ssh/plugin-sdk/frontend";
 import type { Terminal } from "@xterm/xterm";
 import { isPhysicalShortcutKey } from "./terminal-key-event";
 

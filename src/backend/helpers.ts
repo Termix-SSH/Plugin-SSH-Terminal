@@ -8,7 +8,7 @@ import ssh2Pkg, {
   type SignCallback,
   type SigningRequestOptions,
 } from "ssh2";
-import type { PluginLogger } from "@termix/plugin-sdk/backend";
+import type { PluginLogger } from "@termix-ssh/plugin-sdk/backend";
 
 const { AgentProtocol, BaseAgent } = ssh2Pkg;
 

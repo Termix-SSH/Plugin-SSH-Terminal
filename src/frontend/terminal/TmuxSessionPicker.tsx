@@ -1,7 +1,7 @@
 import React from "react";
 import { Terminal, Monitor, Users, Clock } from "lucide-react";
-import { Button } from "@termix/plugin-sdk/ui";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+import { Button } from "@termix-ssh/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 interface TmuxSessionInfo {
   name: string;

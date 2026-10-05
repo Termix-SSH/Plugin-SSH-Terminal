@@ -10,7 +10,7 @@ import {
   useSettings,
   useTranslation,
   type PanelProps,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   ArrowLeft,
   Braces,
@@ -39,7 +39,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import {
   mergeLocalMacros,
   sanitizeTerminalMacros,

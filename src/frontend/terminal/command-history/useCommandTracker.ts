@@ -1,5 +1,5 @@
 import { useRef, useCallback } from "react";
-import { usePluginApi } from "@termix/plugin-sdk/frontend";
+import { usePluginApi } from "@termix-ssh/plugin-sdk/frontend";
 import { saveCommandToHistory } from "../../terminal-api";
 
 const SENSITIVE_PATTERNS = [

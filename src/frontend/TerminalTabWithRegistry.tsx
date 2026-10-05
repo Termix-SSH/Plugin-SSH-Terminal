@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { TabProps } from "@termix/plugin-sdk/frontend";
+import type { TabProps } from "@termix-ssh/plugin-sdk/frontend";
 import { TerminalTabContent } from "./terminal/TerminalTabContent";
 import type { TerminalHandle } from "./terminal/terminal-types";
 import { registerSession, setActiveSession } from "./session-registry";

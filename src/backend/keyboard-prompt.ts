@@ -13,7 +13,7 @@ import type {
   PluginKeyboardInteractivePrompt,
   PluginSsh,
   PluginSshHost,
-} from "@termix/plugin-sdk/backend";
+} from "@termix-ssh/plugin-sdk/backend";
 import type { TerminalLogger } from "./helpers.js";
 
 type KeyboardInteractivePrompt = PluginKeyboardInteractivePrompt;

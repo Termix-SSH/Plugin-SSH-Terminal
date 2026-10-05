@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   usePluginApi,
   type PluginApiClient,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import { getClientSettings, type TerminalClientSettings } from "./terminal-api";
 import {
   DEFAULT_MOSH_COMMAND,

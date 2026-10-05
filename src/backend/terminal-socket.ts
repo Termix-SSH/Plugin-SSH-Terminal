@@ -14,7 +14,7 @@ import {
   type PluginSshPrepared,
   type PluginSshPromptChannel,
   type PluginWebSocketConnection,
-} from "@termix/plugin-sdk/backend";
+} from "@termix-ssh/plugin-sdk/backend";
 import {
   asObject,
   asString,

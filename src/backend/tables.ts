@@ -6,7 +6,7 @@ import {
   refUser,
   text,
   timestamp,
-} from "@termix/plugin-sdk/db";
+} from "@termix-ssh/plugin-sdk/db";
 
 /**
  * Commands typed into terminal sessions, per user and host.

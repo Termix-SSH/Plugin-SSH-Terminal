@@ -22,8 +22,8 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@termix/plugin-sdk/ui";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 interface MobileTerminalKeyboardProps {
   terminalRef: React.RefObject<TerminalHandle | null>;

@@ -16,12 +16,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
   useConfirm,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import {
   useSettings,
   useTranslation,
   type HostEditorSectionProps,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import { TerminalPreview } from "../look/TerminalPreview";
 import {
   TERMINAL_THEMES,

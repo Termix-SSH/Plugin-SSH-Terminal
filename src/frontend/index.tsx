@@ -17,8 +17,8 @@ import type {
   StandaloneViewProps,
   TabProps,
   TermixApp,
-} from "@termix/plugin-sdk/frontend";
-import { isElectron } from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/frontend";
+import { isElectron } from "@termix-ssh/plugin-sdk/ui";
 import { loadTerminal } from "./terminal/TerminalTabContent";
 import TerminalApp from "./terminal/TerminalApp";
 import {

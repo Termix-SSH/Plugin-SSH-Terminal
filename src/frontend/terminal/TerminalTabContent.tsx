@@ -2,12 +2,12 @@ import { lazy, Suspense } from "react";
 import { useThemePreview } from "../look/theme-preview";
 import { TerminalSquare } from "lucide-react";
 import type { TerminalHandle, TerminalHostConfig } from "./Terminal";
-import { useIsMobile } from "@termix/plugin-sdk/ui";
+import { useIsMobile } from "@termix-ssh/plugin-sdk/ui";
 import {
   useTranslation,
   invokeAction,
   type TabProps,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import type { Host } from "../types";
 import { hostTerminalValues } from "../terminal-settings";
 import { readHostTerminalSettings } from "../../shared/terminal-settings";

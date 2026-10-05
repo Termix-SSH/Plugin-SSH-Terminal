@@ -1,7 +1,7 @@
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
-import type { TabProps } from "@termix/plugin-sdk/frontend";
+import type { TabProps } from "@termix-ssh/plugin-sdk/frontend";
 
 const captured = vi.hoisted(() => ({ props: [] as Record<string, unknown>[] }));
 
@@ -21,7 +21,7 @@ vi.mock(
   }),
 );
 
-vi.mock("@termix/plugin-sdk/ui", () => ({
+vi.mock("@termix-ssh/plugin-sdk/ui", () => ({
   useIsMobile: () => false,
 }));
 

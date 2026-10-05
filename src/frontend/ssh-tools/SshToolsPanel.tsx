@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { KeyRound, Terminal } from "lucide-react";
 import { toast } from "sonner";
-import { Button, Separator } from "@termix/plugin-sdk/ui";
+import { Button, Separator } from "@termix-ssh/plugin-sdk/ui";
 import {
   getClientPreference,
   getHostPassword,
   setClientPreference,
   useTranslation,
   type PanelProps,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   getSessionHandle,
   sessionsSnapshot,

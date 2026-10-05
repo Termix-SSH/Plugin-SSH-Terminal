@@ -9,8 +9,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
   cn,
-} from "@termix/plugin-sdk/ui";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 interface TerminalSearchBarProps {
   visible: boolean;

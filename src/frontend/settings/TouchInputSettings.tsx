@@ -7,11 +7,11 @@ import {
   type TouchInputNumericKey,
   type TouchInputSettings as TouchInputValues,
 } from "../../shared/touch-input-settings";
-import { Button, Input, SettingRow, Switch } from "@termix/plugin-sdk/ui";
+import { Button, Input, SettingRow, Switch } from "@termix-ssh/plugin-sdk/ui";
 import {
   useTranslation,
   type SettingsComponentProps,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import { cacheTouchInputSettings } from "../terminal/touch-input-settings-store";
 
 const fields: Array<{
