@@ -2,7 +2,7 @@ import {
   useTranslation,
   type KeybindingActionEditorProps,
 } from "@termix-ssh/plugin-sdk/frontend";
-import { Input } from "@termix-ssh/plugin-sdk/ui";
+import { Input, Checkbox } from "@termix-ssh/plugin-sdk/ui";
 
 export function PasteNote() {
   const { t } = useTranslation();
@@ -63,14 +63,13 @@ export function SendTextEditor({
         className="w-full h-24 px-3 py-2 text-xs bg-background border border-border text-foreground placeholder:text-muted-foreground resize-none outline-none focus:ring-1 focus:ring-ring font-mono"
       />
       <label className="flex items-center gap-2 text-xs text-muted-foreground">
-        <input
-          type="checkbox"
+        <Checkbox
           checked={appendEnter}
-          onChange={(e) =>
+          onCheckedChange={(checked) =>
             onChange({
               type: action.type,
               text,
-              appendEnter: e.target.checked,
+              appendEnter: checked === true,
             })
           }
         />

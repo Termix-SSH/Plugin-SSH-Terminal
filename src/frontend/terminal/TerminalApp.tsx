@@ -1,6 +1,9 @@
 import React from "react";
 import { Terminal } from "./Terminal";
-import { FullScreenAppWrapper, ConnectionScreen } from "@termix-ssh/plugin-sdk/ui";
+import {
+  FullScreenAppWrapper,
+  ConnectionScreen,
+} from "@termix-ssh/plugin-sdk/ui";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 interface TerminalAppProps {

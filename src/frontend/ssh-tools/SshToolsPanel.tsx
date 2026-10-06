@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";
-import { KeyRound, Terminal } from "lucide-react";
+import { KeyRound, Terminal, Keyboard } from "lucide-react";
 import { toast } from "sonner";
-import { Button, Separator } from "@termix-ssh/plugin-sdk/ui";
+import {
+  Button,
+  Checkbox,
+  GroupHeading,
+  SwitchRow,
+} from "@termix-ssh/plugin-sdk/ui";
 import {
   getClientPreference,
   getHostPassword,
@@ -216,171 +221,129 @@ export function SshToolsPanel({ targetTab }: PanelProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 p-3">
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-bold uppercase tracking-widest">
-          {t("sshTools.keyRecordingTitle")}
-        </span>
-
-        {/* Terminal selector */}
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">
-              {t("sshTools.recordToTerminals")}
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={selectAll}
-                className="text-[10px] text-accent-brand hover:text-accent-brand/70"
-              >
+    <div className="flex flex-col gap-2 p-2.5">
+      <GroupHeading
+        title={t("sshTools.keyRecordingTitle")}
+        count={selectedTabIds.size || undefined}
+        action={
+          terminalTabs.length > 0 ? (
+            <span className="flex items-center">
+              <Button variant="ghost" size="xs" onClick={selectAll}>
                 {t("sshTools.selectAll")}
-              </button>
-              <button
-                onClick={deselectAll}
-                className="text-[10px] text-accent-brand hover:text-accent-brand/70"
-              >
+              </Button>
+              <Button variant="ghost" size="xs" onClick={deselectAll}>
                 {t("sshTools.selectNone")}
-              </button>
-            </div>
-          </div>
+              </Button>
+            </span>
+          ) : undefined
+        }
+      />
+      <span className="text-[11px] text-muted-foreground">
+        {t("sshTools.recordToTerminals")}
+      </span>
 
-          {terminalTabs.length === 0 ? (
-            <div className="flex items-center gap-1.5 px-2.5 py-2 border border-dashed border-border/60 text-muted-foreground/40">
-              <Terminal className="size-3 shrink-0" />
-              <span className="text-xs">
-                {t("sshTools.noTerminalTabsOpen")}
-              </span>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-1">
-              {terminalTabs.map((tab) => {
-                const selected = selectedTabIds.has(tab.id);
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => toggleTab(tab.id)}
-                    className={`flex items-center gap-2 px-2.5 py-1.5 border text-left transition-colors ${
-                      selected
-                        ? "border-accent-brand/40 bg-accent-brand/10 text-accent-brand"
-                        : "border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground/40"
-                    }`}
-                  >
-                    <div
-                      className={`size-3 border-2 flex items-center justify-center shrink-0 transition-colors ${
-                        selected
-                          ? "border-accent-brand bg-accent-brand"
-                          : "border-border/60"
-                      }`}
-                    >
-                      {selected && <div className="size-1.5 bg-background" />}
-                    </div>
-                    <Terminal className="size-3 shrink-0 opacity-60" />
-                    <span className="text-xs font-medium truncate flex-1">
-                      {tab.label || tab.hostName || tab.ip}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+      {terminalTabs.length === 0 ? (
+        <div className="flex items-center gap-1.5 border border-dashed border-border px-2.5 py-2 text-muted-foreground">
+          <Terminal className="size-3 shrink-0" />
+          <span className="text-xs">{t("sshTools.noTerminalTabsOpen")}</span>
         </div>
+      ) : (
+        <div className="flex flex-col border border-border">
+          {terminalTabs.map((tab) => {
+            const selected = selectedTabIds.has(tab.id);
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => toggleTab(tab.id)}
+                className={`flex items-center gap-2 border-b border-border/60 px-2.5 py-1.5 text-left transition-colors last:border-0 ${
+                  selected
+                    ? "bg-accent-brand/10 text-accent-brand"
+                    : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                }`}
+              >
+                <Checkbox
+                  checked={selected}
+                  tabIndex={-1}
+                  className="pointer-events-none"
+                />
+                <Terminal className="size-3 shrink-0 opacity-60" />
+                <span className="flex-1 truncate text-xs font-medium">
+                  {tab.label || tab.hostName || tab.ip}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
+      <div className="flex gap-2">
         <Button
           variant="outline"
           disabled={selectedTabIds.size === 0}
-          className={`w-full ${keyRecording ? "border-accent-brand/40 text-accent-brand bg-accent-brand/10 hover:bg-accent-brand/20 hover:text-accent-brand" : ""}`}
+          className={`min-w-0 flex-1 ${keyRecording ? "border-accent-brand/40 bg-accent-brand/10 text-accent-brand hover:bg-accent-brand/20 hover:text-accent-brand" : ""}`}
           onClick={toggleRecording}
         >
-          {keyRecording
-            ? `${t("sshTools.stopRecording")} (${selectedTabIds.size})`
-            : selectedTabIds.size === 0
-              ? t("sshTools.selectTerminalsAbove")
-              : `${t("sshTools.startRecording")} (${selectedTabIds.size})`}
+          <Keyboard className="size-3.5" />
+          <span className="truncate">
+            {keyRecording
+              ? t("sshTools.stopRecording")
+              : t("sshTools.startRecording")}
+          </span>
         </Button>
-
-        {keyRecording && (
-          <input
-            ref={inputRef}
-            onKeyDown={handleKeyDown}
-            onPaste={handlePaste}
-            onChange={(e) => {
-              // Keystrokes are broadcast directly via handleKeyDown; the
-              // field itself must stay empty. This also catches paste
-              // insertion on browsers that fire "input" before we can
-              // intercept it in onPaste.
-              e.target.value = "";
-            }}
-            placeholder={t("sshTools.broadcastInputPlaceholder")}
-            className="w-full px-2.5 py-2 text-xs bg-background border border-accent-brand/40 text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-accent-brand/70 caret-transparent"
-          />
-        )}
-
         <Button
           variant="outline"
           disabled={selectedTabIds.size === 0}
-          className="w-full"
+          className="min-w-0 flex-1"
           onClick={() => {
             void fillPassword();
           }}
         >
-          <KeyRound className="size-3.5 mr-2" />
-          {selectedTabIds.size === 0
-            ? t("sshTools.selectTerminalsAbove")
-            : `${t("sshTools.fillPassword")} (${selectedTabIds.size})`}
+          <KeyRound className="size-3.5" />
+          <span className="truncate">{t("sshTools.fillPassword")}</span>
         </Button>
       </div>
-
-      <Separator />
-
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-bold uppercase tracking-widest">
-          {t("sshTools.settingsTitle")}
+      {selectedTabIds.size === 0 && terminalTabs.length > 0 && (
+        <span className="text-[11px] text-muted-foreground">
+          {t("sshTools.selectTerminalsAbove")}
         </span>
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-muted-foreground">
-            {t("sshTools.enableRightClickCopyPaste")}
-          </span>
-          <button
-            onClick={() => {
-              const next = !rightClickPaste;
-              setRightClickPaste(next);
-              setClientPreference(
-                "rightClickCopyPaste",
-                next ? "true" : "false",
-              );
-            }}
-            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 transition-colors ${
-              rightClickPaste
-                ? "bg-accent-brand border-accent-brand"
-                : "bg-muted border-border"
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-3 w-3 bg-background shadow-sm transition-transform ${rightClickPaste ? "translate-x-4" : "translate-x-0.5"}`}
-            />
-          </button>
-        </div>
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-muted-foreground">
-            {t("sshTools.copyOnSelect")}
-          </span>
-          <button
-            onClick={() => {
-              const next = !copyOnSelect;
-              setCopyOnSelect(next);
-              setClientPreference("copyOnSelect", next ? "true" : "false");
-            }}
-            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 transition-colors ${
-              copyOnSelect
-                ? "bg-accent-brand border-accent-brand"
-                : "bg-muted border-border"
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-3 w-3 bg-background shadow-sm transition-transform ${copyOnSelect ? "translate-x-4" : "translate-x-0.5"}`}
-            />
-          </button>
-        </div>
+      )}
+
+      {keyRecording && (
+        <input
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          onChange={(e) => {
+            // Keystrokes are broadcast directly via handleKeyDown; the
+            // field itself must stay empty. This also catches paste
+            // insertion on browsers that fire "input" before we can
+            // intercept it in onPaste.
+            e.target.value = "";
+          }}
+          placeholder={t("sshTools.broadcastInputPlaceholder")}
+          className="h-8 w-full caret-transparent border border-accent-brand/40 bg-background px-2.5 text-xs text-foreground outline-none placeholder:text-muted-foreground/60 focus:border-accent-brand/70"
+        />
+      )}
+
+      <GroupHeading title={t("sshTools.settingsTitle")} className="pt-2" />
+      <div className="flex flex-col border border-border bg-card px-3">
+        <SwitchRow
+          label={t("sshTools.enableRightClickCopyPaste")}
+          checked={rightClickPaste}
+          onChange={(next) => {
+            setRightClickPaste(next);
+            setClientPreference("rightClickCopyPaste", next ? "true" : "false");
+          }}
+        />
+        <SwitchRow
+          label={t("sshTools.copyOnSelect")}
+          checked={copyOnSelect}
+          onChange={(next) => {
+            setCopyOnSelect(next);
+            setClientPreference("copyOnSelect", next ? "true" : "false");
+          }}
+        />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   RobustClipboardProvider,
   copyToClipboard,
   readFromClipboard,
+  Select2,
 } from "@termix-ssh/plugin-sdk/ui";
 import { resolveTermixThemeColors } from "../look/terminal-theme";
 import {
@@ -184,7 +185,7 @@ export function LocalTerminal({
     <div className="flex h-full w-full flex-col bg-background">
       {isWindows && (
         <div className="flex justify-end border-b border-border px-2 py-1">
-          <select
+          <Select2
             aria-label={t("terminal.localShell")}
             className="rounded border border-border bg-background px-2 py-1 text-xs text-foreground"
             value={shell}
@@ -194,7 +195,7 @@ export function LocalTerminal({
           >
             <option value="default">PowerShell</option>
             <option value="wsl">WSL</option>
-          </select>
+          </Select2>
         </div>
       )}
       <div ref={xtermRef} className="min-h-0 flex-1 p-2" />
