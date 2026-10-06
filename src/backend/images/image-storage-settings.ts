@@ -11,11 +11,7 @@ import path from "path";
  *   session exists, local storage otherwise. Configuration never influences
  *   this choice.
  */
-export const TERMINAL_IMAGE_STORAGE_MODES = [
-  "auto",
-  "local",
-  "remote-sftp",
-] as const;
+const TERMINAL_IMAGE_STORAGE_MODES = ["auto", "local", "remote-sftp"] as const;
 
 export type TerminalImageStorageMode =
   (typeof TERMINAL_IMAGE_STORAGE_MODES)[number];
@@ -51,7 +47,7 @@ export const TERMINAL_IMAGE_STORAGE_KEYS = {
  * Legacy environment variables from the original env-only configuration. They
  * seed defaults only when no database value exists for the same field.
  */
-export const TERMINAL_IMAGE_STORAGE_ENV = {
+const TERMINAL_IMAGE_STORAGE_ENV = {
   mode: "TERMIX_IMAGE_STORAGE_MODE",
   localDir: "TERMIX_IMAGE_DIR",
   hostPath: "TERMIX_IMAGE_HOST_PATH",
@@ -64,7 +60,7 @@ export const DEFAULT_IMAGE_TTL_MS = 3_600_000;
 export const DEFAULT_IMAGE_MAX_COUNT = 100;
 export const DEFAULT_IMAGE_MAX_BYTES = 5_368_709_120;
 export const DEFAULT_IMAGE_HOST_PATH = "/tmp/termix-image-v0";
-export const MIN_IMAGE_MAX_BYTES = 1_048_576;
+const MIN_IMAGE_MAX_BYTES = 1_048_576;
 
 export function defaultImageLocalDir(env: NodeJS.ProcessEnv): string {
   return path.resolve(

@@ -1,4 +1,4 @@
-export const TOUCH_INPUT_SETTING_KEY = "touch_input_settings";
+const TOUCH_INPUT_SETTING_KEY = "touch_input_settings";
 
 export interface TouchInputSettings {
   enabled: boolean;
@@ -86,9 +86,7 @@ export function normalizeTouchInputSettings(
   return normalized;
 }
 
-export function validateTouchInputSettingsUpdate(
-  value: unknown,
-): string | null {
+function validateTouchInputSettingsUpdate(value: unknown): string | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return "settings must be an object";
   }

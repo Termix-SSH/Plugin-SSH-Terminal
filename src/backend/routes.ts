@@ -35,7 +35,7 @@ function isNonEmptyString(val: unknown): val is string {
   return typeof val === "string" && val.trim().length > 0;
 }
 
-export const SENSITIVE_COMMAND_PATTERNS = [
+const SENSITIVE_COMMAND_PATTERNS = [
   /passw(or)?d/i,
   /\bsecret\b/i,
   /\btoken\b/i,

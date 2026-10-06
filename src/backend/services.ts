@@ -55,7 +55,7 @@ export interface LiveSessionsV1 {
   idleTimeoutMinutes: () => number;
 }
 
-export interface CommandHistoryEntry {
+interface CommandHistoryEntry {
   command: string;
   executedAt: string;
 }
@@ -65,7 +65,7 @@ export interface TerminalHistoryV1 {
   list: (hostId: number, limit?: number) => Promise<CommandHistoryEntry[]>;
 }
 
-export interface TmuxSessionInfo {
+interface TmuxSessionInfo {
   name: string;
   created: number;
   lastActivity: number;
@@ -73,7 +73,7 @@ export interface TmuxSessionInfo {
   attachedClients: number;
 }
 
-export interface TmuxDetection {
+interface TmuxDetection {
   available: boolean;
   sessions: TmuxSessionInfo[];
 }

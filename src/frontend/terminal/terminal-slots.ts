@@ -42,14 +42,14 @@ export interface TerminalSlotApi {
   } | null;
 }
 
-export interface TerminalToolbarStatusProps {
+interface TerminalToolbarStatusProps {
   host: Host;
   isConnected: boolean;
   /** Visible on a desktop viewport and connected: poll only while true. */
   active: boolean;
 }
 
-export interface TerminalSidePanelProps {
+interface TerminalSidePanelProps {
   host: Host | undefined;
   hostId: number | undefined;
   hostLabel: string;

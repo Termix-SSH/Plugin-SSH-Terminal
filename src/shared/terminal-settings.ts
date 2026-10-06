@@ -31,7 +31,7 @@ export interface TerminalThemeColors {
   brightWhite: string;
 }
 
-export interface SyntaxHighlightingOptions {
+interface SyntaxHighlightingOptions {
   logLevels: boolean;
   paths: boolean;
   timestamps: boolean;
@@ -44,8 +44,8 @@ export type CursorStyle = "block" | "underline" | "bar";
 export type BellStyle = "none" | "sound" | "visual" | "both";
 export type FastScrollModifier = "alt" | "ctrl" | "shift";
 export type BackspaceMode = "normal" | "control-h";
-export type HostLocalEcho = "default" | "off" | "auto" | "on";
-export type HostLinkClickBehavior = "default" | "confirm" | "direct";
+type HostLocalEcho = "default" | "off" | "auto" | "on";
+type HostLinkClickBehavior = "default" | "confirm" | "direct";
 
 /** How a terminal looks. Each value follows the host defaults unless the host sets it. */
 export interface TerminalAppearance {
@@ -87,7 +87,7 @@ export interface TerminalBehavior {
 /** Everything the host editor's Terminal tab edits. */
 export type HostTerminalSettings = TerminalAppearance & TerminalBehavior;
 
-export const APPEARANCE_KEYS = [
+const APPEARANCE_KEYS = [
   "theme",
   "cursorBlink",
   "cursorStyle",
@@ -103,7 +103,7 @@ export const APPEARANCE_KEYS = [
   "customThemeColors",
 ] as const satisfies readonly (keyof TerminalAppearance)[];
 
-export const BEHAVIOR_KEYS = [
+const BEHAVIOR_KEYS = [
   "rightClickSelectsWord",
   "macOptionIsMeta",
   "fastScrollModifier",
@@ -123,9 +123,9 @@ export const BEHAVIOR_KEYS = [
 ] as const satisfies readonly (keyof TerminalBehavior)[];
 
 export const DEFAULT_MOSH_COMMAND = "mosh-server new -s -l LANG=en_US.UTF-8";
-export const DEFAULT_FONT_FAMILY = "Caskaydia Cove Nerd Font Mono";
+const DEFAULT_FONT_FAMILY = "Caskaydia Cove Nerd Font Mono";
 
-export const DEFAULT_SYNTAX_HIGHLIGHTING: SyntaxHighlightingOptions = {
+const DEFAULT_SYNTAX_HIGHLIGHTING: SyntaxHighlightingOptions = {
   logLevels: true,
   paths: true,
   timestamps: true,
@@ -205,7 +205,7 @@ function isObject(value: unknown): value is Record<string, unknown> {
 }
 
 /** A JSON string or an object as an object, anything else as null. */
-export function asObject(value: unknown): Record<string, unknown> | null {
+function asObject(value: unknown): Record<string, unknown> | null {
   let parsed = value;
   if (typeof parsed === "string") {
     if (!parsed) return null;
@@ -273,7 +273,7 @@ function pick(key: string, value: unknown): unknown {
 }
 
 /** The keys of an object that fit, typed, with everything else dropped. */
-export function pickTerminalValues(
+function pickTerminalValues(
   source: Record<string, unknown> | null | undefined,
   keys: readonly string[],
 ): Record<string, unknown> {

@@ -14,16 +14,15 @@ export interface RectLike {
 
 export type ToolbarDensity = "icon" | "labeled" | "expanded";
 
-export const TOOLBAR_POSITION_STORAGE_KEY =
-  "termix-terminal-toolbar-position-v2";
+const TOOLBAR_POSITION_STORAGE_KEY = "termix-terminal-toolbar-position-v2";
 const TOOLBAR_MARGIN = 8;
 const RECOVERY_SIZE = 44;
 
-export function getDefaultToolbarPosition(): ToolbarPosition {
+function getDefaultToolbarPosition(): ToolbarPosition {
   return { x: 0, y: 0 };
 }
 
-export function sanitizeToolbarPosition(value: unknown): ToolbarPosition {
+function sanitizeToolbarPosition(value: unknown): ToolbarPosition {
   if (!value || typeof value !== "object") return getDefaultToolbarPosition();
   const candidate = value as Partial<ToolbarPosition>;
   return Number.isFinite(candidate.x) && Number.isFinite(candidate.y)

@@ -1,6 +1,6 @@
 import type { ToolbarDensity } from "./toolbar-geometry";
 
-export const TOOLBAR_ANCHORS = [
+const TOOLBAR_ANCHORS = [
   "bottom",
   "bottom-left",
   "bottom-right",
@@ -66,7 +66,7 @@ export function isLeftAnchor(anchor: ToolbarAnchor): boolean {
   return anchor.endsWith("-left");
 }
 
-export function isTopAnchor(anchor: ToolbarAnchor): boolean {
+function isTopAnchor(anchor: ToolbarAnchor): boolean {
   return anchor.startsWith("top");
 }
 

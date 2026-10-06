@@ -41,7 +41,7 @@ export function loadTerminalClientSettings(
   return pending;
 }
 
-export function peekTerminalClientSettings(): TerminalClientSettings | null {
+function peekTerminalClientSettings(): TerminalClientSettings | null {
   return cached;
 }
 
@@ -58,7 +58,7 @@ export function resetTerminalClientSettings(): void {
   listeners.clear();
 }
 
-export function useTerminalClientSettings(): TerminalClientSettings | null {
+function useTerminalClientSettings(): TerminalClientSettings | null {
   const api = usePluginApi();
   const apiRef = useRef(api);
   apiRef.current = api;

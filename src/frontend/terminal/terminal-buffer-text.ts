@@ -5,7 +5,7 @@ import type { Terminal } from "@xterm/xterm";
  * long-running session holds megabytes, and nothing consuming this wants all
  * of it.
  */
-export const DEFAULT_BUFFER_CONTEXT_LINES = 200;
+const DEFAULT_BUFFER_CONTEXT_LINES = 200;
 
 /**
  * Serializes the tail of a terminal's buffer to plain text.

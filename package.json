@@ -10,7 +10,8 @@
     "validate": "termix-plugin validate",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "postinstall": "node scripts/patch-ssh2-agent.cjs"
   },
   "dependencies": {
     "@xterm/addon-clipboard": "^0.2.0",
@@ -30,6 +31,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
+    "@types/multer": "^2.3.0",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
@@ -38,6 +40,7 @@
     "jsdom": "^30.0.1",
     "lint-staged": "^17.2.0",
     "prettier": "3.9.9",
+    "typescript": "~6.0.3",
     "vitest": "^4.1.11"
   },
   "peerDependencies": {

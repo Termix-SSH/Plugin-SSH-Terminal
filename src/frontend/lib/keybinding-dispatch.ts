@@ -12,7 +12,7 @@ export interface KeybindingDispatchContext {
 }
 
 /** The keybinding actions the terminal runs itself. */
-export const TERMINAL_KEYBINDING_ACTIONS = [
+const TERMINAL_KEYBINDING_ACTIONS = [
   "copy",
   "paste",
   "sendControlCode",

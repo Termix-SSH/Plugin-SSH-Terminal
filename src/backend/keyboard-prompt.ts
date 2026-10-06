@@ -21,7 +21,7 @@ type KeyboardInteractivePrompt = PluginKeyboardInteractivePrompt;
 const PASSWORD_PATTERN = /password/i;
 
 /** The answer at one index, the stored password for password prompts, else empty. */
-export function responsesWithAnswer(
+function responsesWithAnswer(
   prompts: KeyboardInteractivePrompt[],
   answerIndex: number,
   answer: string,

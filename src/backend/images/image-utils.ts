@@ -1,5 +1,5 @@
 // Accepted decoded input formats; uploads are normalized to PNG by the route.
-export const IMAGE_FORMAT_EXTENSIONS: Record<string, string> = {
+const IMAGE_FORMAT_EXTENSIONS: Record<string, string> = {
   avif: "avif",
   gif: "gif",
   heif: "heif",
@@ -17,7 +17,7 @@ export function imageExtensionForFormat(
   return format ? IMAGE_FORMAT_EXTENSIONS[format] : undefined;
 }
 
-export const MAX_NORMALIZED_IMAGE_BYTES = 10 * 1024 * 1024;
+const MAX_NORMALIZED_IMAGE_BYTES = 10 * 1024 * 1024;
 
 export function exceedsNormalizedImageSize(
   byteLength: number,
@@ -72,7 +72,7 @@ export function createConcurrencyLimiter(
   };
 }
 
-export const IMAGE_FILENAME_PATTERN = /^[0-9a-f-]{36}\.[a-z0-9]+$/i;
+const IMAGE_FILENAME_PATTERN = /^[0-9a-f-]{36}\.[a-z0-9]+$/i;
 
 export function isImageFilename(filename: string): boolean {
   return IMAGE_FILENAME_PATTERN.test(filename);

@@ -22,7 +22,7 @@ export interface Host {
 }
 
 /** Enough of a snippet for the variables dialog. */
-export interface Snippet {
+interface Snippet {
   id: number;
   name: string;
   content: string;

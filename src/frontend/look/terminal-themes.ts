@@ -828,4 +828,4 @@ export const DEFAULT_TERMINAL_CONFIG = {
   moshCommand: DEFAULT_MOSH_COMMAND,
 };
 
-export type TerminalConfigType = typeof DEFAULT_TERMINAL_CONFIG;
+type TerminalConfigType = typeof DEFAULT_TERMINAL_CONFIG;

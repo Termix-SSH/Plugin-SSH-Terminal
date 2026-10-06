@@ -296,7 +296,7 @@ export function parseTerminalMacros(value?: string | null): TerminalMacro[] {
 }
 
 /** Where 2.8 kept macros for a user whose storage mode was local. */
-export const LOCAL_MACROS_KEY = "terminalMacros";
+const LOCAL_MACROS_KEY = "terminalMacros";
 
 /**
  * The saved macros plus any this browser kept on its own before 2.9.0 that
