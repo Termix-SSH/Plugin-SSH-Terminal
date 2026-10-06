@@ -3781,7 +3781,6 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           attempt={reconnectAttempts.current}
           maxAttempts={maxReconnectAttempts}
           disconnectedMessage={t("terminal.connectionLost")}
-          retryLabel={t("terminal.reconnect")}
           onManualRetry={() => {
             setShowDisconnectedOverlay(false);
             isUnmountingRef.current = false;
@@ -3797,13 +3796,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               connectToHost(terminal.cols, terminal.rows);
             }
           }}
-          extraActions={
-            onClose && (
-              <Button variant="outline" onClick={onClose}>
-                {t("terminal.closeTab")}
-              </Button>
-            )
-          }
+          onClose={onClose}
           logPosition={hasConnectionError ? "top" : "bottom"}
         />
 

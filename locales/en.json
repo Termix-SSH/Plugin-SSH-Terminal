@@ -28,7 +28,6 @@
     "autoTmuxEnableFailed": "Failed to enable Auto-Tmux",
     "autoTmuxEnabled": "Auto-Tmux enabled for {{host}}. It applies from the next connection.",
     "clipboardHttpWarning": "Couldn't read the clipboard. Some browsers restrict clipboard access outside HTTPS - try Ctrl+V instead, or serve Termix over HTTPS.",
-    "closeTab": "Close",
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
     "connectionRejected": "Connection rejected by server. Please check your authentication and network configuration.",
