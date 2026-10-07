@@ -35,3 +35,16 @@ npm run format     # format the code with Prettier
 
 - `ssh-terminal.sessions`: let other features, like session sharing and recording, reach your live terminal sessions. Admins and users have it by default.
 - `ssh-terminal.history`: let other features, like the AI assistant, read your command history. Admins and users have it by default.
+
+## Services
+
+Provides to other plugins:
+
+- `sessions.live` as `ssh`: find a live terminal session so it can be shared
+- `terminal.history`: read a user's command history
+
+Uses from other plugins:
+
+- `tmux.sessions` to attach to tmux. Optional
+- `sessions.sharing` for shared sessions. Optional
+- `recordings.writer` to record sessions. Optional

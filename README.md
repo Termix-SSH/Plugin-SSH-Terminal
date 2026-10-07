@@ -31,21 +31,6 @@ SSH Terminal is the terminal in Termix. It opens SSH sessions in tabs and split 
 
 <br />
 
-## Services
-
-Provides to other plugins:
-
-- `sessions.live` as `ssh`: find a live terminal session so it can be shared
-- `terminal.history`: read a user's command history
-
-Uses from other plugins:
-
-- `tmux.sessions` to attach to tmux. Optional
-- `sessions.sharing` for shared sessions. Optional
-- `recordings.writer` to record sessions. Optional
-
-<br />
-
 ## Sponsors
 
 Interested in a paid placement to support development? Email [mail@termix.site](mailto:mail@termix.site).
