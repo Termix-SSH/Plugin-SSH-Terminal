@@ -51,7 +51,6 @@ interface AuthContext {
   ws: WebSocket;
   hostId: number;
   isKeyboardInteractive: boolean;
-  keyboardInteractiveResponded: boolean;
   keyboardInteractiveFinish: ((responses: string[]) => void) | null;
   totpPromptSent: boolean;
   /** The handler whose browser round is waiting for "<id>_auth_continue". */
@@ -191,7 +190,6 @@ export class SSHAuthManager {
     }
 
     this.context.totpPromptSent = true;
-    this.context.keyboardInteractiveResponded = true;
     this.context.keyboardInteractiveFinish = (answers: string[]) => {
       finish(
         responsesWithAnswer(
@@ -225,9 +223,9 @@ export class SSHAuthManager {
     finish: (responses: string[]) => void,
     password: string | undefined,
   ): void {
-    if (this.context.keyboardInteractiveResponded) return;
-    this.context.keyboardInteractiveResponded = true;
-
+    // A server may ask more than once: a wrong password, or a menu choice
+    // ("Choose [1] Push, or [2] TOTP:") followed by a press-enter confirm.
+    // Every round reaches the client.
     this.context.keyboardInteractiveFinish = (answers: string[]) => {
       finish(
         responsesWithAnswer(
@@ -246,6 +244,7 @@ export class SSHAuthManager {
         type: "password_required",
         prompt: prompts[promptIndex].prompt,
         echo: prompts[promptIndex].echo,
+        isPush,
       }),
     );
   }
@@ -257,8 +256,6 @@ export class SSHAuthManager {
       this.context.keyboardInteractiveFinish = null;
       if (kind === "totp") {
         this.context.totpPromptSent = false;
-      } else {
-        this.context.keyboardInteractiveResponded = false;
       }
       this.context.log.warn(
         `${kind === "totp" ? "TOTP" : "Password"} prompt timeout`,
@@ -305,6 +302,5 @@ export class SSHAuthManager {
     this.context.keyboardInteractiveFinish = null;
     this.context.totpPromptSent = false;
     this.context.browserSignInId = null;
-    this.context.keyboardInteractiveResponded = false;
   }
 }

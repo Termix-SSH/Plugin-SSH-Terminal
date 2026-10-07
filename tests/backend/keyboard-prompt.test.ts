@@ -14,8 +14,9 @@ import { SSHAuthManager } from "../../src/backend/keyboard-prompt.js";
  */
 const PASSWORD = /password/i;
 const FORTI = /type\s+['"]?push['"]?/i;
+const PUSH_MENU = /choose.*push.*totp/i;
 const PUSH =
-  /choose.*push.*totp|press enter.*(push|send)|push notification|authentication by phone/i;
+  /press enter.*(push|send)|push notification|authentication by phone/i;
 const TOTP =
   /verification code|verification_code|token|otp|2fa|authenticator|google.*auth/i;
 
@@ -39,9 +40,10 @@ function classify(
     };
   }
   const texts = round.prompts.map((p) => p.prompt);
-  const isPush =
-    !texts.some((t) => FORTI.test(t)) && texts.some((t) => PUSH.test(t));
-  if (!isPush) {
+  const isPushFlow =
+    !texts.some((t) => FORTI.test(t)) &&
+    texts.some((t) => PUSH_MENU.test(t) || PUSH.test(t));
+  if (!isPushFlow) {
     const totp = round.prompts.findIndex((p) => TOTP.test(p.prompt));
     if (totp !== -1) return { kind: "totp", promptIndex: totp };
   }
@@ -72,7 +74,6 @@ function createManager() {
     ws,
     hostId: 1,
     isKeyboardInteractive: false,
-    keyboardInteractiveResponded: false,
     keyboardInteractiveFinish: null,
     totpPromptSent: false,
     browserSignInId: null,
@@ -115,7 +116,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     expect(finish).not.toHaveBeenCalled();
   });
 
-  it("forwards echo:true for a JumpCloud-style push/TOTP menu prompt", () => {
+  it("sends a JumpCloud-style push/TOTP menu as a text prompt, not a push confirm", () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -141,8 +142,58 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
         type: "password_required",
         prompt: "Choose [1] Push, or [2] TOTP: ",
         echo: true,
+        isPush: false,
       },
     ]);
+
+    manager.context.keyboardInteractiveFinish?.(["1"]);
+
+    expect(finish).toHaveBeenCalledWith(["1"]);
+  });
+
+  it("asks again when a menu choice is followed by a push confirm round", () => {
+    const { manager, sent } = createManager();
+    const menuFinish = vi.fn();
+    const confirmFinish = vi.fn();
+    const host = { username: "root", authType: "none" };
+
+    manager.handleKeyboardInteractive(
+      "",
+      "",
+      "",
+      [{ prompt: "Choose [1] Push, or [2] TOTP: ", echo: true }],
+      menuFinish,
+      host,
+    );
+    manager.context.keyboardInteractiveFinish?.(["1"]);
+    expect(menuFinish).toHaveBeenCalledWith(["1"]);
+
+    manager.handleKeyboardInteractive(
+      "",
+      "",
+      "",
+      [{ prompt: "Press enter to send Push", echo: true }],
+      confirmFinish,
+      host,
+    );
+
+    expect(sent.filter((m) => m.type === "password_required")).toEqual([
+      {
+        type: "password_required",
+        prompt: "Choose [1] Push, or [2] TOTP: ",
+        echo: true,
+        isPush: false,
+      },
+      {
+        type: "password_required",
+        prompt: "Press enter to send Push",
+        echo: true,
+        isPush: true,
+      },
+    ]);
+
+    manager.context.keyboardInteractiveFinish?.([""]);
+    expect(confirmFinish).toHaveBeenCalledWith([""]);
   });
 
   it("silently auto-answers a plain password prompt when a stored password exists", () => {
@@ -188,6 +239,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
         type: "password_required",
         prompt: "Press enter to send Push request: ",
         echo: true,
+        isPush: true,
       },
     ]);
 
