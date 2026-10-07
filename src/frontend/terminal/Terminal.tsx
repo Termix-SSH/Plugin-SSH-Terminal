@@ -1107,7 +1107,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }
     }
 
-    function handleTotpCancel() {
+    /**
+     * Closes the MFA dialog and stops its timer. Also used once the server
+     * has moved past the prompt, so a push approval that was waiting doesn't
+     * leave the dialog over the terminal or let the timer close the session.
+     */
+    function dismissMfaPrompt() {
       if (totpTimeoutRef.current) {
         clearTimeout(totpTimeoutRef.current);
         totpTimeoutRef.current = null;
@@ -1117,6 +1122,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       setIsPasswordPrompt(false);
       setMfaPromptMode("totp");
       setMfaWaiting(false);
+    }
+
+    function handleTotpCancel() {
+      dismissMfaPrompt();
       if (onClose) onClose();
     }
 
@@ -1926,6 +1935,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             }
           } else if (msg.type === "error") {
             const errorMessage = msg.message || t("terminal.unknownError");
+            dismissMfaPrompt();
 
             addLog({
               type: "error",
@@ -1977,6 +1987,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             updateConnectionError(errorMessage);
             setIsConnecting(false);
           } else if (msg.type === "connected") {
+            dismissMfaPrompt();
             if (keepScrollbackRef.current) {
               keepScrollbackRef.current = false;
               reconnectAttempts.current = 0;
@@ -2128,9 +2139,15 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             setMfaWaiting(false);
           } else if (msg.type === "password_required") {
             const promptText: string = msg.prompt || "";
+            // The backend says whether this is a confirm-only push. Older
+            // servers don't, so fall back to the prompt text. A menu such as
+            // "Choose [1] Push, or [2] TOTP:" needs a text field instead.
             const pushPromptPattern =
-              /choose.*push.*totp|press enter.*(push|send)|push notification|authentication by phone/i;
-            const isPush = pushPromptPattern.test(promptText);
+              /press enter.*(push|send)|push notification|authentication by phone/i;
+            const isPush =
+              typeof msg.isPush === "boolean"
+                ? msg.isPush
+                : pushPromptPattern.test(promptText);
             const isMenu = !isPush && msg.echo === true;
             const mode: "menu" | "push" | "password" = isPush
               ? "push"

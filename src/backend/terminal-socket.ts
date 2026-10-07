@@ -337,7 +337,6 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     let totpPromptSent = false;
     let totpTimeout: NodeJS.Timeout | null = null;
     let isKeyboardInteractive = false;
-    let keyboardInteractiveResponded = false;
     let isConnecting = false;
     let isConnected = false;
     let isCleaningUp = false;
@@ -418,7 +417,6 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       isConnecting = false;
       isConnected = false;
       isKeyboardInteractive = false;
-      keyboardInteractiveResponded = false;
       keyboardInteractiveFinish = null;
       totpPromptSent = false;
       browserSignInId = null;
@@ -894,7 +892,11 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
 
             case "password_response": {
               const passwordData = data as TOTPResponseData;
-              if (keyboardInteractiveFinish && passwordData?.code) {
+              // A push-confirm prompt is answered with an empty string.
+              if (
+                keyboardInteractiveFinish &&
+                typeof passwordData?.code === "string"
+              ) {
                 if (totpTimeout) {
                   clearTimeout(totpTimeout);
                   totpTimeout = null;
@@ -2319,7 +2321,6 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             browserSignInId,
             isKeyboardInteractive,
             hasKeyboardInteractiveFinish: !!keyboardInteractiveFinish,
-            keyboardInteractiveResponded,
           });
 
           // The provider decides what an auth failure means: clear a cached
@@ -2444,8 +2445,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             err.message.includes(
               "All configured authentication methods failed",
             ) &&
-            !isKeyboardInteractive &&
-            !keyboardInteractiveResponded
+            !isKeyboardInteractive
           ) {
             isAwaitingAuthCredentials = true;
             if (currentSessionId) {
@@ -2633,7 +2633,6 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
         ws,
         hostId: id || 0,
         isKeyboardInteractive,
-        keyboardInteractiveResponded,
         keyboardInteractiveFinish,
         totpPromptSent,
         browserSignInId,
@@ -2672,8 +2671,6 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
 
             isKeyboardInteractive =
               sshAuthManager.context.isKeyboardInteractive;
-            keyboardInteractiveResponded =
-              sshAuthManager.context.keyboardInteractiveResponded;
             keyboardInteractiveFinish =
               sshAuthManager.context.keyboardInteractiveFinish;
             totpPromptSent = sshAuthManager.context.totpPromptSent;
@@ -2853,6 +2850,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                   type: "password_required",
                   prompt: request.prompt,
                   echo: request.echo,
+                  isPush: request.isPush,
                 }),
               );
             }
