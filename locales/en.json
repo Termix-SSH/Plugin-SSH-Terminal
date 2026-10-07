@@ -290,6 +290,9 @@
       "rightClickSelectsWord": {
         "label": "Right click selects word"
       },
+      "wheelZoom": {
+        "label": "Zoom with Ctrl or Cmd and scroll"
+      },
       "macOptionIsMeta": {
         "label": "Option is Meta"
       },
@@ -458,6 +461,8 @@
     "rightClickSelectsWord": "Right Click Selects Word",
     "rightClickSelectsWordLabel": "Right-click Selects Word",
     "rightClickSelectsWordShortDesc": "Select the word under cursor on right-click",
+    "wheelZoomLabel": "Zoom With Ctrl/Cmd + Scroll",
+    "wheelZoomShortDesc": "Change the font size by scrolling while holding Ctrl or Cmd",
     "saveAsGlobalTheme": "Save as Global Theme",
     "saveGlobalThemeError": "Failed to save theme",
     "saveGlobalThemeNamePrompt": "Enter a name for this theme",

@@ -575,6 +575,16 @@ export function HostTerminalSettings({
             />
           </SettingRow>
           <SettingRow
+            label={t("hosts.wheelZoomLabel")}
+            defaultKey="wheelZoom"
+            description={t("hosts.wheelZoomShortDesc")}
+          >
+            <FakeSwitch
+              checked={form.wheelZoom}
+              onChange={(v) => setField("wheelZoom", v)}
+            />
+          </SettingRow>
+          <SettingRow
             label={t("hosts.macOptionIsMetaLabel")}
             defaultKey="macOptionIsMeta"
             description={t("hosts.macOptionIsMetaShortDesc")}

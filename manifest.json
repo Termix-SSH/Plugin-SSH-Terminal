@@ -489,6 +489,13 @@
             "default": false
           },
           {
+            "key": "wheelZoom",
+            "type": "boolean",
+            "labelKey": "settings.host.wheelZoom.label",
+            "hidden": true,
+            "default": true
+          },
+          {
             "key": "macOptionIsMeta",
             "type": "boolean",
             "labelKey": "settings.host.macOptionIsMeta.label",

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- A terminal setting to turn off zooming with Ctrl or Cmd and scroll
+
 ## 1.0.0
 
 ### Added

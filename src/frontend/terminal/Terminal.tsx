@@ -76,6 +76,7 @@ import type { TerminalHandle, TerminalHostConfig } from "./terminal-types.ts";
 import type { Host, TabType } from "../types";
 import { isTabKeyEvent } from "./terminal-key-event.ts";
 import { installTouchWheelCoordinator } from "./touch-wheel-coordinator.ts";
+import { terminalWheelAction } from "./terminal-wheel.ts";
 import { loadTouchInputSettings } from "./touch-input-settings-store.ts";
 import {
   handleTerminalClipboardKeyEvent,
@@ -2777,18 +2778,13 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       });
 
       terminal.attachCustomWheelEventHandler((ev) => {
-        if (ev.ctrlKey || ev.metaKey) {
+        const cfg = termSettingsRef.current;
+        const action = terminalWheelAction(ev, cfg);
+        if (action === "zoom") {
           changeTerminalFontSize(ev.deltaY < 0 ? 1 : -1);
           return false;
         }
-
-        const cfg = termSettingsRef.current;
-        const mod = cfg.fastScrollModifier;
-        const modHeld =
-          (mod === "alt" && ev.altKey) ||
-          (mod === "ctrl" && ev.ctrlKey) ||
-          (mod === "shift" && ev.shiftKey);
-        if (modHeld) {
+        if (action === "fast") {
           const lines = Math.round(
             (Math.abs(ev.deltaY) / 100) * (cfg.fastScrollSensitivity ?? 5),
           );

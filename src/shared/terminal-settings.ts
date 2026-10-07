@@ -67,6 +67,8 @@ export interface TerminalAppearance {
 /** How a terminal behaves on one host. */
 export interface TerminalBehavior {
   rightClickSelectsWord: boolean;
+  /** Ctrl or Cmd plus the wheel changes the font size. */
+  wheelZoom: boolean;
   macOptionIsMeta: boolean;
   fastScrollModifier: FastScrollModifier;
   fastScrollSensitivity: number;
@@ -105,6 +107,7 @@ const APPEARANCE_KEYS = [
 
 const BEHAVIOR_KEYS = [
   "rightClickSelectsWord",
+  "wheelZoom",
   "macOptionIsMeta",
   "fastScrollModifier",
   "fastScrollSensitivity",
@@ -152,6 +155,7 @@ export const DEFAULT_APPEARANCE: TerminalAppearance = {
 
 export const DEFAULT_BEHAVIOR: TerminalBehavior = {
   rightClickSelectsWord: false,
+  wheelZoom: true,
   macOptionIsMeta: false,
   fastScrollModifier: "alt",
   fastScrollSensitivity: 5,
