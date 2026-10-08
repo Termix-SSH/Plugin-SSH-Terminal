@@ -329,6 +329,9 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     });
 
     let currentSessionId: string | null = null;
+    // Set once this socket joins someone else's session. It never becomes the
+    // owner of anything after that, even with no participant row.
+    let isJoiner = false;
     let sshConn: SSHClientType | null = null;
     let sshStream: ClientChannel | null = null;
     let lastJumpClient: SSHClientType | null = null;
@@ -463,6 +466,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           const gateParticipant = gateSession
             ? sessionManager.getParticipantForWs(gateSession, ws)
             : null;
+          if (isJoiner && !gateParticipant) return;
           if (!isMessageAllowedForParticipant(gateParticipant, type)) {
             return;
           }
@@ -638,11 +642,19 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               const disconnectParticipant = disconnectSession
                 ? sessionManager.getParticipantForWs(disconnectSession, ws)
                 : null;
-              if (disconnectParticipant && !disconnectParticipant.isOwner) {
+              if (
+                isJoiner ||
+                (disconnectParticipant && !disconnectParticipant.isOwner)
+              ) {
                 if (currentSessionId) {
                   sessionManager.removeParticipant(currentSessionId, ws);
                   currentSessionId = null;
                 }
+                // Drop the owner's channel too, or the old references would
+                // still reach their shell.
+                sshStream = null;
+                sshConn = null;
+                isConnected = false;
                 break;
               }
               if (currentSessionId) {
@@ -1089,6 +1101,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 }
 
                 currentSessionId = share.sessionId;
+                isJoiner = true;
                 sshStream = joinedSession.sshStream;
                 sshConn = joinedSession.sshConn;
                 isConnecting = false;

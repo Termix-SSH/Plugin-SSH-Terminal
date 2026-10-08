@@ -14,3 +14,7 @@
 - Macros that automate logins and prompts
 - Send keystrokes to several terminals at once
 - A local terminal in the desktop app
+
+### Fixed
+
+- Someone who joined a shared session read-only can no longer type into it after leaving
