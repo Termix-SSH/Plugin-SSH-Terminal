@@ -45,6 +45,7 @@ import {
   type SavedCustomTheme,
 } from "../../shared/terminal-settings";
 import { invalidateTerminalClientSettings } from "../terminal-settings";
+import { docsUrl } from "../docs";
 
 const PLUGIN_ID = "ssh-terminal";
 const CUSTOM_FONT_OPTION = "__custom__";
@@ -721,7 +722,7 @@ export function HostTerminalSettings({
               <>
                 {t("hosts.enableAutoTmuxDesc")}{" "}
                 <a
-                  href="https://docs.termix.site/features/terminal/tmux"
+                  href={docsUrl("", "sessions-that-survive")}
                   target="_blank"
                   rel="noreferrer"
                   className="text-accent-brand hover:underline"
@@ -805,7 +806,7 @@ export function HostTerminalSettings({
             <p className="text-[10px] text-muted-foreground">
               {t("hosts.localEchoDesc")}{" "}
               <a
-                href="https://docs.termix.site/features/terminal/appearance"
+                href={docsUrl("appearance")}
                 target="_blank"
                 rel="noreferrer"
                 className="text-accent-brand hover:underline"

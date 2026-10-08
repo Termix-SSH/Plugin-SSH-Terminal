@@ -14,6 +14,8 @@
 
 SSH Terminal is the terminal in Termix. It opens SSH sessions in tabs and split screen, and the desktop app also gets a local terminal.
 
+Read the [docs](https://docs.termix.site/plugins/ssh-terminal) to set it up and use it.
+
 <br />
 
 ## Features

@@ -8,6 +8,7 @@
   },
   "license": "Apache-2.0",
   "repository": "https://github.com/Termix-SSH/Plugin-SSH-Terminal",
+  "docs": "https://docs.termix.site/plugins/ssh-terminal",
   "category": "Terminal",
   "icon": "SquareTerminal",
   "features": [
@@ -22,9 +23,40 @@
     "Send keystrokes to several terminals at once",
     "A local terminal in the desktop app"
   ],
+  "env": [
+    {
+      "name": "TERMIX_IMAGE_STORAGE_MODE",
+      "description": "Where pasted terminal images go: auto, local or remote. Only used until an admin saves the setting."
+    },
+    {
+      "name": "TERMIX_IMAGE_DIR",
+      "description": "Folder on the Termix server for local image storage.",
+      "default": "DATA_DIR/termix-image-v0"
+    },
+    {
+      "name": "TERMIX_IMAGE_HOST_PATH",
+      "description": "The same folder as the host sees it, for agents that read images.",
+      "default": "/tmp/termix-image-v0"
+    },
+    {
+      "name": "TERMIX_IMAGE_TTL_MS",
+      "description": "How long an image is kept, in milliseconds.",
+      "default": "3600000"
+    },
+    {
+      "name": "TERMIX_MAX_IMAGE_COUNT",
+      "description": "Most images kept at once.",
+      "default": "100"
+    },
+    {
+      "name": "TERMIX_MAX_IMAGE_STORAGE_BYTES",
+      "description": "Most bytes of images kept at once.",
+      "default": "5368709120"
+    }
+  ],
   "engine": {
     "termix": ">=26.10.0",
-    "api": "1"
+    "api": "^1.2"
   },
   "capabilities": [
     "hosts:read",

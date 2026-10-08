@@ -61,6 +61,7 @@ import {
   sessionsSnapshot,
   subscribeSessions,
 } from "../session-registry";
+import { docsUrl } from "../docs";
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "";
@@ -664,7 +665,7 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
           />
           <Button variant="outline" size="icon" asChild>
             <a
-              href="https://docs.termix.site/features/terminal/macros"
+              href={docsUrl("macros")}
               target="_blank"
               rel="noreferrer"
               title={t("hosts.docsLink")}
