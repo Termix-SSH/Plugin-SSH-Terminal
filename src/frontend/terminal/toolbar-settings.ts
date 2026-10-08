@@ -1,33 +1,44 @@
-import type { ToolbarDensity } from "./toolbar-geometry";
+export type ToolbarPosition = "top" | "bottom";
+export type ToolbarLabels = "labeled" | "icons";
 
-const TOOLBAR_ANCHORS = [
-  "bottom",
-  "bottom-left",
-  "bottom-right",
-  "top",
-  "top-left",
-  "top-right",
-] as const;
-export type ToolbarAnchor = (typeof TOOLBAR_ANCHORS)[number];
+/** Which buttons a host shows and in what order, by button id. */
+export interface ToolbarButtonLayout {
+  order: string[];
+  hidden: string[];
+}
 
 export interface ToolbarSettings {
-  anchor: ToolbarAnchor;
-  startCollapsed: boolean;
-  /** null keeps whatever mode the user last picked in the toolbar. */
-  density: ToolbarDensity | null;
+  position: ToolbarPosition;
+  labels: ToolbarLabels;
   showStatus: boolean;
-  fadeWhenIdle: boolean;
+  buttons: ToolbarButtonLayout;
 }
 
 export const DEFAULT_TOOLBAR_SETTINGS: ToolbarSettings = {
-  anchor: "bottom",
-  startCollapsed: false,
-  density: null,
+  position: "bottom",
+  labels: "labeled",
   showStatus: true,
-  fadeWhenIdle: true,
+  buttons: { order: [], hidden: [] },
 };
 
-const DENSITIES: ToolbarDensity[] = ["icon", "labeled", "expanded"];
+const stringList = (value: unknown): string[] =>
+  Array.isArray(value)
+    ? value.filter((entry): entry is string => typeof entry === "string")
+    : [];
+
+export function readButtonLayout(value: unknown): ToolbarButtonLayout {
+  let parsed = value;
+  if (typeof parsed === "string") {
+    try {
+      parsed = JSON.parse(parsed);
+    } catch {
+      parsed = null;
+    }
+  }
+  if (!parsed || typeof parsed !== "object") return { order: [], hidden: [] };
+  const layout = parsed as Partial<Record<keyof ToolbarButtonLayout, unknown>>;
+  return { order: stringList(layout.order), hidden: stringList(layout.hidden) };
+}
 
 /** The toolbar's host settings, as the host payload carries them. */
 export function readToolbarSettings(
@@ -39,44 +50,78 @@ export function readToolbarSettings(
         pluginSettings?: Record<string, Record<string, unknown>>;
       } | null
     )?.pluginSettings?.["ssh-terminal"] ?? {};
-  const anchor = values.terminalToolbarPosition;
-  const density = values.terminalToolbarDisplay;
-  const bool = (value: unknown, fallback: boolean) =>
-    typeof value === "boolean" ? value : fallback;
+  return readToolbarValues(values);
+}
+
+/** Same as readToolbarSettings, from this plugin's own host values. */
+export function readToolbarValues(
+  values: Record<string, unknown>,
+): ToolbarSettings {
+  const position = values.terminalToolbarPosition;
+  // Older hosts saved a corner ("top-left") or a display mode instead.
+  const labels =
+    values.terminalToolbarLabels ??
+    (values.terminalToolbarDisplay === "icon" ? "icons" : undefined);
   return {
-    anchor: TOOLBAR_ANCHORS.includes(anchor as ToolbarAnchor)
-      ? (anchor as ToolbarAnchor)
-      : DEFAULT_TOOLBAR_SETTINGS.anchor,
-    startCollapsed: values.terminalToolbarStartState === "collapsed",
-    density: DENSITIES.includes(density as ToolbarDensity)
-      ? (density as ToolbarDensity)
-      : null,
-    showStatus: bool(
-      values.terminalToolbarShowStatus,
-      DEFAULT_TOOLBAR_SETTINGS.showStatus,
-    ),
-    fadeWhenIdle: bool(
-      values.terminalToolbarFade,
-      DEFAULT_TOOLBAR_SETTINGS.fadeWhenIdle,
-    ),
+    position:
+      typeof position === "string" && position.startsWith("top")
+        ? "top"
+        : "bottom",
+    labels: labels === "icons" ? "icons" : "labeled",
+    showStatus:
+      typeof values.terminalToolbarShowStatus === "boolean"
+        ? values.terminalToolbarShowStatus
+        : DEFAULT_TOOLBAR_SETTINGS.showStatus,
+    buttons: readButtonLayout(values.terminalToolbarButtons),
   };
 }
 
-export function isLeftAnchor(anchor: ToolbarAnchor): boolean {
-  return anchor.endsWith("-left");
+/**
+ * Orders the available buttons by the saved layout. Buttons the layout has
+ * never seen (a plugin installed later) keep their natural place at the end.
+ */
+export function arrangeButtons<T extends { id: string }>(
+  available: T[],
+  layout: ToolbarButtonLayout,
+): T[] {
+  const rank = new Map(layout.order.map((id, index) => [id, index]));
+  return available
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => {
+      const rankA = rank.get(a.item.id) ?? layout.order.length + a.index;
+      const rankB = rank.get(b.item.id) ?? layout.order.length + b.index;
+      return rankA - rankB;
+    })
+    .map(({ item }) => item);
 }
 
-function isTopAnchor(anchor: ToolbarAnchor): boolean {
-  return anchor.startsWith("top");
+export function visibleButtons<T extends { id: string }>(
+  available: T[],
+  layout: ToolbarButtonLayout,
+): T[] {
+  const hidden = new Set(layout.hidden);
+  return arrangeButtons(available, layout).filter(
+    (item) => !hidden.has(item.id),
+  );
 }
 
-/** Flex placement for the full-size overlay that holds the toolbar. */
-export function toolbarAnchorClasses(anchor: ToolbarAnchor): string {
-  const vertical = isTopAnchor(anchor) ? "items-start pt-2" : "items-end pb-2";
-  const horizontal = anchor.endsWith("-left")
-    ? "justify-start pl-2"
-    : anchor.endsWith("-right")
-      ? "justify-end pr-2"
-      : "justify-center";
-  return `${vertical} ${horizontal}`;
+/**
+ * How many buttons fit in the space left, given each button's width. The
+ * overflow menu's width is only reserved when something spills into it.
+ */
+export function countFittingButtons(
+  widths: number[],
+  available: number,
+  overflowWidth: number,
+): number {
+  const total = widths.reduce((sum, width) => sum + width, 0);
+  if (total <= available) return widths.length;
+  let used = overflowWidth;
+  let count = 0;
+  for (const width of widths) {
+    if (used + width > available) break;
+    used += width;
+    count += 1;
+  }
+  return count;
 }

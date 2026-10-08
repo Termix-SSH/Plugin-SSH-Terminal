@@ -92,23 +92,13 @@
   },
   "terminalToolbar": {
     "detachTmux": "Detach tmux",
-    "detachTmuxDescription": "Detach tmux session",
-    "dismissError": "Dismiss image error",
-    "hideToolbar": "Hide toolbar",
-    "image": "Image actions (images only)",
-    "imageActionFailed": "Image action failed",
-    "layout": "Toolbar display mode",
-    "layoutExpanded": "Expanded with metrics",
-    "layoutIcon": "Icon only",
-    "layoutLabeled": "Icons and labels",
-    "moveToolbar": "Move toolbar",
-    "moveToolbarHint": "Drag to reposition the toolbar",
+    "detachTmuxDescription": "Detach from the tmux session",
+    "image": "Image",
+    "label": "Terminal toolbar",
+    "more": "More",
     "paste": "Paste image",
-    "pasteImage": "Paste image from clipboard (images only)",
-    "retry": "Retry",
-    "showToolbar": "Expand toolbar",
+    "settingsTitle": "Toolbar",
     "upload": "Upload image",
-    "uploadImage": "Upload an image to the host",
     "uploadingImage": "Uploading..."
   },
   "history": {
@@ -205,40 +195,18 @@
     },
     "host": {
       "enableTerminalToolbar": {
-        "label": "Enable Terminal Toolbar",
-        "description": "Show a quick-access toolbar docked to the active terminal for this host's tools and live stats"
+        "label": "Show toolbar",
+        "description": "A bar along the edge of the terminal with this host's tools and live stats."
       },
       "terminalToolbarPosition": {
-        "label": "Toolbar Position",
-        "description": "Where the toolbar sits in the terminal. You can still drag it from there.",
-        "bottom": "Bottom center",
-        "bottomLeft": "Bottom left",
-        "bottomRight": "Bottom right",
-        "top": "Top center",
-        "topLeft": "Top left",
-        "topRight": "Top right"
-      },
-      "terminalToolbarStartState": {
-        "label": "Toolbar Start State",
-        "description": "Whether the toolbar opens expanded or minimized when the terminal connects",
-        "expanded": "Expanded",
-        "collapsed": "Minimized"
-      },
-      "terminalToolbarDisplay": {
-        "label": "Toolbar Display Mode",
-        "description": "How toolbar buttons are shown. Last used keeps whatever you picked in the toolbar.",
-        "remember": "Last used",
-        "icon": "Icon only",
-        "labeled": "Icons and labels",
-        "expanded": "Expanded with stats"
+        "label": "Position",
+        "description": "Which edge of the terminal the toolbar sits on.",
+        "bottom": "Bottom",
+        "top": "Top"
       },
       "terminalToolbarShowStatus": {
-        "label": "Show Live Stats",
-        "description": "Show live host stats above the toolbar buttons in expanded mode"
-      },
-      "terminalToolbarFade": {
-        "label": "Fade When Idle",
-        "description": "Fade the toolbar out until you hover over it"
+        "label": "Live stats",
+        "description": "Show live host stats on the right side of the toolbar."
       },
       "enableCommandHistory": {
         "label": "Command History",
@@ -337,6 +305,20 @@
       },
       "autoReconnect": {
         "label": "Reconnect automatically"
+      },
+      "terminalToolbarLabels": {
+        "label": "Button labels",
+        "description": "Narrow terminals drop to icons on their own.",
+        "labeled": "Icons and labels",
+        "icons": "Icons only"
+      },
+      "terminalToolbarButtons": {
+        "label": "Buttons",
+        "description": "Turn buttons on or off and change their order.",
+        "reset": "Reset",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "tmuxHint": "Only shows while tmux is attached"
       }
     },
     "user": {

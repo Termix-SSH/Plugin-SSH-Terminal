@@ -274,15 +274,14 @@
             "key": "enableTerminalToolbar",
             "type": "boolean",
             "labelKey": "settings.host.enableTerminalToolbar.label",
-            "descriptionKey": "settings.host.enableTerminalToolbar.description",
+            "hidden": true,
             "default": true
           },
           {
             "key": "terminalToolbarPosition",
             "type": "select",
             "labelKey": "settings.host.terminalToolbarPosition.label",
-            "descriptionKey": "settings.host.terminalToolbarPosition.description",
-            "requires": "enableTerminalToolbar",
+            "hidden": true,
             "default": "bottom",
             "options": [
               {
@@ -290,68 +289,25 @@
                 "labelKey": "settings.host.terminalToolbarPosition.bottom"
               },
               {
-                "value": "bottom-left",
-                "labelKey": "settings.host.terminalToolbarPosition.bottomLeft"
-              },
-              {
-                "value": "bottom-right",
-                "labelKey": "settings.host.terminalToolbarPosition.bottomRight"
-              },
-              {
                 "value": "top",
                 "labelKey": "settings.host.terminalToolbarPosition.top"
-              },
-              {
-                "value": "top-left",
-                "labelKey": "settings.host.terminalToolbarPosition.topLeft"
-              },
-              {
-                "value": "top-right",
-                "labelKey": "settings.host.terminalToolbarPosition.topRight"
               }
             ]
           },
           {
-            "key": "terminalToolbarStartState",
+            "key": "terminalToolbarLabels",
             "type": "select",
-            "labelKey": "settings.host.terminalToolbarStartState.label",
-            "descriptionKey": "settings.host.terminalToolbarStartState.description",
-            "requires": "enableTerminalToolbar",
-            "default": "expanded",
+            "labelKey": "settings.host.terminalToolbarLabels.label",
+            "hidden": true,
+            "default": "labeled",
             "options": [
-              {
-                "value": "expanded",
-                "labelKey": "settings.host.terminalToolbarStartState.expanded"
-              },
-              {
-                "value": "collapsed",
-                "labelKey": "settings.host.terminalToolbarStartState.collapsed"
-              }
-            ]
-          },
-          {
-            "key": "terminalToolbarDisplay",
-            "type": "select",
-            "labelKey": "settings.host.terminalToolbarDisplay.label",
-            "descriptionKey": "settings.host.terminalToolbarDisplay.description",
-            "requires": "enableTerminalToolbar",
-            "default": "remember",
-            "options": [
-              {
-                "value": "remember",
-                "labelKey": "settings.host.terminalToolbarDisplay.remember"
-              },
-              {
-                "value": "icon",
-                "labelKey": "settings.host.terminalToolbarDisplay.icon"
-              },
               {
                 "value": "labeled",
-                "labelKey": "settings.host.terminalToolbarDisplay.labeled"
+                "labelKey": "settings.host.terminalToolbarLabels.labeled"
               },
               {
-                "value": "expanded",
-                "labelKey": "settings.host.terminalToolbarDisplay.expanded"
+                "value": "icons",
+                "labelKey": "settings.host.terminalToolbarLabels.icons"
               }
             ]
           },
@@ -359,17 +315,14 @@
             "key": "terminalToolbarShowStatus",
             "type": "boolean",
             "labelKey": "settings.host.terminalToolbarShowStatus.label",
-            "descriptionKey": "settings.host.terminalToolbarShowStatus.description",
-            "requires": "enableTerminalToolbar",
+            "hidden": true,
             "default": true
           },
           {
-            "key": "terminalToolbarFade",
-            "type": "boolean",
-            "labelKey": "settings.host.terminalToolbarFade.label",
-            "descriptionKey": "settings.host.terminalToolbarFade.description",
-            "requires": "enableTerminalToolbar",
-            "default": true
+            "key": "terminalToolbarButtons",
+            "type": "json",
+            "labelKey": "settings.host.terminalToolbarButtons.label",
+            "hidden": true
           },
           {
             "key": "enableCommandHistory",
@@ -736,17 +689,6 @@
         }
       }
     ],
-    "uiPresets": {
-      "simple": {
-        "toolbarDensity": "icon"
-      },
-      "balanced": {
-        "toolbarDensity": "labeled"
-      },
-      "advanced": {
-        "toolbarDensity": "expanded"
-      }
-    },
     "uses": ["files.openEditor", "files.openHost", "snippets.startupCommand"]
   },
   "locales": "locales",

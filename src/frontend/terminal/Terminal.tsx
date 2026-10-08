@@ -72,6 +72,7 @@ import {
 import { toast } from "sonner";
 import { Save } from "lucide-react";
 import { TerminalToolbar } from "./TerminalToolbar.tsx";
+import { readToolbarSettings } from "./toolbar-settings.ts";
 import type { TerminalHandle, TerminalHostConfig } from "./terminal-types.ts";
 import type { Host, TabType } from "../types";
 import { isTabKeyEvent } from "./terminal-key-event.ts";
@@ -3638,381 +3639,384 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }
     }
 
-    return (
-      <div
-        className="h-full w-full relative"
-        style={{
-          backgroundColor: backgroundImage ? "transparent" : backgroundColor,
-          ...(backgroundImage && {
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }),
+    const toolbar = host && showToolbar && (
+      <TerminalToolbar
+        host={host}
+        isConnected={isConnected}
+        isTmuxAttached={isTmuxAttached}
+        onTmuxDetach={() => {
+          if (webSocketRef.current?.readyState === WebSocket.OPEN) {
+            webSocketRef.current.send(JSON.stringify({ type: "tmux_detach" }));
+          }
         }}
-      >
-        {backgroundImage && (
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundColor: themeColors.background,
-              opacity: 1 - backgroundImageOpacity,
-            }}
-          />
-        )}
+        isImageUploading={isImageUploading}
+        onUploadImage={(file) => void handleImageUpload(file, "file")}
+        onPasteImage={() => void handleClipboardImage()}
+        slotApi={slotApi}
+        onOpenFiles={onOpenFileManager ? openFilesAtCwd : undefined}
+        isFocused={isFocusedPane}
+      />
+    );
+    const toolbarOnTop = readToolbarSettings(host).position === "top";
+
+    return (
+      <div className="flex h-full w-full flex-col">
+        {toolbarOnTop && toolbar}
         <div
-          ref={xtermRef}
-          className="h-full w-full relative"
+          className="relative min-h-0 w-full flex-1"
           style={{
-            pointerEvents: isVisible ? "auto" : "none",
-            visibility:
-              isConnected && isFitted && !connectionError
-                ? "visible"
-                : "hidden",
+            backgroundColor: backgroundImage ? "transparent" : backgroundColor,
+            ...(backgroundImage && {
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }),
           }}
-          onClick={() => {
-            if (terminal && !splitScreen) {
-              terminal.focus();
-            }
-          }}
-        />
-
-        {isConnected &&
-          host &&
-          !showToolbar &&
-          dockContributions.map((contribution, index) => {
-            const Icon = contribution.icon;
-            return (
-              <Button
-                key={contribution.actionId}
-                type="button"
-                size="icon"
-                variant="secondary"
-                onClick={() =>
-                  setDock((open) =>
-                    open?.id === contribution.actionId
-                      ? null
-                      : { id: contribution.actionId, props: {} },
-                  )
-                }
-                title={
-                  t(contribution.titleKey) +
-                  (index === 0 ? " (Ctrl+Shift+A)" : "")
-                }
-                className="absolute top-2 z-[110] size-8 bg-black/60 text-white/75 hover:bg-black/80 hover:text-white"
-                style={{ right: 8 + index * 40 }}
-              >
-                {Icon && <Icon className="size-4" />}
-              </Button>
-            );
-          })}
-
-        {host && showToolbar && (
-          <TerminalToolbar
-            host={host}
-            isConnected={isConnected}
-            isTmuxAttached={isTmuxAttached}
-            onTmuxDetach={() => {
-              if (webSocketRef.current?.readyState === WebSocket.OPEN) {
-                webSocketRef.current.send(
-                  JSON.stringify({ type: "tmux_detach" }),
-                );
+        >
+          {backgroundImage && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundColor: themeColors.background,
+                opacity: 1 - backgroundImageOpacity,
+              }}
+            />
+          )}
+          <div
+            ref={xtermRef}
+            className="h-full w-full relative"
+            style={{
+              pointerEvents: isVisible ? "auto" : "none",
+              visibility:
+                isConnected && isFitted && !connectionError
+                  ? "visible"
+                  : "hidden",
+            }}
+            onClick={() => {
+              if (terminal && !splitScreen) {
+                terminal.focus();
               }
             }}
-            isImageUploading={isImageUploading}
-            onUploadImage={(file) => void handleImageUpload(file, "file")}
-            onPasteImage={() => void handleClipboardImage()}
-            isFocused={isFocusedPane}
-            slotApi={slotApi}
-            onOpenFiles={onOpenFileManager ? openFilesAtCwd : undefined}
           />
-        )}
 
-        {dock &&
-          (() => {
-            const contribution = dockContributions.find(
-              (item) => item.actionId === dock.id,
-            );
-            const Panel = contribution?.component;
-            if (!Panel) return null;
-            return (
-              <Panel
-                host={host}
-                hostId={hostConfig.id}
-                hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
-                panelProps={dock.props}
-                onClose={closeDock}
-                onRunInTerminal={handleRunCommandInTerminal}
-              />
-            );
-          })()}
+          {isConnected &&
+            host &&
+            !showToolbar &&
+            dockContributions.map((contribution, index) => {
+              const Icon = contribution.icon;
+              return (
+                <Button
+                  key={contribution.actionId}
+                  type="button"
+                  size="icon"
+                  variant="secondary"
+                  onClick={() =>
+                    setDock((open) =>
+                      open?.id === contribution.actionId
+                        ? null
+                        : { id: contribution.actionId, props: {} },
+                    )
+                  }
+                  title={
+                    t(contribution.titleKey) +
+                    (index === 0 ? " (Ctrl+Shift+A)" : "")
+                  }
+                  className="absolute top-2 z-[110] size-8 bg-black/60 text-white/75 hover:bg-black/80 hover:text-white"
+                  style={{ right: 8 + index * 40 }}
+                >
+                  {Icon && <Icon className="size-4" />}
+                </Button>
+              );
+            })}
 
-        {isQuickConnect &&
-          isConnected &&
-          !isQuickConnectSaved &&
-          onSaveQuickConnect && (
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={isSavingQuickConnect}
-              onClick={async () => {
-                setIsSavingQuickConnect(true);
-                try {
-                  await onSaveQuickConnect();
-                  setIsQuickConnectSaved(true);
-                } catch {
-                  // The shell reports the failure with a toast.
-                } finally {
-                  setIsSavingQuickConnect(false);
+          {dock &&
+            (() => {
+              const contribution = dockContributions.find(
+                (item) => item.actionId === dock.id,
+              );
+              const Panel = contribution?.component;
+              if (!Panel) return null;
+              return (
+                <Panel
+                  host={host}
+                  hostId={hostConfig.id}
+                  hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
+                  panelProps={dock.props}
+                  onClose={closeDock}
+                  onRunInTerminal={handleRunCommandInTerminal}
+                />
+              );
+            })()}
+
+          {isQuickConnect &&
+            isConnected &&
+            !isQuickConnectSaved &&
+            onSaveQuickConnect && (
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={isSavingQuickConnect}
+                onClick={async () => {
+                  setIsSavingQuickConnect(true);
+                  try {
+                    await onSaveQuickConnect();
+                    setIsQuickConnectSaved(true);
+                  } catch {
+                    // The shell reports the failure with a toast.
+                  } finally {
+                    setIsSavingQuickConnect(false);
+                  }
+                }}
+                className="absolute top-2 left-2 z-[110] h-7 gap-1.5 bg-black/60 text-white/80 hover:bg-black/80 hover:text-white"
+              >
+                <Save className="size-3.5" />
+                {t("hosts.addHost")}
+              </Button>
+            )}
+
+          <ConnectionScreen
+            status={
+              showDisconnectedOverlay
+                ? "disconnected"
+                : isConnecting
+                  ? "connecting"
+                  : hasConnectionError
+                    ? "error"
+                    : "connected"
+            }
+            message={t("terminal.connecting")}
+            detail={
+              hostConfig.ip
+                ? `${hostConfig.username ? `${hostConfig.username}@` : ""}${hostConfig.ip}${hostConfig.port ? `:${hostConfig.port}` : ""}`
+                : undefined
+            }
+            errorDetail={connectionError}
+            backgroundColor={backgroundColor}
+            attempt={reconnectAttempts.current}
+            maxAttempts={maxReconnectAttempts}
+            disconnectedMessage={t("terminal.connectionLost")}
+            onManualRetry={() => {
+              setShowDisconnectedOverlay(false);
+              isUnmountingRef.current = false;
+              shouldNotReconnectRef.current = false;
+              isReconnectingRef.current = false;
+              isConnectingRef.current = false;
+              reconnectAttempts.current = 0;
+              wasDisconnectedBySSH.current = false;
+              wasConnectedRef.current = false;
+              updateConnectionError(null);
+              if (terminal) {
+                terminal.clear();
+                connectToHost(terminal.cols, terminal.rows);
+              }
+            }}
+            onClose={onClose}
+            logPosition={hasConnectionError ? "top" : "bottom"}
+          />
+
+          <TOTPDialog
+            isOpen={totpRequired}
+            prompt={totpPrompt}
+            mode={mfaPromptMode}
+            waiting={mfaWaiting}
+            onSubmit={handleTotpSubmit}
+            onCancel={handleTotpCancel}
+            backgroundColor={backgroundColor}
+          />
+
+          <SSHAuthDialog
+            isOpen={showAuthDialog}
+            reason={authDialogReason}
+            onSubmit={handleAuthDialogSubmit}
+            onCancel={handleAuthDialogCancel}
+            hostInfo={{
+              ip: hostConfig.ip,
+              port: hostConfig.port,
+              username: hostConfig.username,
+              name: hostConfig.name,
+            }}
+            backgroundColor={backgroundColor}
+          />
+
+          <PassphraseDialog
+            isOpen={showPassphraseDialog}
+            onSubmit={handlePassphraseSubmit}
+            onCancel={handlePassphraseCancel}
+            hostInfo={{
+              ip: hostConfig.ip,
+              port: hostConfig.port,
+              username: hostConfig.username,
+              name: hostConfig.name,
+            }}
+            backgroundColor={backgroundColor}
+          />
+
+          <BrowserSignInDialog
+            isOpen={browserSignIn !== null}
+            label={browserSignIn?.label ?? ""}
+            url={browserSignIn?.url ?? ""}
+            code={browserSignIn?.code ?? ""}
+            onContinue={handleBrowserSignInContinue}
+            onCancel={handleBrowserSignInCancel}
+            onOpenUrl={handleBrowserSignInOpenUrl}
+            backgroundColor={backgroundColor}
+          />
+
+          <ComponentSlot
+            slotId={TERMINAL_OVERLAY_SLOT}
+            when={{ host }}
+            props={overlayProps as unknown as Record<string, unknown>}
+          />
+
+          {hostKeyVerification?.isOpen && (
+            <HostKeyVerificationDialog
+              isOpen={true}
+              scenario={hostKeyVerification.scenario}
+              {...hostKeyVerification.data}
+              onAccept={() => {
+                if (webSocketRef.current) {
+                  webSocketRef.current.send(
+                    JSON.stringify({
+                      type: "host_key_verification_response",
+                      data: { action: "accept" },
+                    }),
+                  );
                 }
+                setHostKeyVerification(null);
               }}
-              className="absolute top-2 left-2 z-[110] h-7 gap-1.5 bg-black/60 text-white/80 hover:bg-black/80 hover:text-white"
-            >
-              <Save className="size-3.5" />
-              {t("hosts.addHost")}
-            </Button>
+              onReject={() => {
+                if (webSocketRef.current) {
+                  webSocketRef.current.send(
+                    JSON.stringify({
+                      type: "host_key_verification_response",
+                      data: { action: "reject" },
+                    }),
+                  );
+                }
+                setHostKeyVerification(null);
+                setIsConnecting(false);
+                updateConnectionError(t("terminal.hostKeyRejected"));
+              }}
+              backgroundColor={backgroundColor}
+            />
           )}
 
-        <ConnectionScreen
-          status={
-            showDisconnectedOverlay
-              ? "disconnected"
-              : isConnecting
-                ? "connecting"
-                : hasConnectionError
-                  ? "error"
-                  : "connected"
-          }
-          message={t("terminal.connecting")}
-          detail={
-            hostConfig.ip
-              ? `${hostConfig.username ? `${hostConfig.username}@` : ""}${hostConfig.ip}${hostConfig.port ? `:${hostConfig.port}` : ""}`
-              : undefined
-          }
-          errorDetail={connectionError}
-          backgroundColor={backgroundColor}
-          attempt={reconnectAttempts.current}
-          maxAttempts={maxReconnectAttempts}
-          disconnectedMessage={t("terminal.connectionLost")}
-          onManualRetry={() => {
-            setShowDisconnectedOverlay(false);
-            isUnmountingRef.current = false;
-            shouldNotReconnectRef.current = false;
-            isReconnectingRef.current = false;
-            isConnectingRef.current = false;
-            reconnectAttempts.current = 0;
-            wasDisconnectedBySSH.current = false;
-            wasConnectedRef.current = false;
-            updateConnectionError(null);
-            if (terminal) {
-              terminal.clear();
-              connectToHost(terminal.cols, terminal.rows);
+          {tmuxSessionPicker && (
+            <TmuxSessionPicker
+              isOpen={true}
+              sessions={tmuxSessionPicker.sessions}
+              onSelect={(sessionName) => {
+                setTmuxSessionPicker(null);
+                if (webSocketRef.current?.readyState === WebSocket.OPEN) {
+                  webSocketRef.current.send(
+                    JSON.stringify({
+                      type: "tmux_attach",
+                      data: { sessionName },
+                    }),
+                  );
+                }
+                setTimeout(() => terminal?.focus(), 50);
+              }}
+              onCreateNew={() => {
+                setTmuxSessionPicker(null);
+                if (webSocketRef.current?.readyState === WebSocket.OPEN) {
+                  webSocketRef.current.send(
+                    JSON.stringify({
+                      type: "tmux_attach",
+                      data: { sessionName: "" },
+                    }),
+                  );
+                }
+                setTimeout(() => terminal?.focus(), 50);
+              }}
+              onCancel={() => setTmuxSessionPicker(null)}
+              backgroundColor={backgroundColor}
+            />
+          )}
+
+          <CommandAutocomplete
+            visible={showAutocomplete}
+            suggestions={autocompleteSuggestions}
+            selectedIndex={autocompleteSelectedIndex}
+            position={autocompletePosition}
+            onSelect={handleAutocompleteSelect}
+          />
+          <CommandAutosuggestion
+            visible={!showAutocomplete && Boolean(autosuggestion)}
+            suggestion={autosuggestion}
+            position={autosuggestionPosition}
+            style={autosuggestionStyle}
+          />
+
+          <TerminalSearchBar
+            visible={showSearch}
+            query={searchQuery}
+            onQueryChange={handleSearchQueryChange}
+            onFindNext={() => runSearch("next")}
+            onFindPrevious={() => runSearch("previous")}
+            onClose={closeSearch}
+            caseSensitive={searchCaseSensitive}
+            onToggleCaseSensitive={toggleSearchCaseSensitive}
+            wholeWord={searchWholeWord}
+            onToggleWholeWord={toggleSearchWholeWord}
+            regex={searchRegex}
+            onToggleRegex={toggleSearchRegex}
+            resultIndex={searchResultIndex}
+            resultCount={searchResultCount}
+            inputRef={searchInputRef}
+          />
+
+          <PanePrompt
+            open={!!linkClickDialog}
+            title={t("terminal.linkDialogTitle")}
+            description={
+              <span className="select-all break-all font-mono text-foreground">
+                {linkClickDialog?.url}
+              </span>
             }
-          }}
-          onClose={onClose}
-          logPosition={hasConnectionError ? "top" : "bottom"}
-        />
-
-        <TOTPDialog
-          isOpen={totpRequired}
-          prompt={totpPrompt}
-          mode={mfaPromptMode}
-          waiting={mfaWaiting}
-          onSubmit={handleTotpSubmit}
-          onCancel={handleTotpCancel}
-          backgroundColor={backgroundColor}
-        />
-
-        <SSHAuthDialog
-          isOpen={showAuthDialog}
-          reason={authDialogReason}
-          onSubmit={handleAuthDialogSubmit}
-          onCancel={handleAuthDialogCancel}
-          hostInfo={{
-            ip: hostConfig.ip,
-            port: hostConfig.port,
-            username: hostConfig.username,
-            name: hostConfig.name,
-          }}
-          backgroundColor={backgroundColor}
-        />
-
-        <PassphraseDialog
-          isOpen={showPassphraseDialog}
-          onSubmit={handlePassphraseSubmit}
-          onCancel={handlePassphraseCancel}
-          hostInfo={{
-            ip: hostConfig.ip,
-            port: hostConfig.port,
-            username: hostConfig.username,
-            name: hostConfig.name,
-          }}
-          backgroundColor={backgroundColor}
-        />
-
-        <BrowserSignInDialog
-          isOpen={browserSignIn !== null}
-          label={browserSignIn?.label ?? ""}
-          url={browserSignIn?.url ?? ""}
-          code={browserSignIn?.code ?? ""}
-          onContinue={handleBrowserSignInContinue}
-          onCancel={handleBrowserSignInCancel}
-          onOpenUrl={handleBrowserSignInOpenUrl}
-          backgroundColor={backgroundColor}
-        />
-
-        <ComponentSlot
-          slotId={TERMINAL_OVERLAY_SLOT}
-          when={{ host }}
-          props={overlayProps as unknown as Record<string, unknown>}
-        />
-
-        {hostKeyVerification?.isOpen && (
-          <HostKeyVerificationDialog
-            isOpen={true}
-            scenario={hostKeyVerification.scenario}
-            {...hostKeyVerification.data}
-            onAccept={() => {
-              if (webSocketRef.current) {
-                webSocketRef.current.send(
-                  JSON.stringify({
-                    type: "host_key_verification_response",
-                    data: { action: "accept" },
-                  }),
-                );
-              }
-              setHostKeyVerification(null);
-            }}
-            onReject={() => {
-              if (webSocketRef.current) {
-                webSocketRef.current.send(
-                  JSON.stringify({
-                    type: "host_key_verification_response",
-                    data: { action: "reject" },
-                  }),
-                );
-              }
-              setHostKeyVerification(null);
-              setIsConnecting(false);
-              updateConnectionError(t("terminal.hostKeyRejected"));
-            }}
-            backgroundColor={backgroundColor}
+            onCancel={() => setLinkClickDialog(null)}
+            actions={
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setLinkClickDialog(null)}
+                >
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (linkClickDialog)
+                      writeTextToClipboard(linkClickDialog.url);
+                    setLinkClickDialog(null);
+                  }}
+                >
+                  {t("terminal.linkDialogCopy")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
+                  onClick={() => {
+                    if (linkClickDialog)
+                      window.open(
+                        linkClickDialog.url,
+                        "_blank",
+                        "noopener,noreferrer",
+                      );
+                    setLinkClickDialog(null);
+                  }}
+                >
+                  {t("terminal.linkDialogOpen")}
+                </Button>
+              </>
+            }
           />
-        )}
-
-        {tmuxSessionPicker && (
-          <TmuxSessionPicker
-            isOpen={true}
-            sessions={tmuxSessionPicker.sessions}
-            onSelect={(sessionName) => {
-              setTmuxSessionPicker(null);
-              if (webSocketRef.current?.readyState === WebSocket.OPEN) {
-                webSocketRef.current.send(
-                  JSON.stringify({
-                    type: "tmux_attach",
-                    data: { sessionName },
-                  }),
-                );
-              }
-              setTimeout(() => terminal?.focus(), 50);
-            }}
-            onCreateNew={() => {
-              setTmuxSessionPicker(null);
-              if (webSocketRef.current?.readyState === WebSocket.OPEN) {
-                webSocketRef.current.send(
-                  JSON.stringify({
-                    type: "tmux_attach",
-                    data: { sessionName: "" },
-                  }),
-                );
-              }
-              setTimeout(() => terminal?.focus(), 50);
-            }}
-            onCancel={() => setTmuxSessionPicker(null)}
-            backgroundColor={backgroundColor}
-          />
-        )}
-
-        <CommandAutocomplete
-          visible={showAutocomplete}
-          suggestions={autocompleteSuggestions}
-          selectedIndex={autocompleteSelectedIndex}
-          position={autocompletePosition}
-          onSelect={handleAutocompleteSelect}
-        />
-        <CommandAutosuggestion
-          visible={!showAutocomplete && Boolean(autosuggestion)}
-          suggestion={autosuggestion}
-          position={autosuggestionPosition}
-          style={autosuggestionStyle}
-        />
-
-        <TerminalSearchBar
-          visible={showSearch}
-          query={searchQuery}
-          onQueryChange={handleSearchQueryChange}
-          onFindNext={() => runSearch("next")}
-          onFindPrevious={() => runSearch("previous")}
-          onClose={closeSearch}
-          caseSensitive={searchCaseSensitive}
-          onToggleCaseSensitive={toggleSearchCaseSensitive}
-          wholeWord={searchWholeWord}
-          onToggleWholeWord={toggleSearchWholeWord}
-          regex={searchRegex}
-          onToggleRegex={toggleSearchRegex}
-          resultIndex={searchResultIndex}
-          resultCount={searchResultCount}
-          inputRef={searchInputRef}
-        />
-
-        <PanePrompt
-          open={!!linkClickDialog}
-          title={t("terminal.linkDialogTitle")}
-          description={
-            <span className="select-all break-all font-mono text-foreground">
-              {linkClickDialog?.url}
-            </span>
-          }
-          onCancel={() => setLinkClickDialog(null)}
-          actions={
-            <>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setLinkClickDialog(null)}
-              >
-                {t("common.cancel")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  if (linkClickDialog)
-                    writeTextToClipboard(linkClickDialog.url);
-                  setLinkClickDialog(null);
-                }}
-              >
-                {t("terminal.linkDialogCopy")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
-                onClick={() => {
-                  if (linkClickDialog)
-                    window.open(
-                      linkClickDialog.url,
-                      "_blank",
-                      "noopener,noreferrer",
-                    );
-                  setLinkClickDialog(null);
-                }}
-              >
-                {t("terminal.linkDialogOpen")}
-              </Button>
-            </>
-          }
-        />
+        </div>
+        {!toolbarOnTop && toolbar}
       </div>
     );
   },
