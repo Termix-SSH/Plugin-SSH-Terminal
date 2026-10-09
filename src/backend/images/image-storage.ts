@@ -40,7 +40,7 @@ export interface StoredTerminalImage {
 }
 
 /**
- * Mode selection for one upload. Explicit modes are deterministic — they are
+ * Mode selection for one upload. Explicit modes are deterministic, they are
  * returned regardless of capability and the route reports the failure; only
  * `auto` falls back, and only on capability (a connected terminal session
  * with SFTP), never on configuration.
@@ -122,7 +122,7 @@ async function getActiveImageStorageUsage(
 /**
  * Local mapped-storage adapter. Enforces the TTL/count/byte policy and raises
  * `IMAGE_STORAGE_LIMIT_REACHED` (HTTP 507 at the route) when the caps are hit.
- * The returned shellPath is built from the agent-visible hostPath — the
+ * The returned shellPath is built from the agent-visible hostPath, the
  * backend's own localDir is never exposed.
  */
 export async function storeImageLocally(

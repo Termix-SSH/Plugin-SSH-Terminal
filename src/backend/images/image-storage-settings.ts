@@ -7,7 +7,7 @@ import path from "path";
  *   never falls back to the remote SFTP path.
  * - `remote-sftp`: always write to the connected terminal's SSH host over SFTP.
  *   Deterministic: never falls back to local storage.
- * - `auto`: pick by capability only — remote SFTP when a connected terminal
+ * - `auto`: pick by capability only, remote SFTP when a connected terminal
  *   session exists, local storage otherwise. Configuration never influences
  *   this choice.
  */

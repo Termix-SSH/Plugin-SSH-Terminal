@@ -70,10 +70,10 @@ const CONTROL_STRING_SEQUENCE = /\x1b[\]P^_]/;
 const MID_LINE_CR = /\r(?!\n)/;
 
 // Detects shell prompt lines (user@host:/path$ or similar) after stripping ANSI.
-// These should not be highlighted — the server already colored them, and injecting
+// These should not be highlighted, the server already colored them, and injecting
 // additional ANSI codes into the prompt fragments causes display corruption.
 //
-// The parameter-byte class (0-9;?>=!) intentionally also includes `<` and `:` —
+// The parameter-byte class (0-9;?>=!) intentionally also includes `<` and `:`,
 // SGR mouse-tracking reports (`ESC[<Cb;Cx;CyM`) use `<` as their private-mode
 // marker. Without it, mouse reports from TUI apps (especially through a
 // multiplexer like screen) aren't recognized as escape sequences and leak
@@ -87,7 +87,7 @@ function isShellPromptLine(bare: string): boolean {
   // Matches a trailing prompt: "user@host:~$ ", "root@pi:/home/pi# ", "[user@host dir]$ "
   if (/(?:[\w.-]+@[\w.-]+|[\w.-]+).*?[$#%>]\s*$/.test(plain)) return true;
   // Matches a leading prompt followed by a command: "user@host:/path$ cmd arg"
-  // This is the echoed command line — the shell colors the prompt prefix itself,
+  // This is the echoed command line, the shell colors the prompt prefix itself,
   // so injecting extra ANSI codes into it causes visual corruption / doubled paths.
   if (/^(?:\[?[\w.-]+@[\w.-]+[\w./ ~-]*\]?|[\w.-]+).*?[$#%>]\s+\S/.test(plain))
     return true;
@@ -97,12 +97,12 @@ function isShellPromptLine(bare: string): boolean {
 // Matches any complete ANSI escape sequence
 const ANSI_REGEX = /\x1b(?:[@-Z\\-_]|\[[0-9:;<=>?!]*[@-~])/g;
 
-// Matches SGR sequences (color/style setters) specifically — used to track active color state
+// Matches SGR sequences (color/style setters) specifically, used to track active color state
 const SGR_REGEX = /\x1b\[[0-9;]*m/;
 
 // All patterns, ordered roughly by specificity. Priority determines which wins on overlap.
 const ALL_PATTERNS: HighlightPattern[] = [
-  // IPv4 with optional :port — well-bounded, very specific
+  // IPv4 with optional :port, well-bounded, very specific
   {
     name: "ipv4",
     regex:
@@ -112,7 +112,7 @@ const ALL_PATTERNS: HighlightPattern[] = [
     category: "ipAddresses",
   },
 
-  // Bracket timestamps [HH:MM] or [HH:MM:SS] — tight range checks prevent false positives
+  // Bracket timestamps [HH:MM] or [HH:MM:SS], tight range checks prevent false positives
   {
     name: "timestamp-bracket",
     regex: /\[(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\]/g,
@@ -133,7 +133,7 @@ const ALL_PATTERNS: HighlightPattern[] = [
     category: "timestamps",
   },
 
-  // Error-level keywords — case-insensitive, catches "Error", "error", "FAILED", etc.
+  // Error-level keywords, case-insensitive, catches "Error", "error", "FAILED", etc.
   {
     name: "log-error",
     regex:
@@ -143,7 +143,7 @@ const ALL_PATTERNS: HighlightPattern[] = [
     category: "logLevels",
   },
 
-  // Warning-level keywords — case-insensitive
+  // Warning-level keywords, case-insensitive
   {
     name: "log-warn",
     regex: /\b(?:warn(?:ing)?|alert|caution)\b|\[warn(?:ing)?\]/gi,
@@ -152,7 +152,7 @@ const ALL_PATTERNS: HighlightPattern[] = [
     category: "logLevels",
   },
 
-  // Success keywords — kept conservative to avoid noise.
+  // Success keywords, kept conservative to avoid noise.
   // Negative lookahead prevents matching when directly followed by a path separator
   // (e.g. shell `cd` output that prints "success~/new/dir").
   {
@@ -164,7 +164,7 @@ const ALL_PATTERNS: HighlightPattern[] = [
     category: "logLevels",
   },
 
-  // URLs — blue + underline
+  // URLs, blue + underline
   {
     name: "url",
     regex: /https?:\/\/[^\s\])}>"']+/g,
@@ -173,7 +173,7 @@ const ALL_PATTERNS: HighlightPattern[] = [
     category: "urls",
   },
 
-  // Absolute paths — permissive character class that allows *, ?, [], globs, etc.
+  // Absolute paths, permissive character class that allows *, ?, [], globs, etc.
   // Requires at least one slash after the root segment so we don't match bare /dev or /tmp.
   // Boundary: must start at beginning of text or after whitespace/colon/comma/paren.
   {
@@ -231,7 +231,7 @@ function hasIncompleteAnsiSequence(text: string): boolean {
  * Tracks whether the stream is inside a control string (OSC/DCS/APC/PM) across
  * chunk boundaries.
  *
- * A control string carries text that must never reach the screen — an OSC 0
+ * A control string carries text that must never reach the screen, an OSC 0
  * title, for instance, contains the user, host and path. Its opening `ESC ]`
  * and its terminator often land in different websocket frames, and the
  * continuation frame contains no escape byte at all, so every single-chunk
@@ -492,7 +492,7 @@ export function highlightTerminalOutput(
   // could be a live readline input line that bash will redraw with \r +
   // cursor-positioning sequences. Injecting ANSI bytes into it adds invisible
   // chars that bash doesn't count, so bash's cursor arithmetic diverges from
-  // xterm's actual column position — causing the cursor to jump and text to
+  // xterm's actual column position, causing the cursor to jump and text to
   // shift when the user types or navigates with arrow keys.
   // Only skip the last fragment when the chunk already has complete lines
   // before it (single-line chunks with no \n are plain output, not input).

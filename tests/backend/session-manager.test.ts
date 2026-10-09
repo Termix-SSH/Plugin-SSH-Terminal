@@ -582,3 +582,36 @@ describe("isMessageAllowedForParticipant", () => {
     }
   });
 });
+
+describe("TerminalSessionManager - backpressure", () => {
+  it("pauses the shell while a viewer is backed up and resumes once it drains", () => {
+    vi.useFakeTimers();
+    try {
+      const id = sessionManager.createSession("bp-user", 1, "host", 80, 24);
+      sessionManager.getSession(id)!.isConnected = true;
+      const ws = makeFakeWs() as unknown as { bufferedAmount: number };
+      ws.bufferedAmount = 0;
+      sessionManager.attachWs(id, "bp-user", ws as never);
+      const stream = { pause: vi.fn(), resume: vi.fn() };
+
+      sessionManager.applyBackpressure(id, stream as never);
+      expect(stream.pause).not.toHaveBeenCalled();
+
+      ws.bufferedAmount = 16 * 1024 * 1024;
+      sessionManager.applyBackpressure(id, stream as never);
+      sessionManager.applyBackpressure(id, stream as never);
+      expect(stream.pause).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(200);
+      expect(stream.resume).not.toHaveBeenCalled();
+
+      ws.bufferedAmount = 0;
+      vi.advanceTimersByTime(100);
+      expect(stream.resume).toHaveBeenCalledTimes(1);
+
+      sessionManager.destroySession(id);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});

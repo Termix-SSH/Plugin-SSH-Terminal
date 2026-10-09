@@ -298,7 +298,7 @@ describe("highlightTerminalOutput", () => {
 
   it("does not highlight paths inside a command-echo line (prompt + command)", () => {
     // When the shell echoes the user's command, it prefixes the prompt.
-    // The path in the prompt portion (/home/user) must not be highlighted —
+    // The path in the prompt portion (/home/user) must not be highlighted,
     // the shell already colored it, and re-coloring it causes the doubled-path bug.
     const echo = "user@host:/home/user$ cd /opt/app/bin/files";
     const out = highlightTerminalOutput(echo);
@@ -325,13 +325,13 @@ describe("highlightTerminalOutput", () => {
 
   it("still highlights a single-line chunk with no trailing newline", () => {
     // A single-line chunk with no \n is plain command output, not a readline
-    // input fragment — highlight it normally.
+    // input fragment, highlight it normally.
     const out = highlightTerminalOutput("ERROR: something failed");
     expect(out).toContain(ESC + "[91m");
   });
 
   it("highlights all lines when the chunk ends with a newline", () => {
-    // When a chunk ends with \n every line is complete output — highlight them all.
+    // When a chunk ends with \n every line is complete output, highlight them all.
     const chunk = "ERROR: disk full\nconnect to /var/run/app.sock\n";
     const out = highlightTerminalOutput(chunk);
     expect(out.split("\n")[0]).toContain(ESC + "[91m");

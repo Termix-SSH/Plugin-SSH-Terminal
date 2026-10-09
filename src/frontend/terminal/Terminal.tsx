@@ -1922,7 +1922,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               const output = applyLocalEchoToOutput(msg.data);
               terminal.write(formatTerminalOutput(output));
               scheduleAutosuggestionUpdate();
-              // Strip ANSI escape codes before testing — newer sudo versions (Ubuntu 26.04+)
+              // Strip ANSI escape codes before testing, newer sudo versions (Ubuntu 26.04+)
               // emit colored prompts with embedded escape sequences that break the regex.
               const strippedData = msg.data.replace(
                 /\x1b(?:[@-Z\\-_]|\[[0-9:;<=>?!]*[@-~])/g,
@@ -3148,7 +3148,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           return false;
         }
 
-        // Forward global app shortcuts to AppShell directly — xterm swallows
+        // Forward global app shortcuts to AppShell directly, xterm swallows
         // all keydown events and synthetic re-dispatch is unreliable.
         // stopPropagation prevents the same event from also firing the window listener.
         if (e.ctrlKey && e.shiftKey && !e.altKey && !e.metaKey) {

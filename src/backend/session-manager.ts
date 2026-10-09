@@ -14,6 +14,11 @@ const MAX_SESSIONS_PER_USER = 10;
 // and stalling the WS ping/pong health check enough to look like connection
 // drops. Batch pending lines and flush on a short trailing edge instead.
 const RECORDING_FLUSH_INTERVAL_MS = 300;
+// Shell output pauses while any viewer has this much unsent, and resumes once
+// every viewer is back under the low mark.
+const SEND_HIGH_WATER_BYTES = 8 * 1024 * 1024;
+const SEND_LOW_WATER_BYTES = 1024 * 1024;
+const SEND_DRAIN_POLL_MS = 50;
 
 export interface SessionParticipant {
   ws: WebSocket;
@@ -59,6 +64,7 @@ export interface TerminalSession {
   recordingPersistChain: Promise<void>;
   pendingRecordingData: string;
   recordingFlushTimer: NodeJS.Timeout | null;
+  drainTimer: NodeJS.Timeout | null;
   tmuxSessionName: string | null;
   sessionLoggingEnabled: boolean;
   sessionStartedAt: number;
@@ -146,7 +152,7 @@ export class TerminalSessionManager {
           existing.sshStream != null &&
           !existing.sshStream.destroyed;
         if (isLiveSession) {
-          // Don't destroy a live session (even if detached) — the caller should attach instead
+          // Don't destroy a live session (even if detached), the caller should attach instead
           this.log.warn(
             "Tab instance has live session, skipping duplicate create",
             {
@@ -229,6 +235,7 @@ export class TerminalSessionManager {
       recordingPersistChain: Promise.resolve(),
       pendingRecordingData: "",
       recordingFlushTimer: null,
+      drainTimer: null,
       tmuxSessionName: null,
       sessionLoggingEnabled: !!recordingSink,
       sessionStartedAt: now,
@@ -594,6 +601,38 @@ export class TerminalSessionManager {
     }
   }
 
+  /** The largest unsent backlog among a session's open sockets. */
+  pendingSendBytes(sessionId: string): number {
+    const session = this.sessions.get(sessionId);
+    if (!session) return 0;
+    let max = 0;
+    for (const participant of session.participants.values()) {
+      if (participant.ws.readyState !== WebSocket.OPEN) continue;
+      max = Math.max(max, participant.ws.bufferedAmount ?? 0);
+    }
+    return max;
+  }
+
+  /**
+   * Pauses the shell while a viewer is backed up, so fast output like
+   * `yes` or a big cat cannot pile up in server memory. Call after a broadcast.
+   */
+  applyBackpressure(sessionId: string, stream: ClientChannel): void {
+    const session = this.sessions.get(sessionId);
+    if (!session || session.drainTimer) return;
+    if (this.pendingSendBytes(sessionId) < SEND_HIGH_WATER_BYTES) return;
+    stream.pause();
+    const timer = setInterval(() => {
+      const live = this.sessions.get(sessionId);
+      if (live && this.pendingSendBytes(sessionId) > SEND_LOW_WATER_BYTES)
+        return;
+      clearInterval(timer);
+      if (live) live.drainTimer = null;
+      stream.resume();
+    }, SEND_DRAIN_POLL_MS);
+    session.drainTimer = timer;
+  }
+
   /** Finds the participant entry (owner or not) for a given socket. */
   getParticipantForWs(
     session: TerminalSession,
@@ -689,6 +728,10 @@ export class TerminalSessionManager {
     if (session.detachTimeout) {
       clearTimeout(session.detachTimeout);
       session.detachTimeout = null;
+    }
+    if (session.drainTimer) {
+      clearInterval(session.drainTimer);
+      session.drainTimer = null;
     }
 
     this.maybePersistLog(session, true);

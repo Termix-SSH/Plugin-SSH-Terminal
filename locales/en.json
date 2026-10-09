@@ -474,38 +474,12 @@
     "themePreview": "Theme Preview",
     "useSSHTitleDesc": "Update the tab title from the shell's window title instead of the host name",
     "useSSHTitleLabel": "Use SSH Window Title",
-    "enableTunnel": "Enable Tunnel",
-    "enableFileManager": "Enable File Manager",
-    "enableDocker": "Enable Docker",
-    "startupSnippet": "Startup Snippet",
-    "quickActions": "Quick Actions",
     "proxmoxLastSyncStatus": {
       "success": "Success"
     },
-    "proxmoxResultSkippedNoIp": "{{count}} skipped (no IP found)",
-    "proxmoxStatsUrlCopied": "Proxmox Stats URL copied to clipboard",
-    "rdpUrlCopied": "RDP URL copied",
-    "vncUrlCopied": "VNC URL copied",
-    "filterAuthStepca": "Step CA",
     "guac": {
-      "noCredential": "No credential (direct credentials below)",
-      "authTypeDirect": "Direct",
-      "authTypeCredential": "Credential",
-      "authTypeNone": "None",
-      "recordingPath": "Recording Path",
-      "recordingName": "Recording Name",
-      "saveHostFirst": "Save the host first.",
-      "sharingOptionsAfterSave": "Sharing options are available after the host has been saved.",
-      "permissionLevel": "Permission Level",
-      "typeHeader": "Type",
-      "targetHeader": "Target",
-      "permissionHeader": "Permission",
-      "cancelBtn": "Cancel",
-      "savingBtn": "Saving...",
-      "updateHostBtn": "Update Host",
-      "addHostBtn": "Add Host"
+      "permissionLevel": "Permission Level"
     },
-    "filterAuthVault": "Vault",
     "deleteGlobalThemeConfirm": "Delete the theme {{name}}?"
   },
   "nav": {
@@ -571,7 +545,6 @@
     "nameRequired": "Give the macro a name before saving",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "What this macro does (optional)",
-    "unsaved": "Unsaved changes",
     "save": "Save",
     "saved": "Macro saved",
     "saveFailed": "Could not save the macro",
@@ -585,11 +558,9 @@
     "running": "Running...",
     "completed": "Macro finished",
     "failed": "Macro failed",
-    "loadFailed": "Could not load macros",
     "needTerminal": "Open and connect a terminal first",
     "noSteps": "This macro has no steps yet. Add one below.",
     "addStep": "Add step",
-    "stepNumber": "Step {{number}}",
     "removeStep": "Remove step",
     "confirmRunTitle": "Run this macro?",
     "confirmRunBody": "\"{{name}}\" will send commands to {{host}}.",
@@ -619,8 +590,7 @@
     "send": {
       "text": "Command or text",
       "textPlaceholder": "systemctl restart nginx",
-      "pressEnter": "Press Enter after sending",
-      "pressEnterHelp": "Turn this off to type text without submitting it."
+      "pressEnter": "Press Enter after sending"
     },
     "wait": {
       "pattern": "Wait until the output contains",
@@ -637,8 +607,7 @@
       "pattern": "If the output contains",
       "patternPlaceholder": "Active: active (running)",
       "then": "Then do this",
-      "else": "Otherwise do this",
-      "emptyBranch": "No steps"
+      "else": "Otherwise do this"
     },
     "repeat": {
       "count": "Number of times",
@@ -646,11 +615,9 @@
     },
     "match": {
       "useRegex": "Match with a regular expression",
-      "useRegexHelp": "Leave this off to match the text exactly as written.",
       "invalidRegex": "Not a valid regular expression, it will be matched as plain text"
     },
     "seconds": "seconds",
-    "secondsShort": "{{count}}s",
     "search": "Search macros"
   },
   "errors": {

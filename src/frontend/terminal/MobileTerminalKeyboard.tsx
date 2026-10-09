@@ -309,7 +309,7 @@ export function MobileTerminalKeyboard({
 
   return (
     <div className="md:hidden flex flex-col bg-sidebar border-t border-border shrink-0">
-      {/* Row 1 — special keys */}
+      {/* Row 1: special keys */}
       <div className="flex items-center gap-1 px-2 py-1.5 overflow-x-auto">
         {/* ESC */}
         <button
@@ -488,7 +488,7 @@ export function MobileTerminalKeyboard({
       {/* Ctrl combos panel */}
       {ctrlActive && <CtrlPanel onSend={handleCtrlKey} />}
 
-      {/* Row 2 — quick keys */}
+      {/* Row 2: quick keys */}
       <div className="flex items-center gap-1 px-2 pb-1.5 overflow-x-auto">
         {quickKeys.map((sym, i) => (
           <button

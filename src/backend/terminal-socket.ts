@@ -349,6 +349,10 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     let browserSignInId: string | null = null;
     let browserSignInTimeout: NodeJS.Timeout | null = null;
     let isAwaitingAuthCredentials = false;
+    let lastConnectOptions: Pick<
+      ConnectToHostData,
+      "initialPath" | "executeCommand" | "tmuxAttachSession"
+    > = {};
 
     let wsAlive = true;
 
@@ -486,6 +490,11 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 break;
               }
               connectData.hostConfig.userId = userId;
+              lastConnectOptions = {
+                initialPath: connectData.initialPath,
+                executeCommand: connectData.executeCommand,
+                tmuxAttachSession: connectData.tmuxAttachSession,
+              };
               handleConnectToHost(connectData).catch((error) => {
                 const errMsg = getErrorMessage(error);
                 if (
@@ -956,6 +965,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 );
                 break;
               }
+              credentialsData.hostConfig.userId = userId;
 
               if (credentialsData.password) {
                 credentialsData.hostConfig.password = credentialsData.password;
@@ -983,6 +993,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               sshStream = null;
 
               const reconnectData: ConnectToHostData = {
+                ...lastConnectOptions,
                 cols: credentialsData.cols,
                 rows: credentialsData.rows,
                 hostConfig: credentialsData.hostConfig,
@@ -1404,6 +1415,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
 
       isConnecting = true;
       sshConn = new Client();
+      const pendingConn = sshConn;
 
       sendLog("dns", "info", `Starting address resolution of ${ip}`);
       sendLog("tcp", "info", `Connecting to ${ip} port ${port}`);
@@ -1770,6 +1782,13 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       sshConn.on(
         "ready",
         bind(() => {
+          // The tab closed during the handshake: nobody will attach, so
+          // don't open a shell that would sit detached until the timeout.
+          if (ws.readyState !== WebSocket.OPEN) {
+            clearTimeout(connectionTimeout);
+            pendingConn.end();
+            return;
+          }
           if (serverHostId != null) {
             clearOnlineStatus ??= ctx.hosts.trackSession(serverHostId);
           }
@@ -2094,6 +2113,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                       type: "data",
                       data: utf8String,
                     });
+                    sessionManager.applyBackpressure(boundSessionId!, stream);
                   }
                 } catch (error) {
                   sshLogger.error("Error encoding terminal data", error, {
@@ -2899,6 +2919,14 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           currentSessionId = null;
         }
         cleanupAuthState(connectionTimeout);
+        return;
+      }
+      if (ws.readyState !== WebSocket.OPEN) {
+        (transport.jumpClient as SSHClientType | null)?.end();
+        (
+          connectConfig.sock as { destroy?: () => void } | undefined
+        )?.destroy?.();
+        clearTimeout(connectionTimeout);
         return;
       }
       lastJumpClient = transport.jumpClient as SSHClientType | null;
