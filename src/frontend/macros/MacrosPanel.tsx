@@ -656,12 +656,17 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-col gap-1.5 border-b border-border px-3 py-2">
+        <PanelSearch
+          value={search}
+          onChange={setSearch}
+          placeholder={t("macros.search")}
+          fill
+        />
         <div className="flex items-center gap-2">
-          <PanelSearch
-            value={search}
-            onChange={setSearch}
-            placeholder={t("macros.search")}
-            fill
+          <AddButton
+            label={t("macros.create")}
+            onClick={createMacro}
+            className="flex-1"
           />
           <Button variant="outline" size="icon" asChild>
             <a
@@ -674,7 +679,6 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
               <ExternalLink className="size-3.5" />
             </a>
           </Button>
-          <AddButton label={t("macros.create")} onClick={createMacro} />
         </div>
         <div className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted-foreground">
           <TerminalIcon className="size-3 shrink-0" />
