@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Copy, Terminal, Trash2 } from "lucide-react";
+import { Copy, SlidersHorizontal, Terminal, Trash2 } from "lucide-react";
 import {
   copyToClipboard,
   Button,
@@ -13,6 +13,7 @@ import {
 } from "@termix-ssh/plugin-sdk/ui";
 import {
   usePluginApi,
+  useSettings,
   useTranslation,
   type PanelProps,
 } from "@termix-ssh/plugin-sdk/frontend";
@@ -22,6 +23,7 @@ import {
   getCommandHistory,
   hostSetting,
 } from "../terminal-api";
+import { PanelSettings, rowActionProps } from "../panel-settings";
 
 /** Command history for the terminal the user is working in. */
 export function HistoryPanel({ targetTab }: PanelProps) {
@@ -30,6 +32,9 @@ export function HistoryPanel({ targetTab }: PanelProps) {
   const api = usePluginApi();
   const [search, setSearch] = useState("");
   const [commands, setCommands] = useState<string[]>([]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settings = useSettings("user");
+  const alwaysShowActions = settings.values.historyAlwaysShowActions === true;
 
   const activeTab = targetTab;
   const activeIsTerminal = !!activeTab;
@@ -49,6 +54,17 @@ export function HistoryPanel({ targetTab }: PanelProps) {
       .then(setCommands)
       .catch(() => setCommands([]));
   }, [api, hostId, trackingEnabled]);
+
+  if (settingsOpen) {
+    return (
+      <PanelSettings
+        settings={settings}
+        settingKey="historyAlwaysShowActions"
+        title={t("history.settingsTitle")}
+        onBack={() => setSettingsOpen(false)}
+      />
+    );
+  }
 
   if (activeIsTerminal && !trackingEnabled) {
     return (
@@ -120,6 +136,15 @@ export function HistoryPanel({ targetTab }: PanelProps) {
           >
             <Trash2 className="size-3.5" />
           </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            title={t("history.settingsTitle")}
+            aria-label={t("history.settingsTitle")}
+            onClick={() => setSettingsOpen(true)}
+          >
+            <SlidersHorizontal className="size-3.5" />
+          </Button>
         </div>
         <Facts className="text-[11px] text-muted-foreground">
           <span className="flex items-center gap-1">
@@ -136,7 +161,8 @@ export function HistoryPanel({ targetTab }: PanelProps) {
             stripe={i}
             tone="muted"
             title={<span className="font-mono text-xs font-normal">{cmd}</span>}
-            actions={
+            {...rowActionProps(
+              alwaysShowActions,
               <>
                 <ListRowAction
                   label={t("common.copy")}
@@ -151,8 +177,8 @@ export function HistoryPanel({ targetTab }: PanelProps) {
                 >
                   <Trash2 />
                 </ListRowAction>
-              </>
-            }
+              </>,
+            )}
           />
         ))}
       </PanelList>

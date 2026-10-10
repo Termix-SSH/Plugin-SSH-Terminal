@@ -25,14 +25,11 @@
     "tab": "Tab"
   },
   "terminal": {
-    "autoTmuxEnableFailed": "Failed to enable Auto-Tmux",
-    "autoTmuxEnabled": "Auto-Tmux enabled for {{host}}. It applies from the next connection.",
     "clipboardHttpWarning": "Couldn't read the clipboard. Some browsers restrict clipboard access outside HTTPS - try Ctrl+V instead, or serve Termix over HTTPS.",
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
     "connectionRejected": "Connection rejected by server. Please check your authentication and network configuration.",
     "connectionTimeout": "Connection timeout",
-    "enableAutoTmuxAction": "Enable Auto-Tmux",
     "hostKeyRejected": "SSH host key verification rejected. Connection cancelled.",
     "linkDialogCopy": "Copy",
     "linkDialogOpen": "Open",
@@ -53,8 +50,6 @@
     "searchRegex": "Use Regular Expression",
     "searchResultCount": "{{index}} of {{count}}",
     "searchWholeWord": "Match Whole Word",
-    "sessionExpiredNotice": "Your previous session on {{host}} expired after {{minutes}} minutes disconnected; the shell and anything running in it are gone. Enable Auto-Tmux on this host to keep sessions alive.",
-    "sessionExpiredNoticeNoMinutes": "Your previous session on {{host}} expired while disconnected; the shell and anything running in it are gone. Enable Auto-Tmux on this host to keep sessions alive.",
     "sessionTakenOver": "Session was opened in another tab. Reconnecting...",
     "tmuxAttached": "Attached clients",
     "tmuxAttachedCount": "{{count}} attached",
@@ -111,7 +106,8 @@
     "trackingDisabledHint": "Turn on Command History in this host's SSH Terminal tab.",
     "commandCount_one": "{{count}} command",
     "commandCount_other": "{{count}} commands",
-    "deleteConfirm": "Remove this command from history?"
+    "deleteConfirm": "Remove this command from history?",
+    "settingsTitle": "History settings"
   },
   "touchInput": {
     "enabled": "Enable Touch Input",
@@ -328,7 +324,16 @@
       },
       "customThemes": {
         "label": "Saved themes"
-      }
+      },
+      "macrosAlwaysShowActions": {
+        "label": "Always show macro buttons",
+        "description": "Keep the run and delete buttons under each macro visible. Turn off to show them only on hover."
+      },
+      "historyAlwaysShowActions": {
+        "label": "Always show history buttons",
+        "description": "Keep the copy and delete buttons under each command visible. Turn off to show them only on hover."
+      },
+      "displayTitle": "Display"
     }
   },
   "palette": {
@@ -619,7 +624,8 @@
       "invalidRegex": "Not a valid regular expression, it will be matched as plain text"
     },
     "seconds": "seconds",
-    "search": "Search macros"
+    "search": "Search macros",
+    "settingsTitle": "Macro settings"
   },
   "errors": {
     "remoteServerRequired": "Remote server required. Connect a remote server in Settings to use this connection type."

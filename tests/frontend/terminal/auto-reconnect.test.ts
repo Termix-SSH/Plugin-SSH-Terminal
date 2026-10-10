@@ -9,7 +9,7 @@ const source = fs.readFileSync(
 );
 const attempt = source.slice(
   source.indexOf("    function attemptReconnection()"),
-  source.indexOf("    // A persisted session that timed out"),
+  source.indexOf("    async function connectToHost("),
 );
 
 function run(keepScrollback: boolean, attempts = 0) {

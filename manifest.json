@@ -655,6 +655,20 @@
           "labelKey": "macros.title",
           "hidden": true,
           "default": []
+        },
+        {
+          "key": "macrosAlwaysShowActions",
+          "type": "boolean",
+          "labelKey": "settings.user.macrosAlwaysShowActions.label",
+          "descriptionKey": "settings.user.macrosAlwaysShowActions.description",
+          "default": false
+        },
+        {
+          "key": "historyAlwaysShowActions",
+          "type": "boolean",
+          "labelKey": "settings.user.historyAlwaysShowActions.label",
+          "descriptionKey": "settings.user.historyAlwaysShowActions.description",
+          "default": false
         }
       ]
     },

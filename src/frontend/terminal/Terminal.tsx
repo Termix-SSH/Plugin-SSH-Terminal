@@ -26,7 +26,6 @@ import { WebLinksAddon } from "@xterm/addon-web-links";
 import { SearchAddon } from "@xterm/addon-search";
 import {
   deleteCommandFromHistory,
-  enableHostAutoTmux,
   getClientSettings,
   getCommandHistory,
   hostSetting,
@@ -121,7 +120,6 @@ import {
   isElectron,
 } from "@termix-ssh/plugin-sdk/ui";
 import {
-  notifyHostsChanged,
   useTranslation,
   invokeAction,
   usePluginApi,
@@ -1599,49 +1597,6 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }, delay);
     }
 
-    // A persisted session that timed out reconnects to a fresh shell below.
-    // Say so, and offer the setting that would have kept it alive.
-    async function explainSessionExpiry() {
-      const hostLabel = hostConfig.name || hostConfig.ip;
-      let minutes: number | null = null;
-      try {
-        minutes = (await getClientSettings(api)).sessionTimeoutMinutes;
-      } catch {
-        /* the notice still makes sense without the number */
-      }
-      const notice = minutes
-        ? t("terminal.sessionExpiredNotice", { host: hostLabel, minutes })
-        : t("terminal.sessionExpiredNoticeNoMinutes", { host: hostLabel });
-      addLog({ type: "warning", stage: "connection", message: notice });
-
-      const canEnable =
-        typeof hostConfig.id === "number" &&
-        !termSettingsRef.current.autoTmux &&
-        !hostConfig.joinShareId;
-      toast.warning(notice, {
-        duration: 15000,
-        ...(canEnable
-          ? {
-              action: {
-                label: t("terminal.enableAutoTmuxAction"),
-                onClick: () => {
-                  void enableHostAutoTmux(api, hostConfig.id as number)
-                    .then(() => {
-                      notifyHostsChanged();
-                      toast.success(
-                        t("terminal.autoTmuxEnabled", { host: hostLabel }),
-                      );
-                    })
-                    .catch(() =>
-                      toast.error(t("terminal.autoTmuxEnableFailed")),
-                    );
-                },
-              },
-            }
-          : {}),
-      });
-    }
-
     async function connectToHost(cols: number, rows: number) {
       if (isConnectingRef.current) {
         return;
@@ -2286,7 +2241,6 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             isAttachingSessionRef.current = false;
             sessionIdRef.current = null;
             wasSessionExpiredRef.current = true;
-            void explainSessionExpiry();
             if (hostConfig.instanceId) {
               patchOpenTab(hostConfig.instanceId!, {
                 backendSessionId: null,

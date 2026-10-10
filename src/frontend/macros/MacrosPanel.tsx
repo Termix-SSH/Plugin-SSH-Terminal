@@ -20,6 +20,7 @@ import {
   GitBranch,
   Plus,
   Repeat,
+  SlidersHorizontal,
   Square,
   Terminal as TerminalIcon,
   Trash2,
@@ -62,6 +63,7 @@ import {
   subscribeSessions,
 } from "../session-registry";
 import { docsUrl } from "../docs";
+import { PanelSettings, rowActionProps } from "../panel-settings";
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "";
@@ -459,6 +461,8 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
   const settings = useSettings("user");
   const [draft, setDraft] = useState<TerminalMacro | null>(null);
   const [search, setSearch] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const alwaysShowActions = settings.values.macrosAlwaysShowActions === true;
   const editing = draft !== null;
   useEffect(() => {
     if (active) setEditing?.(editing);
@@ -668,6 +672,15 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
             onClick={createMacro}
             className="flex-1"
           />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setSettingsOpen(true)}
+            title={t("macros.settingsTitle")}
+            aria-label={t("macros.settingsTitle")}
+          >
+            <SlidersHorizontal className="size-3.5" />
+          </Button>
           <Button variant="outline" size="icon" asChild>
             <a
               href={docsUrl("macros")}
@@ -723,7 +736,8 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
                   <ListBadge tone="success">{t("macros.running")}</ListBadge>
                 ) : undefined
               }
-              actions={
+              {...rowActionProps(
+                alwaysShowActions,
                 <>
                   <ListRowAction
                     label={isRunning ? t("macros.stop") : t("macros.run")}
@@ -741,12 +755,21 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
                   >
                     <Trash2 />
                   </ListRowAction>
-                </>
-              }
+                </>,
+              )}
             />
           );
         })}
       </PanelList>
+
+      {settingsOpen && (
+        <PanelSettings
+          settings={settings}
+          settingKey="macrosAlwaysShowActions"
+          title={t("macros.settingsTitle")}
+          onBack={() => setSettingsOpen(false)}
+        />
+      )}
 
       <InlineView
         open={!!draft}

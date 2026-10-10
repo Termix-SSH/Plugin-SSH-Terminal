@@ -29,14 +29,6 @@ export async function getClientSettings(
   };
 }
 
-/** Turns auto tmux on for a host (its terminal host setting). */
-export async function enableHostAutoTmux(
-  api: PluginApiClient,
-  hostId: number,
-): Promise<void> {
-  await api.put(`/hosts/${hostId}/auto-tmux`, { enabled: true });
-}
-
 export async function saveCommandToHistory(
   api: PluginApiClient,
   hostId: number,
