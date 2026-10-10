@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useCallback, useRef } from "react";
 import { useThemePreview } from "../look/theme-preview";
 import { TerminalSquare } from "lucide-react";
 import type { TerminalHandle, TerminalHostConfig } from "./Terminal";
@@ -10,6 +10,7 @@ import {
 } from "@termix-ssh/plugin-sdk/frontend";
 import type { Host } from "../types";
 import { hostTerminalValues } from "../terminal-settings";
+import { assignRef } from "../lib/assign-ref";
 import { readHostTerminalSettings } from "../../shared/terminal-settings";
 
 /** The session fields the shell keeps on a terminal tab. */
@@ -66,6 +67,15 @@ export function TerminalTabContent({
   const { t } = useTranslation();
   const previewTerminalTheme = useThemePreview();
   const isMobile = useIsMobile();
+  // Core may hand a callback ref, so keep our own copy for the keyboard.
+  const terminalRef = useRef<TerminalHandle | null>(null);
+  const setTerminal = useCallback(
+    (value: TerminalHandle | null) => {
+      terminalRef.current = value;
+      assignRef(handleRef as React.Ref<TerminalHandle>, value);
+    },
+    [handleRef],
+  );
   const useSshTitle = readHostTerminalSettings(
     hostTerminalValues(host),
   ).useSSHTitle;
@@ -87,7 +97,7 @@ export function TerminalTabContent({
         <div className="flex flex-col h-full w-full">
           <div className="flex-1 min-h-0">
             <TerminalFeature
-              ref={handleRef as React.Ref<TerminalHandle>}
+              ref={setTerminal}
               hostConfig={
                 {
                   ...sshHost,
@@ -130,11 +140,7 @@ export function TerminalTabContent({
               isFocusedPane={isFocusedPane}
             />
           </div>
-          {isMobile && (
-            <MobileTerminalKeyboard
-              terminalRef={handleRef as React.RefObject<TerminalHandle | null>}
-            />
-          )}
+          {isMobile && <MobileTerminalKeyboard terminalRef={terminalRef} />}
         </div>
       </CommandHistoryProvider>
     </Suspense>

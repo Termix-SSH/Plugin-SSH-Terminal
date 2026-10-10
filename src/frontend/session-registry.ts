@@ -39,7 +39,7 @@ export function registerSession(
   notify();
   return () => {
     sessions.delete(info.id);
-    if (activeId === info.id) activeId = null;
+    if (activeId === info.id) activeId = [...sessions.keys()].pop() ?? null;
     notify();
   };
 }
@@ -69,8 +69,10 @@ function send(session: Session, text: string, run?: boolean): void {
 }
 
 export function sendToActive(text: string, opts?: { run?: boolean }): boolean {
-  if (!activeId) return false;
-  const session = sessions.get(activeId);
+  // Falls back to the newest session when none was focused yet.
+  const session =
+    (activeId ? sessions.get(activeId) : undefined) ??
+    [...sessions.values()].pop();
   if (!session) return false;
   send(session, text, opts?.run);
   return true;

@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { TabProps } from "@termix-ssh/plugin-sdk/frontend";
 import { TerminalTabContent } from "./terminal/TerminalTabContent";
 import type { TerminalHandle } from "./terminal/terminal-types";
 import { registerSession, setActiveSession } from "./session-registry";
+import { assignRef } from "./lib/assign-ref";
 
 /**
  * Registers the tab's terminal handle in the session registry, so
@@ -11,7 +12,6 @@ import { registerSession, setActiveSession } from "./session-registry";
  */
 export function TerminalTabWithRegistry(props: TabProps) {
   const tabRecord = props.tab as { id: string };
-  const handle = props.handleRef as { current: TerminalHandle | null } | null;
   const host = props.host as
     | {
         id: string;
@@ -21,45 +21,36 @@ export function TerminalTabWithRegistry(props: TabProps) {
         port?: number;
       }
     | undefined;
-  const registeredRef = useRef<(() => void) | null>(null);
+  const [handle, setHandle] = useState<TerminalHandle | null>(null);
+  const { handleRef } = props;
+  const trackHandle = useCallback(
+    (value: TerminalHandle | null) => {
+      assignRef(handleRef as React.Ref<TerminalHandle>, value);
+      setHandle(value);
+    },
+    [handleRef],
+  );
 
   useEffect(() => {
-    let cancelled = false;
-    let attempts = 0;
-
-    const tryRegister = () => {
-      if (cancelled || registeredRef.current) return;
-      const ref = handle?.current;
-      if (!ref) {
-        if (attempts++ < 40) setTimeout(tryRegister, 250);
-        return;
-      }
-      registeredRef.current = registerSession(
-        {
-          id: tabRecord.id,
-          hostId: host ? Number(host.id) || null : null,
-          hostName: host?.name,
-          label: props.label,
-          ip: host?.ip,
-          username: host?.username,
-          port: host?.port,
-        },
-        ref,
-      );
-    };
-    tryRegister();
-
-    return () => {
-      cancelled = true;
-      registeredRef.current?.();
-      registeredRef.current = null;
-    };
+    if (!handle) return;
+    return registerSession(
+      {
+        id: tabRecord.id,
+        hostId: host ? Number(host.id) || null : null,
+        hostName: host?.name,
+        label: props.label,
+        ip: host?.ip,
+        username: host?.username,
+        port: host?.port,
+      },
+      handle,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabRecord.id]);
+  }, [handle, tabRecord.id]);
 
   useEffect(() => {
     if (props.isFocusedPane) setActiveSession(tabRecord.id);
   }, [props.isFocusedPane, tabRecord.id]);
 
-  return <TerminalTabContent {...props} />;
+  return <TerminalTabContent {...props} handleRef={trackHandle} />;
 }
