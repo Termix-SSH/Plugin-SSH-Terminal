@@ -35,6 +35,9 @@ export function SshToolsPanel({ targetTab }: PanelProps) {
   const [rightClickPaste, setRightClickPaste] = useState(
     () => getClientPreference("rightClickCopyPaste") !== "false",
   );
+  const [ctrlVPaste, setCtrlVPaste] = useState(
+    () => getClientPreference("ctrlVPaste") !== "false",
+  );
   const [copyOnSelect, setCopyOnSelect] = useState(
     () => getClientPreference("copyOnSelect") === "true",
   );
@@ -334,6 +337,14 @@ export function SshToolsPanel({ targetTab }: PanelProps) {
           onChange={(next) => {
             setRightClickPaste(next);
             setClientPreference("rightClickCopyPaste", next ? "true" : "false");
+          }}
+        />
+        <SwitchRow
+          label={t("sshTools.ctrlVPaste")}
+          checked={ctrlVPaste}
+          onChange={(next) => {
+            setCtrlVPaste(next);
+            setClientPreference("ctrlVPaste", next ? "true" : "false");
           }}
         />
         <SwitchRow

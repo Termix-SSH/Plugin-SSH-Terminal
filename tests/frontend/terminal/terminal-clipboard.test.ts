@@ -212,6 +212,41 @@ describe("handleTerminalClipboardKeyEvent", () => {
     expect(actions.readTextFromClipboard).not.toHaveBeenCalled();
   });
 
+  it("sends plain Ctrl+V to the shell when Ctrl+V paste is off", () => {
+    getCookieMock.mockImplementation((name) =>
+      name === "ctrlVPaste" ? "false" : undefined,
+    );
+    const terminal = createFakeTerminal();
+    const actions = createActions();
+    const plain = createKeyEvent({ ctrlKey: true, code: "KeyV", key: "v" });
+    expect(
+      handleTerminalClipboardKeyEvent(
+        plain,
+        terminal as unknown as Terminal,
+        actions,
+        { plainPasteMode: "explicit" },
+      ),
+    ).toBe(true);
+    expect(plain.preventDefault).not.toHaveBeenCalled();
+    expect(actions.readTextFromClipboard).not.toHaveBeenCalled();
+
+    const shifted = createKeyEvent({
+      ctrlKey: true,
+      shiftKey: true,
+      code: "KeyV",
+      key: "V",
+    });
+    expect(
+      handleTerminalClipboardKeyEvent(
+        shifted,
+        terminal as unknown as Terminal,
+        actions,
+      ),
+    ).toBe(false);
+    expect(actions.readTextFromClipboard).toHaveBeenCalled();
+    getCookieMock.mockReset();
+  });
+
   it("reads the clipboard explicitly for plain Ctrl+V when configured", async () => {
     const terminal = createFakeTerminal();
     const actions = createActions();

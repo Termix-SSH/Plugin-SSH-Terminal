@@ -6,6 +6,11 @@ export function getUseRightClickCopyPaste(): boolean {
   return getClientPreference("rightClickCopyPaste") !== "false";
 }
 
+/** Off sends Ctrl+V to the shell (vim block select, lnext); Ctrl+Shift+V still pastes. */
+export function getCtrlVPastes(): boolean {
+  return getClientPreference("ctrlVPaste") !== "false";
+}
+
 export interface TerminalClipboardActions {
   writeTextToClipboard: (text: string) => Promise<unknown>;
   readTextFromClipboard: () => Promise<string>;
@@ -99,6 +104,7 @@ export function handleTerminalClipboardKeyEvent(
     !e.altKey &&
     isPasteKey;
   if (plainModPaste) {
+    if (e.ctrlKey && !getCtrlVPastes()) return true;
     if (plainPasteMode === "explicit") {
       e.preventDefault();
       e.stopPropagation();

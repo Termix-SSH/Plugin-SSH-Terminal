@@ -493,6 +493,7 @@
     "broadcastInputPlaceholder": "Type here to broadcast keystrokes...",
     "copyOnSelect": "Copy selected text automatically",
     "enableRightClickCopyPaste": "Enable right-click copy/paste",
+    "ctrlVPaste": "Ctrl+V pastes (turn off to send Ctrl+V to the shell)",
     "fillPassword": "Fill password",
     "fillPasswordMissing": "No saved password for {{count}} selected terminal(s)",
     "fillPasswordSuccess": "Filled password into {{count}} terminal(s)",
