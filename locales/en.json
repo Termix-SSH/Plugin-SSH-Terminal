@@ -517,6 +517,7 @@
     "stopRecording": "Stop Recording"
   },
   "keybindings": {
+    "openLocalTerminal": "Open new Local Terminal",
     "copy": "Copy selection",
     "paste": "Paste",
     "sendControlCode": "Send Ctrl+letter signal",
