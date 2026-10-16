@@ -5,6 +5,7 @@
 ### Added
 
 - A keyboard shortcut to open a new local terminal, set in Settings, Keyboard Shortcuts
+- Pasting a copied image with Ctrl+V or Cmd+V uploads it to the host, the same as the paste image button
 
 ## 1.0.2
 

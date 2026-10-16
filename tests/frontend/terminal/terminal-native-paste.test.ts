@@ -18,7 +18,7 @@ function pasteEvent(image: File | null, text = "", filesOnly = false) {
 }
 
 describe("terminal native paste", () => {
-  it("uploads original PNG bytes and blocks xterm and alternative text", () => {
+  it("uploads original PNG bytes and blocks xterm", () => {
     const container = document.createElement("div");
     const textarea = document.createElement("textarea");
     container.append(textarea);
@@ -34,12 +34,20 @@ describe("terminal native paste", () => {
     const image = new File([new Uint8Array([137, 80, 78, 71])], "capture.png", {
       type: "image/png",
     });
-    const event = pasteEvent(image, "alternative text");
+    const event = pasteEvent(image);
     textarea.dispatchEvent(event);
     expect(upload).toHaveBeenCalledExactlyOnceWith(image);
     expect(paste).not.toHaveBeenCalled();
     expect(xtermPaste).not.toHaveBeenCalled();
     expect(event.defaultPrevented).toBe(true);
+  });
+  it("pastes the text when an app copies text with an image of it", () => {
+    const paste = vi.fn();
+    const upload = vi.fn();
+    const image = new File(["png"], "cells.png", { type: "image/png" });
+    createTerminalNativePasteHandler(paste, upload)(pasteEvent(image, "a	b"));
+    expect(paste).toHaveBeenCalledExactlyOnceWith("a	b");
+    expect(upload).not.toHaveBeenCalled();
   });
   it("supports files without clipboard items", () => {
     const upload = vi.fn();

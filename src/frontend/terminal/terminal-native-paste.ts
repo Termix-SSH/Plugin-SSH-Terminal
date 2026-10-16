@@ -1,4 +1,8 @@
-/** Use the native paste payload, without another clipboard read or image re-encoding. */
+/**
+ * Use the native paste payload, without another clipboard read or image
+ * re-encoding. Text wins when there is any: apps like Excel and Word put an
+ * image of the copied text next to it.
+ */
 export function createTerminalNativePasteHandler(
   pasteText: (text: string) => void,
   uploadImage: (file: File) => void,
@@ -19,7 +23,7 @@ export function createTerminalNativePasteHandler(
     if (!image && !text) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    if (image) uploadImage(image);
-    else pasteText(text);
+    if (text) pasteText(text);
+    else if (image) uploadImage(image);
   };
 }
