@@ -629,6 +629,7 @@
     "remoteServerRequired": "需要远程服务器。请在设置中连接远程服务器以使用此连接类型。"
   },
   "plugin": {
-    "name": "SSH 终端"
+    "name": "SSH 终端",
+    "description": "SSH 终端会话，支持标签页、分屏、历史记录、宏，桌面应用中还有本地终端。"
   }
 }

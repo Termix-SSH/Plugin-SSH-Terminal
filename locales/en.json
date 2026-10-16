@@ -682,6 +682,7 @@
     "remoteServerRequired": "Remote server required. Connect a remote server in Settings to use this connection type."
   },
   "plugin": {
-    "name": "SSH Terminal"
+    "name": "SSH Terminal",
+    "description": "SSH terminal sessions with tabs, split screen, history, macros and a local terminal in the desktop app."
   }
 }
