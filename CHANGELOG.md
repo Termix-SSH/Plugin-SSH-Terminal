@@ -2,6 +2,10 @@
 
 ## 1.0.3
 
+### Added
+
+- A keyboard shortcut to open a new local terminal, set in Settings, Keyboard Shortcuts
+
 ## 1.0.2
 
 ### Fixed
