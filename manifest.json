@@ -15,6 +15,7 @@
   "features": [
     "Tabs and split screen",
     "Jump hosts and host key verification",
+    "Cloudflare Tunnel (Zero Trust) support",
     "Sessions stay alive after a disconnect and reconnect on their own",
     "Tmux and Mosh support",
     "Themes, fonts and syntax highlighting",
@@ -331,6 +332,46 @@
             "labelKey": "settings.host.enableCommandHistory.label",
             "descriptionKey": "settings.host.enableCommandHistory.description",
             "default": true
+          },
+          {
+            "key": "cloudflareTunnelEnabled",
+            "type": "boolean",
+            "labelKey": "settings.host.cloudflareTunnelEnabled.label",
+            "descriptionKey": "settings.host.cloudflareTunnelEnabled.description",
+            "hidden": true,
+            "default": false
+          },
+          {
+            "key": "cloudflareTunnelHostname",
+            "type": "string",
+            "labelKey": "settings.host.cloudflareTunnelHostname.label",
+            "descriptionKey": "settings.host.cloudflareTunnelHostname.description",
+            "hidden": true,
+            "default": ""
+          },
+          {
+            "key": "cloudflareTunnelPort",
+            "type": "number",
+            "labelKey": "settings.host.cloudflareTunnelPort.label",
+            "descriptionKey": "settings.host.cloudflareTunnelPort.description",
+            "hidden": true,
+            "default": 443
+          },
+          {
+            "key": "cloudflareTunnelClientId",
+            "type": "string",
+            "labelKey": "settings.host.cloudflareTunnelClientId.label",
+            "descriptionKey": "settings.host.cloudflareTunnelClientId.description",
+            "hidden": true,
+            "default": ""
+          },
+          {
+            "key": "cloudflareTunnelClientSecret",
+            "type": "secret",
+            "labelKey": "settings.host.cloudflareTunnelClientSecret.label",
+            "descriptionKey": "settings.host.cloudflareTunnelClientSecret.description",
+            "hidden": true,
+            "default": ""
           },
           {
             "key": "theme",

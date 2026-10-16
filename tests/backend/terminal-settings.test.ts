@@ -48,6 +48,19 @@ describe("resolveTerminalSettings", () => {
       DEFAULT_HOST_TERMINAL_SETTINGS.theme,
     );
   });
+
+  it("drops placeholder objects like { set: true } for cloudflareTunnelClientSecret and preserves strings", () => {
+    expect(
+      readHostTerminalSettings({
+        cloudflareTunnelClientSecret: { set: true },
+      }).cloudflareTunnelClientSecret,
+    ).toBe("");
+    expect(
+      readHostTerminalSettings({
+        cloudflareTunnelClientSecret: "actual-secret",
+      }).cloudflareTunnelClientSecret,
+    ).toBe("actual-secret");
+  });
 });
 
 describe("readUserSettings", () => {

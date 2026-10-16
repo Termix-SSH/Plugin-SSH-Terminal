@@ -15,6 +15,7 @@ import {
   type PluginSshPromptChannel,
   type PluginWebSocketConnection,
 } from "@termix-ssh/plugin-sdk/backend";
+import { isRedactedSecret } from "@termix-ssh/plugin-sdk/settings";
 import {
   asObject,
   asString,
@@ -35,6 +36,10 @@ import {
 } from "./helpers.js";
 import { SSHAuthManager } from "./keyboard-prompt.js";
 import { HOST_KEYS } from "./settings.js";
+import {
+  createCloudflareTunnelStream,
+  normalizeCloudflareEndpoint,
+} from "./cloudflare-tunnel.js";
 import {
   isMessageAllowedForParticipant,
   type TerminalSessionManager,
@@ -1600,6 +1605,96 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
         }
       }
 
+      const clientPluginSettings = (hostConfig as Record<string, unknown>)
+        .pluginSettings as Record<string, Record<string, unknown>> | undefined;
+      const hostDataPluginSettings = (
+        resolvedHostData as Record<string, unknown> | null
+      )?.pluginSettings as Record<string, Record<string, unknown>> | undefined;
+      const cfFromPlugin =
+        clientPluginSettings?.["ssh-terminal"] ??
+        hostDataPluginSettings?.["ssh-terminal"];
+
+      let cloudflareTunnelEnabled =
+        cfFromPlugin?.cloudflareTunnelEnabled === true;
+      let cfTunnelHostname =
+        typeof cfFromPlugin?.cloudflareTunnelHostname === "string"
+          ? cfFromPlugin.cloudflareTunnelHostname
+          : "";
+      let cfTunnelPort =
+        typeof cfFromPlugin?.cloudflareTunnelPort === "number" &&
+        cfFromPlugin.cloudflareTunnelPort > 0
+          ? cfFromPlugin.cloudflareTunnelPort
+          : 443;
+      let cfTunnelClientId =
+        typeof cfFromPlugin?.cloudflareTunnelClientId === "string"
+          ? cfFromPlugin.cloudflareTunnelClientId
+          : "";
+      let cfTunnelClientSecret =
+        typeof cfFromPlugin?.cloudflareTunnelClientSecret === "string" &&
+        cfFromPlugin.cloudflareTunnelClientSecret.trim() !== "" &&
+        !isRedactedSecret(cfFromPlugin.cloudflareTunnelClientSecret) &&
+        cfFromPlugin.cloudflareTunnelClientSecret !== "[object Object]"
+          ? cfFromPlugin.cloudflareTunnelClientSecret
+          : "";
+
+      if (serverHostId != null) {
+        try {
+          if (!cloudflareTunnelEnabled) {
+            cloudflareTunnelEnabled =
+              (await ctx.settings.getHost(
+                serverHostId,
+                HOST_KEYS.cloudflareTunnelEnabled,
+              )) === true;
+          }
+          if (cloudflareTunnelEnabled) {
+            if (!cfTunnelHostname) {
+              const hostVal = await ctx.settings.getHost(
+                serverHostId,
+                HOST_KEYS.cloudflareTunnelHostname,
+              );
+              if (typeof hostVal === "string" && hostVal) {
+                cfTunnelHostname = hostVal;
+              }
+            }
+            if (cfTunnelPort === 443) {
+              const portVal = await ctx.settings.getHost(
+                serverHostId,
+                HOST_KEYS.cloudflareTunnelPort,
+              );
+              if (typeof portVal === "number" && portVal > 0) {
+                cfTunnelPort = portVal;
+              }
+            }
+            if (!cfTunnelClientId) {
+              const clientIdVal = await ctx.settings.getHost(
+                serverHostId,
+                HOST_KEYS.cloudflareTunnelClientId,
+              );
+              if (typeof clientIdVal === "string" && clientIdVal) {
+                cfTunnelClientId = clientIdVal;
+              }
+            }
+            // If the secret was not provided as a plaintext string by the client
+            // (e.g. client sent { set: true } placeholder), resolve the decrypted secret from server-side storage
+            if (!cfTunnelClientSecret) {
+              const rawStoredSecret = await ctx.settings.getHost(
+                serverHostId,
+                HOST_KEYS.cloudflareTunnelClientSecret,
+              );
+              if (
+                typeof rawStoredSecret === "string" &&
+                !isRedactedSecret(rawStoredSecret) &&
+                rawStoredSecret !== "[object Object]"
+              ) {
+                cfTunnelClientSecret = rawStoredSecret;
+              }
+            }
+          }
+        } catch {
+          // ignore error reading server settings
+        }
+      }
+
       // Resolve credentials server-side when frontend doesn't provide them
       let resolvedCredentials = {
         username,
@@ -1694,6 +1789,16 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           "info",
           `Skipping local address resolution of ${ip} (resolved by jump host)`,
         );
+      } else if (cloudflareTunnelEnabled) {
+        const cfEndpoint = normalizeCloudflareEndpoint(
+          cfTunnelHostname || ip,
+          cfTunnelPort || 443,
+        );
+        sendLog(
+          "dns",
+          "info",
+          `Routing connection through Cloudflare Tunnel (${cfEndpoint.hostname})`,
+        );
       } else {
         sendLog("dns", "info", `Starting address resolution of ${ip}`);
         try {
@@ -1733,7 +1838,19 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           return;
         }
       }
-      sendLog("tcp", "info", `Connecting to ${ip} port ${port}`);
+      if (!cloudflareTunnelEnabled) {
+        sendLog("tcp", "info", `Connecting to ${ip} port ${port}`);
+      } else {
+        const cfEndpoint = normalizeCloudflareEndpoint(
+          cfTunnelHostname || ip,
+          cfTunnelPort || 443,
+        );
+        sendLog(
+          "tcp",
+          "info",
+          `Connecting via Cloudflare Tunnel to ${cfEndpoint.hostname}:${cfEndpoint.port}`,
+        );
+      }
 
       // A provider can hold the handshake open pending an out-of-band step
       // (Tailscale SSH check mode delivers its re-auth URL as an auth banner,
@@ -2892,6 +3009,26 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
 
       let transport: Awaited<ReturnType<typeof ctx.ssh.openTransport>>;
       try {
+        if (cloudflareTunnelEnabled) {
+          const cfEndpoint = normalizeCloudflareEndpoint(
+            cfTunnelHostname || ip,
+            cfTunnelPort || 443,
+          );
+          sendLog(
+            "handshake",
+            "info",
+            `Connecting to Cloudflare Zero Trust Tunnel for ${cfEndpoint.hostname}:${cfEndpoint.port}`,
+          );
+          const cfStream = await createCloudflareTunnelStream({
+            hostname: cfEndpoint.hostname,
+            port: cfEndpoint.port,
+            clientId: cfTunnelClientId,
+            clientSecret: cfTunnelClientSecret,
+            log: (level, message) => sendLog("handshake", level, message),
+          });
+          connectConfig.sock = cfStream;
+        }
+
         transport = await ctx.ssh.openTransport(connectTarget, connectConfig, {
           // Resolved above, or deliberately left to the jump host.
           resolveDns: false,
@@ -2904,6 +3041,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           hostId: id,
           ip,
           port,
+          cloudflareTunnel: cloudflareTunnelEnabled,
         });
         ws.send(
           JSON.stringify({
@@ -2931,15 +3069,21 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       }
       lastJumpClient = transport.jumpClient as SSHClientType | null;
 
+      const viaType = cloudflareTunnelEnabled
+        ? "cloudflare_tunnel"
+        : transport.via;
+
       sendLog(
         "handshake",
         "info",
-        transport.via === "jump"
-          ? "Starting SSH session through jump host" +
+        cloudflareTunnelEnabled
+          ? "Starting SSH session over Cloudflare Tunnel"
+          : transport.via === "jump"
+            ? "Starting SSH session through jump host" +
               (viaProxy ? " (via proxy)" : "")
-          : transport.via === "proxy"
-            ? "Starting SSH session (via proxy)"
-            : "Starting SSH session",
+            : transport.via === "proxy"
+              ? "Starting SSH session (via proxy)"
+              : "Starting SSH session",
       );
       sendLog("auth", "info", `Authenticating as ${username}`);
       sshLogger.info("Initiating SSH connection", {
@@ -2951,7 +3095,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
         port,
         username,
         authType: resolvedCredentials.authType,
-        via: transport.via,
+        via: viaType,
       });
       sshConn.connect(connectConfig);
     }

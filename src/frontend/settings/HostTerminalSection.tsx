@@ -1,5 +1,6 @@
 import type { HostEditorSectionProps } from "@termix-ssh/plugin-sdk/frontend";
 import { HostFeatureFields } from "@termix-ssh/plugin-sdk/ui";
+import { HostCloudflareTunnelSettings } from "./HostCloudflareTunnelSettings";
 import { HostTerminalSettings } from "./HostTerminalSettings";
 import { HostToolbarSettings } from "./HostToolbarSettings";
 
@@ -14,6 +15,11 @@ export function HostTerminalSection({
     <>
       <HostFeatureFields form={form} updateForm={updateForm} />
       <HostToolbarSettings form={form} updateForm={updateForm} host={host} />
+      <HostCloudflareTunnelSettings
+        form={form}
+        updateForm={updateForm}
+        host={host}
+      />
       <HostTerminalSettings
         form={form}
         setField={setField}

@@ -84,6 +84,11 @@ export interface TerminalBehavior {
   passwordPromptAutoFill: boolean;
   sudoPasswordAutoFill: boolean;
   autoReconnect: boolean;
+  cloudflareTunnelEnabled: boolean;
+  cloudflareTunnelHostname: string;
+  cloudflareTunnelPort: number;
+  cloudflareTunnelClientId: string;
+  cloudflareTunnelClientSecret: string;
 }
 
 /** Everything the host editor's Terminal tab edits. */
@@ -123,6 +128,11 @@ const BEHAVIOR_KEYS = [
   "passwordPromptAutoFill",
   "sudoPasswordAutoFill",
   "autoReconnect",
+  "cloudflareTunnelEnabled",
+  "cloudflareTunnelHostname",
+  "cloudflareTunnelPort",
+  "cloudflareTunnelClientId",
+  "cloudflareTunnelClientSecret",
 ] as const satisfies readonly (keyof TerminalBehavior)[];
 
 export const DEFAULT_MOSH_COMMAND = "mosh-server new -s -l LANG=en_US.UTF-8";
@@ -171,6 +181,11 @@ export const DEFAULT_BEHAVIOR: TerminalBehavior = {
   passwordPromptAutoFill: true,
   sudoPasswordAutoFill: false,
   autoReconnect: false,
+  cloudflareTunnelEnabled: false,
+  cloudflareTunnelHostname: "",
+  cloudflareTunnelPort: 443,
+  cloudflareTunnelClientId: "",
+  cloudflareTunnelClientSecret: "",
 };
 
 export const DEFAULT_HOST_TERMINAL_SETTINGS: HostTerminalSettings = {
@@ -249,7 +264,12 @@ function pick(key: string, value: unknown): unknown {
         ? "termix"
         : value;
     case "fontFamily":
-      return typeof value === "string" && value ? value : undefined;
+    case "cloudflareTunnelHostname":
+    case "cloudflareTunnelClientId":
+    case "cloudflareTunnelClientSecret":
+      return typeof value === "string" && value !== "[object Object]"
+        ? value
+        : undefined;
     case "backgroundImage":
     case "moshCommand":
       return value === null
@@ -263,6 +283,7 @@ function pick(key: string, value: unknown): unknown {
       return isObject(value)
         ? { ...DEFAULT_SYNTAX_HIGHLIGHTING, ...value }
         : undefined;
+    case "cloudflareTunnelPort":
     case "fontSize":
     case "scrollback":
     case "letterSpacing":

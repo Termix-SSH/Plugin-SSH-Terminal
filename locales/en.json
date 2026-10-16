@@ -25,6 +25,18 @@
     "tab": "Tab"
   },
   "terminal": {
+    "cloudflareTunnelTitle": "Cloudflare Tunnel (Zero Trust)",
+    "cloudflareTunnelDesc": "Connect to hosts behind a Cloudflare Tunnel using native WebSocket transport without opening raw port 22 to the public internet.",
+    "enableCloudflareTunnel": "Enable Cloudflare Tunnel",
+    "enableCloudflareTunnelDesc": "Route SSH traffic through Cloudflare Zero Trust (WSS) using the host's main address instead of direct TCP sockets.",
+    "cloudflareTunnelHostname": "Tunnel Hostname",
+    "cloudflareTunnelHostnameDesc": "Public domain routed to your SSH origin service in Cloudflare Tunnel (leave empty to use the host's main address).",
+    "cloudflareTunnelPort": "Tunnel Port",
+    "cloudflareTunnelPortDesc": "Edge HTTPS/WSS port on Cloudflare (default is 443).",
+    "cloudflareTunnelClientId": "Service Token Client ID",
+    "cloudflareTunnelClientIdDesc": "Optional CF-Access-Client-Id header. Required only if Cloudflare Access Zero Trust policy enforces Service Tokens.",
+    "cloudflareTunnelClientSecret": "Service Token Client Secret",
+    "cloudflareTunnelClientSecretDesc": "Optional CF-Access-Client-Secret header for Cloudflare Access authentication.",
     "clipboardHttpWarning": "Couldn't read the clipboard. Some browsers restrict clipboard access outside HTTPS - try Ctrl+V instead, or serve Termix over HTTPS.",
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
@@ -209,6 +221,26 @@
       "enableCommandHistory": {
         "label": "Command History",
         "description": "Record commands run in this terminal for history and autocomplete"
+      },
+      "cloudflareTunnelEnabled": {
+        "label": "Cloudflare Tunnel",
+        "description": "Route SSH traffic over Cloudflare Zero Trust via WebSocket"
+      },
+      "cloudflareTunnelHostname": {
+        "label": "Tunnel Hostname",
+        "description": "Cloudflare Tunnel public hostname"
+      },
+      "cloudflareTunnelPort": {
+        "label": "Tunnel Port",
+        "description": "Cloudflare edge HTTPS/WSS port"
+      },
+      "cloudflareTunnelClientId": {
+        "label": "CF-Access-Client-Id",
+        "description": "Cloudflare Access Service Token Client ID"
+      },
+      "cloudflareTunnelClientSecret": {
+        "label": "CF-Access-Client-Secret",
+        "description": "Cloudflare Access Service Token Client Secret"
       },
       "enableTerminal": {
         "label": "Enable Terminal",
