@@ -17,6 +17,7 @@ import {
   readClientSettings,
   readImageStorageSettings,
 } from "./settings.js";
+import { TERMINAL_APPEARANCE_KEYS } from "../shared/terminal-settings.js";
 import {
   createConcurrencyLimiter,
   exceedsNormalizedImageSize,
@@ -516,6 +517,35 @@ export function registerTerminalRoutes(
    *       500:
    *         description: Failed to load settings.
    */
+  /**
+   * @openapi
+   * /plugin-api/ssh-terminal/default-appearance:
+   *   get:
+   *     summary: The caller's default terminal look
+   *     description: Theme, font, cursor and the rest of the terminal appearance from the caller's host defaults, then the server's. Used by terminals without a host, like the local terminal.
+   *     tags:
+   *       - Terminal
+   *     responses:
+   *       200:
+   *         description: Appearance values keyed by setting name.
+   *       401:
+   *         description: Not signed in.
+   */
+  router.get("/default-appearance", async (_req, res) => {
+    const userId = ctx.currentActor();
+    if (!userId) return res.status(401).json({ error: "Sign in first" });
+    try {
+      const values: Record<string, unknown> = {};
+      for (const key of TERMINAL_APPEARANCE_KEYS) {
+        values[key] = await ctx.settings.getHostDefault(userId, key);
+      }
+      res.json(values);
+    } catch (err) {
+      log.error("Failed to load the default terminal appearance", err);
+      res.status(500).json({ error: "Failed to load settings" });
+    }
+  });
+
   router.get("/client-settings", async (_req, res) => {
     try {
       res.json(await readClientSettings(ctx));

@@ -146,6 +146,16 @@ describe("terminal settings routes", () => {
     authType: "password",
   });
 
+  it("gives a host-less terminal the user's default look", async () => {
+    server = await startServer();
+    await server.mock.ctx.settings.setUser("user-1", "theme", "dracula");
+    await server.mock.ctx.settings.setUser("user-1", "fontSize", 18);
+    const { status, body } = await server.request("GET", "/default-appearance");
+    expect(status).toBe(200);
+    expect(body.theme).toBe("dracula");
+    expect(body.fontSize).toBe(18);
+  });
+
   it("hands every user their own terminal settings", async () => {
     server = await startServer();
     await server.mock.ctx.settings.setUser(

@@ -21,7 +21,9 @@ import {
   TERMINAL_FONTS,
 } from "../look/terminal-themes";
 import { ensureTerminalFontsLoaded } from "../look/terminal-global-styles";
-import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { usePluginApi, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { getDefaultAppearance } from "../terminal-api";
+import { resolveTerminalFontFamily } from "../look/terminal-themes";
 
 export function LocalTerminal({
   instanceId,
@@ -37,6 +39,22 @@ export function LocalTerminal({
   const tRef = useRef(t);
   tRef.current = t;
   const { theme: appTheme } = useTheme();
+  const api = usePluginApi();
+  // The same look as SSH terminals get from the user's host defaults.
+  const [appearance, setAppearance] = useState<Awaited<
+    ReturnType<typeof getDefaultAppearance>
+  > | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    getDefaultAppearance(api)
+      .then((value) => {
+        if (!cancelled) setAppearance(value);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [api]);
   const { instance: terminal, ref: xtermRef } = useXTerm();
   const fitAddonRef = useRef<FitAddon | null>(null);
   const sessionIdRef = useRef<string | null>(null);
@@ -82,15 +100,35 @@ export function LocalTerminal({
 
   useEffect(() => {
     if (!terminal) return;
-    const colors = resolveTermixThemeColors("termix", appTheme);
-    const font = TERMINAL_FONTS.find(
-      (item) => item.value === DEFAULT_TERMINAL_CONFIG.fontFamily,
+    if (!appearance) {
+      const font = TERMINAL_FONTS.find(
+        (item) => item.value === DEFAULT_TERMINAL_CONFIG.fontFamily,
+      );
+      ensureTerminalFontsLoaded(font?.value ?? TERMINAL_FONTS[0].value);
+      terminal.options.theme = resolveTermixThemeColors("termix", appTheme);
+      terminal.options.fontFamily =
+        font?.fallback ?? TERMINAL_FONTS[0].fallback;
+      terminal.options.fontSize = DEFAULT_TERMINAL_CONFIG.fontSize;
+      return;
+    }
+    ensureTerminalFontsLoaded(appearance.fontFamily || TERMINAL_FONTS[0].value);
+    terminal.options.theme = resolveTermixThemeColors(
+      appearance.theme,
+      appTheme,
+      appearance.customThemeColors,
     );
-    ensureTerminalFontsLoaded(font?.value ?? TERMINAL_FONTS[0].value);
-    terminal.options.theme = colors;
-    terminal.options.fontFamily = font?.fallback ?? TERMINAL_FONTS[0].fallback;
-    terminal.options.fontSize = DEFAULT_TERMINAL_CONFIG.fontSize;
-  }, [appTheme, terminal]);
+    terminal.options.fontFamily = resolveTerminalFontFamily(
+      appearance.fontFamily,
+    );
+    terminal.options.fontSize = appearance.fontSize;
+    terminal.options.cursorBlink = appearance.cursorBlink;
+    terminal.options.cursorStyle = appearance.cursorStyle;
+    terminal.options.scrollback = appearance.scrollback;
+    terminal.options.letterSpacing = appearance.letterSpacing;
+    terminal.options.lineHeight = appearance.lineHeight;
+    terminal.options.minimumContrastRatio = appearance.minimumContrastRatio;
+    fit();
+  }, [appTheme, appearance, fit, terminal]);
 
   useEffect(() => {
     if (!terminal || !window.electronAPI?.isElectron) return;

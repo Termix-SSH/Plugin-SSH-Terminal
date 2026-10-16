@@ -4,7 +4,9 @@ import {
   type TouchInputSettings,
 } from "../shared/touch-input-settings";
 import {
+  readHostTerminalSettings,
   readUserSettings,
+  resolveTerminalSettings,
   type TerminalUserSettings,
 } from "../shared/terminal-settings";
 
@@ -27,6 +29,14 @@ export async function getClientSettings(
     touchInput: normalizeTouchInputSettings(data?.touchInput),
     user: readUserSettings(data?.user as unknown as Record<string, unknown>),
   };
+}
+
+/** The user's default terminal look, for a terminal without a host. */
+export async function getDefaultAppearance(api: PluginApiClient) {
+  const { data } = await api.get<Record<string, unknown>>(
+    "/default-appearance",
+  );
+  return resolveTerminalSettings(readHostTerminalSettings(data));
 }
 
 export async function saveCommandToHistory(

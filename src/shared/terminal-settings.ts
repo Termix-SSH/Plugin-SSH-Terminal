@@ -111,6 +111,9 @@ const APPEARANCE_KEYS = [
   "customThemeColors",
 ] as const satisfies readonly (keyof TerminalAppearance)[];
 
+/** The look of a terminal, which a host-less one like the local terminal reads from defaults. */
+export const TERMINAL_APPEARANCE_KEYS: readonly string[] = APPEARANCE_KEYS;
+
 const BEHAVIOR_KEYS = [
   "rightClickSelectsWord",
   "wheelZoom",

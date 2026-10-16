@@ -12,6 +12,7 @@
 
 ### Changed
 
+- The local terminal uses your terminal look from host defaults (theme, font, cursor and spacing)
 - On macOS, Option+drag selects text even while an app like Midnight Commander uses the mouse
 
 ### Fixed
