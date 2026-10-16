@@ -1,7 +1,7 @@
 {
   "id": "ssh-terminal",
   "name": "SSH Terminal",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SSH terminal sessions with tabs, split screen, history, macros and a local terminal in the desktop app.",
   "author": {
     "name": "Termix"
