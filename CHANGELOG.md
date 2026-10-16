@@ -9,6 +9,10 @@
 - Connect to hosts behind a Cloudflare Tunnel, with an optional Access service token, from the host's Terminal tab
 - Other plugins can open a terminal tab attached to a tmux session
 
+### Changed
+
+- On macOS, Option+drag selects text even while an app like Midnight Commander uses the mouse
+
 ## 1.0.2
 
 ### Fixed

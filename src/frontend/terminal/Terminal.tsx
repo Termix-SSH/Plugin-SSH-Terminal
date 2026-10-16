@@ -2662,7 +2662,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         allowTransparency: true, // MUST be set before open()
         convertEol: false,
         macOptionIsMeta: config.macOptionIsMeta,
-        macOptionClickForcesSelection: false,
+        // Option+drag selects text while an app like mc uses the mouse.
+        macOptionClickForcesSelection: true,
         rightClickSelectsWord: config.rightClickSelectsWord,
         fastScrollSensitivity: config.fastScrollSensitivity,
         allowProposedApi: true,
