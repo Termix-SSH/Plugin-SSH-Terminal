@@ -2852,7 +2852,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         if (e.ctrlKey && onOpenFileManager) {
           e.preventDefault();
           e.stopPropagation();
-          onOpenFileManager();
+          openFilesAtCwd();
           return;
         }
 

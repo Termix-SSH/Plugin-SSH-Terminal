@@ -17,6 +17,7 @@
 
 ### Fixed
 
+- The Files button and Ctrl+right-click opened the file manager in the home folder instead of the shell's current folder
 - The mouse wheel over a tmux session walked shell history instead of scrolling; it now scrolls tmux's own history
 
 ## 1.0.2

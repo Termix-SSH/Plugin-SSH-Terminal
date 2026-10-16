@@ -36,6 +36,7 @@ import {
 import { SSHAuthManager } from "./keyboard-prompt.js";
 import { HOST_KEYS } from "./settings.js";
 import { tmuxScrollCommand } from "./tmux-scroll.js";
+import { SHELL_CWD_COMMAND } from "./shell-cwd.js";
 import {
   createCloudflareTunnelStream,
   normalizeCloudflareEndpoint,
@@ -689,7 +690,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 ws.send(JSON.stringify({ type: "cwd", path: "/" }));
                 break;
               }
-              activeConn.exec("pwd", (err, execStream) => {
+              activeConn.exec(SHELL_CWD_COMMAND, (err, execStream) => {
                 if (err) {
                   ws.send(JSON.stringify({ type: "cwd", path: "/" }));
                   return;
