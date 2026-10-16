@@ -702,6 +702,9 @@
             "type": "boolean"
           }
         }
+      },
+      {
+        "id": "openLocalTerminal"
       }
     ],
     "uses": ["files.openEditor", "files.openHost", "snippets.startupCommand"]

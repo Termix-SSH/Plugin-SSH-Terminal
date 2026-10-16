@@ -118,9 +118,19 @@ describe(`${manifest.id} activate`, () => {
       expect(rendered.registered.railItems().map((item) => item.id)).toContain(
         "local-terminal",
       );
+      expect(rendered.registered.keybindingActions()).toContain(
+        "openLocalTerminal",
+      );
     } finally {
       delete (window as { IS_ELECTRON?: boolean }).IS_ELECTRON;
     }
+  });
+
+  it("does not register the local terminal shortcut in the browser", async () => {
+    rendered = await renderWithApp(plugin, { manifest, locales });
+    expect(rendered.registered.keybindingActions()).not.toContain(
+      "openLocalTerminal",
+    );
   });
 
   it("terminal.sendToActive and terminal.listSessions report no session when none is registered", async () => {

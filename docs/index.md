@@ -39,7 +39,7 @@ Paste or drop an image into a terminal and Termix uploads it to the host and typ
 
 ## Local terminal
 
-In the desktop app, open Local Terminal from the rail or the command palette for a shell on your own computer. It uses PowerShell on Windows, zsh on macOS and your `SHELL` on Linux. Set `TERMIX_LOCAL_SHELL` to use another.
+In the desktop app, open Local Terminal from the rail or the command palette for a shell on your own computer. You can also assign a shortcut to **Open new Local Terminal** in Settings, Keyboard Shortcuts; it works from anywhere in the app, including an SSH terminal. Each use opens a new session and focuses it. It uses PowerShell on Windows, zsh on macOS and your `SHELL` on Linux. Set `TERMIX_LOCAL_SHELL` to use another.
 
 ## Look and feel
 

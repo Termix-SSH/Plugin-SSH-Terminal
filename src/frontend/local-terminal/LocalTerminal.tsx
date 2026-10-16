@@ -40,6 +40,10 @@ export function LocalTerminal({
   const { instance: terminal, ref: xtermRef } = useXTerm();
   const fitAddonRef = useRef<FitAddon | null>(null);
   const sessionIdRef = useRef<string | null>(null);
+  const sessionReadyRef = useRef(false);
+  const visibleRef = useRef(isVisible);
+  visibleRef.current = isVisible;
+  const focusFrameRef = useRef<number | null>(null);
   const [isWindows, setIsWindows] = useState(false);
   const [shell, setShell] = useState<"default" | "wsl">("default");
 
@@ -62,6 +66,19 @@ export function LocalTerminal({
       );
     }
   }, [terminal]);
+
+  const focusWhenReady = useCallback(() => {
+    if (!terminal || !sessionReadyRef.current || !visibleRef.current) return;
+    if (focusFrameRef.current !== null) {
+      cancelAnimationFrame(focusFrameRef.current);
+    }
+    focusFrameRef.current = requestAnimationFrame(() => {
+      focusFrameRef.current = null;
+      if (!sessionReadyRef.current || !visibleRef.current) return;
+      fit();
+      terminal.focus();
+    });
+  }, [fit, terminal]);
 
   useEffect(() => {
     if (!terminal) return;
@@ -126,6 +143,7 @@ export function LocalTerminal({
     let disposed = false;
     let removeData = () => {};
     let removeExit = () => {};
+    sessionReadyRef.current = false;
     const input = terminal.onData((data) => {
       const sessionId = sessionIdRef.current;
       if (sessionId) window.electronAPI.writeLocalTerminal(sessionId, data);
@@ -151,7 +169,11 @@ export function LocalTerminal({
             );
           },
         );
-        return window.electronAPI.readyLocalTerminal(sessionId);
+        return window.electronAPI.readyLocalTerminal(sessionId).then(() => {
+          if (disposed) return;
+          sessionReadyRef.current = true;
+          focusWhenReady();
+        });
       })
       .catch((error: unknown) => {
         const message = error instanceof Error ? error.message : String(error);
@@ -162,6 +184,11 @@ export function LocalTerminal({
     if (xtermRef.current) observer.observe(xtermRef.current);
     return () => {
       disposed = true;
+      sessionReadyRef.current = false;
+      if (focusFrameRef.current !== null) {
+        cancelAnimationFrame(focusFrameRef.current);
+        focusFrameRef.current = null;
+      }
       terminal.attachCustomKeyEventHandler(() => true);
       observer.disconnect();
       input.dispose();
@@ -175,11 +202,12 @@ export function LocalTerminal({
       fitAddonRef.current = null;
       fitAddon.dispose();
     };
-  }, [fit, instanceId, shell, terminal, xtermRef]);
+  }, [fit, focusWhenReady, instanceId, shell, terminal, xtermRef]);
 
   useEffect(() => {
-    if (isVisible) requestAnimationFrame(fit);
-  }, [fit, isVisible]);
+    if (!isVisible) return;
+    focusWhenReady();
+  }, [focusWhenReady, isVisible]);
 
   return (
     <div className="flex h-full w-full flex-col bg-background">

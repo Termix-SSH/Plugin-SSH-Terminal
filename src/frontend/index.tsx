@@ -172,6 +172,12 @@ export function activate(app: TermixApp): void {
       multiInstance: true,
       inLayouts: false,
     });
+    app.registerKeybindingAction({
+      id: "openLocalTerminal",
+      titleKey: "keybindings.openLocalTerminal",
+      scope: "global",
+      run: () => app.tabs.openSingletonTab("local-terminal"),
+    });
     app.registerRailItem({
       id: "local-terminal",
       icon: Laptop,
