@@ -121,6 +121,11 @@ export function TerminalTabContent({
                   ? tmuxAttachCommand(tab.data.tmuxSession)
                   : undefined
               }
+              tmuxSession={
+                typeof tab.data?.tmuxSession === "string"
+                  ? tab.data.tmuxSession || undefined
+                  : undefined
+              }
               title={label}
               showTitle={false}
               splitScreen={inSplit}

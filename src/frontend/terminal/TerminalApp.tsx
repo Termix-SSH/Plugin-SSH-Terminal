@@ -55,6 +55,7 @@ const TerminalApp: React.FC<TerminalAppProps> = ({ hostId, tmuxSession }) => {
               executeCommand={
                 tmuxSession ? tmuxAttachCommand(tmuxSession) : undefined
               }
+              tmuxSession={tmuxSession || undefined}
             />
           </CommandHistoryProvider>
         );

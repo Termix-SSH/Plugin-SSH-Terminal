@@ -35,6 +35,7 @@ import {
 } from "./helpers.js";
 import { SSHAuthManager } from "./keyboard-prompt.js";
 import { HOST_KEYS } from "./settings.js";
+import { tmuxScrollCommand } from "./tmux-scroll.js";
 import {
   createCloudflareTunnelStream,
   normalizeCloudflareEndpoint,
@@ -881,6 +882,27 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                   }),
                 );
               }
+              break;
+            }
+
+            case "tmux_scroll": {
+              const scroll = asObject(data);
+              const session = currentSessionId
+                ? sessionManager.getSession(currentSessionId)
+                : null;
+              const name =
+                asString(scroll.sessionName) || session?.tmuxSessionName;
+              const direction = scroll.direction === "down" ? "down" : "up";
+              const conn = session?.sshConn ?? sshConn;
+              if (!conn || !name || name === "(active)") break;
+              conn.exec(
+                tmuxScrollCommand(name, direction, Number(scroll.lines)),
+                (err, execStream) => {
+                  if (err) return;
+                  execStream.on("data", () => {});
+                  execStream.stderr.on("data", () => {});
+                },
+              );
               break;
             }
 

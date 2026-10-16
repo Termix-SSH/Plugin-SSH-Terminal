@@ -29,3 +29,18 @@ type WheelBuffer = { type: "normal" | "alternate"; baseY: number };
 export function wheelHasNothingToScroll(buffer: WheelBuffer): boolean {
   return buffer.type === "normal" && buffer.baseY === 0;
 }
+
+/** Pixels per scrolled line, the same step xterm uses for one wheel line. */
+const PIXELS_PER_LINE = 40;
+
+/** A wheel delta in pixels, whatever unit the browser reported it in. */
+export function wheelPixels(deltaY: number, deltaMode: number): number {
+  if (deltaMode === 1) return deltaY * PIXELS_PER_LINE;
+  if (deltaMode === 2) return deltaY * PIXELS_PER_LINE * 20;
+  return deltaY;
+}
+
+/** How many tmux lines a batch of wheel pixels scrolls. */
+export function tmuxScrollLines(pixels: number): number {
+  return Math.max(1, Math.round(Math.abs(pixels) / PIXELS_PER_LINE)) * 3;
+}

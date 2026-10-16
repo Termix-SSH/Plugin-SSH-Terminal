@@ -13,6 +13,10 @@
 
 - On macOS, Option+drag selects text even while an app like Midnight Commander uses the mouse
 
+### Fixed
+
+- The mouse wheel over a tmux session walked shell history instead of scrolling; it now scrolls tmux's own history
+
 ## 1.0.2
 
 ### Fixed

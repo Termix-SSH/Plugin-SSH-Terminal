@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   terminalWheelAction,
+  tmuxScrollLines,
   wheelHasNothingToScroll,
+  wheelPixels,
 } from "../../../src/frontend/terminal/terminal-wheel";
 
 const keys = { ctrlKey: false, metaKey: false, altKey: false, shiftKey: false };
@@ -48,5 +50,18 @@ describe("wheelHasNothingToScroll", () => {
     expect(wheelHasNothingToScroll({ type: "alternate", baseY: 0 })).toBe(
       false,
     );
+  });
+});
+
+describe("tmux wheel scrolling", () => {
+  it("turns line and page deltas into pixels", () => {
+    expect(wheelPixels(100, 0)).toBe(100);
+    expect(wheelPixels(3, 1)).toBe(120);
+    expect(wheelPixels(1, 2)).toBe(800);
+  });
+
+  it("scrolls at least one step per batch", () => {
+    expect(tmuxScrollLines(-5)).toBe(3);
+    expect(tmuxScrollLines(-120)).toBe(9);
   });
 });

@@ -83,7 +83,9 @@ import { isTabKeyEvent } from "./terminal-key-event.ts";
 import { installTouchWheelCoordinator } from "./touch-wheel-coordinator.ts";
 import {
   terminalWheelAction,
+  tmuxScrollLines,
   wheelHasNothingToScroll,
+  wheelPixels,
 } from "./terminal-wheel.ts";
 import { loadTouchInputSettings } from "./touch-input-settings-store.ts";
 import {
@@ -158,6 +160,8 @@ interface SSHTerminalProps {
   executeCommand?: string;
   /** Attach to this tmux session right after connecting (tmux monitor). */
   tmuxAttachSession?: string;
+  /** The tmux session executeCommand attaches to, so the wheel can scroll it. */
+  tmuxSession?: string;
   onOpenFileManager?: (path?: string) => void;
   onOpenFileInEditor?: (filePath: string) => void;
   previewTheme?: string | null;
@@ -202,6 +206,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       initialPath,
       executeCommand,
       tmuxAttachSession,
+      tmuxSession,
       onOpenFileManager,
       onOpenFileInEditor,
       previewTheme,
@@ -399,6 +404,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }>;
     } | null>(null);
     const tmuxSessionNameRef = useRef<string | null>(null);
+    const tmuxSessionPropRef = useRef(tmuxSession);
+    tmuxSessionPropRef.current = tmuxSession;
     const [isTmuxAttached, setIsTmuxAttached] = useState(false);
     const tmuxCopyModeHintShownRef = useRef(false);
 
@@ -2754,6 +2761,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         fitTerminal();
       });
 
+      let tmuxWheelPixels = 0;
+      let tmuxWheelTimer: ReturnType<typeof setTimeout> | null = null;
       terminal.attachCustomWheelEventHandler((ev) => {
         const cfg = termSettingsRef.current;
         const action = terminalWheelAction(ev, cfg);
@@ -2767,6 +2776,39 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           );
           terminal.scrollLines(ev.deltaY > 0 ? lines : -lines);
           ev.preventDefault();
+          return false;
+        }
+        // Over tmux without mouse mode, xterm would send arrow keys to the
+        // shell. Ask tmux to scroll its own history instead.
+        const tmuxName =
+          tmuxSessionNameRef.current ?? tmuxSessionPropRef.current;
+        if (
+          tmuxName &&
+          tmuxName !== "(active)" &&
+          terminal.buffer.active.type === "alternate" &&
+          terminal.modes.mouseTrackingMode === "none"
+        ) {
+          ev.preventDefault();
+          tmuxWheelPixels += wheelPixels(ev.deltaY, ev.deltaMode);
+          if (!tmuxWheelTimer) {
+            tmuxWheelTimer = setTimeout(() => {
+              tmuxWheelTimer = null;
+              const pixels = tmuxWheelPixels;
+              tmuxWheelPixels = 0;
+              if (pixels === 0) return;
+              if (webSocketRef.current?.readyState !== WebSocket.OPEN) return;
+              webSocketRef.current.send(
+                JSON.stringify({
+                  type: "tmux_scroll",
+                  data: {
+                    sessionName: tmuxName,
+                    direction: pixels < 0 ? "up" : "down",
+                    lines: tmuxScrollLines(pixels),
+                  },
+                }),
+              );
+            }, 50);
+          }
           return false;
         }
         if (wheelHasNothingToScroll(terminal.buffer.active)) {

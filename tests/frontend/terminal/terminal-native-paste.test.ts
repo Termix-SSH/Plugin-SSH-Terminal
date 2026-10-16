@@ -45,8 +45,8 @@ describe("terminal native paste", () => {
     const paste = vi.fn();
     const upload = vi.fn();
     const image = new File(["png"], "cells.png", { type: "image/png" });
-    createTerminalNativePasteHandler(paste, upload)(pasteEvent(image, "a	b"));
-    expect(paste).toHaveBeenCalledExactlyOnceWith("a	b");
+    createTerminalNativePasteHandler(paste, upload)(pasteEvent(image, "a\tb"));
+    expect(paste).toHaveBeenCalledExactlyOnceWith("a\tb");
     expect(upload).not.toHaveBeenCalled();
   });
   it("supports files without clipboard items", () => {
