@@ -1,5 +1,7 @@
 import { Duplex } from "node:stream";
 import WebSocket, { createWebSocketStream } from "ws";
+import { isRedactedSecret } from "@termix-ssh/plugin-sdk/settings";
+import { HOST_KEYS } from "./settings.js";
 
 export interface CloudflareTunnelOptions {
   hostname: string;
@@ -236,4 +238,70 @@ function createWebSocketTunnelStream(options: {
       resolve(duplexStream);
     });
   });
+}
+
+export interface TunnelSettings {
+  enabled: boolean;
+  hostname: string;
+  port: number;
+  clientId: string;
+  clientSecret: string;
+}
+
+const NO_TUNNEL: TunnelSettings = {
+  enabled: false,
+  hostname: "",
+  port: 443,
+  clientId: "",
+  clientSecret: "",
+};
+
+const text = (value: unknown) =>
+  typeof value === "string" && !isRedactedSecret(value) ? value : "";
+const validPort = (value: unknown) =>
+  typeof value === "number" && value > 0 && value < 65536 ? value : 443;
+
+/**
+ * A saved host only ever uses what is stored for it (readHost). Taking these
+ * from the client would let a user who may only connect point the tunnel,
+ * and the owner's credentials, at a server of their choosing. A quick connect
+ * has nothing stored and brings its own values.
+ */
+export async function resolveTunnelSettings(
+  readHost: ((key: string) => Promise<unknown>) | null,
+  clientPluginSettings: unknown,
+): Promise<TunnelSettings> {
+  if (readHost) {
+    try {
+      if ((await readHost(HOST_KEYS.cloudflareTunnelEnabled)) !== true) {
+        return NO_TUNNEL;
+      }
+      return {
+        enabled: true,
+        hostname: text(await readHost(HOST_KEYS.cloudflareTunnelHostname)),
+        port: validPort(await readHost(HOST_KEYS.cloudflareTunnelPort)),
+        clientId: text(await readHost(HOST_KEYS.cloudflareTunnelClientId)),
+        clientSecret: text(
+          await readHost(HOST_KEYS.cloudflareTunnelClientSecret),
+        ),
+      };
+    } catch {
+      return NO_TUNNEL;
+    }
+  }
+  const all =
+    clientPluginSettings && typeof clientPluginSettings === "object"
+      ? (clientPluginSettings as Record<string, unknown>)
+      : {};
+  const own = all["ssh-terminal"];
+  const client =
+    own && typeof own === "object" ? (own as Record<string, unknown>) : {};
+  if (client.cloudflareTunnelEnabled !== true) return NO_TUNNEL;
+  return {
+    enabled: true,
+    hostname: text(client.cloudflareTunnelHostname),
+    port: validPort(client.cloudflareTunnelPort),
+    clientId: text(client.cloudflareTunnelClientId),
+    clientSecret: text(client.cloudflareTunnelClientSecret),
+  };
 }

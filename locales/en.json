@@ -97,7 +97,15 @@
     "localShell": "Local terminal shell",
     "autocompleteHintComplete": "Tab or Enter to complete",
     "autocompleteHintNavigate": "↑↓ to navigate",
-    "autocompleteHintClose": "Esc to close"
+    "autocompleteHintClose": "Esc to close",
+    "cloudflareTunnelClientSecretPlaceholder": "Optional service token secret",
+    "cloudflareTunnelClientSecretPlaceholderNew": "New service token secret",
+    "secretSaved": "Saved",
+    "secretReplace": "Replace",
+    "secretClear": "Clear",
+    "secretCancel": "Cancel",
+    "hideSecret": "Hide secret",
+    "showSecret": "Show secret"
   },
   "terminalToolbar": {
     "detachTmux": "Detach tmux",

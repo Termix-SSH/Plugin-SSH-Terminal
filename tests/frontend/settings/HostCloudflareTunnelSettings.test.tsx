@@ -78,7 +78,7 @@ describe("HostCloudflareTunnelSettings", () => {
     expect(screen.queryByDisplayValue("[object Object]")).toBeNull();
     // Should show saved indicator
     expect(screen.getByText(/••••••••/)).toBeTruthy();
-    const replaceBtn = screen.getByText("settings.secretReplace");
+    const replaceBtn = screen.getByText("terminal.secretReplace");
     expect(replaceBtn).toBeTruthy();
 
     // Click Replace
@@ -92,7 +92,7 @@ describe("HostCloudflareTunnelSettings", () => {
     expect(input.value).toBe("");
 
     // Cancel button should be shown
-    const cancelBtn = screen.getByText("common.cancel");
+    const cancelBtn = screen.getByText("terminal.secretCancel");
     expect(cancelBtn).toBeTruthy();
     fireEvent.click(cancelBtn);
     expect(updateForm).toHaveBeenCalled();

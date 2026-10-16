@@ -5,6 +5,7 @@ import WebSocket, { WebSocketServer } from "ws";
 import {
   createCloudflareTunnelStream,
   normalizeCloudflareEndpoint,
+  resolveTunnelSettings,
 } from "../../src/backend/cloudflare-tunnel.js";
 
 describe("normalizeCloudflareEndpoint", () => {
@@ -198,5 +199,47 @@ describe("createCloudflareTunnelStream", () => {
     } finally {
       server.close();
     }
+  });
+});
+
+describe("resolveTunnelSettings", () => {
+  const stored: Record<string, unknown> = {
+    cloudflareTunnelEnabled: true,
+    cloudflareTunnelHostname: "ssh.example.com",
+    cloudflareTunnelPort: 443,
+    cloudflareTunnelClientId: "id",
+    cloudflareTunnelClientSecret: "secret",
+  };
+  const attacker = {
+    "ssh-terminal": {
+      cloudflareTunnelEnabled: true,
+      cloudflareTunnelHostname: "evil.example.net",
+    },
+  };
+
+  it("ignores client values for a saved host", async () => {
+    const settings = await resolveTunnelSettings(
+      async (key) => stored[key],
+      attacker,
+    );
+    expect(settings.hostname).toBe("ssh.example.com");
+    expect(settings.clientSecret).toBe("secret");
+  });
+
+  it("stays off for a saved host without a stored tunnel", async () => {
+    const settings = await resolveTunnelSettings(
+      async () => undefined,
+      attacker,
+    );
+    expect(settings.enabled).toBe(false);
+  });
+
+  it("takes a quick connect's own values", async () => {
+    const settings = await resolveTunnelSettings(null, attacker);
+    expect(settings).toMatchObject({
+      enabled: true,
+      hostname: "evil.example.net",
+      port: 443,
+    });
   });
 });

@@ -6,6 +6,8 @@
 
 - A keyboard shortcut to open a new local terminal, set in Settings, Keyboard Shortcuts
 - Pasting a copied image with Ctrl+V or Cmd+V uploads it to the host, the same as the paste image button
+- Connect to hosts behind a Cloudflare Tunnel, with an optional Access service token, from the host's Terminal tab
+- Other plugins can open a terminal tab attached to a tmux session
 
 ## 1.0.2
 

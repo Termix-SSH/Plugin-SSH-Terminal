@@ -15,7 +15,6 @@ import {
   type PluginSshPromptChannel,
   type PluginWebSocketConnection,
 } from "@termix-ssh/plugin-sdk/backend";
-import { isRedactedSecret } from "@termix-ssh/plugin-sdk/settings";
 import {
   asObject,
   asString,
@@ -39,6 +38,7 @@ import { HOST_KEYS } from "./settings.js";
 import {
   createCloudflareTunnelStream,
   normalizeCloudflareEndpoint,
+  resolveTunnelSettings,
 } from "./cloudflare-tunnel.js";
 import {
   isMessageAllowedForParticipant,
@@ -1605,95 +1605,17 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
         }
       }
 
-      const clientPluginSettings = (hostConfig as Record<string, unknown>)
-        .pluginSettings as Record<string, Record<string, unknown>> | undefined;
-      const hostDataPluginSettings = (
-        resolvedHostData as Record<string, unknown> | null
-      )?.pluginSettings as Record<string, Record<string, unknown>> | undefined;
-      const cfFromPlugin =
-        clientPluginSettings?.["ssh-terminal"] ??
-        hostDataPluginSettings?.["ssh-terminal"];
-
-      let cloudflareTunnelEnabled =
-        cfFromPlugin?.cloudflareTunnelEnabled === true;
-      let cfTunnelHostname =
-        typeof cfFromPlugin?.cloudflareTunnelHostname === "string"
-          ? cfFromPlugin.cloudflareTunnelHostname
-          : "";
-      let cfTunnelPort =
-        typeof cfFromPlugin?.cloudflareTunnelPort === "number" &&
-        cfFromPlugin.cloudflareTunnelPort > 0
-          ? cfFromPlugin.cloudflareTunnelPort
-          : 443;
-      let cfTunnelClientId =
-        typeof cfFromPlugin?.cloudflareTunnelClientId === "string"
-          ? cfFromPlugin.cloudflareTunnelClientId
-          : "";
-      let cfTunnelClientSecret =
-        typeof cfFromPlugin?.cloudflareTunnelClientSecret === "string" &&
-        cfFromPlugin.cloudflareTunnelClientSecret.trim() !== "" &&
-        !isRedactedSecret(cfFromPlugin.cloudflareTunnelClientSecret) &&
-        cfFromPlugin.cloudflareTunnelClientSecret !== "[object Object]"
-          ? cfFromPlugin.cloudflareTunnelClientSecret
-          : "";
-
-      if (serverHostId != null) {
-        try {
-          if (!cloudflareTunnelEnabled) {
-            cloudflareTunnelEnabled =
-              (await ctx.settings.getHost(
-                serverHostId,
-                HOST_KEYS.cloudflareTunnelEnabled,
-              )) === true;
-          }
-          if (cloudflareTunnelEnabled) {
-            if (!cfTunnelHostname) {
-              const hostVal = await ctx.settings.getHost(
-                serverHostId,
-                HOST_KEYS.cloudflareTunnelHostname,
-              );
-              if (typeof hostVal === "string" && hostVal) {
-                cfTunnelHostname = hostVal;
-              }
-            }
-            if (cfTunnelPort === 443) {
-              const portVal = await ctx.settings.getHost(
-                serverHostId,
-                HOST_KEYS.cloudflareTunnelPort,
-              );
-              if (typeof portVal === "number" && portVal > 0) {
-                cfTunnelPort = portVal;
-              }
-            }
-            if (!cfTunnelClientId) {
-              const clientIdVal = await ctx.settings.getHost(
-                serverHostId,
-                HOST_KEYS.cloudflareTunnelClientId,
-              );
-              if (typeof clientIdVal === "string" && clientIdVal) {
-                cfTunnelClientId = clientIdVal;
-              }
-            }
-            // If the secret was not provided as a plaintext string by the client
-            // (e.g. client sent { set: true } placeholder), resolve the decrypted secret from server-side storage
-            if (!cfTunnelClientSecret) {
-              const rawStoredSecret = await ctx.settings.getHost(
-                serverHostId,
-                HOST_KEYS.cloudflareTunnelClientSecret,
-              );
-              if (
-                typeof rawStoredSecret === "string" &&
-                !isRedactedSecret(rawStoredSecret) &&
-                rawStoredSecret !== "[object Object]"
-              ) {
-                cfTunnelClientSecret = rawStoredSecret;
-              }
-            }
-          }
-        } catch {
-          // ignore error reading server settings
-        }
-      }
+      const tunnel = await resolveTunnelSettings(
+        serverHostId != null
+          ? (key) => ctx.settings.getHost(serverHostId, key)
+          : null,
+        (hostConfig as Record<string, unknown>).pluginSettings,
+      );
+      const cloudflareTunnelEnabled = tunnel.enabled;
+      const cfTunnelHostname = tunnel.hostname;
+      const cfTunnelPort = tunnel.port;
+      const cfTunnelClientId = tunnel.clientId;
+      const cfTunnelClientSecret = tunnel.clientSecret;
 
       // Resolve credentials server-side when frontend doesn't provide them
       let resolvedCredentials = {

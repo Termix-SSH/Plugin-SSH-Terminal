@@ -264,6 +264,7 @@ function pick(key: string, value: unknown): unknown {
         ? "termix"
         : value;
     case "fontFamily":
+      return typeof value === "string" && value ? value : undefined;
     case "cloudflareTunnelHostname":
     case "cloudflareTunnelClientId":
     case "cloudflareTunnelClientSecret":

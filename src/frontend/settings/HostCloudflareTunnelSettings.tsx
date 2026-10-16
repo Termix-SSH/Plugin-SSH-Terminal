@@ -68,18 +68,12 @@ export function HostCloudflareTunnelSettings({
 
   return (
     <SectionCard
-      title={t(
-        "terminal.cloudflareTunnelTitle",
-        "Cloudflare Tunnel (Zero Trust)",
-      )}
+      title={t("terminal.cloudflareTunnelTitle")}
       icon={<Cloud className="size-3.5" />}
     >
       <SettingRow
-        label={t("terminal.enableCloudflareTunnel", "Enable Cloudflare Tunnel")}
-        description={t(
-          "terminal.enableCloudflareTunnelDesc",
-          "Route SSH traffic through Cloudflare Zero Trust (WSS) using the host's main address instead of direct TCP sockets.",
-        )}
+        label={t("terminal.enableCloudflareTunnel")}
+        description={t("terminal.enableCloudflareTunnelDesc")}
       >
         <FakeSwitch
           checked={enabled}
@@ -90,11 +84,8 @@ export function HostCloudflareTunnelSettings({
       {enabled && (
         <>
           <SettingRow
-            label={t("terminal.cloudflareTunnelPort", "Tunnel Port")}
-            description={t(
-              "terminal.cloudflareTunnelPortDesc",
-              "Edge HTTPS/WSS port on Cloudflare (default is 443).",
-            )}
+            label={t("terminal.cloudflareTunnelPort")}
+            description={t("terminal.cloudflareTunnelPortDesc")}
           >
             <Input
               type="number"
@@ -112,39 +103,27 @@ export function HostCloudflareTunnelSettings({
           </SettingRow>
 
           <SettingRow
-            label={t(
-              "terminal.cloudflareTunnelClientId",
-              "Service Token Client ID",
-            )}
-            description={t(
-              "terminal.cloudflareTunnelClientIdDesc",
-              "Optional CF-Access-Client-Id header. Required only if Cloudflare Access Zero Trust policy enforces Service Tokens.",
-            )}
+            label={t("terminal.cloudflareTunnelClientId")}
+            description={t("terminal.cloudflareTunnelClientIdDesc")}
           >
             <Input
               value={clientId}
               onChange={(e) =>
                 write({ cloudflareTunnelClientId: e.target.value })
               }
-              placeholder="e.g. xxxxxxxx.access"
+              placeholder="xxxxxxxx.access"
               className="max-w-xs"
             />
           </SettingRow>
 
           <SettingRow
-            label={t(
-              "terminal.cloudflareTunnelClientSecret",
-              "Service Token Client Secret",
-            )}
-            description={t(
-              "terminal.cloudflareTunnelClientSecretDesc",
-              "Optional CF-Access-Client-Secret header for Cloudflare Access authentication.",
-            )}
+            label={t("terminal.cloudflareTunnelClientSecret")}
+            description={t("terminal.cloudflareTunnelClientSecretDesc")}
           >
             {isSecretConfigured && !isEditingSecret ? (
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded">
-                  •••••••• ({t("settings.secretSet", "Saved")})
+                <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1">
+                  •••••••• ({t("terminal.secretSaved")})
                 </span>
                 <Button
                   type="button"
@@ -156,7 +135,7 @@ export function HostCloudflareTunnelSettings({
                     write({ cloudflareTunnelClientSecret: "" });
                   }}
                 >
-                  {t("settings.secretReplace", "Replace")}
+                  {t("terminal.secretReplace")}
                 </Button>
                 <Button
                   type="button"
@@ -168,7 +147,7 @@ export function HostCloudflareTunnelSettings({
                     write({ cloudflareTunnelClientSecret: "" });
                   }}
                 >
-                  {t("common.clear", "Clear")}
+                  {t("terminal.secretClear")}
                 </Button>
               </div>
             ) : (
@@ -184,12 +163,8 @@ export function HostCloudflareTunnelSettings({
                       isSecretConfigured
                         ? t(
                             "terminal.cloudflareTunnelClientSecretPlaceholderNew",
-                            "New Service Token Secret",
                           )
-                        : t(
-                            "terminal.cloudflareTunnelClientSecretPlaceholder",
-                            "Optional Service Token Secret",
-                          )
+                        : t("terminal.cloudflareTunnelClientSecretPlaceholder")
                     }
                     className="pr-10"
                     autoFocus={isSecretConfigured && isEditingSecret}
@@ -200,7 +175,11 @@ export function HostCloudflareTunnelSettings({
                     size="icon"
                     onClick={() => setShowSecret((prev) => !prev)}
                     className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground"
-                    aria-label={showSecret ? "Hide secret" : "Show secret"}
+                    aria-label={
+                      showSecret
+                        ? t("terminal.hideSecret")
+                        : t("terminal.showSecret")
+                    }
                   >
                     {showSecret ? (
                       <EyeOff className="h-4 w-4" />
@@ -220,7 +199,7 @@ export function HostCloudflareTunnelSettings({
                       write({ cloudflareTunnelClientSecret: { set: true } });
                     }}
                   >
-                    {t("common.cancel", "Cancel")}
+                    {t("terminal.secretCancel")}
                   </Button>
                 )}
               </div>
