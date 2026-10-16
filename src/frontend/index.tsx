@@ -68,6 +68,8 @@ const LocalTerminal = lazy(() =>
 );
 
 interface TerminalOpenOptions {
+  /** Exact tmux session name to attach to in the newly opened tab. */
+  tmuxSession?: string;
   path?: string;
   joinSharedSessionId?: string;
   joinShareId?: string;
@@ -309,6 +311,7 @@ export function activate(app: TermixApp): void {
       label: options.label,
       data: {
         ...(options.path ? { initialPath: options.path } : {}),
+        ...(options.tmuxSession ? { tmuxSession: options.tmuxSession } : {}),
         ...(options.joinSharedSessionId
           ? {
               joinSharedSessionId: options.joinSharedSessionId,

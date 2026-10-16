@@ -10,6 +10,7 @@ import {
 } from "@termix-ssh/plugin-sdk/frontend";
 import type { Host } from "../types";
 import { hostTerminalValues } from "../terminal-settings";
+import { tmuxAttachCommand } from "./tmux-attach-command";
 import { assignRef } from "../lib/assign-ref";
 import { readHostTerminalSettings } from "../../shared/terminal-settings";
 
@@ -22,6 +23,7 @@ interface TerminalTabRecord {
   joinShareId?: string | null;
   initialFilePath?: string;
   data?: {
+    tmuxSession?: string;
     initialPath?: string;
     joinSharedSessionId?: string | null;
     joinShareId?: string | null;
@@ -113,6 +115,12 @@ export function TerminalTabContent({
               }
               isVisible={isVisible}
               initialPath={tab.data?.initialPath ?? tab.initialFilePath}
+              executeCommand={
+                typeof tab.data?.tmuxSession === "string" &&
+                tab.data.tmuxSession
+                  ? tmuxAttachCommand(tab.data.tmuxSession)
+                  : undefined
+              }
               title={label}
               showTitle={false}
               splitScreen={inSplit}

@@ -32,9 +32,15 @@ afterEach(() => {
   captured.props = [];
 });
 
-function renderTab(inSplit?: boolean) {
+function renderTab(inSplit?: boolean, data?: Record<string, unknown>) {
   const props = {
-    tab: { id: "t1", instanceId: "i1", type: "terminal", label: "web-01" },
+    tab: {
+      id: "t1",
+      instanceId: "i1",
+      type: "terminal",
+      label: "web-01",
+      data,
+    },
     host: { id: "1", name: "web-01", ip: "10.0.0.1", port: 22 },
     sshHost: { id: 1 },
     label: "web-01",
@@ -62,5 +68,17 @@ describe("TerminalTabContent in a split", () => {
     renderTab(undefined);
     await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
     expect(captured.props.at(-1)?.splitScreen).toBe(false);
+  });
+  it("attaches an independent tab to the exact requested tmux session", async () => {
+    renderTab(undefined, { tmuxSession: "agent's session" });
+    await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+    expect(captured.props.at(-1)?.executeCommand).toBe(
+      "tmux attach-session -t '=agent'\\''s session'",
+    );
+  });
+  it("does not execute anything when a restored tmux session value is invalid", async () => {
+    renderTab(undefined, { tmuxSession: 42 });
+    await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+    expect(captured.props.at(-1)?.executeCommand).toBeUndefined();
   });
 });

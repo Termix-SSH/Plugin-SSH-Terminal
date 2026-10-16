@@ -63,6 +63,28 @@ describe(`${manifest.id} activate`, () => {
     );
   });
 
+  it("opens a fresh terminal tab carrying the requested tmux session name", async () => {
+    rendered = await renderWithApp(plugin, { manifest, locales });
+    const host = { id: 7, name: "server", ip: "192.0.2.1", port: 22 };
+    await rendered.app.invokeAction("terminal.open", host, {
+      tmuxSession: "agent-session",
+      label: "agent-session",
+    });
+    expect(rendered.shellCalls).toEqual([
+      {
+        method: "openTab",
+        args: [
+          { ...host, pluginSettings: {} },
+          "terminal",
+          {
+            forceNewTab: true,
+            label: "agent-session",
+            data: { tmuxSession: "agent-session" },
+          },
+        ],
+      },
+    ]);
+  });
   it("duplicates only the SSH connection configuration into a fresh tab", async () => {
     rendered = await renderWithApp(plugin, { manifest, locales });
     const host = { id: 7, name: "server", ip: "192.0.2.1", port: 22 };
