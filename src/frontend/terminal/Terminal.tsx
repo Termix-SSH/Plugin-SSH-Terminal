@@ -60,6 +60,7 @@ import {
   buildImageUploadFormData,
   type TerminalImageUploadSource,
 } from "./terminal-image-upload";
+import { createTerminalNativePasteHandler } from "./terminal-native-paste";
 import { TerminalSearchBar } from "./search/TerminalSearchBar.tsx";
 import {
   CommandAutocomplete,
@@ -302,6 +303,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const [isSavingQuickConnect, setIsSavingQuickConnect] = useState(false);
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
+    const imageUploadRef = useRef(handleImageUpload);
     const [isConnecting, setIsConnecting] = useState(false);
     const [isFitted, setIsFitted] = useState(false);
     const [connectionError, setConnectionError] = useState<string | null>(null);
@@ -2853,15 +2855,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       };
       element?.addEventListener("auxclick", handleMiddleClick);
 
-      const handlePaste = (e: ClipboardEvent) => {
-        const text = e.clipboardData?.getData("text");
-        if (text) {
-          e.preventDefault();
-          e.stopPropagation();
-          terminal.paste(text);
-        }
-      };
-      element?.addEventListener("paste", handlePaste);
+      const handlePaste = createTerminalNativePasteHandler(
+        (text) => terminal.paste(text),
+        (file) => void imageUploadRef.current(file, "clipboard"),
+      );
+      // Capture before xterm handles paste, so images do not become empty or duplicate input.
+      element?.addEventListener("paste", handlePaste, true);
 
       let tmuxDragTracking = false;
       const handleTmuxDragStart = (e: MouseEvent) => {
@@ -2935,7 +2934,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         element?.removeEventListener("contextmenu", handleContextMenu);
         element?.removeEventListener("mouseup", handleSelectionMouseUp);
         element?.removeEventListener("auxclick", handleMiddleClick);
-        element?.removeEventListener("paste", handlePaste);
+        element?.removeEventListener("paste", handlePaste, true);
         element?.removeEventListener("mousedown", handleTmuxDragStart);
         element?.removeEventListener("mousemove", handleTmuxDragMove);
         element?.removeEventListener("mouseup", handleTmuxDragEnd);
@@ -3554,6 +3553,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         setIsImageUploading(false);
       }
     }
+
+    // Keep the terminal session and upload callback current without rebuilding xterm.
+    useEffect(() => {
+      imageUploadRef.current = handleImageUpload;
+    });
 
     async function handleClipboardImage() {
       if (!navigator.clipboard?.read) {
