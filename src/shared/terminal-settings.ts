@@ -84,6 +84,7 @@ export interface TerminalBehavior {
   passwordPromptAutoFill: boolean;
   sudoPasswordAutoFill: boolean;
   autoReconnect: boolean;
+  keepOpenOnExit: boolean;
   cloudflareTunnelEnabled: boolean;
   cloudflareTunnelHostname: string;
   cloudflareTunnelPort: number;
@@ -128,6 +129,7 @@ const BEHAVIOR_KEYS = [
   "passwordPromptAutoFill",
   "sudoPasswordAutoFill",
   "autoReconnect",
+  "keepOpenOnExit",
   "cloudflareTunnelEnabled",
   "cloudflareTunnelHostname",
   "cloudflareTunnelPort",
@@ -181,6 +183,7 @@ export const DEFAULT_BEHAVIOR: TerminalBehavior = {
   passwordPromptAutoFill: true,
   sudoPasswordAutoFill: false,
   autoReconnect: false,
+  keepOpenOnExit: false,
   cloudflareTunnelEnabled: false,
   cloudflareTunnelHostname: "",
   cloudflareTunnelPort: 443,

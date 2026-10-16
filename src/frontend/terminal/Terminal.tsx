@@ -297,6 +297,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const sessionOriginRef = useRef<"local" | "remote">("local");
     // Set while an auto reconnect runs, so the old output stays on screen.
     const keepScrollbackRef = useRef(false);
+    // The session ended but the tab stays open to show its output.
+    const sessionEndedRef = useRef(false);
+    const reconnectAfterEndRef = useRef<() => void>(() => {});
     const customKeybindingsRef = useRef<CustomKeybinding[]>([]);
     const resizeTimeout = useRef<NodeJS.Timeout | null>(null);
     const wasDisconnectedBySSH = useRef(false);
@@ -1798,6 +1801,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           resolveLocalEchoMode(termSettingsRef.current.localEcho),
         );
         terminalInputDisposableRef.current = terminal.onData((data) => {
+          if (sessionEndedRef.current) {
+            if (data === "\r") reconnectAfterEndRef.current();
+            return;
+          }
           if (ws.readyState !== WebSocket.OPEN) return;
           if (data === "\r" || data === "\n") {
             const currentCmd = getCurrentCommand().trim();
@@ -2065,9 +2072,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             setIsConnected(false);
             setIsConnecting(false);
             shouldNotReconnectRef.current = true;
-            if (onClose) {
-              onClose();
-            }
+            endSession();
           } else if (msg.type === "disconnected") {
             wasDisconnectedBySSH.current = true;
             shouldNotReconnectRef.current = true;
@@ -2075,7 +2080,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             setIsConnecting(false);
             if (msg.graceful) {
               wasConnectedRef.current = false;
-              if (onClose) onClose();
+              endSession();
             } else if (wasConnectedRef.current) {
               wasConnectedRef.current = false;
               if (
@@ -3683,6 +3688,34 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       />
     );
     const toolbarOnTop = readToolbarSettings(host).position === "top";
+
+    // Closes the tab when the shell ends, unless the host keeps it open to
+    // show the last output.
+    function endSession() {
+      if (!termSettingsRef.current.keepOpenOnExit) {
+        onClose?.();
+        return;
+      }
+      sessionEndedRef.current = true;
+      terminal?.write(
+        `\r\n\x1b[2m${t("terminal.sessionEndedKeepOpen")}\x1b[0m\r\n`,
+      );
+    }
+
+    reconnectAfterEndRef.current = () => {
+      if (!terminal) return;
+      sessionEndedRef.current = false;
+      isUnmountingRef.current = false;
+      shouldNotReconnectRef.current = false;
+      isReconnectingRef.current = false;
+      isConnectingRef.current = false;
+      reconnectAttempts.current = 0;
+      wasDisconnectedBySSH.current = false;
+      wasConnectedRef.current = false;
+      keepScrollbackRef.current = true;
+      updateConnectionError(null);
+      connectToHost(terminal.cols, terminal.rows);
+    };
 
     return (
       <div className="flex h-full w-full flex-col">

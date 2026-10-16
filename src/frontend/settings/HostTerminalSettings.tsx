@@ -768,6 +768,16 @@ export function HostTerminalSettings({
             />
           </SettingRow>
           <SettingRow
+            label={t("hosts.keepOpenOnExitLabel")}
+            defaultKey="keepOpenOnExit"
+            description={t("hosts.keepOpenOnExitDesc")}
+          >
+            <FakeSwitch
+              checked={form.keepOpenOnExit}
+              onChange={(v) => setField("keepOpenOnExit", v)}
+            />
+          </SettingRow>
+          <SettingRow
             label={t("hosts.passwordPromptAutoFillLabel")}
             defaultKey="passwordPromptAutoFill"
             description={t("hosts.passwordPromptAutoFillDesc")}

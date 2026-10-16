@@ -673,6 +673,13 @@
             "labelKey": "settings.host.autoReconnect.label",
             "hidden": true,
             "default": false
+          },
+          {
+            "key": "keepOpenOnExit",
+            "type": "boolean",
+            "labelKey": "settings.host.keepOpenOnExit.label",
+            "hidden": true,
+            "default": false
           }
         ]
       },

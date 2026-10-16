@@ -105,7 +105,8 @@
     "secretClear": "Clear",
     "secretCancel": "Cancel",
     "hideSecret": "Hide secret",
-    "showSecret": "Show secret"
+    "showSecret": "Show secret",
+    "sessionEndedKeepOpen": "Session ended. Press Enter to reconnect."
   },
   "terminalToolbar": {
     "detachTmux": "Detach tmux",
@@ -357,6 +358,9 @@
         "moveUp": "Move up",
         "moveDown": "Move down",
         "tmuxHint": "Only shows while tmux is attached"
+      },
+      "keepOpenOnExit": {
+        "label": "Keep tab open on exit"
       }
     },
     "user": {
@@ -527,7 +531,9 @@
     "guac": {
       "permissionLevel": "Permission Level"
     },
-    "deleteGlobalThemeConfirm": "Delete the theme {{name}}?"
+    "deleteGlobalThemeConfirm": "Delete the theme {{name}}?",
+    "keepOpenOnExitLabel": "Keep tab open on exit",
+    "keepOpenOnExitDesc": "When the shell exits or the connection closes, keep the tab and its output. Press Enter to reconnect."
   },
   "nav": {
     "history": "History",

@@ -8,6 +8,7 @@
 - Pasting a copied image with Ctrl+V or Cmd+V uploads it to the host, the same as the paste image button
 - Connect to hosts behind a Cloudflare Tunnel, with an optional Access service token, from the host's Terminal tab
 - Other plugins can open a terminal tab attached to a tmux session
+- Keep tab open on exit, in a host's Terminal tab, keeps the output on screen when the shell exits or the connection closes; press Enter to reconnect
 
 ### Changed
 
