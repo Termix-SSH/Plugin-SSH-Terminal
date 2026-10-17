@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-const saveCommandToHistory = vi.fn(async () => {});
+const saveCommandToHistory = vi.fn(async (..._args: unknown[]) => {});
 vi.mock("@termix-ssh/plugin-sdk/frontend", () => ({
   usePluginApi: () => ({}),
 }));
