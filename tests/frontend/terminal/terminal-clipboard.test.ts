@@ -11,6 +11,7 @@ import {
   getUseRightClickCopyPaste,
   handleTerminalClipboardKeyEvent,
   createTerminalContextMenuHandler,
+  createTerminalSelectionMouseUpHandler,
 } from "../../../src/frontend/terminal/terminal-clipboard";
 
 function createFakeTerminal({ selection = "" }: { selection?: string } = {}) {
@@ -51,9 +52,10 @@ function createKeyEvent(init: {
   } as unknown as KeyboardEvent;
 }
 
-function createMouseEvent(init: { ctrlKey?: boolean } = {}) {
+function createMouseEvent(init: { ctrlKey?: boolean; button?: number } = {}) {
   return {
     ctrlKey: false,
+    button: 0,
     preventDefault: vi.fn(),
     stopPropagation: vi.fn(),
     ...init,
@@ -284,6 +286,24 @@ describe("handleTerminalClipboardKeyEvent", () => {
 });
 
 describe("createTerminalContextMenuHandler", () => {
+  it("pastes over a selection when copy-on-select is enabled", async () => {
+    getCookieMock.mockImplementation((name) =>
+      name === "copyOnSelect" ? "true" : undefined,
+    );
+    const terminal = createFakeTerminal({ selection: "hello" });
+    const actions = createActions();
+    const handler = createTerminalContextMenuHandler(
+      terminal as unknown as Terminal,
+      actions,
+    );
+
+    handler(createMouseEvent());
+    await Promise.resolve();
+
+    expect(actions.writeTextToClipboard).not.toHaveBeenCalled();
+    expect(terminal.paste).toHaveBeenCalledWith("clipboard-text");
+  });
+
   it("routes Ctrl+right-click to the passthrough callback instead of the clipboard", () => {
     const terminal = createFakeTerminal({ selection: "hello" });
     const actions = createActions();
@@ -363,5 +383,49 @@ describe("createTerminalContextMenuHandler", () => {
 
     expect(actions.readTextFromClipboard).toHaveBeenCalled();
     expect(terminal.paste).toHaveBeenCalledWith("clipboard-text");
+  });
+});
+
+describe("createTerminalSelectionMouseUpHandler", () => {
+  it("reads preference changes without recreating the handler and keeps the selection", () => {
+    const terminal = createFakeTerminal({ selection: "selected output" });
+    const actions = createActions();
+    const handler = createTerminalSelectionMouseUpHandler(
+      terminal as unknown as Terminal,
+      actions,
+    );
+
+    handler(createMouseEvent());
+    expect(actions.writeTextToClipboard).not.toHaveBeenCalled();
+
+    getCookieMock.mockImplementation((name) =>
+      name === "copyOnSelect" ? "true" : undefined,
+    );
+    handler(createMouseEvent());
+    expect(actions.writeTextToClipboard).toHaveBeenCalledWith(
+      "selected output",
+    );
+    expect(terminal.clearSelection).not.toHaveBeenCalled();
+
+    actions.writeTextToClipboard.mockClear();
+    getCookieMock.mockReturnValue("false");
+    handler(createMouseEvent());
+    expect(actions.writeTextToClipboard).not.toHaveBeenCalled();
+  });
+
+  it("ignores non-left clicks and empty selections", () => {
+    getCookieMock.mockReturnValue("true");
+    const terminal = createFakeTerminal({ selection: "selected output" });
+    const actions = createActions();
+    const handler = createTerminalSelectionMouseUpHandler(
+      terminal as unknown as Terminal,
+      actions,
+    );
+
+    handler(createMouseEvent({ button: 1 }));
+    handler(createMouseEvent({ button: 2 }));
+    terminal.getSelection.mockReturnValue("");
+    handler(createMouseEvent());
+    expect(actions.writeTextToClipboard).not.toHaveBeenCalled();
   });
 });

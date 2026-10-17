@@ -7,6 +7,7 @@ import { getMacLineNavigationSequence } from "../lib/mac-line-navigation";
 import {
   handleTerminalClipboardKeyEvent,
   createTerminalContextMenuHandler,
+  createTerminalSelectionMouseUpHandler,
 } from "../terminal/terminal-clipboard";
 import {
   useAppTheme as useTheme,
@@ -177,6 +178,11 @@ export function LocalTerminal({
     );
     const element = xtermRef.current;
     element?.addEventListener("contextmenu", handleContextMenu);
+    const handleSelectionMouseUp = createTerminalSelectionMouseUpHandler(
+      terminal,
+      clipboardActions,
+    );
+    element?.addEventListener("mouseup", handleSelectionMouseUp);
 
     let disposed = false;
     let removeData = () => {};
@@ -233,6 +239,7 @@ export function LocalTerminal({
       removeData();
       removeExit();
       element?.removeEventListener("contextmenu", handleContextMenu);
+      element?.removeEventListener("mouseup", handleSelectionMouseUp);
       clipboardProvider.dispose();
       const sessionId = sessionIdRef.current;
       sessionIdRef.current = null;
