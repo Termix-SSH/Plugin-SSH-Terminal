@@ -22,6 +22,7 @@
 - The Files button and Ctrl+right-click opened the file manager in the home folder instead of the shell's current folder
 - The mouse wheel over a tmux session walked shell history instead of scrolling; it now scrolls tmux's own history
 - Option+Left and Option+Right on macOS move the cursor by word again. Alt+Arrow only leaves the terminal when there is a split pane to move to
+- Tab inside tmux, vim or less showed a short list of history entries instead of going to the app, and keys typed there were saved to command history
 
 ## 1.0.2
 

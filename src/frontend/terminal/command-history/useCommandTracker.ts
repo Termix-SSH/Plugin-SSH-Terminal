@@ -17,6 +17,27 @@ const SENSITIVE_PATTERNS = [
   /\bexport\b.*(?:PASSWORD|SECRET|TOKEN|KEY)=/i,
 ];
 
+type EscapeState = "none" | "esc" | "csi" | "ss3";
+
+/**
+ * Steps through an escape sequence: CSI (ESC [ ... final byte), SS3
+ * (ESC O x, arrow keys in application mode) or ESC plus one key (Alt+key).
+ */
+export function nextEscapeState(
+  state: EscapeState,
+  charCode: number,
+): EscapeState {
+  if (state === "esc") {
+    if (charCode === 91) return "csi";
+    if (charCode === 79) return "ss3";
+    return "none";
+  }
+  if (state === "csi") {
+    return charCode >= 0x40 && charCode <= 0x7e ? "none" : "csi";
+  }
+  return "none";
+}
+
 interface UseCommandTrackerOptions {
   hostId?: number;
   enabled?: boolean;
@@ -25,6 +46,8 @@ interface UseCommandTrackerOptions {
   onLineSubmitted?: (line: string) => void;
   /** True while the terminal waits for a password, so it is never kept. */
   isPasswordInput?: () => boolean;
+  /** True while a full-screen app like tmux or vim owns the keys. */
+  isFullScreen?: () => boolean;
 }
 
 interface CommandTrackerResult {
@@ -40,30 +63,31 @@ export function useCommandTracker({
   onCommandExecuted,
   onLineSubmitted,
   isPasswordInput,
+  isFullScreen,
 }: UseCommandTrackerOptions): CommandTrackerResult {
   const api = usePluginApi();
   const currentCommandRef = useRef<string>("");
-  const isInEscapeSequenceRef = useRef<boolean>(false);
+  const escapeRef = useRef<EscapeState>("none");
 
   const trackInput = useCallback(
     (data: string) => {
+      // Keys typed into tmux, vim or less are not a shell command line.
+      if (isFullScreen?.()) {
+        currentCommandRef.current = "";
+        escapeRef.current = "none";
+        return;
+      }
       for (let i = 0; i < data.length; i++) {
         const char = data[i];
         const charCode = char.charCodeAt(0);
 
         if (charCode === 27) {
-          isInEscapeSequenceRef.current = true;
+          escapeRef.current = "esc";
           continue;
         }
 
-        if (isInEscapeSequenceRef.current) {
-          if (
-            (charCode >= 65 && charCode <= 90) ||
-            (charCode >= 97 && charCode <= 122) ||
-            charCode === 126
-          ) {
-            isInEscapeSequenceRef.current = false;
-          }
+        if (escapeRef.current !== "none") {
+          escapeRef.current = nextEscapeState(escapeRef.current, charCode);
           continue;
         }
 
@@ -111,7 +135,14 @@ export function useCommandTracker({
         }
       }
     },
-    [enabled, hostId, onCommandExecuted, onLineSubmitted, isPasswordInput],
+    [
+      enabled,
+      hostId,
+      onCommandExecuted,
+      onLineSubmitted,
+      isPasswordInput,
+      isFullScreen,
+    ],
   );
 
   const getCurrentCommand = useCallback(() => {

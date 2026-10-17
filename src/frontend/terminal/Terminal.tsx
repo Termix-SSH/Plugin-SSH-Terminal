@@ -449,6 +449,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const lastCommandRef = useRef("");
     const outputTailRef = useRef("");
     const passwordInputRef = useRef(false);
+    const alternateScreenModeRef = useRef(false);
 
     const { trackInput, getCurrentCommand, updateCurrentCommand } =
       useCommandTracker({
@@ -458,6 +459,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           lastCommandRef.current = line;
         },
         isPasswordInput: () => passwordInputRef.current,
+        isFullScreen: () => alternateScreenModeRef.current,
         onCommandExecuted: (command) => {
           if (!autocompleteHistory.current.includes(command)) {
             autocompleteHistory.current = [
@@ -626,8 +628,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       autosuggestionRef.current = autosuggestion;
     }, [autosuggestion]);
 
+    // History means nothing inside tmux, vim or less, so Tab and
+    // suggestions go to the app there.
     const isAutocompleteEnabled = useCallback(
-      () => termUserRef.current.commandAutocomplete,
+      () =>
+        termUserRef.current.commandAutocomplete &&
+        !alternateScreenModeRef.current,
       [],
     );
 
@@ -880,7 +886,6 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const activityLoggingRef = useRef(false);
     const passwordPromptShownRef = useRef(false);
     const passwordPromptBufferRef = useRef("");
-    const alternateScreenModeRef = useRef(false);
     const controlStringModeRef = useRef(false);
 
     const lastSentSizeRef = useRef<{ cols: number; rows: number } | null>(null);
@@ -3389,9 +3394,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             }
           };
 
-          const autocompleteEnabled = termUserRef.current.commandAutocomplete;
-
-          if (!autocompleteEnabled) {
+          if (!isAutocompleteEnabled()) {
             clearAutosuggestion();
             sendTabToShell();
             return false;
