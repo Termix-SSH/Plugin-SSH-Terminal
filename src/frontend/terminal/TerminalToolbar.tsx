@@ -299,7 +299,7 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
       role="toolbar"
       aria-label={t("terminalToolbar.label")}
       className={cn(
-        "relative z-[110] flex h-8 w-full shrink-0 items-center gap-1 border-border bg-background px-1",
+        "relative z-[110] flex h-8 w-full shrink-0 items-center gap-1 border-border bg-sidebar px-1",
         settings.position === "top" ? "border-b" : "border-t",
         !isFocused && "opacity-60 hover:opacity-100 focus-within:opacity-100",
       )}
