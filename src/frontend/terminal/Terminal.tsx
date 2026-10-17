@@ -44,6 +44,7 @@ import {
 } from "../look/terminal-font-zoom";
 import { TmuxSessionPicker } from "./TmuxSessionPicker";
 import { getTerminalBufferText } from "./terminal-buffer-text.ts";
+import { isPaneNavHotkey } from "../lib/pane-nav-hotkey";
 import { getMacLineNavigationSequence } from "../lib/mac-line-navigation";
 import { useCommandTracker } from "./command-history/useCommandTracker";
 import {
@@ -3191,16 +3192,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           }
         }
 
-        if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-          const arrowCodes = [
-            "ArrowLeft",
-            "ArrowRight",
-            "ArrowUp",
-            "ArrowDown",
-          ];
-          if (arrowCodes.includes(e.code)) {
+        // Only keep the key when core moved to another pane. Otherwise it
+        // goes to the shell, where Alt+Arrow jumps a word.
+        if (isPaneNavHotkey(e)) {
+          globalShortcutHandler.current?.(e);
+          if (e.defaultPrevented) {
             e.stopPropagation();
-            globalShortcutHandler.current?.(e);
             return false;
           }
         }
