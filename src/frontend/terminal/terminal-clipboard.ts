@@ -1,6 +1,14 @@
 import { getClientPreference } from "@termix-ssh/plugin-sdk/frontend";
 import type { Terminal } from "@xterm/xterm";
 import { isPhysicalShortcutKey } from "./terminal-key-event";
+import {
+  resolveTerminalContextMenuAction,
+  selectedTextToCopy,
+} from "./terminal-clipboard-actions";
+
+export function getCopyOnSelect(): boolean {
+  return getClientPreference("copyOnSelect") === "true";
+}
 
 export function getUseRightClickCopyPaste(): boolean {
   return getClientPreference("rightClickCopyPaste") !== "false";
@@ -126,7 +134,7 @@ export interface TerminalContextMenuOptions {
 
 /**
  * Builds a "contextmenu" listener implementing right-click copy/paste:
- * copies the selection if one exists, otherwise pastes. Gated behind the
+ * copies the selection unless copy-on-select is enabled, otherwise pastes. Gated behind the
  * user's "rightClickCopyPaste" preference cookie.
  */
 export function createTerminalContextMenuHandler(
@@ -142,11 +150,16 @@ export function createTerminalContextMenuHandler(
       return;
     }
 
-    if (!getUseRightClickCopyPaste()) return;
+    const action = resolveTerminalContextMenuAction({
+      rightClickCopyPaste: getUseRightClickCopyPaste(),
+      copyOnSelect: getCopyOnSelect(),
+      hasSelection: terminal.hasSelection(),
+    });
+    if (action === "native") return;
 
     e.preventDefault();
     e.stopPropagation();
-    if (terminal.hasSelection()) {
+    if (action === "copy") {
       const text = terminal.getSelection();
       writeTextToClipboard(text).then(() => terminal.clearSelection());
     } else {
@@ -154,5 +167,20 @@ export function createTerminalContextMenuHandler(
         if (text) terminal.paste(text);
       });
     }
+  };
+}
+
+/** Copies completed selections using the current client preference. */
+export function createTerminalSelectionMouseUpHandler(
+  terminal: Terminal,
+  { writeTextToClipboard }: TerminalClipboardActions,
+): (e: MouseEvent) => void {
+  return (e: MouseEvent) => {
+    const text = selectedTextToCopy({
+      copyOnSelect: getCopyOnSelect(),
+      button: e.button,
+      selection: terminal.getSelection(),
+    });
+    if (text) void writeTextToClipboard(text);
   };
 }

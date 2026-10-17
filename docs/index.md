@@ -41,6 +41,8 @@ Paste or drop an image into a terminal and Termix uploads it to the host and typ
 
 In the desktop app, open Local Terminal from the rail or the command palette for a shell on your own computer. You can also give Open new Local Terminal a shortcut in Settings, Keyboard Shortcuts. It works from anywhere in the app, including an SSH terminal, and each use opens and focuses a new session. It uses PowerShell on Windows, zsh on macOS and your `SHELL` on Linux. Set `TERMIX_LOCAL_SHELL` to use another.
 
+The clipboard settings in SSH Tools also apply to Local Terminal: right-click copy/paste, Ctrl+V paste and automatic copying of selected text. With automatic copying enabled, finishing a selection copies it and right-click pastes.
+
 ## Look and feel
 
 Theme, font, cursor, scrollback, background image, syntax highlighting, local echo and more are set per host, or once for all hosts with [host defaults](/guide/host-defaults). See [appearance](appearance.md).
