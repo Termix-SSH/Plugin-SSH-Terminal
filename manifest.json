@@ -729,6 +729,9 @@
         "id": "paste"
       },
       {
+        "id": "clearConsole"
+      },
+      {
         "id": "sendControlCode",
         "params": {
           "controlCode": {

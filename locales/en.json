@@ -566,6 +566,7 @@
     "openLocalTerminal": "Open new Local Terminal",
     "copy": "Copy selection",
     "paste": "Paste",
+    "clearConsole": "Clear console",
     "sendControlCode": "Send Ctrl+letter signal",
     "sendText": "Send text",
     "controlCodeLabel": "Letter",

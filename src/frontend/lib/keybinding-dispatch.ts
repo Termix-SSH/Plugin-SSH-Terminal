@@ -15,6 +15,7 @@ export interface KeybindingDispatchContext {
 const TERMINAL_KEYBINDING_ACTIONS = [
   "copy",
   "paste",
+  "clearConsole",
   "sendControlCode",
   "sendText",
 ] as const;
@@ -60,6 +61,13 @@ export function dispatchKeybindingAction(
       ctx.readTextFromClipboard().then((value) => {
         if (value) ctx.terminal.paste(value);
       });
+      return true;
+    }
+    case "clearConsole": {
+      // Wipes the screen and scrollback on the client; nothing is sent to
+      // the shell, so it works the same inside editors and running programs.
+      ctx.terminal.clearSelection();
+      ctx.terminal.clear();
       return true;
     }
     case "sendControlCode": {

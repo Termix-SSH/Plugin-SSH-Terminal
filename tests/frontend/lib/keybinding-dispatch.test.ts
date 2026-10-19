@@ -26,6 +26,7 @@ function makeContext(
       getSelection: vi.fn(() => ""),
       clearSelection: vi.fn(),
       paste: vi.fn(),
+      clear: vi.fn(),
     } as unknown as Terminal,
     webSocketRef: { current: ws as unknown as WebSocket },
     writeTextToClipboard: vi.fn().mockResolvedValue(true),
@@ -66,6 +67,13 @@ describe("dispatchKeybindingAction", () => {
     await Promise.resolve();
     await Promise.resolve();
     expect(ctx.terminal.paste).toHaveBeenCalledWith("pasted text");
+  });
+
+  it("clearConsole clears the terminal without sending anything to the shell", () => {
+    const ctx = makeContext();
+    expect(dispatchKeybindingAction({ type: "clearConsole" }, ctx)).toBe(true);
+    expect(ctx.terminal.clear).toHaveBeenCalled();
+    expect(ctx.sentData).toEqual([]);
   });
 
   it("sendControlCode sends the corresponding control byte", () => {

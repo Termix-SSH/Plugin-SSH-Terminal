@@ -253,6 +253,10 @@ export function activate(app: TermixApp): void {
     editor: PasteNote,
   });
   app.registerKeybindingAction({
+    id: "clearConsole",
+    titleKey: "keybindings.clearConsole",
+  });
+  app.registerKeybindingAction({
     id: "sendControlCode",
     titleKey: "keybindings.sendControlCode",
     editor: SendControlCodeEditor,
