@@ -1,11 +1,5 @@
 # Changelog
 
-## 1.1.1
-
-### Fixed
-
-- Store pasted images in the SSH user home on Windows OpenSSH hosts, where /tmp may not exist, and return a Windows drive path.
-
 ## 1.1.0
 
 ### Added
