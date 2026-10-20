@@ -289,6 +289,44 @@ describe("storeImageViaSftp", () => {
     return { sftp, written, calls, streams };
   }
 
+  it("stores Windows images under the SSH user's home and returns a native drive path", async () => {
+    const { sftp, written, calls } = fakeSftp({});
+    sftp.realpath = (_path, callback) =>
+      callback(undefined, "/C:/Users/Test User");
+    const stored = await storeImageViaSftp(sftp, PNG_BYTES, {
+      maxCount: 100,
+      maxBytes: 1000000,
+    });
+    expect(stored.shellPath).toBe(
+      `C:/Users/Test User/.termix-images/${stored.id}.png`,
+    );
+    expect(
+      written.get(`/C:/Users/Test User/.termix-images/${stored.id}.png`),
+    ).toEqual(PNG_BYTES);
+    expect(calls.mkdir.map((c) => c.dir)).toEqual([
+      "/C:/Users/Test User/.termix-images",
+      "/C:/Users/Test User/.termix-images/.termix-write-lock",
+    ]);
+  });
+
+  it("keeps Unix image storage in /tmp after resolving the home", async () => {
+    const { sftp } = fakeSftp({});
+    sftp.realpath = (_path, callback) => callback(undefined, "/home/user");
+    expect((await storeImageViaSftp(sftp, PNG_BYTES)).shellPath).toMatch(
+      /^\/tmp\/termix-images\//,
+    );
+  });
+
+  it("reports a failed home lookup without writing or deleting another path", async () => {
+    const { sftp, calls } = fakeSftp({});
+    sftp.realpath = (_path, callback) =>
+      callback(new Error("lookup failed"), "");
+    const error = await storeImageViaSftp(sftp, PNG_BYTES).catch((e) => e);
+    expect(error.code).toBe("IMAGE_REMOTE_WRITE_FAILED");
+    expect(calls.mkdir).toEqual([]);
+    expect(calls.createWriteStream).toEqual([]);
+  });
+
   it("writes into the remote image directory and returns its POSIX path", async () => {
     const { sftp, written } = fakeSftp({});
     const stored = await storeImageViaSftp(sftp, PNG_BYTES);
