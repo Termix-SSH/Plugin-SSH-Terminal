@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+### Fixed
+
+- Pasting or uploading an image to a Windows OpenSSH host works when the host has no C: mp folder
+
 ## 1.1.0
 
 ### Added
