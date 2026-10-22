@@ -191,6 +191,10 @@ export const REMOTE_IMAGE_DIR = "/tmp/termix-images";
 
 /** Minimal SFTP surface the remote adapter needs (satisfied by ssh2). */
 export interface ImageSftpClient {
+  realpath?: (
+    remotePath: string,
+    callback: (error: Error | undefined, absolutePath: string) => void,
+  ) => void;
   mkdir(
     dir: string,
     attrsOrCallback: { mode?: number } | ((err?: Error) => void),
@@ -359,13 +363,14 @@ function sftpMkdir(sftp: ImageSftpClient, dir: string): Promise<void> {
   });
 }
 
-const REMOTE_IMAGE_LOCK_DIR = `${REMOTE_IMAGE_DIR}/.termix-write-lock`;
 const REMOTE_IMAGE_LOCK_LEASE_MS = 60_000;
 
 function waitForRemoteImageLock(
   sftp: ImageSftpClient,
   attempts = 60,
+  remoteDir = REMOTE_IMAGE_DIR,
 ): Promise<() => Promise<void>> {
+  const lockDir = `${remoteDir}/.termix-write-lock`;
   if (!sftp.rmdir) {
     return Promise.reject(
       new TerminalImageStorageError(
@@ -378,12 +383,12 @@ function waitForRemoteImageLock(
   return new Promise((resolve, reject) => {
     let remaining = attempts;
     const tryAcquire = () => {
-      sftp.mkdir(REMOTE_IMAGE_LOCK_DIR, { mode: 0o700 }, (error) => {
+      sftp.mkdir(lockDir, { mode: 0o700 }, (error) => {
         if (!error) {
           resolve(
             () =>
               new Promise<void>((releaseResolve, releaseReject) => {
-                sftp.rmdir!(REMOTE_IMAGE_LOCK_DIR, (releaseError) =>
+                sftp.rmdir!(lockDir, (releaseError) =>
                   releaseError ? releaseReject(releaseError) : releaseResolve(),
                 );
               }),
@@ -402,13 +407,13 @@ function waitForRemoteImageLock(
           );
           return;
         }
-        inspect(REMOTE_IMAGE_LOCK_DIR, (inspectError, attrs) => {
+        inspect(lockDir, (inspectError, attrs) => {
           const stale =
             !inspectError &&
             typeof attrs?.mtime === "number" &&
             Date.now() - attrs.mtime * 1000 > REMOTE_IMAGE_LOCK_LEASE_MS;
           if (stale) {
-            sftp.rmdir!(REMOTE_IMAGE_LOCK_DIR, (removeError) => {
+            sftp.rmdir!(lockDir, (removeError) => {
               if (removeError) {
                 if (--remaining <= 0) {
                   reject(
@@ -481,10 +486,11 @@ async function cleanupExpiredRemoteImages(
   sftp: ImageSftpClient,
   ttlMs: number | undefined,
   nowMs = Date.now(),
+  remoteDir = REMOTE_IMAGE_DIR,
 ): Promise<void> {
   if (!ttlMs || ttlMs <= 0 || !sftp.readdir || !sftp.unlink) return;
   const entries = await new Promise<ImageSftpEntry[]>((resolve) => {
-    sftp.readdir!(REMOTE_IMAGE_DIR, (error, result) => {
+    sftp.readdir!(remoteDir, (error, result) => {
       resolve(error ? [] : result);
     });
   });
@@ -502,9 +508,7 @@ async function cleanupExpiredRemoteImages(
       .map((entry) =>
         withTimeout(
           new Promise<void>((resolve) => {
-            sftp.unlink!(`${REMOTE_IMAGE_DIR}/${entry.filename}`, () =>
-              resolve(),
-            );
+            sftp.unlink!(`${remoteDir}/${entry.filename}`, () => resolve());
           }),
           3_000,
           "SFTP cleanup operation timed out",
@@ -521,6 +525,7 @@ async function enforceRemoteImageLimits(
   imageBytes: number,
   maxCount: number,
   maxBytes: number,
+  remoteDir = REMOTE_IMAGE_DIR,
 ): Promise<void> {
   if (!sftp.readdir) {
     throw new TerminalImageStorageError(
@@ -531,7 +536,7 @@ async function enforceRemoteImageLimits(
   let entries: ImageSftpEntry[];
   try {
     entries = await new Promise<ImageSftpEntry[]>((resolve, reject) => {
-      sftp.readdir!(REMOTE_IMAGE_DIR, (error, result) => {
+      sftp.readdir!(remoteDir, (error, result) => {
         if (error) reject(error);
         else resolve(result);
       });
@@ -575,23 +580,40 @@ async function storeImageViaSftpUnlocked(
 ): Promise<StoredTerminalImage> {
   const id = randomUUID();
   const filename = `${id}.png`;
-  const remotePath = `${REMOTE_IMAGE_DIR}/${filename}`;
+  let remoteDir = REMOTE_IMAGE_DIR;
+  let remotePath: string | undefined;
 
   let releaseRemoteLock: (() => Promise<void>) | undefined;
   let operationError: TerminalImageStorageError | undefined;
   try {
+    if (sftp.realpath) {
+      const home = await withTimeout(
+        new Promise<string>((resolve, reject) => {
+          sftp.realpath!(".", (error, resolved) =>
+            error ? reject(error) : resolve(resolved),
+          );
+        }),
+        3_000,
+        "SFTP home directory operation timed out",
+      );
+      // Windows OpenSSH exposes drive paths as /C:/Users/name. Use the
+      // user's home instead of assuming a Unix /tmp directory exists.
+      if (/^\/?[A-Za-z]:[\\/]/.test(home))
+        remoteDir = `${home.replace(/\\/g, "/").replace(/\/$/, "")}/.termix-images`;
+    }
+    remotePath = `${remoteDir}/${filename}`;
     await withTimeout(
-      sftpMkdir(sftp, REMOTE_IMAGE_DIR),
+      sftpMkdir(sftp, remoteDir),
       3_000,
       "SFTP directory operation timed out",
     );
     releaseRemoteLock = await withTimeout(
-      waitForRemoteImageLock(sftp),
+      waitForRemoteImageLock(sftp, 60, remoteDir),
       10_000,
       "SFTP lock operation timed out",
     );
     await withTimeout(
-      cleanupExpiredRemoteImages(sftp, options.ttlMs, options.nowMs),
+      cleanupExpiredRemoteImages(sftp, options.ttlMs, options.nowMs, remoteDir),
       5_000,
       "SFTP cleanup operation timed out",
     );
@@ -602,6 +624,7 @@ async function storeImageViaSftpUnlocked(
           image.length,
           options.maxCount ?? 100,
           options.maxBytes ?? 5_368_709_120,
+          remoteDir,
         ),
         5_000,
         "SFTP quota operation timed out",
@@ -609,10 +632,10 @@ async function storeImageViaSftpUnlocked(
     }
     await sftpWriteFile(sftp, remotePath, image, options.writeTimeoutMs);
   } catch (error) {
-    if (sftp.unlink) {
+    if (sftp.unlink && remotePath) {
       await withTimeout(
         new Promise<void>((resolve) => {
-          sftp.unlink!(remotePath, () => resolve());
+          sftp.unlink!(remotePath!, () => resolve());
         }),
         3_000,
         "SFTP cleanup operation timed out",
@@ -640,7 +663,7 @@ async function storeImageViaSftpUnlocked(
         if (sftp.unlink) {
           await withTimeout(
             new Promise<void>((resolve) => {
-              sftp.unlink!(remotePath, () => resolve());
+              sftp.unlink!(remotePath!, () => resolve());
             }),
             3_000,
             "SFTP cleanup operation timed out",
@@ -657,7 +680,12 @@ async function storeImageViaSftpUnlocked(
 
   if (operationError) throw operationError;
 
-  return { id, filename, shellPath: remotePath, storage: "remote-sftp" };
+  return {
+    id,
+    filename,
+    shellPath: remotePath!.replace(/^\/([A-Za-z]:\/)/, "$1"),
+    storage: "remote-sftp",
+  };
 }
 
 export function storeImageViaSftp(
