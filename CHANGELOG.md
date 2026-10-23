@@ -2,6 +2,10 @@
 
 ## 1.1.1
 
+### Added
+
+- Connect from host setting for the mobile app: the phone, this server, or automatic
+
 ### Fixed
 
 - Pasting or uploading an image to a Windows OpenSSH host works when the host has no C:\tmp folder

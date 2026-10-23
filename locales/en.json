@@ -252,6 +252,13 @@
         "label": "Command History",
         "description": "Record commands run in this terminal for history and autocomplete"
       },
+      "connectFrom": {
+        "label": "Connect from (mobile app)",
+        "description": "Where the mobile app opens SSH for this host: the phone, this server, or the phone when it can reach the host.",
+        "auto": "Automatic",
+        "device": "The phone",
+        "server": "This server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Route SSH traffic over Cloudflare Zero Trust via WebSocket"

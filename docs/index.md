@@ -10,6 +10,8 @@ The first time you connect, Termix shows the host's key fingerprint and asks you
 
 Turn Enable Terminal off for a host that should never get a terminal.
 
+The mobile app can open SSH from the phone itself or through this server. Connect from (mobile app) picks which for a host: Automatic uses the phone when it can reach the host and the server otherwise. Each user picks their own.
+
 ## Sessions that survive
 
 - Disconnects: If your browser drops, the session stays alive on the server for 30 minutes. Reopen the tab and you pick up where you left off. Admins change the time or turn it off in Settings, SSH Terminal.

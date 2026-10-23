@@ -369,6 +369,28 @@
             "default": true
           },
           {
+            "key": "connectFrom",
+            "type": "select",
+            "labelKey": "settings.host.connectFrom.label",
+            "descriptionKey": "settings.host.connectFrom.description",
+            "default": "auto",
+            "personal": true,
+            "options": [
+              {
+                "value": "auto",
+                "labelKey": "settings.host.connectFrom.auto"
+              },
+              {
+                "value": "device",
+                "labelKey": "settings.host.connectFrom.device"
+              },
+              {
+                "value": "server",
+                "labelKey": "settings.host.connectFrom.server"
+              }
+            ]
+          },
+          {
             "key": "cloudflareTunnelEnabled",
             "type": "boolean",
             "labelKey": "settings.host.cloudflareTunnelEnabled.label",
