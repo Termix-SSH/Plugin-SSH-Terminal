@@ -154,8 +154,14 @@ export function createTerminalContextMenuHandler(
       rightClickCopyPaste: getUseRightClickCopyPaste(),
       copyOnSelect: getCopyOnSelect(),
       hasSelection: terminal.hasSelection(),
+      mouseTracking: terminal.modes.mouseTrackingMode !== "none",
+      shiftKey: e.shiftKey,
     });
     if (action === "native") return;
+    if (action === "app") {
+      e.preventDefault();
+      return;
+    }
 
     e.preventDefault();
     e.stopPropagation();

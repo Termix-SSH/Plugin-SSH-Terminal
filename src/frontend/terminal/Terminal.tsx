@@ -2890,7 +2890,14 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           rightClickCopyPaste: getUseRightClickCopyPaste(),
           copyOnSelect: getCopyOnSelect(),
           hasSelection: terminal.hasSelection(),
+          mouseTracking: terminal.modes.mouseTrackingMode !== "none",
+          shiftKey: e.shiftKey,
         });
+        if (action === "app") {
+          // Keep the browser menu away; the program already got the click.
+          e.preventDefault();
+          return;
+        }
         if (action !== "native") {
           e.preventDefault();
           e.stopPropagation();
