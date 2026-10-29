@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Kon nie die knipbord lees nie. Sommige blaaiers beperk toegang tot die knipbord buite HTTPS - probeer Ctrl+V in plaas daarvan, of bedien Termix oor HTTPS.",
     "connecting": "Maak verbinding...",
     "connectionLost": "Verbinding verlore",
+    "editHost": "Redige gasheer",
     "connectionRejected": "Verbinding deur bediener verwerp. Kontroleer asseblief jou outentikasie en netwerkkonfigurasie.",
     "connectionTimeout": "Verbindingstyd verstryk",
     "hostKeyRejected": "SSH-bedienersleutelverifikasie verwerp. Verbinding gekanselleer.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maksimum aantal herverbindingspogings bereik",
     "noHostSelected": "Geen gasheer gekies nie",
     "passwordPromptFillTitle": "Vul die gestoorde wagwoord in hierdie versoek in?",
+    "suPasswordFillTitle": "Vul die gestoorde wagwoord vir {{user}} in?",
     "reconnect": "Hermaak verbinding",
     "reconnected": "Suksesvol herverbind",
     "reconnecting": "Hermaak verbinding... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Opdraggeskiedenis",
         "description": "Neem opdragte wat in hierdie terminaal uitgevoer word vir geskiedenis en outo-voltooing op"
       },
+      "connectFrom": {
+        "label": "Maak verbinding vanaf (mobiele app)",
+        "description": "Waar die mobiele app SSH vir hierdie gasheer oopmaak: die foon, hierdie bediener, of die foon wanneer dit die gasheer kan bereik.",
+        "auto": "Outomaties",
+        "device": "Die foon",
+        "server": "Hierdie bediener"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-tunnel",
         "description": "Rig SSH-verkeer oor Cloudflare Zero Trust via WebSocket"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Outo-tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Vra wanneer een tmux-sessie bestaan"
+      },
       "useSSHTitle": {
         "label": "Gebruik die SSH-titel"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Vul sudo-aanvrae in"
+      },
+      "suPasswordAutoFill": {
+        "label": "Vul su-aanwysings in"
       },
       "autoReconnect": {
         "label": "Herkoppel outomaties"
@@ -400,7 +415,11 @@
         "label": "Wys altyd geskiedenis-knoppies",
         "description": "Hou die kopieer- en verwyderknoppies onder elke opdrag sigbaar. Skakel af om dit slegs by hover te wys."
       },
-      "displayTitle": "Vertoning"
+      "displayTitle": "Vertoning",
+      "zmodem": {
+        "label": "rz en sz-lêeroordrae",
+        "description": "Laai lêers op en af met rz en sz (lrzsz) reg in die terminaal."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Aktiveer outo-Mosh",
     "enableAutoMoshDesc": "Gebruik Mosh eerder as SSH indien beskikbaar",
     "enableAutoTmux": "Aktiveer outo-tmux",
+    "autoTmuxAskWhenOne": "Vra wanneer een sessie bestaan",
+    "autoTmuxAskWhenOneDesc": "Wys die sessiekiezer selfs met een tmux-sessie, sodat 'n nuwe tabblad sy eie sessie kan begin in plaas daarvan om dit by te sluit",
     "enableAutoTmuxDesc": "Hou jou skul en enige programme wat daarin loop lewendig oor verbreekte verbinding en blaaierherstarts deur binne tmux te loop (tmux moet op die gasheer geïnstalleer wees)",
     "fastScrollModifier": "Vinnige skrol-wysiger",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Reëlhoogte",
     "lineHeightLabel": "Reëlhoogte",
     "linkClickBehaviorConfirm": "Wys pop-up om te open of te kopieer",
-    "linkClickBehaviorDesc": "Beheer wat gebeur wanneer jy op 'n skakel in die terminaal klik. Gebruik 'Verstek' om die app-vlak instelling te volg.",
+    "linkClickBehaviorDesc": "Beheer wat gebeur wanneer jy op 'n skakel in die terminaal klik. Ctrl+klik (Cmd+klik op Mac) maak dit altyd dadelik oop. Gebruik 'Standaard' om die app-vlakinstelling te volg.",
     "linkClickBehaviorDirect": "Open direk",
+    "linkClickBehaviorModifier": "Maak oop met Ctrl+klik (Cmd+klik op Mac)",
     "linkClickBehaviorLabel": "Skakelklik-gedrag",
     "loadingHost": "Laai gasheer...",
     "localEchoAuto": "Outomaties",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo-wagwoord outovulling",
     "sudoPasswordAutoFillDesc": "Stoor 'n sudo-wagwoord sodat gasheer-metriek, terminaal-aanvrae en ander voorregte opdragte outomaties kan uitvoer.",
     "sudoPasswordAutoFillLabel": "Sudo-wagwoord outovulling",
+    "suPasswordAutoFillLabel": "Su-wagwoord outovulling",
+    "suPasswordAutoFillDesc": "Bied by 'n su-aanwysing die wagwoord wat op 'n ander gasheer met dieselfde adres gestoor is, en die gebruiker waarna su omskakel",
     "syntaxCategoryIpAddresses": "IP-adresse",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Logvlakke",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH-terminal",
     "description": "SSH-terminaalsessies met oopblaaie, gesplitste skerm, geskiedenis, makro's en 'n plaaslike terminaal in die burebladtoepassing."
+  },
+  "zmodem": {
+    "waiting": "Die gasheer wag vir lêers (rz).",
+    "choose": "Kies lêers",
+    "sending": "Laai {{name}} op",
+    "receiving": "Laai {{name}} af",
+    "cancel": "Kanselleer oordrag"
   }
 }

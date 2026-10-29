@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "无法读取剪贴板。某些浏览器限制在非 HTTPS 环境下访问剪贴板——请尝试使用 Ctrl+V，或通过 HTTPS 提供 Termix 服务。",
     "connecting": "正在连接...",
     "connectionLost": "连接已断开",
+    "editHost": "编辑主机",
     "connectionRejected": "连接被服务器拒绝。请检查您的身份验证和网络配置。",
     "connectionTimeout": "连接超时",
     "hostKeyRejected": "SSH 主机密钥验证被拒绝。连接已取消。",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "已达到最大重连尝试次数",
     "noHostSelected": "未选择主机",
     "passwordPromptFillTitle": "是否在此提示符中填入已保存的密码？",
+    "suPasswordFillTitle": "是否填入 {{user}} 的已保存密码？",
     "reconnect": "重新连接",
     "reconnected": "重新连接成功",
     "reconnecting": "正在重新连接...（{{attempt}}/{{max}}）",
@@ -249,6 +251,13 @@
         "label": "命令历史",
         "description": "记录在此终端中运行的命令，用于历史和自动补全"
       },
+      "connectFrom": {
+        "label": "连接来源（移动应用）",
+        "description": "移动应用为此主机打开 SSH 的位置：手机、此服务器，或手机能直接访问该主机时。",
+        "auto": "自动",
+        "device": "手机",
+        "server": "此服务器"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "通过 WebSocket 将 SSH 流量路由到 Cloudflare Zero Trust"
@@ -339,6 +348,9 @@
       "autoTmux": {
         "label": "自动启用 tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "存在一个 tmux 会话时询问"
+      },
       "useSSHTitle": {
         "label": "使用 SSH 标题"
       },
@@ -359,6 +371,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "填充 sudo 提示"
+      },
+      "suPasswordAutoFill": {
+        "label": "自动填充 su 提示"
       },
       "autoReconnect": {
         "label": "自动重新连接"
@@ -397,7 +412,11 @@
         "label": "始终显示历史记录按钮",
         "description": "保持每个命令下方的复制和删除按钮可见。关闭后仅在悬停时显示。"
       },
-      "displayTitle": "显示"
+      "displayTitle": "显示",
+      "zmodem": {
+        "label": "rz 和 sz 文件传输",
+        "description": "在终端中直接使用 rz 和 sz (lrzsz) 上传和下载文件。"
+      }
     }
   },
   "palette": {
@@ -469,6 +488,8 @@
     "enableAutoMosh": "启用自动 Mosh",
     "enableAutoMoshDesc": "如果可用，优先使用 Mosh 而非 SSH",
     "enableAutoTmux": "启用自动 Tmux",
+    "autoTmuxAskWhenOne": "存在一个会话时询问",
+    "autoTmuxAskWhenOneDesc": "即使只有一个 tmux 会话也显示会话选择器，以便新标签页可以启动自己的会话而不是加入现有会话",
     "enableAutoTmuxDesc": "通过在 tmux 中运行，保持您的 Shell 及其中的进程在断开连接和浏览器重启后仍然存活（主机上必须已安装 tmux）",
     "fastScrollModifier": "快速滚动修饰键",
     "fastScrollModifierAlt": "Alt",
@@ -490,8 +511,9 @@
     "lineHeight": "行高",
     "lineHeightLabel": "行高",
     "linkClickBehaviorConfirm": "显示弹窗以打开或复制",
-    "linkClickBehaviorDesc": "控制在终端中点击链接时的行为。使用“默认”以遵循应用级设置。",
+    "linkClickBehaviorDesc": "控制在终端中点击链接时的行为。Ctrl+点击（Mac 上为 Cmd+点击）会立即打开链接。选择“默认”以遵循应用级设置。",
     "linkClickBehaviorDirect": "直接打开",
+    "linkClickBehaviorModifier": "使用 Ctrl+点击（Mac 上为 Cmd+点击）打开",
     "linkClickBehaviorLabel": "链接点击行为",
     "loadingHost": "正在加载主机...",
     "localEchoAuto": "自动",
@@ -524,6 +546,8 @@
     "sudoPasswordAutoFill": "Sudo 密码自动填充",
     "sudoPasswordAutoFillDesc": "存储 sudo 密码，以便主机指标、终端提示等可以自动运行特权命令。",
     "sudoPasswordAutoFillLabel": "Sudo 密码自动填充",
+    "suPasswordAutoFillLabel": "Su 密码自动填充",
+    "suPasswordAutoFillDesc": "在 su 提示符下，提供与 su 切换到的用户具有相同地址的其他主机上已保存的密码",
     "syntaxCategoryIpAddresses": "IP 地址",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "日志级别",
@@ -700,5 +724,12 @@
   "plugin": {
     "name": "SSH 终端",
     "description": "SSH 终端会话，支持标签页、分屏、历史记录、宏，桌面应用中还有本地终端。"
+  },
+  "zmodem": {
+    "waiting": "主机正在等待文件（rz）。",
+    "choose": "选择文件",
+    "sending": "正在上传 {{name}}",
+    "receiving": "正在下载 {{name}}",
+    "cancel": "取消传输"
   }
 }

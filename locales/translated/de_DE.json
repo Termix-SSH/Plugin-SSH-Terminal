@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Zwischenablage konnte nicht gelesen werden. Einige Browser schränken den Zugriff auf die Zwischenablage außerhalb von HTTPS ein – versuche es stattdessen mit Strg+V oder richte Termix über HTTPS ein.",
     "connecting": "Verbindung wird hergestellt...",
     "connectionLost": "Verbindung unterbrochen",
+    "editHost": "Host bearbeiten",
     "connectionRejected": "Verbindung vom Server abgelehnt. Bitte überprüfe deine Authentifizierungsdaten und Netzwerk-Konfiguration.",
     "connectionTimeout": "Verbindungszeitüberschreitung",
     "hostKeyRejected": "SSH-Host-Schlüssel-Verifizierung fehlgeschlagen. Verbindung abgebrochen.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maximale Anzahl von Wiederholungsversuchen erreicht",
     "noHostSelected": "Kein Host ausgewählt",
     "passwordPromptFillTitle": "Gespeichertes Passwort in dieses Feld einfügen?",
+    "suPasswordFillTitle": "Gespeichertes Passwort für {{user}} ausfüllen?",
     "reconnect": "Verbindung wiederherstellen",
     "reconnected": "Verbindung erfolgreich wiederhergestellt",
     "reconnecting": "Verbindung wird wiederhergestellt... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Befehlsverlauf",
         "description": "Aufzeichnen der in diesem Terminal ausgeführten Befehle für Verlauf und Autovervollständigung"
       },
+      "connectFrom": {
+        "label": "Verbinden von (Mobile App)",
+        "description": "Wo die Mobile App SSH für diesen Host öffnet: das Telefon, dieser Server oder das Telefon, wenn es den Host erreichen kann.",
+        "auto": "Automatisch",
+        "device": "Das Telefon",
+        "server": "Dieser Server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "SSH-Verkehr über Cloudflare Zero Trust via WebSocket leiten"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Automatisch tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Fragen, wenn eine tmux-Sitzung existiert"
+      },
       "useSSHTitle": {
         "label": "SSH-Titel verwenden"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Sudo-Abfragen ausfüllen"
+      },
+      "suPasswordAutoFill": {
+        "label": "su-Aufforderungen ausfüllen"
       },
       "autoReconnect": {
         "label": "Automatisch neu verbinden"
@@ -400,7 +415,11 @@
         "label": "Verlaufsschaltflächen immer anzeigen",
         "description": "Die Schaltflächen „Kopieren“ und „Löschen“ unter jedem Befehl sichtbar lassen. Deaktivieren, um sie nur beim Hovern anzuzeigen."
       },
-      "displayTitle": "Anzeige"
+      "displayTitle": "Anzeige",
+      "zmodem": {
+        "label": "rz- und sz-Dateitransfers",
+        "description": "Dateien mit rz und sz (lrzsz) direkt im Terminal hoch- und herunterladen."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Auto-Mosh aktivieren",
     "enableAutoMoshDesc": "Mosh statt SSH verwenden, falls verfügbar",
     "enableAutoTmux": "Auto-Tmux aktivieren",
+    "autoTmuxAskWhenOne": "Fragen, wenn eine Sitzung existiert",
+    "autoTmuxAskWhenOneDesc": "Den Sitzungs-Auswahlmenü auch bei einer tmux-Sitzung anzeigen, damit ein neuer Tab seine eigene Sitzung starten kann, anstatt sich dieser anzuschließen",
     "enableAutoTmuxDesc": "Halten Sie Ihre Shell und alle darin ausgeführten Prozesse über Trennungen und Browser-Neustarts hinweg am Leben, indem Sie sie in tmux ausführen (tmux muss auf dem Host installiert sein)",
     "fastScrollModifier": "Modifikator für schnelles Scrollen",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Zeilenhöhe",
     "lineHeightLabel": "Zeilenhöhe",
     "linkClickBehaviorConfirm": "Popup zum Öffnen oder Kopieren anzeigen",
-    "linkClickBehaviorDesc": "Steuert, was passiert, wenn Sie auf einen Link im Terminal klicken. Verwenden Sie 'Standard', um die appweite Einstellung zu übernehmen.",
+    "linkClickBehaviorDesc": "Steuert, was passiert, wenn Sie auf einen Link im Terminal klicken. Strg+Klick (Cmd+Klick auf Mac) öffnet ihn immer sofort. Verwenden Sie 'Standard', um die App-Einstellung zu übernehmen.",
     "linkClickBehaviorDirect": "Direkt öffnen",
+    "linkClickBehaviorModifier": "Mit Strg+Klick öffnen (Cmd+Klick auf Mac)",
     "linkClickBehaviorLabel": "Verhalten beim Link-Klick",
     "loadingHost": "Host wird geladen...",
     "localEchoAuto": "Automatisch",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo-Passwort-Autovervollständigung",
     "sudoPasswordAutoFillDesc": "Ein Sudo-Passwort speichern, damit Host-Metriken, Terminalabfragen und andere privilegierte Befehle automatisch ausführen können.",
     "sudoPasswordAutoFillLabel": "Sudo-Passwort-Autovervollständigung",
+    "suPasswordAutoFillLabel": "Su-Passwort automatisch ausfüllen",
+    "suPasswordAutoFillDesc": "Bei einer su-Aufforderung das auf einem anderen Host mit derselben Adresse gespeicherte Passwort anbieten, zu dem der Benutzer wechselt",
     "syntaxCategoryIpAddresses": "IP-Adressen",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Protokollebenen",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH-Terminal",
     "description": "SSH-Terminalsitzungen mit Tabs, geteiltem Bildschirm, Verlauf, Makros und einem lokalen Terminal in der Desktop-App."
+  },
+  "zmodem": {
+    "waiting": "Der Host wartet auf Dateien (rz).",
+    "choose": "Dateien auswählen",
+    "sending": "{{name}} wird hochgeladen",
+    "receiving": "{{name}} wird heruntergeladen",
+    "cancel": "Transfer abbrechen"
   }
 }

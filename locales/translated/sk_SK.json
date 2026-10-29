@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Nepodarilo sa prečítať schránku. Niektoré prehliadače obmedzujú prístup k schránke mimo HTTPS – skúste namiesto toho Ctrl+V alebo spustite Termix cez HTTPS.",
     "connecting": "Pripájanie...",
     "connectionLost": "Stratené spojenie",
+    "editHost": "Upraviť host",
     "connectionRejected": "Spojenie bolo serverom zamietnuté. Skontrolujte svoje prihlasovacie údaje a sieťovú konfiguráciu.",
     "connectionTimeout": "Časový limit spojenia vypršal",
     "hostKeyRejected": "Overenie SSH kľúča hostiteľa bolo zamietnuté. Spojenie bolo zrušené.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Dosiahnutý maximálny počet pokusov o opätovné pripojenie",
     "noHostSelected": "Nie je vybraný žiadny hostiteľ",
     "passwordPromptFillTitle": "Vložiť uložené heslo do tohto výzvy?",
+    "suPasswordFillTitle": "Doplniť uložené heslo pre {{user}}?",
     "reconnect": "Opätovne pripojiť",
     "reconnected": "Úspešne opätovne pripojené",
     "reconnecting": "Opätovné pripájanie... ({{attempt}}/{{max}})",
@@ -258,6 +260,13 @@
         "label": "História príkazov",
         "description": "Zaznamenávať príkazy spustené v tomto termináli pre históriu a automatické dopĺňanie"
       },
+      "connectFrom": {
+        "label": "Pripojiť z (mobilná aplikácia)",
+        "description": "Kde mobilná aplikácia otvorí SSH pre tento host: telefón, tento server alebo telefón, ak sa dokáže pripojiť k hostovi.",
+        "auto": "Automaticky",
+        "device": "Telefón",
+        "server": "Tento server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Presmerovať SSH prevádzku cez Cloudflare Zero Trust prostredníctvom WebSocket"
@@ -348,6 +357,9 @@
       "autoTmux": {
         "label": "Automatické tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Opýtať sa, keď existuje jedna relácia tmux"
+      },
       "useSSHTitle": {
         "label": "Použiť názov z SSH"
       },
@@ -368,6 +380,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Vyplnenie výziev sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Doplňovať výzvy su"
       },
       "autoReconnect": {
         "label": "Automatické opätovné pripojenie"
@@ -406,7 +421,11 @@
         "label": "Vždy zobrazovať tlačidlá histórie",
         "description": "Udržať tlačidlá kopírovania a odstránenia pod každým príkazom viditeľné. Vypnutím sa zobrazia len pri najetí myšou."
       },
-      "displayTitle": "Zobrazenie"
+      "displayTitle": "Zobrazenie",
+      "zmodem": {
+        "label": "Prenos súborov rz a sz",
+        "description": "Nahrávajte a sťahujte súbory pomocou rz a sz (lrzsz) priamo v termináli."
+      }
     }
   },
   "palette": {
@@ -478,6 +497,8 @@
     "enableAutoMosh": "Povoliť Auto-Mosh",
     "enableAutoMoshDesc": "Ak je dostupný, uprednostniť Mosh pred SSH",
     "enableAutoTmux": "Povoliť Auto-Tmux",
+    "autoTmuxAskWhenOne": "Opýtať sa, keď existuje jedna relácia",
+    "autoTmuxAskWhenOneDesc": "Zobraziť výber relácie aj pri jednej relácii tmux, aby nová karta mohla začať vlastnú reláciu namiesto pripojenia k nej",
     "enableAutoTmuxDesc": "Udržujte svoj shell a všetko, čo v ňom beží, nažive aj pri odpojení alebo reštarte prehliadača spustením vo vnútri tmux (tmux musí byť nainštalovaný na hostiteľovi)",
     "fastScrollModifier": "Modifikátor rýchleho posúvania",
     "fastScrollModifierAlt": "Alt",
@@ -499,8 +520,9 @@
     "lineHeight": "Výška riadku",
     "lineHeightLabel": "Výška riadku",
     "linkClickBehaviorConfirm": "Zobraziť výzvu na otvorenie alebo kopírovanie",
-    "linkClickBehaviorDesc": "Ovláda, čo sa stane po kliknutí na odkaz v termináli. Použite 'Predvolené' na použitie nastavenia na úrovni aplikácie.",
+    "linkClickBehaviorDesc": "Ovláda, čo sa stane po kliknutí na odkaz v termináli. Ctrl+klik (Cmd+klik na Mac) ho vždy otvorí okamžite. Použite 'Predvolené' na dodržanie nastavenia na úrovni aplikácie.",
     "linkClickBehaviorDirect": "Otvoriť priamo",
+    "linkClickBehaviorModifier": "Otvoriť pomocou Ctrl+klik (Cmd+klik na Mac)",
     "linkClickBehaviorLabel": "Správanie pri kliknutí na odkaz",
     "loadingHost": "Načítava sa hostiteľ...",
     "localEchoAuto": "Automaticky",
@@ -533,6 +555,8 @@
     "sudoPasswordAutoFill": "Automatické vyplnenie sudo hesla",
     "sudoPasswordAutoFillDesc": "Uložte sudo heslo, aby mohli metriky hosta, výzvy v termináli a iné spúšťať privilégiované príkazy automaticky.",
     "sudoPasswordAutoFillLabel": "Automatické vyplnenie sudo hesla",
+    "suPasswordAutoFillLabel": "Automatické dopĺňanie hesla su",
+    "suPasswordAutoFillDesc": "Pri výzve su ponúknuť heslo uložené na inom hostovi s rovnakou adresou a používateľom, na ktorého sa su prepína",
     "syntaxCategoryIpAddresses": "IP adresy",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Úrovne logovania",
@@ -718,5 +742,12 @@
   "plugin": {
     "name": "SSH terminál",
     "description": "SSH terminálové relácie s kartami, rozdelenou obrazovkou, históriou, makrami a lokálnym terminálom v desktopovej aplikácii."
+  },
+  "zmodem": {
+    "waiting": "Host čaká na súbory (rz).",
+    "choose": "Vybrať súbory",
+    "sending": "Nahrávanie {{name}}",
+    "receiving": "Sťahovanie {{name}}",
+    "cancel": "Zrušiť prenos"
   }
 }

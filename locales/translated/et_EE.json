@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Lõikelaua lugemine ei õnnestunud. Mõned brauserid piiravad lõikelaua ligipääsu HTTPS-i väljaspool – proovi Ctrl+V või kasuta Termixit HTTPS-i kaudu.",
     "connecting": "Ühendamine...",
     "connectionLost": "Ühendus katkes",
+    "editHost": "Muuda hosti",
     "connectionRejected": "Server lükkas ühenduse tagasi. Palun kontrolli autentimist ja võrgu seadeid.",
     "connectionTimeout": "Ühenduse aegumine",
     "hostKeyRejected": "SSH hosti võtme kontroll ebaõnnestus. Ühendus tühistatud.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maksimaalne ümberühendatuste arv saavutatud",
     "noHostSelected": "Hosti ei ole valitud",
     "passwordPromptFillTitle": "Kas sisestada salvestatud parool sellele küsimusele?",
+    "suPasswordFillTitle": "Kas täita salvestatud parool kasutajale {{user}}?",
     "reconnect": "Ühenda uuesti",
     "reconnected": "Ühendus taastatud edukalt",
     "reconnecting": "Ühenduse taastamine... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Käskude ajalugu",
         "description": "Salvesta selles terminalis käivitatud käsud ajaloo ja automaatse täitmise jaoks"
       },
+      "connectFrom": {
+        "label": "Ühenda (mobiilirakendus)",
+        "description": "Kus mobiilirakendus avab selle hosti SSH-ühenduse: telefonis, sellel serveril või telefonis, kui see suudab hostini jõuda.",
+        "auto": "Automaatne",
+        "device": "Telefon",
+        "server": "See server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare'i tunnel",
         "description": "Suuna SSH-liiklus Cloudflare Zero Trusti kaudu WebSocketi vahendusel"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Automaatne tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Küsi, kui üks tmux-i sessioon on olemas"
+      },
       "useSSHTitle": {
         "label": "Kasuta SSH pealkirja"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Täida sudo paroolipäringud"
+      },
+      "suPasswordAutoFill": {
+        "label": "Täita su-päringud"
       },
       "autoReconnect": {
         "label": "Ühenda automaatselt uuesti"
@@ -400,7 +415,11 @@
         "label": "Kuva ajaloo nupud alati",
         "description": "Hoia iga käsu all olevad kopeerimise ja kustutamise nupud nähtaval. Lülita välja, et kuvada need ainult hiirega hõljutamisel."
       },
-      "displayTitle": "Kuvamine"
+      "displayTitle": "Kuvamine",
+      "zmodem": {
+        "label": "rz ja sz failide ülekanded",
+        "description": "Laadi faile üles ja alla rz ja sz (lrzsz) abil otse terminalis."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Luba Auto-Mosh",
     "enableAutoMoshDesc": "Kasuta Moshit SSH asemel, kui see on saadaval",
     "enableAutoTmux": "Luba Auto-Tmux",
+    "autoTmuxAskWhenOne": "Küsi, kui üks sessioon on olemas",
+    "autoTmuxAskWhenOneDesc": "Kuva sessiooni valik isegi ühe tmux-i sessiooni korral, et uus vahekaart saaks alustada oma sessiooni selle asemel, et liituda olemasolevaga",
     "enableAutoTmuxDesc": "Hoia oma shell ja selles töötavad protsessid ühenduse katkemise või brauseri taaskäivitamise ajal elus, käivitades need tmuxi sees (tmux peab olema hostil paigaldatud)",
     "fastScrollModifier": "Kiire kerimise muudis",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Rea kõrgus",
     "lineHeightLabel": "Rea kõrgus",
     "linkClickBehaviorConfirm": "Kuva hüpikaken avamiseks või kopeerimiseks",
-    "linkClickBehaviorDesc": "Kontrollib, mis juhtub, kui klõpsate terminalis lingil. Kasutage 'Vaikimisi', et järgida rakenduse tasandi seadet.",
+    "linkClickBehaviorDesc": "Kontrollib, mis juhtub, kui klõpsate terminalis lingil. Ctrl+klõps (Macil Cmd+klõps) avab selle alati kohe. Kasuta 'Vaikimisi', et järgida rakendusastme seadet.",
     "linkClickBehaviorDirect": "Ava otse",
+    "linkClickBehaviorModifier": "Ava Ctrl+klõpsuga (Macil Cmd+klõps)",
     "linkClickBehaviorLabel": "Lingi klõpsamise käitumine",
     "loadingHost": "Laadin hosti...",
     "localEchoAuto": "Automaatne",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo parooli automaatne täitmine",
     "sudoPasswordAutoFillDesc": "Salvesta sudo parool, et hosti meetrikad, terminali päringud ja muud teenused saaksid automaatselt privileegitud käske käivitada.",
     "sudoPasswordAutoFillLabel": "Sudo parooli automaatne täitmine",
+    "suPasswordAutoFillLabel": "Su-parooli automaatne täitmine",
+    "suPasswordAutoFillDesc": "Paku su-päringul parooli, mis on salvestatud teisele hostile sama aadressiga ja kasutajaga, kelleks su lülitub",
     "syntaxCategoryIpAddresses": "IP-aadressid",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Logitase",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH-terminal",
     "description": "SSH käsurea seansid vahelehtede, jagatud ekraani, ajaloo, makrode ja kohaliku käsureaga lauaarvuti rakenduses."
+  },
+  "zmodem": {
+    "waiting": "Host ootab faile (rz).",
+    "choose": "Vali failid",
+    "sending": "Üleslaadimine {{name}}",
+    "receiving": "Allalaadimine {{name}}",
+    "cancel": "Katkesta ülekandmine"
   }
 }

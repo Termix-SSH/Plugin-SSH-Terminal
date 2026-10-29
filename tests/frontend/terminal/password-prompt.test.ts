@@ -4,6 +4,7 @@ import {
   isSudoCommand,
   isSudoPrompt,
   stripAnsi,
+  suTargetUser,
 } from "../../../src/frontend/terminal/password-prompt";
 
 describe("isPasswordPrompt", () => {
@@ -59,5 +60,23 @@ describe("stripAnsi", () => {
     const esc = String.fromCharCode(27);
     const bel = String.fromCharCode(7);
     expect(stripAnsi(`${esc}]0;title${bel}Password: `)).toBe("Password: ");
+  });
+});
+
+describe("suTargetUser", () => {
+  it("finds the user su switches to", () => {
+    expect(suTargetUser("su")).toBe("root");
+    expect(suTargetUser("su -")).toBe("root");
+    expect(suTargetUser("su - postgres")).toBe("postgres");
+    expect(suTargetUser("su -l deploy")).toBe("deploy");
+    expect(suTargetUser("su app -c 'whoami'")).toBe("app");
+    expect(suTargetUser("su -s /bin/bash www-data")).toBe("www-data");
+    expect(suTargetUser("cd /tmp && su bob")).toBe("bob");
+  });
+
+  it("ignores other commands and sudo su", () => {
+    expect(suTargetUser("sudo su -")).toBeNull();
+    expect(suTargetUser("sumo")).toBeNull();
+    expect(suTargetUser("ls su")).toBeNull();
   });
 });

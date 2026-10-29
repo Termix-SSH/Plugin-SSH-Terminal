@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Kon het klembord niet lezen. Sommige browsers beperken toegang tot het klembord buiten HTTPS - probeer Ctrl+V, of serveer Termix via HTTPS.",
     "connecting": "Verbinden...",
     "connectionLost": "Verbinding verbroken",
+    "editHost": "Host bewerken",
     "connectionRejected": "Verbinding geweigerd door de server. Controleer uw authenticatie en netwerkconfiguratie.",
     "connectionTimeout": "Verbindingstijd verstreken",
     "hostKeyRejected": "SSH-hostsleutelverificatie geweigerd. Verbinding geannuleerd.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maximaal aantal herverbindingspogingen bereikt",
     "noHostSelected": "Geen host geselecteerd",
     "passwordPromptFillTitle": "Het opgeslagen wachtwoord in deze prompt invullen?",
+    "suPasswordFillTitle": "Het opgeslagen wachtwoord voor {{user}} invullen?",
     "reconnect": "Opnieuw verbinden",
     "reconnected": "Succesvol opnieuw verbonden",
     "reconnecting": "Opnieuw verbinden... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Commandogeschiedenis",
         "description": "Neem commando's op die in deze terminal worden uitgevoerd voor geschiedenis en automatische voltooiing"
       },
+      "connectFrom": {
+        "label": "Verbinden vanaf (mobiele app)",
+        "description": "Waar de mobiele app SSH voor deze host opent: op de telefoon, op deze server, of op de telefoon als deze de host kan bereiken.",
+        "auto": "Automatisch",
+        "device": "De telefoon",
+        "server": "Deze server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Routeer SSH-verkeer via Cloudflare Zero Trust door WebSocket"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Automatisch tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Vragen als er één tmux-sessie bestaat"
+      },
       "useSSHTitle": {
         "label": "Gebruik de SSH-titel"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Sudo-vragen invullen"
+      },
+      "suPasswordAutoFill": {
+        "label": "Su-aanvragen invullen"
       },
       "autoReconnect": {
         "label": "Automatisch opnieuw verbinden"
@@ -400,7 +415,11 @@
         "label": "Altijd geschiedenis-knoppen tonen",
         "description": "Houd de knoppen voor kopiëren en verwijderen onder elke opdracht zichtbaar. Zet uit om ze alleen bij hover te tonen."
       },
-      "displayTitle": "Weergave"
+      "displayTitle": "Weergave",
+      "zmodem": {
+        "label": "rz- en sz-bestandsoverdrachten",
+        "description": "Bestanden uploaden en downloaden met rz en sz (lrzsz) direct in de terminal."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Auto-Mosh inschakelen",
     "enableAutoMoshDesc": "Geef voorkeur aan Mosh boven SSH indien beschikbaar",
     "enableAutoTmux": "Auto-Tmux inschakelen",
+    "autoTmuxAskWhenOne": "Vragen als er één sessie bestaat",
+    "autoTmuxAskWhenOneDesc": "Toon de sessiekiezer zelfs met één tmux-sessie, zodat een nieuw tabblad zijn eigen sessie kan starten in plaats van deze te joinen",
     "enableAutoTmuxDesc": "Houd je shell en alles dat erin draait actief bij verbindingsverlies en browserherstarts door binnen tmux te draaien (tmux moet op de host geïnstalleerd zijn)",
     "fastScrollModifier": "Snel scrollen-modificator",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Regelafstand",
     "lineHeightLabel": "Regelafstand",
     "linkClickBehaviorConfirm": "Pop-up tonen om te openen of kopiëren",
-    "linkClickBehaviorDesc": "Bepaalt wat er gebeurt als je op een link in de terminal klikt. Gebruik 'Standaard' om de instelling op app-niveau te volgen.",
+    "linkClickBehaviorDesc": "Bepaalt wat er gebeurt als je op een link in de terminal klikt. Ctrl+click (Cmd+click op Mac) opent deze altijd direct. Gebruik 'Standaard' om de app-instelling te volgen.",
     "linkClickBehaviorDirect": "Direct openen",
+    "linkClickBehaviorModifier": "Openen met Ctrl+click (Cmd+click op Mac)",
     "linkClickBehaviorLabel": "Gedrag bij klikken op link",
     "loadingHost": "Host laden...",
     "localEchoAuto": "Automatisch",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo-wachtwoordautovulling",
     "sudoPasswordAutoFillDesc": "Bewaar een sudo-wachtwoord zodat hostmetrieken, terminalprompts en andere functies automatisch bevoorrechte opdrachten kunnen uitvoeren.",
     "sudoPasswordAutoFillLabel": "Sudo-wachtwoordautovulling",
+    "suPasswordAutoFillLabel": "Automatisch invullen su-wachtwoord",
+    "suPasswordAutoFillDesc": "Bied bij een su-aanvraag het wachtwoord aan dat is opgeslagen op een andere host met hetzelfde adres en de gebruiker waarnaar su schakelt",
     "syntaxCategoryIpAddresses": "IP-adressen",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Logniveaus",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH-terminal",
     "description": "SSH-terminalsessies met tabbladen, gesplitst scherm, geschiedenis, macros en een lokale terminal in de desktop-app."
+  },
+  "zmodem": {
+    "waiting": "De host wacht op bestanden (rz).",
+    "choose": "Bestanden kiezen",
+    "sending": "Uploaden van {{name}}",
+    "receiving": "Downloaden van {{name}}",
+    "cancel": "Overdracht annuleren"
   }
 }

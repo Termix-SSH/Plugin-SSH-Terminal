@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Không thể đọc clipboard. Một số trình duyệt hạn chế truy cập clipboard ngoài HTTPS - hãy thử Ctrl+V, hoặc chạy Termix qua HTTPS.",
     "connecting": "Đang kết nối...",
     "connectionLost": "Mất kết nối",
+    "editHost": "Chỉnh sửa host",
     "connectionRejected": "Kết nối bị máy chủ từ chối. Vui lòng kiểm tra thông tin xác thực và cấu hình mạng của bạn.",
     "connectionTimeout": "Hết thời gian kết nối",
     "hostKeyRejected": "Xác minh khóa máy chủ SSH bị từ chối. Đã hủy kết nối.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Đã đạt số lần thử kết nối lại tối đa",
     "noHostSelected": "Chưa chọn máy chủ",
     "passwordPromptFillTitle": "Điền mật khẩu đã lưu vào lời nhắc này?",
+    "suPasswordFillTitle": "Điền mật khẩu đã lưu cho {{user}}?",
     "reconnect": "Kết nối lại",
     "reconnected": "Kết nối lại thành công",
     "reconnecting": "Đang kết nối lại... ({{attempt}}/{{max}})",
@@ -249,6 +251,13 @@
         "label": "Lịch sử lệnh",
         "description": "Ghi lại các lệnh chạy trong terminal này để sử dụng cho lịch sử và tự động hoàn thành"
       },
+      "connectFrom": {
+        "label": "Kết nối từ (ứng dụng di động)",
+        "description": "Nơi ứng dụng di động mở SSH cho host này: điện thoại, máy chủ này, hoặc điện thoại khi có thể kết nối đến host.",
+        "auto": "Tự động",
+        "device": "Điện thoại",
+        "server": "Máy chủ này"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Định tuyến lưu lượng SSH qua Cloudflare Zero Trust thông qua WebSocket"
@@ -339,6 +348,9 @@
       "autoTmux": {
         "label": "Tự động tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Hỏi khi có một phiên tmux"
+      },
       "useSSHTitle": {
         "label": "Sử dụng tiêu đề SSH"
       },
@@ -359,6 +371,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Điền mật khẩu sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Điền tự động mật khẩu su"
       },
       "autoReconnect": {
         "label": "Tự động kết nối lại"
@@ -397,7 +412,11 @@
         "label": "Luôn hiển thị nút lịch sử",
         "description": "Giữ các nút sao chép và xóa dưới mỗi lệnh luôn hiển thị. Tắt để chỉ hiển thị chúng khi di chuột qua."
       },
-      "displayTitle": "Hiển thị"
+      "displayTitle": "Hiển thị",
+      "zmodem": {
+        "label": "Truyền tệp rz và sz",
+        "description": "Tải lên và tải xuống tệp bằng rz và sz (lrzsz) trực tiếp trong terminal."
+      }
     }
   },
   "palette": {
@@ -469,6 +488,8 @@
     "enableAutoMosh": "Bật Auto-Mosh",
     "enableAutoMoshDesc": "Ưu tiên Mosh thay vì SSH nếu có sẵn",
     "enableAutoTmux": "Bật Auto-Tmux",
+    "autoTmuxAskWhenOne": "Hỏi khi có một phiên",
+    "autoTmuxAskWhenOneDesc": "Hiển thị trình chọn phiên ngay cả khi chỉ có một phiên tmux, để tab mới có thể bắt đầu phiên riêng thay vì tham gia vào phiên đó",
     "enableAutoTmuxDesc": "Giữ shell và mọi thứ đang chạy trong đó hoạt động xuyên suốt các lần ngắt kết nối và khởi động lại trình duyệt bằng cách chạy bên trong tmux (tmux phải được cài đặt trên máy chủ)",
     "fastScrollModifier": "Phím sửa đổi cuộn nhanh",
     "fastScrollModifierAlt": "Alt",
@@ -490,8 +511,9 @@
     "lineHeight": "Chiều cao dòng",
     "lineHeightLabel": "Chiều cao dòng",
     "linkClickBehaviorConfirm": "Hiển thị hộp thoại để mở hoặc sao chép",
-    "linkClickBehaviorDesc": "Kiểm soát hành động khi bạn nhấp vào liên kết trong terminal. Sử dụng 'Mặc định' để tuân theo cài đặt cấp ứng dụng.",
+    "linkClickBehaviorDesc": "Kiểm soát hành động khi bạn nhấp vào liên kết trong terminal. Nhấp Ctrl+click (Cmd+click trên Mac) luôn mở ngay lập tức. Dùng 'Mặc định' để theo cài đặt cấp ứng dụng.",
     "linkClickBehaviorDirect": "Mở trực tiếp",
+    "linkClickBehaviorModifier": "Mở bằng Ctrl+click (Cmd+click trên Mac)",
     "linkClickBehaviorLabel": "Hành động khi nhấp vào liên kết",
     "loadingHost": "Đang tải máy chủ...",
     "localEchoAuto": "Tự động",
@@ -524,6 +546,8 @@
     "sudoPasswordAutoFill": "Điền mật khẩu sudo tự động",
     "sudoPasswordAutoFillDesc": "Lưu mật khẩu sudo để các chỉ số máy chủ, lời nhắc terminal và các tính năng khác có thể chạy lệnh đặc quyền tự động.",
     "sudoPasswordAutoFillLabel": "Điền mật khẩu sudo tự động",
+    "suPasswordAutoFillLabel": "Điền tự động mật khẩu Su",
+    "suPasswordAutoFillDesc": "Tại lời nhắc su, đề xuất mật khẩu đã lưu trên host khác có cùng địa chỉ và người dùng mà su chuyển sang",
     "syntaxCategoryIpAddresses": "Địa chỉ IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Cấp độ nhật ký",
@@ -700,5 +724,12 @@
   "plugin": {
     "name": "Terminal SSH",
     "description": "Các phiên terminal SSH với tab, chia màn hình, lịch sử, macro và terminal cục bộ trong ứng dụng desktop."
+  },
+  "zmodem": {
+    "waiting": "Host đang chờ tệp (rz).",
+    "choose": "Chọn tệp",
+    "sending": "Đang tải lên {{name}}",
+    "receiving": "Đang tải xuống {{name}}",
+    "cancel": "Hủy truyền tệp"
   }
 }

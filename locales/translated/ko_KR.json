@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "클립보드를 읽을 수 없습니다. 일부 브라우저는 HTTPS 외부에서 클립보드 접근을 제한합니다. 대신 Ctrl+V를 사용하거나 Termix를 HTTPS로 제공하세요.",
     "connecting": "연결 중...",
     "connectionLost": "연결 끊김",
+    "editHost": "호스트 편집",
     "connectionRejected": "서버에서 연결이 거부되었습니다. 인증 및 네트워크 구성을 확인하세요.",
     "connectionTimeout": "연결 시간 초과",
     "hostKeyRejected": "SSH 호스트 키 확인이 거부되었습니다. 연결이 취소되었습니다.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "최대 재연결 시도 횟수 도달",
     "noHostSelected": "선택된 호스트 없음",
     "passwordPromptFillTitle": "저장된 비밀번호를 이 프롬프트에 입력하시겠습니까?",
+    "suPasswordFillTitle": "{{user}}의 저장된 비밀번호를 입력하시겠습니까?",
     "reconnect": "재연결",
     "reconnected": "재연결 성공",
     "reconnecting": "재연결 중... ({{attempt}}/{{max}})",
@@ -249,6 +251,13 @@
         "label": "명령어 기록",
         "description": "이 터미널에서 실행된 명령어를 기록하여 기록 및 자동 완성 기능에 사용합니다."
       },
+      "connectFrom": {
+        "label": "연결 위치 (모바일 앱)",
+        "description": "모바일 앱에서 이 호스트에 대한 SSH를 여는 위치입니다: 휴대폰, 이 서버, 또는 호스트에 도달할 수 있을 때의 휴대폰.",
+        "auto": "자동",
+        "device": "휴대폰",
+        "server": "이 서버"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "WebSocket을 통해 Cloudflare Zero Trust로 SSH 트래픽 라우팅"
@@ -339,6 +348,9 @@
       "autoTmux": {
         "label": "자동 tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "tmux 세션이 하나 있을 때 확인"
+      },
       "useSSHTitle": {
         "label": "SSH 제목 사용"
       },
@@ -359,6 +371,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "sudo 프롬프트 자동 입력"
+      },
+      "suPasswordAutoFill": {
+        "label": "su 프롬프트 자동 입력"
       },
       "autoReconnect": {
         "label": "자동 재연결"
@@ -397,7 +412,11 @@
         "label": "기록 버튼 항상 표시",
         "description": "각 명령어 아래 복사 및 삭제 버튼을 항상 표시합니다. 끄면 마우스를 올렸을 때만 표시됩니다."
       },
-      "displayTitle": "디스플레이"
+      "displayTitle": "디스플레이",
+      "zmodem": {
+        "label": "rz 및 sz 파일 전송",
+        "description": "터미널에서 직접 rz 및 sz (lrzsz)를 사용하여 파일을 업로드하고 다운로드합니다."
+      }
     }
   },
   "palette": {
@@ -469,6 +488,8 @@
     "enableAutoMosh": "자동 Mosh 사용",
     "enableAutoMoshDesc": "사용 가능한 경우 SSH 대신 Mosh 선호",
     "enableAutoTmux": "자동 Tmux 사용",
+    "autoTmuxAskWhenOne": "세션이 하나 있을 때 확인",
+    "autoTmuxAskWhenOneDesc": "tmux 세션이 하나 있더라도 세션 선택기를 표시하여 새 탭이 기존 세션에 합류하는 대신 자체 세션을 시작할 수 있습니다.",
     "enableAutoTmuxDesc": "tmux 내에서 실행하여 연결 끊김 및 브라우저 재시작 시 셸과 실행 중인 작업 유지 (호스트에 tmux가 설치되어 있어야 함)",
     "fastScrollModifier": "빠른 스크롤 수정키",
     "fastScrollModifierAlt": "Alt",
@@ -490,8 +511,9 @@
     "lineHeight": "줄 높이",
     "lineHeightLabel": "줄 높이",
     "linkClickBehaviorConfirm": "팝업 표시하여 열기 또는 복사",
-    "linkClickBehaviorDesc": "터미널에서 링크를 클릭했을 때의 동작을 제어합니다. 앱 수준 설정을 따르려면 '기본'을 사용하세요.",
+    "linkClickBehaviorDesc": "터미널에서 링크를 클릭했을 때의 동작을 제어합니다. Ctrl+클릭 (Mac의 경우 Cmd+클릭)은 항상 즉시 엽니다. 앱 수준의 설정을 따르려면 '기본값'을 사용하세요.",
     "linkClickBehaviorDirect": "직접 열기",
+    "linkClickBehaviorModifier": "Ctrl+클릭으로 열기 (Mac의 경우 Cmd+클릭)",
     "linkClickBehaviorLabel": "링크 클릭 동작",
     "loadingHost": "호스트 로딩 중...",
     "localEchoAuto": "자동",
@@ -524,6 +546,8 @@
     "sudoPasswordAutoFill": "Sudo 비밀번호 자동 입력",
     "sudoPasswordAutoFillDesc": "호스트 메트릭, 터미널 프롬프트 등에서 특권 명령어를 자동으로 실행할 수 있도록 sudo 비밀번호를 저장합니다.",
     "sudoPasswordAutoFillLabel": "Sudo 비밀번호 자동 입력",
+    "suPasswordAutoFillLabel": "Su 비밀번호 자동 입력",
+    "suPasswordAutoFillDesc": "su 프롬프트에서 동일한 주소와 su가 전환하는 사용자를 가진 다른 호스트에 저장된 비밀번호를 제안합니다.",
     "syntaxCategoryIpAddresses": "IP 주소",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "로그 레벨",
@@ -700,5 +724,12 @@
   "plugin": {
     "name": "SSH 터미널",
     "description": "데스크톱 앱에서 탭, 분할 화면, 기록, 매크로 및 로컬 터미널을 갖춘 SSH 터미널 세션."
+  },
+  "zmodem": {
+    "waiting": "호스트가 파일을 기다리고 있습니다 (rz).",
+    "choose": "파일 선택",
+    "sending": "{{name}} 업로드 중",
+    "receiving": "{{name}} 다운로드 중",
+    "cancel": "전송 취소"
   }
 }

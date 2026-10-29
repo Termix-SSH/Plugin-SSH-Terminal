@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Ni mogoče prebrati odložišča. Nekateri brskalniki omejujejo dostop do odložišča zunaj HTTPS – poskusite s Ctrl+V ali pa Termix gostite prek HTTPS.",
     "connecting": "Povezovanje...",
     "connectionLost": "Povezava prekinjena",
+    "editHost": "Uredi gostitelja",
     "connectionRejected": "Povezava zavrnjena s strani strežnika. Preverite svojo avtentikacijo in omrežne nastavitve.",
     "connectionTimeout": "Časovna omejitev povezave",
     "hostKeyRejected": "Preverjanje SSH ključa gostitelja zavrnjeno. Povezava preklicana.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Doseženo največje število poskusov ponovne povezave",
     "noHostSelected": "Ni izbranega gostitelja",
     "passwordPromptFillTitle": "Ali želite v to polje vstaviti shranjeno geslo?",
+    "suPasswordFillTitle": "Izpolni shranjeno geslo za {{user}}?",
     "reconnect": "Ponovno poveži",
     "reconnected": "Uspešno ponovno povezano",
     "reconnecting": "Ponovno povezovanje... ({{attempt}}/{{max}})",
@@ -258,6 +260,13 @@
         "label": "Zgodovina ukazov",
         "description": "Zabeleži ukaze, izvedene v tem terminalu, za zgodovino in samodejno dopolnjevanje"
       },
+      "connectFrom": {
+        "label": "Poveži se iz (mobilna aplikacija)",
+        "description": "Kje mobilna aplikacija odpre SSH za tega gostitelja: na telefonu, na tem strežniku ali na telefonu, ko lahko doseže gostitelja.",
+        "auto": "Samodejno",
+        "device": "Na telefonu",
+        "server": "Na tem strežniku"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Usmeri SSH promet prek Cloudflare Zero Trust z uporabo WebSocketa"
@@ -348,6 +357,9 @@
       "autoTmux": {
         "label": "Samodejni tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Vprašaj, ko obstaja ena tmux seja"
+      },
       "useSSHTitle": {
         "label": "Uporabi naslov SSH"
       },
@@ -368,6 +380,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Izpolni vnosne polja za sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Izpolni pozive za su"
       },
       "autoReconnect": {
         "label": "Samodejno ponovno povezovanje"
@@ -406,7 +421,11 @@
         "label": "Vedno prikaži gumbe za zgodovino",
         "description": "Vedno prikaži gumbe za kopiranje in brisanje pod vsakim ukazom. Izklopite, če želite, da se prikažejo le ob drsenju miške."
       },
-      "displayTitle": "Prikaz"
+      "displayTitle": "Prikaz",
+      "zmodem": {
+        "label": "Prenosi datotek rz in sz",
+        "description": "Nalaganje in prenos datotek z rz in sz (lrzsz) neposredno v terminalu."
+      }
     }
   },
   "palette": {
@@ -478,6 +497,8 @@
     "enableAutoMosh": "Omogoči samodejni Mosh",
     "enableAutoMoshDesc": "Uporabi Mosh namesto SSH, če je na voljo",
     "enableAutoTmux": "Omogoči samodejni tmux",
+    "autoTmuxAskWhenOne": "Vprašaj, ko obstaja ena seja",
+    "autoTmuxAskWhenOneDesc": "Prikaži izbirnik sej tudi, ko obstaja le ena tmux seja, da lahko nova zavihek začne svojo lastno sejo namesto, da bi se ji pridružil",
     "enableAutoTmuxDesc": "Ohranite lupino in vse, kar se v njej izvaja, aktivno med prekinitvami povezave in ponovnimi zagoni brskalnika z izvajanjem znotraj tmux (tmux mora biti nameščen na gostitelju)",
     "fastScrollModifier": "Spremenilnik za hitro pomikanje",
     "fastScrollModifierAlt": "Alt",
@@ -499,8 +520,9 @@
     "lineHeight": "Višina vrstice",
     "lineHeightLabel": "Višina vrstice",
     "linkClickBehaviorConfirm": "Prikaži pogovorno okno za odpiranje ali kopiranje",
-    "linkClickBehaviorDesc": "Nadzira, kaj se zgodi, ko kliknete povezavo v terminalu. Za upoštevanje nastavitve na ravni aplikacije uporabite 'Privzeto'.",
+    "linkClickBehaviorDesc": "Nadzira, kaj se zgodi, ko kliknete povezavo v terminalu. Ctrl+klik (Cmd+klik na Macu) jo vedno takoj odpre. Uporabite 'Privzeto', da sledite nastavitvi na ravni aplikacije.",
     "linkClickBehaviorDirect": "Odpri neposredno",
+    "linkClickBehaviorModifier": "Odpri s Ctrl+klikom (Cmd+klik na Macu)",
     "linkClickBehaviorLabel": "Obnašanje ob kliku na povezavo",
     "loadingHost": "Nalaganje gostitelja...",
     "localEchoAuto": "Samodejno",
@@ -533,6 +555,8 @@
     "sudoPasswordAutoFill": "Samodejni vnos gesla za sudo",
     "sudoPasswordAutoFillDesc": "Shranite geslo za sudo, da bodo lahko metrike gostitelja, pozivi terminala in drugi samodejno izvajali ukaze z višjimi pravicami.",
     "sudoPasswordAutoFillLabel": "Samodejni vnos gesla za sudo",
+    "suPasswordAutoFillLabel": "Samodejno izpolnjevanje gesla za su",
+    "suPasswordAutoFillDesc": "Ob pozivu za su ponudi geslo, shranjeno na drugem gostitelju z istim naslovom in uporabnikom, v katerega se preklaplja su",
     "syntaxCategoryIpAddresses": "IP naslovi",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Stopnje dnevnika",
@@ -718,5 +742,12 @@
   "plugin": {
     "name": "SSH terminal",
     "description": "SSH terminalne seje z zavihki, razdeljenim zaslonom, zgodovino, makri in lokalnim terminalom v namizni aplikaciji."
+  },
+  "zmodem": {
+    "waiting": "Gostitelj čaka na datoteke (rz).",
+    "choose": "Izberi datoteke",
+    "sending": "Nalaganje {{name}}",
+    "receiving": "Prenos {{name}}",
+    "cancel": "Prekliči prenos"
   }
 }

@@ -51,6 +51,7 @@ import {
   isPasswordPrompt as endsInPasswordPrompt,
   isSudoPrompt as isSudoPromptOutput,
   stripAnsi,
+  suTargetUser,
 } from "./password-prompt";
 import {
   highlightTerminalOutput,
@@ -79,6 +80,8 @@ import { toast } from "sonner";
 import { Save } from "lucide-react";
 import { TerminalToolbar } from "./TerminalToolbar.tsx";
 import { readToolbarSettings } from "./toolbar-settings.ts";
+import { ZmodemController, type ZmodemState } from "./zmodem-transfer.ts";
+import { ZmodemBar } from "./ZmodemBar.tsx";
 import type { TerminalHandle, TerminalHostConfig } from "./terminal-types.ts";
 import type { Host, TabType } from "../types";
 import { isTabKeyEvent } from "./terminal-key-event.ts";
@@ -143,6 +146,7 @@ import {
   getHostPassword,
   patchOpenTab,
   useHost,
+  useHosts,
 } from "@termix-ssh/plugin-sdk/frontend";
 
 type HostKeyVerificationData = Omit<
@@ -171,6 +175,8 @@ interface SSHTerminalProps {
   disableAutoFocus?: boolean;
   isQuickConnect?: boolean;
   onSaveQuickConnect?: () => Promise<void>;
+  /** Opens the host's editor, offered when the connection fails. */
+  onEditHost?: () => void;
   /** Full host record, used to drive the context-aware terminal toolbar. */
   host?: Host;
   onOpenTab?: (type: TabType) => void;
@@ -215,6 +221,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       disableAutoFocus = false,
       isQuickConnect = false,
       onSaveQuickConnect,
+      onEditHost,
       host,
       isFocusedPane = true,
     },
@@ -238,6 +245,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     termSettingsRef.current = termSettings;
     const termUserRef = useRef(termUser);
     termUserRef.current = termUser;
+    const [zmodemState, setZmodemState] = useState<ZmodemState>({
+      phase: "idle",
+    });
+    const zmodemRef = useRef<ZmodemController | null>(null);
+    zmodemRef.current ??= new ZmodemController(setZmodemState);
     const showToolbar = hostSetting(host, "enableTerminalToolbar", true);
     const outputListenersRef = useRef(new Set<(data: string) => void>());
 
@@ -886,6 +898,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     );
 
     const activityLoggingRef = useRef(false);
+    const { hosts: savedHosts } = useHosts();
+    const savedHostsRef = useRef(savedHosts);
+    savedHostsRef.current = savedHosts;
     const passwordPromptShownRef = useRef(false);
     const passwordPromptBufferRef = useRef("");
     const controlStringModeRef = useRef(false);
@@ -1356,6 +1371,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
       if (!endsInPasswordPrompt(buffered)) return;
 
+      const suUser = suTargetUser(lastCommandRef.current);
+      if (suUser !== null) {
+        offerSuPasswordFill(suUser);
+        return;
+      }
+
       const isSudoPrompt = isSudoPromptOutput(buffered, lastCommandRef.current);
 
       // Sudo autofill is opt-in: the saved sudo password must not be sent
@@ -1404,6 +1425,53 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       setTimeout(() => {
         passwordPromptShownRef.current = false;
       }, 15000);
+    }
+
+    /**
+     * A su prompt wants the target user's password, never the login one. It is
+     * offered only when the host turns this on and a saved host with the same
+     * address logs in as that user.
+     */
+    function offerSuPasswordFill(suUser: string) {
+      if (!termSettingsRef.current.suPasswordAutoFill) return;
+      if (passwordPromptShownRef.current) return;
+      const match = savedHostsRef.current.find(
+        (saved) =>
+          saved.ip === hostConfig.ip &&
+          saved.username === suUser &&
+          Number.isFinite(Number(saved.id)),
+      );
+      if (!match) return;
+
+      passwordPromptShownRef.current = true;
+      passwordPromptBufferRef.current = "";
+      void confirm({
+        title: t("terminal.suPasswordFillTitle", { user: suUser }),
+        confirmLabel: t("common.confirm"),
+        cancelLabel: t("common.cancel"),
+        destructive: false,
+      }).then((ok) => {
+        if (ok)
+          void (async () => {
+            const password = await getHostPassword(
+              Number(match.id),
+              "password",
+            );
+            if (
+              password &&
+              webSocketRef.current &&
+              webSocketRef.current.readyState === WebSocket.OPEN
+            ) {
+              webSocketRef.current.send(
+                JSON.stringify({ type: "input", data: password + "\n" }),
+              );
+            }
+          })();
+        setTimeout(() => {
+          passwordPromptShownRef.current = false;
+        }, 3000);
+        return ok;
+      });
     }
 
     function reconnectTerminal() {
@@ -1729,6 +1797,14 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
       const ws = new WebSocket(baseWsUrl, wsProtocols);
       webSocketRef.current = ws;
+      zmodemRef.current?.attach({
+        send: (message) => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(message));
+          }
+        },
+        write: (bytes) => terminal.write(bytes),
+      });
       wasDisconnectedBySSH.current = false;
       updateConnectionError(null);
       shouldNotReconnectRef.current = false;
@@ -1780,8 +1856,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         currentHostIdRef.current = hostConfig.id;
         currentHostConfigRef.current = hostConfig;
 
-        // Consume the pending restored session ID once; retries get null so they create fresh connections
-        const restoredSessionId = pendingRestoredSessionIdRef.current;
+        // A restored tab attaches to its saved session once. After that, a
+        // reconnect attaches to the live session it already has instead of
+        // logging in to the host again; a gone session answers sessionExpired
+        // and the tab then connects fresh.
+        const restoredSessionId =
+          pendingRestoredSessionIdRef.current ?? sessionIdRef.current;
         pendingRestoredSessionIdRef.current = null;
 
         if (hostConfig.joinShareId) {
@@ -1808,6 +1888,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 cols,
                 rows,
                 tabInstanceId: hostConfig.instanceId,
+                zmodem: termUserRef.current.zmodem,
               },
             }),
           );
@@ -1823,6 +1904,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 initialPath,
                 executeCommand,
                 tmuxAttachSession,
+                zmodem: termUserRef.current.zmodem,
               },
             }),
           );
@@ -1913,6 +1995,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       ws.addEventListener("message", (event) => {
         try {
           const msg = JSON.parse(event.data);
+          if (msg.type === "zdata") {
+            if (typeof msg.data === "string") zmodemRef.current?.feed(msg.data);
+            return;
+          }
           if (msg.type !== "data" && msg.type !== "pong") {
             emitSessionMessage(msg);
           }
@@ -2745,15 +2831,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       const clipboardAddon = new ClipboardAddon(undefined, clipboardProvider);
       const unicode11Addon = new Unicode11Addon();
       const searchAddon = new SearchAddon();
-      const webLinksAddon = new WebLinksAddon((_event, uri) => {
+      const webLinksAddon = new WebLinksAddon((event, uri) => {
         const url =
           uri.startsWith("http://") || uri.startsWith("https://")
             ? uri
             : `https://${uri}`;
 
         const behavior = termSettingsRef.current.linkClickBehavior;
+        const modifier = event.ctrlKey || event.metaKey;
 
-        if (behavior === "direct") {
+        // A plain click is left alone so it can select text.
+        if (behavior === "modifier" && !modifier) return;
+        if (behavior === "direct" || modifier) {
           window.open(url, "_blank");
         } else {
           setLinkClickDialog({ url });
@@ -2890,7 +2979,14 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           rightClickCopyPaste: getUseRightClickCopyPaste(),
           copyOnSelect: getCopyOnSelect(),
           hasSelection: terminal.hasSelection(),
+          mouseTracking: terminal.modes.mouseTrackingMode !== "none",
+          shiftKey: e.shiftKey,
         });
+        if (action === "app") {
+          // Keep the browser menu away; the program already got the click.
+          e.preventDefault();
+          return;
+        }
         if (action !== "native") {
           e.preventDefault();
           e.stopPropagation();
@@ -3729,6 +3825,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     reconnectAfterEndRef.current = () => {
       if (!terminal) return;
       sessionEndedRef.current = false;
+      sessionIdRef.current = null;
       isUnmountingRef.current = false;
       shouldNotReconnectRef.current = false;
       isReconnectingRef.current = false;
@@ -3780,6 +3877,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 terminal.focus();
               }
             }}
+          />
+
+          <ZmodemBar
+            state={zmodemState}
+            onFiles={(files) => zmodemRef.current?.sendFiles(files)}
+            onCancel={() => zmodemRef.current?.abort()}
           />
 
           {isConnected &&
@@ -3894,6 +3997,13 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               }
             }}
             onClose={onClose}
+            extraActions={
+              onEditHost ? (
+                <Button size="sm" variant="outline" onClick={onEditHost}>
+                  {t("terminal.editHost")}
+                </Button>
+              ) : undefined
+            }
             logPosition={hasConnectionError ? "top" : "bottom"}
           />
 

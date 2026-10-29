@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Nu s-a putut citi clipboard-ul. Unele browsere restricționează accesul la clipboard în afara HTTPS – încearcă Ctrl+V sau servește Termix prin HTTPS.",
     "connecting": "Se conectează...",
     "connectionLost": "Conexiunea a fost pierdută",
+    "editHost": "Editează gazda",
     "connectionRejected": "Conexiunea a fost respinsă de server. Verifică autentificarea și configurația de rețea.",
     "connectionTimeout": "Timpul de așteptare al conexiunii a expirat",
     "hostKeyRejected": "Verificarea cheii SSH a gazdei a fost respinsă. Conexiunea a fost anulată.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Numărul maxim de încercări de reconectare a fost atins",
     "noHostSelected": "Nicio gazdă selectată",
     "passwordPromptFillTitle": "Completezi parola salvată în acest prompt?",
+    "suPasswordFillTitle": "Se completează parola salvată pentru {{user}}?",
     "reconnect": "Reconectează",
     "reconnected": "Reconectare reușită",
     "reconnecting": "Se reconectează... ({{attempt}}/{{max}})",
@@ -255,6 +257,13 @@
         "label": "Istoric comenzi",
         "description": "Înregistrează comenzile executate în acest terminal pentru istoric și completare automată"
       },
+      "connectFrom": {
+        "label": "Conectare de la (aplicație mobilă)",
+        "description": "Unde deschide aplicația mobilă SSH pentru această gazdă: telefonul, acest server sau telefonul atunci când poate ajunge la gazdă.",
+        "auto": "Automat",
+        "device": "Telefonul",
+        "server": "Acest server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Tunel Cloudflare",
         "description": "Rutează traficul SSH prin Cloudflare Zero Trust folosind WebSocket"
@@ -345,6 +354,9 @@
       "autoTmux": {
         "label": "Tmux automat"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Întreabă când există o sesiune tmux"
+      },
       "useSSHTitle": {
         "label": "Folosește titlul SSH"
       },
@@ -365,6 +377,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Completare automată a solicitărilor sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Completează prompturile su"
       },
       "autoReconnect": {
         "label": "Reconectare automată"
@@ -403,7 +418,11 @@
         "label": "Afișează mereu butoanele istoricului",
         "description": "Păstrează vizibile butoanele de copiere și ștergere sub fiecare comandă. Dezactivează pentru a le afișa doar la trecerea cu mouse-ul."
       },
-      "displayTitle": "Afișaj"
+      "displayTitle": "Afișaj",
+      "zmodem": {
+        "label": "Transferuri de fișiere rz și sz",
+        "description": "Încarcă și descarcă fișiere cu rz și sz (lrzsz) direct în terminal."
+      }
     }
   },
   "palette": {
@@ -475,6 +494,8 @@
     "enableAutoMosh": "Activează Auto-Mosh",
     "enableAutoMoshDesc": "Preferă Mosh în locul SSH dacă este disponibil",
     "enableAutoTmux": "Activează Auto-Tmux",
+    "autoTmuxAskWhenOne": "Întreabă când există o sesiune",
+    "autoTmuxAskWhenOneDesc": "Afișează selectorul de sesiune chiar și cu o singură sesiune tmux, astfel încât un tab nou să își poată începe propria sesiune în loc să se alăture celei existente",
     "enableAutoTmuxDesc": "Menține shell-ul și orice procese în execuție active în timpul deconectărilor și repornirilor browserului, rulându-le în tmux (tmux trebuie instalat pe gazdă)",
     "fastScrollModifier": "Modifier pentru derulare rapidă",
     "fastScrollModifierAlt": "Alt",
@@ -496,8 +517,9 @@
     "lineHeight": "Înălțime linie",
     "lineHeightLabel": "Înălțime linie",
     "linkClickBehaviorConfirm": "Afișează fereastra pentru a deschide sau copia",
-    "linkClickBehaviorDesc": "Controlează ce se întâmplă când dai click pe un link în terminal. Folosește 'Implicit' pentru a urma setarea la nivel de aplicație.",
+    "linkClickBehaviorDesc": "Controlează ce se întâmplă când dai clic pe un link în terminal. Ctrl+clic (Cmd+clic pe Mac) îl deschide întotdeauna imediat. Folosește 'Implicit' pentru a urma setarea la nivel de aplicație.",
     "linkClickBehaviorDirect": "Deschide direct",
+    "linkClickBehaviorModifier": "Deschide cu Ctrl+clic (Cmd+clic pe Mac)",
     "linkClickBehaviorLabel": "Comportament la click pe link",
     "loadingHost": "Se încarcă gazda...",
     "localEchoAuto": "Automat",
@@ -530,6 +552,8 @@
     "sudoPasswordAutoFill": "Completare automată a parolei sudo",
     "sudoPasswordAutoFillDesc": "Stocați o parolă sudo astfel încât metricile gazdei, solicitările terminalului și altele să poată executa comenzi privilegiate automat.",
     "sudoPasswordAutoFillLabel": "Completare automată a parolei sudo",
+    "suPasswordAutoFillLabel": "Completare automată parolă Su",
+    "suPasswordAutoFillDesc": "La un prompt su, oferă parola salvată pe o altă gazdă cu aceeași adresă și utilizatorul către care comută su",
     "syntaxCategoryIpAddresses": "Adrese IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Niveluri de jurnal",
@@ -712,5 +736,12 @@
   "plugin": {
     "name": "Terminal SSH",
     "description": "Sesiuni de terminal SSH cu file, ecran împărțit, istoric, macro-uri și un terminal local în aplicația desktop."
+  },
+  "zmodem": {
+    "waiting": "Gazda așteaptă fișiere (rz).",
+    "choose": "Alege fișiere",
+    "sending": "Se încarcă {{name}}",
+    "receiving": "Se descarcă {{name}}",
+    "cancel": "Anulează transferul"
   }
 }

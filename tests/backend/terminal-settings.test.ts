@@ -76,10 +76,12 @@ describe("readUserSettings", () => {
       readUserSettings({
         customThemes: [{ id: "a", name: "A", colors: {} }, { id: 1 }],
         commandAutocomplete: "yes",
+        zmodem: false,
       }),
     ).toEqual({
       customThemes: [{ id: "a", name: "A", colors: {} }],
       commandAutocomplete: false,
+      zmodem: false,
     });
   });
 });

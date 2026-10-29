@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Nem sikerült olvasni a vágólapot. Egyes böngészők korlátozzák a vágólap hozzáférését HTTPS-en kívül – próbáld meg a Ctrl+V billentyűkombinációt, vagy futtasd a Termixet HTTPS-en keresztül.",
     "connecting": "Csatlakozás...",
     "connectionLost": "A kapcsolat megszakadt",
+    "editHost": "Host szerkesztése",
     "connectionRejected": "A szerver elutasította a kapcsolatot. Kérlek, ellenőrizd a hitelesítési és hálózati beállításaidat.",
     "connectionTimeout": "Kapcsolat időtúllépés",
     "hostKeyRejected": "Az SSH hoszt kulcs ellenőrzése sikertelen. A kapcsolat megszakadt.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "A maximális újracsatlakozási kísérletek száma elérve",
     "noHostSelected": "Nincs kiválasztva hoszt",
     "passwordPromptFillTitle": "Betöltse a mentett jelszót ebbe a mezőbe?",
+    "suPasswordFillTitle": "A {{user}} mentett jelszavát beírja?",
     "reconnect": "Újracsatlakozás",
     "reconnected": "Sikeres újracsatlakozás",
     "reconnecting": "Újracsatlakozás... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Parancstörténet",
         "description": "A ebben a terminálban futtatott parancsok rögzítése a történet és az automatikus kiegészítés számára"
       },
+      "connectFrom": {
+        "label": "Csatlakozás innen (mobilalkalmazás)",
+        "description": "Ahol a mobilalkalmazás megnyitja az SSH-t ehhez a hosthoz: a telefonon, ezen a szerveren, vagy a telefonon, ha elérheti a hostot.",
+        "auto": "Automatikus",
+        "device": "A telefon",
+        "server": "Ez a szerver"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-alagút",
         "description": "Az SSH-forgalom irányítása a Cloudflare Zero Truston keresztül WebSocketen"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Automatikus tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Kérdezzen, ha egy tmux munkamenet létezik"
+      },
       "useSSHTitle": {
         "label": "Az SSH cím használata"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Sudo kitöltés"
+      },
+      "suPasswordAutoFill": {
+        "label": "su parancsok kitöltése"
       },
       "autoReconnect": {
         "label": "Automatikus újracsatlakozás"
@@ -400,7 +415,11 @@
         "label": "Előzmények gombok mindig láthatók",
         "description": "A parancsok alatti másolás és törlés gombok mindig láthatók maradnak. Kapcsold ki, ha csak rámutatáskor jelenjenek meg."
       },
-      "displayTitle": "Megjelenítés"
+      "displayTitle": "Megjelenítés",
+      "zmodem": {
+        "label": "rz és sz fájlküldések",
+        "description": "Fájlok feltöltése és letöltése az rz és sz (lrzsz) segítségével közvetlenül a terminálban."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Automatikus Mosh engedélyezése",
     "enableAutoMoshDesc": "Mosh használata az SSH helyett, ha elérhető",
     "enableAutoTmux": "Automatikus tmux engedélyezése",
+    "autoTmuxAskWhenOne": "Kérdezzen, ha egy munkamenet létezik",
+    "autoTmuxAskWhenOneDesc": "Mutasd a munkamenet-választót akkor is, ha csak egy tmux munkamenet van, így egy új lap saját munkamenetet indíthat, ahelyett hogy csatlakozna meglévőhöz",
     "enableAutoTmuxDesc": "A shell és a benne futó folyamatok életben tartása kapcsolatbontás és böngésző újraindítás esetén tmux használatával (a tmux-nak telepítve kell lennie a hoston)",
     "fastScrollModifier": "Gyors görgetés módosítója",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Sormagasság",
     "lineHeightLabel": "Sormagasság",
     "linkClickBehaviorConfirm": "Felugró ablak megjelenítése a megnyitás vagy másolás választásához",
-    "linkClickBehaviorDesc": "Ez a beállítás határozza meg, mi történik, amikor a terminálban egy hivatkozásra kattint. Az 'Alapértelmezett' értékkel az alkalmazásszintű beállítás lesz érvényes.",
+    "linkClickBehaviorDesc": "Ez vezérli, mi történik, amikor a terminálban egy hivatkozásra kattint. A Ctrl+kattintás (Mac-en Cmd+kattintás) mindig azonnal megnyitja azt. A 'Alapértelmezett' beállítás követi az alkalmazásszintű beállítást.",
     "linkClickBehaviorDirect": "Közvetlen megnyitás",
+    "linkClickBehaviorModifier": "Megnyitás Ctrl+kattintással (Mac-en Cmd+kattintás)",
     "linkClickBehaviorLabel": "Hivatkozás-kattintás viselkedése",
     "loadingHost": "Host betöltése...",
     "localEchoAuto": "Automatikus",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo jelszó automatikus kitöltése",
     "sudoPasswordAutoFillDesc": "Sudo jelszó tárolása, hogy a hoszt metrikák, a terminál kérések és mások automatikusan futtathassanak jogosultságot igénylő parancsokat.",
     "sudoPasswordAutoFillLabel": "Sudo jelszó automatikus kitöltése",
+    "suPasswordAutoFillLabel": "Su jelszó automatikus kitöltése",
+    "suPasswordAutoFillDesc": "Su parancsnál ajánlja fel a másik hoston mentett jelszót, amelynek ugyanaz a címe, és ahhoz a felhasználóhoz kapcsolódik, akire az su vált",
     "syntaxCategoryIpAddresses": "IP-címek",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Naplózási szintek",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH terminál",
     "description": "SSH terminálmunkamenetek fülekkel, osztott képernyővel, előzményekkel, makrókkal és helyi terminállal az asztali alkalmazásban."
+  },
+  "zmodem": {
+    "waiting": "A host fájlokat vár (rz).",
+    "choose": "Fájlok kiválasztása",
+    "sending": "{{name}} feltöltése",
+    "receiving": "{{name}} letöltése",
+    "cancel": "Átvitel megszakítása"
   }
 }

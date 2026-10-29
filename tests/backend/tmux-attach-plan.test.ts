@@ -14,4 +14,9 @@ describe("planTmuxAttach", () => {
     expect(planTmuxAttach(2)).toBe("pick");
     expect(planTmuxAttach(7)).toBe("pick");
   });
+
+  it("asks with one session when the host wants a choice", () => {
+    expect(planTmuxAttach(1, true)).toBe("pick");
+    expect(planTmuxAttach(0, true)).toBe("create");
+  });
 });

@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Couldn't read the clipboard. Some browsers restrict clipboard access outside HTTPS - try Ctrl+V instead, or serve Termix over HTTPS.",
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
+    "editHost": "Edit host",
     "connectionRejected": "Connection rejected by server. Please check your authentication and network configuration.",
     "connectionTimeout": "Connection timeout",
     "hostKeyRejected": "SSH host key verification rejected. Connection cancelled.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maximum reconnection attempts reached",
     "noHostSelected": "No host selected",
     "passwordPromptFillTitle": "Fill the saved password into this prompt?",
+    "suPasswordFillTitle": "Fill the saved password for {{user}}?",
     "reconnect": "Reconnect",
     "reconnected": "Reconnected successfully",
     "reconnecting": "Reconnecting... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Command History",
         "description": "Record commands run in this terminal for history and autocomplete"
       },
+      "connectFrom": {
+        "label": "Connect from (mobile app)",
+        "description": "Where the mobile app opens SSH for this host: the phone, this server, or the phone when it can reach the host.",
+        "auto": "Automatic",
+        "device": "The phone",
+        "server": "This server"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Route SSH traffic over Cloudflare Zero Trust via WebSocket"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Auto tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Ask when one tmux session exists"
+      },
       "useSSHTitle": {
         "label": "Use the SSH title"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Fill sudo prompts"
+      },
+      "suPasswordAutoFill": {
+        "label": "Fill su prompts"
       },
       "autoReconnect": {
         "label": "Reconnect automatically"
@@ -400,7 +415,11 @@
         "label": "Always show history buttons",
         "description": "Keep the copy and delete buttons under each command visible. Turn off to show them only on hover."
       },
-      "displayTitle": "Display"
+      "displayTitle": "Display",
+      "zmodem": {
+        "label": "rz and sz file transfers",
+        "description": "Upload and download files with rz and sz (lrzsz) right in the terminal."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Enable Auto-Mosh",
     "enableAutoMoshDesc": "Prefer Mosh over SSH if available",
     "enableAutoTmux": "Enable Auto-Tmux",
+    "autoTmuxAskWhenOne": "Ask when one session exists",
+    "autoTmuxAskWhenOneDesc": "Show the session picker even with one tmux session, so a new tab can start its own session instead of joining it",
     "enableAutoTmuxDesc": "Keep your shell and anything running in it alive across disconnects and browser restarts by running inside tmux (tmux must be installed on the host)",
     "fastScrollModifier": "Fast Scroll Modifier",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Line Height",
     "lineHeightLabel": "Line Height",
     "linkClickBehaviorConfirm": "Show popup to open or copy",
-    "linkClickBehaviorDesc": "Controls what happens when you click a link in the terminal. Use 'Default' to follow the app-level setting.",
+    "linkClickBehaviorDesc": "Controls what happens when you click a link in the terminal. Ctrl+click (Cmd+click on Mac) always opens it right away. Use 'Default' to follow the app-level setting.",
     "linkClickBehaviorDirect": "Open directly",
+    "linkClickBehaviorModifier": "Open with Ctrl+click (Cmd+click on Mac)",
     "linkClickBehaviorLabel": "Link Click Behavior",
     "loadingHost": "Loading host...",
     "localEchoAuto": "Automatic",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo Password Auto-Fill",
     "sudoPasswordAutoFillDesc": "Store a sudo password so host metrics, terminal prompts, and others can run privileged commands automatically.",
     "sudoPasswordAutoFillLabel": "Sudo Password Auto-fill",
+    "suPasswordAutoFillLabel": "Su Password Auto-fill",
+    "suPasswordAutoFillDesc": "At a su prompt, offer the password saved on another host with the same address and the user su switches to",
     "syntaxCategoryIpAddresses": "IP Addresses",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Log Levels",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH Terminal",
     "description": "SSH terminal sessions with tabs, split screen, history, macros and a local terminal in the desktop app."
+  },
+  "zmodem": {
+    "waiting": "The host is waiting for files (rz).",
+    "choose": "Choose files",
+    "sending": "Uploading {{name}}",
+    "receiving": "Downloading {{name}}",
+    "cancel": "Cancel transfer"
   }
 }

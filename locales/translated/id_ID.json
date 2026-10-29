@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Tidak dapat membaca papan klip. Beberapa browser membatasi akses papan klip di luar HTTPS - coba Ctrl+V, atau jalankan Termix melalui HTTPS.",
     "connecting": "Menghubungkan...",
     "connectionLost": "Koneksi terputus",
+    "editHost": "Edit host",
     "connectionRejected": "Koneksi ditolak oleh server. Periksa autentikasi dan konfigurasi jaringan Anda.",
     "connectionTimeout": "Waktu koneksi habis",
     "hostKeyRejected": "Verifikasi kunci host SSH ditolak. Koneksi dibatalkan.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Mencapai batas maksimum upaya koneksi ulang",
     "noHostSelected": "Tidak ada host yang dipilih",
     "passwordPromptFillTitle": "Isi kata sandi yang disimpan ke prompt ini?",
+    "suPasswordFillTitle": "Isi kata sandi yang disimpan untuk {{user}}?",
     "reconnect": "Hubungkan ulang",
     "reconnected": "Berhasil terhubung kembali",
     "reconnecting": "Menghubungkan ulang... ({{attempt}}/{{max}})",
@@ -249,6 +251,13 @@
         "label": "Riwayat Perintah",
         "description": "Catat perintah yang dijalankan di terminal ini untuk riwayat dan pelengkapan otomatis"
       },
+      "connectFrom": {
+        "label": "Sambungkan dari (aplikasi seluler)",
+        "description": "Di mana aplikasi seluler membuka SSH untuk host ini: di ponsel, server ini, atau di ponsel jika dapat menjangkau host.",
+        "auto": "Otomatis",
+        "device": "Ponsel",
+        "server": "Server ini"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Arahkan lalu lintas SSH melalui Cloudflare Zero Trust via WebSocket"
@@ -339,6 +348,9 @@
       "autoTmux": {
         "label": "Tmux otomatis"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Tanya saat satu sesi tmux ada"
+      },
       "useSSHTitle": {
         "label": "Gunakan judul SSH"
       },
@@ -359,6 +371,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Isi permintaan sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Isi prompt su"
       },
       "autoReconnect": {
         "label": "Sambungkan ulang secara otomatis"
@@ -397,7 +412,11 @@
         "label": "Selalu tampilkan tombol riwayat",
         "description": "Jaga tombol salin dan hapus di bawah setiap perintah agar tetap terlihat. Matikan untuk menampilkannya hanya saat kursor diarahkan."
       },
-      "displayTitle": "Tampilan"
+      "displayTitle": "Tampilan",
+      "zmodem": {
+        "label": "Transfer file rz dan sz",
+        "description": "Unggah dan unduh file dengan rz dan sz (lrzsz) langsung di terminal."
+      }
     }
   },
   "palette": {
@@ -469,6 +488,8 @@
     "enableAutoMosh": "Aktifkan Auto-Mosh",
     "enableAutoMoshDesc": "Utamakan Mosh daripada SSH jika tersedia",
     "enableAutoTmux": "Aktifkan Auto-Tmux",
+    "autoTmuxAskWhenOne": "Tanya saat satu sesi ada",
+    "autoTmuxAskWhenOneDesc": "Tampilkan pemilih sesi bahkan dengan satu sesi tmux, sehingga tab baru dapat memulai sesi sendiri alih-alih bergabung dengannya",
     "enableAutoTmuxDesc": "Jaga shell dan proses yang berjalan di dalamnya tetap hidup saat terputus atau browser diulang dengan menjalankannya di dalam tmux (tmux harus terinstal di host)",
     "fastScrollModifier": "Modifikasi Gulir Cepat",
     "fastScrollModifierAlt": "Alt",
@@ -490,8 +511,9 @@
     "lineHeight": "Tinggi Baris",
     "lineHeightLabel": "Tinggi Baris",
     "linkClickBehaviorConfirm": "Tampilkan popup untuk membuka atau menyalin",
-    "linkClickBehaviorDesc": "Mengontrol apa yang terjadi saat Anda mengklik tautan di terminal. Gunakan 'Default' untuk mengikuti pengaturan tingkat aplikasi.",
+    "linkClickBehaviorDesc": "Mengontrol apa yang terjadi saat Anda mengklik tautan di terminal. Ctrl+klik (Cmd+klik di Mac) selalu membukanya langsung. Gunakan 'Bawaan' untuk mengikuti pengaturan tingkat aplikasi.",
     "linkClickBehaviorDirect": "Buka langsung",
+    "linkClickBehaviorModifier": "Buka dengan Ctrl+klik (Cmd+klik di Mac)",
     "linkClickBehaviorLabel": "Perilaku Klik Tautan",
     "loadingHost": "Memuat host...",
     "localEchoAuto": "Otomatis",
@@ -524,6 +546,8 @@
     "sudoPasswordAutoFill": "Pengisian Otomatis Kata Sandi Sudo",
     "sudoPasswordAutoFillDesc": "Simpan kata sandi sudo agar metrik host, prompt terminal, dan lainnya dapat menjalankan perintah berprivilege secara otomatis.",
     "sudoPasswordAutoFillLabel": "Pengisian Otomatis Kata Sandi Sudo",
+    "suPasswordAutoFillLabel": "Isi Otomatis Kata Sandi Su",
+    "suPasswordAutoFillDesc": "Pada prompt su, tawarkan kata sandi yang disimpan di host lain dengan alamat yang sama dan pengguna yang beralih ke su",
     "syntaxCategoryIpAddresses": "Alamat IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Tingkat Log",
@@ -700,5 +724,12 @@
   "plugin": {
     "name": "Terminal SSH",
     "description": "Sesi terminal SSH dengan tab, layar terbagi, riwayat, makro, dan terminal lokal di aplikasi desktop."
+  },
+  "zmodem": {
+    "waiting": "Host sedang menunggu file (rz).",
+    "choose": "Pilih file",
+    "sending": "Mengunggah {{name}}",
+    "receiving": "Mengunduh {{name}}",
+    "cancel": "Batalkan transfer"
   }
 }

@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Pano okunamadı. Bazı tarayıcılar HTTPS dışındaki bağlantılarda pano erişimini kısıtlar - bunun yerine Ctrl+V deneyin veya Termix'i HTTPS üzerinden çalıştırın.",
     "connecting": "Bağlanılıyor...",
     "connectionLost": "Bağlantı kesildi",
+    "editHost": "Ana makineyi düzenle",
     "connectionRejected": "Bağlantı sunucu tarafından reddedildi. Lütfen kimlik doğrulama ve ağ yapılandırmanızı kontrol edin.",
     "connectionTimeout": "Bağlantı zaman aşımı",
     "hostKeyRejected": "SSH ana bilgisayar anahtarı doğrulaması reddedildi. Bağlantı iptal edildi.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maksimum yeniden bağlantı denemesine ulaşıldı",
     "noHostSelected": "Ana bilgisayar seçilmedi",
     "passwordPromptFillTitle": "Kaydedilen parola bu isteme doldurulsun mu?",
+    "suPasswordFillTitle": "{{user}} için kaydedilen şifre doldurulsun mu?",
     "reconnect": "Yeniden Bağlan",
     "reconnected": "Başarıyla yeniden bağlanıldı",
     "reconnecting": "Yeniden bağlanılıyor... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Komut Geçmişi",
         "description": "Geçmiş ve otomatik tamamlama için bu terminalde çalıştırılan komutları kaydet"
       },
+      "connectFrom": {
+        "label": "Bağlanacak yer (mobil uygulama)",
+        "description": "Mobil uygulamanın bu ana makine için SSH bağlantısını nerede açacağı: telefon, bu sunucu veya ana makineye erişebildiğinde telefon.",
+        "auto": "Otomatik",
+        "device": "Telefon",
+        "server": "Bu sunucu"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "SSH trafiğini WebSocket üzerinden Cloudflare Zero Trust'a yönlendir"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Otomatik tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Bir tmux oturumu varsa sor"
+      },
       "useSSHTitle": {
         "label": "SSH başlığını kullan"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Sudo istemlerini doldur"
+      },
+      "suPasswordAutoFill": {
+        "label": "su istemlerini doldur"
       },
       "autoReconnect": {
         "label": "Otomatik olarak yeniden bağlan"
@@ -400,7 +415,11 @@
         "label": "Geçmiş düğmelerini her zaman göster",
         "description": "Her komutun altındaki kopyala ve sil düğmelerini görünür tut. Sadece üzerine gelindiğinde göstermek için kapatın."
       },
-      "displayTitle": "Görüntüleme"
+      "displayTitle": "Görüntüleme",
+      "zmodem": {
+        "label": "rz ve sz dosya aktarımları",
+        "description": "rz ve sz (lrzsz) kullanarak dosyaları doğrudan terminalde yükleyin ve indirin."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Otomatik Mosh'u Etkinleştir",
     "enableAutoMoshDesc": "Mosh kullanılabilirse SSH yerine onu tercih et",
     "enableAutoTmux": "Otomatik Tmux'u Etkinleştir",
+    "autoTmuxAskWhenOne": "Bir oturum varsa sor",
+    "autoTmuxAskWhenOneDesc": "Yeni bir sekmenin ona katılmak yerine kendi oturumunu başlatmasına olanak tanımak için, tek bir tmux oturumu olsa bile oturum seçicisini göster",
     "enableAutoTmuxDesc": "Kabuk ve içinde çalışan her şeyi bağlantı kesintileri ve tarayıcı yeniden başlatmaları arasında canlı tutmak için tmux içinde çalıştır (tmux sunucuda yüklü olmalıdır)",
     "fastScrollModifier": "Hızlı Kaydırma Değiştiricisi",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Satır Yüksekliği",
     "lineHeightLabel": "Satır Yüksekliği",
     "linkClickBehaviorConfirm": "Açmak veya kopyalamak için açılır pencere göster",
-    "linkClickBehaviorDesc": "Terminalde bir bağlantıya tıkladığınızda ne olacağını kontrol eder. Uygulama düzeyindeki ayarı kullanmak için 'Varsayılan'ı kullanın.",
+    "linkClickBehaviorDesc": "Terminalde bir bağlantıya tıklandığında ne olacağını kontrol eder. Ctrl+tıklama (Mac'te Cmd+tıklama) her zaman onu hemen açar. Uygulama düzeyindeki ayarı takip etmek için 'Varsayılan'ı kullanın.",
     "linkClickBehaviorDirect": "Doğrudan aç",
+    "linkClickBehaviorModifier": "Ctrl+tıklama ile aç (Mac'te Cmd+tıklama)",
     "linkClickBehaviorLabel": "Bağlantı Tıklama Davranışı",
     "loadingHost": "Sunucu yükleniyor...",
     "localEchoAuto": "Otomatik",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo Şifresi Otomatik Doldurma",
     "sudoPasswordAutoFillDesc": "Ana bilgisayar metrikleri, terminal istemleri ve diğerlerinin ayrıcalıklı komutları otomatik olarak çalıştırabilmesi için bir sudo şifresi saklayın.",
     "sudoPasswordAutoFillLabel": "Sudo Şifresi Otomatik Doldurma",
+    "suPasswordAutoFillLabel": "Su Şifresi Otomatik Doldurma",
+    "suPasswordAutoFillDesc": "Bir su isteminde, aynı adrese sahip başka bir ana makinede kaydedilmiş ve su'nun geçiş yaptığı kullanıcıya ait şifreyi öner",
     "syntaxCategoryIpAddresses": "IP Adresleri",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Günlük Seviyeleri",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH Terminali",
     "description": "Sekmeler, bölünmüş ekran, geçmiş, makrolar ve masaüstü uygulamada yerel terminal ile SSH terminal oturumları."
+  },
+  "zmodem": {
+    "waiting": "Ana makine dosyaları bekliyor (rz).",
+    "choose": "Dosyaları seç",
+    "sending": "{{name}} yükleniyor",
+    "receiving": "{{name}} indiriliyor",
+    "cancel": "Aktarımı iptal et"
   }
 }

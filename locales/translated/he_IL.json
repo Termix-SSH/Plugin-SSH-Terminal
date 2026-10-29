@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "לא ניתן לקרוא את הלוח. דפדפנים מסוימים מגבילים גישה ללוח מחוץ ל-HTTPS - נסה Ctrl+V במקום, או הפעל את Termix דרך HTTPS.",
     "connecting": "מתחבר...",
     "connectionLost": "החיבור אבד",
+    "editHost": "עריכת מארח",
     "connectionRejected": "החיבור נדחה על ידי השרת. אנא בדוק את פרטי האימות והתצורה הרשתית שלך.",
     "connectionTimeout": "פג תוקף חיבור",
     "hostKeyRejected": "אימות מפתח מארח SSH נדחה. החיבוט בוטל.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "הושג מספר ניסיונות החיבור מחדש המקסימלי",
     "noHostSelected": "לא נבחר מארח",
     "passwordPromptFillTitle": "להזין את הסיסמה השמורה לשאילתה זו?",
+    "suPasswordFillTitle": "להזין את הסיסמה השמורה עבור {{user}}?",
     "reconnect": "חבר מחדש",
     "reconnected": "החיבור מחדש בוצע בהצלחה",
     "reconnecting": "מתחבר מחדש... ({{attempt}}/{{max}})",
@@ -255,6 +257,13 @@
         "label": "היסטוריית פקודות",
         "description": "הקלט פקודות שרצות בטרמינל זה עבור היסטוריה והשלמה אוטומטית"
       },
+      "connectFrom": {
+        "label": "חיבור מ- (אפליקציה ניידת)",
+        "description": "איפה האפליקציה הניידת פותחת SSH עבור מארח זה: הטלפון, השרת הזה, או הטלפון כשהוא יכול להגיע למארח.",
+        "auto": "אוטומטי",
+        "device": "הטלפון",
+        "server": "השרת הזה"
+      },
       "cloudflareTunnelEnabled": {
         "label": "מנהרת Cloudflare",
         "description": "העברת תעבורת SSH דרך Cloudflare Zero Trust באמצעות WebSocket"
@@ -345,6 +354,9 @@
       "autoTmux": {
         "label": "tmux אוטומטי"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "לשאול כשקיימת סשן tmux אחד"
+      },
       "useSSHTitle": {
         "label": "השתמש בכותרת ה-SSH"
       },
@@ -365,6 +377,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "מילוי אוטומטי לשדות sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "הזנה אוטומטית של בקשות su"
       },
       "autoReconnect": {
         "label": "חיבור מחדש אוטומטי"
@@ -403,7 +418,11 @@
         "label": "הצג תמיד את כפתורי ההיסטוריה",
         "description": "שמור על כפתורי ההעתקה והמחיקה מתחת לכל פקודה גלויים. כבה כדי להציג אותם רק בעת ריחוף."
       },
-      "displayTitle": "תצוגה"
+      "displayTitle": "תצוגה",
+      "zmodem": {
+        "label": "העברות קבצים rz ו-sz",
+        "description": "העלאה והורדה של קבצים עם rz ו-sz (lrzsz) ישירות בטרמינל."
+      }
     }
   },
   "palette": {
@@ -475,6 +494,8 @@
     "enableAutoMosh": "הפעלת Auto-Mosh",
     "enableAutoMoshDesc": "העדפת Mosh על פני SSH אם זמין",
     "enableAutoTmux": "הפעלת Auto-Tmux",
+    "autoTmuxAskWhenOne": "לשאול כשקיימת סשן אחד",
+    "autoTmuxAskWhenOneDesc": "להציג את בוחר הסשנים גם כשקיים סשן tmux אחד, כך שניתן יהיה לפתוח סשן חדש במקום להצטרף לקיים",
     "enableAutoTmuxDesc": "שמירה על פעילות ה-shell וכל התהליכים הרצים בו גם לאחר ניתוק או הפעלה מחדש של הדפדפן, באמצעות הרצה בתוך tmux (נדרש התקנת tmux במארח)",
     "fastScrollModifier": "מקש עזר לגלילה מהירה",
     "fastScrollModifierAlt": "Alt",
@@ -496,8 +517,9 @@
     "lineHeight": "גובה שורה",
     "lineHeightLabel": "גובה שורה",
     "linkClickBehaviorConfirm": "הצגת חלון קופץ לפתיחה או העתקה",
-    "linkClickBehaviorDesc": "שולט במה שקורה בעת לחיצה על קישור בטרמינל. השתמש ב'ברירת מחדל' כדי לעקוב אחר הגדרת ברמת האפליקציה.",
+    "linkClickBehaviorDesc": "שולט במה שקורה כשלוחצים על קישור בטרמינל. לחיצה עם Ctrl (Cmd במאק) תמיד פותחת אותו מיד. השתמש ב'ברירת מחדל' כדי לעקוב אחר הגדרת ברירת המחדל של האפליקציה.",
     "linkClickBehaviorDirect": "פתיחה ישירה",
+    "linkClickBehaviorModifier": "פתיחה עם Ctrl+לחיצה (Cmd+לחיצה במאק)",
     "linkClickBehaviorLabel": "התנהגות לחיצה על קישור",
     "loadingHost": "טוען מארח...",
     "localEchoAuto": "אוטומטי",
@@ -530,6 +552,8 @@
     "sudoPasswordAutoFill": "מילוי אוטומטי של סיסמת Sudo",
     "sudoPasswordAutoFillDesc": "אחסן סיסמת sudo כדי שמדדי מארח, בקשות מסוף ואחרים יוכלו להריץ פקודות מיוחסות באופן אוטומטי.",
     "sudoPasswordAutoFillLabel": "מילוי אוטומטי של סיסמת Sudo",
+    "suPasswordAutoFillLabel": "הזנה אוטומטית של סיסמת Su",
+    "suPasswordAutoFillDesc": "בבקשת su, להציע את הסיסמה השמורה במארח אחר עם אותה כתובת ומשתמש אליו su מתחלף",
     "syntaxCategoryIpAddresses": "כתובות IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "רמות יומן",
@@ -712,5 +736,12 @@
   "plugin": {
     "name": "טרמינל SSH",
     "description": "הפעלות מסוף SSH עם לשוניות, חלוקת מסך, היסטוריה, מאקרו ומסוף מקומי באפליקציית שולחן העבודה."
+  },
+  "zmodem": {
+    "waiting": "המארח ממתין לקבצים (rz).",
+    "choose": "בחירת קבצים",
+    "sending": "מעלה את {{name}}",
+    "receiving": "מוריד את {{name}}",
+    "cancel": "ביטול העברה"
   }
 }

@@ -167,6 +167,7 @@ describe("terminal settings routes", () => {
     expect(body.user).toEqual({
       customThemes: [],
       commandAutocomplete: true,
+      zmodem: true,
     });
     expect(body).not.toHaveProperty("newHostDefaults");
     const other = await server.request("GET", "/client-settings", {

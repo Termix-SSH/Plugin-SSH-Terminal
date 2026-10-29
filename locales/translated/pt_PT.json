@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Não foi possível ler a área de transferência. Alguns navegadores restringem o acesso à área de transferência fora de HTTPS - tente Ctrl+V em vez disso, ou sirva o Termix via HTTPS.",
     "connecting": "A ligar...",
     "connectionLost": "Ligação perdida",
+    "editHost": "Editar host",
     "connectionRejected": "Ligação rejeitada pelo servidor. Verifique a sua autenticação e configuração de rede.",
     "connectionTimeout": "Tempo limite da ligação",
     "hostKeyRejected": "Verificação da chave do host SSH rejeitada. Ligação cancelada.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Número máximo de tentativas de reconexão atingido",
     "noHostSelected": "Nenhum host selecionado",
     "passwordPromptFillTitle": "Preencher a palavra-passe guardada neste pedido?",
+    "suPasswordFillTitle": "Preencher a palavra-passe guardada para {{user}}?",
     "reconnect": "Reconectar",
     "reconnected": "Reconexão bem-sucedida",
     "reconnecting": "A reconectar... ({{attempt}}/{{max}})",
@@ -255,6 +257,13 @@
         "label": "Histórico de comandos",
         "description": "Registar comandos executados neste terminal para histórico e preenchimento automático"
       },
+      "connectFrom": {
+        "label": "Conectar a partir de (app móvel)",
+        "description": "Onde a app móvel abre o SSH para este host: no telemóvel, neste servidor ou no telemóvel quando consegue aceder ao host.",
+        "auto": "Automático",
+        "device": "O telemóvel",
+        "server": "Este servidor"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Encaminhar tráfego SSH através do Cloudflare Zero Trust via WebSocket"
@@ -345,6 +354,9 @@
       "autoTmux": {
         "label": "Tmux automático"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Perguntar quando existe uma sessão tmux"
+      },
       "useSSHTitle": {
         "label": "Usar o título do SSH"
       },
@@ -365,6 +377,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Preencher prompts de sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Preencher prompts de su"
       },
       "autoReconnect": {
         "label": "Reconectar automaticamente"
@@ -403,7 +418,11 @@
         "label": "Mostrar sempre os botões do histórico",
         "description": "Manter os botões de copiar e eliminar visíveis sob cada comando. Desative para os mostrar apenas ao passar o rato."
       },
-      "displayTitle": "Ecrã"
+      "displayTitle": "Ecrã",
+      "zmodem": {
+        "label": "Transferências de ficheiros rz e sz",
+        "description": "Carregar e transferir ficheiros com rz e sz (lrzsz) diretamente no terminal."
+      }
     }
   },
   "palette": {
@@ -475,6 +494,8 @@
     "enableAutoMosh": "Ativar Auto-Mosh",
     "enableAutoMoshDesc": "Preferir Mosh em vez de SSH, se disponível",
     "enableAutoTmux": "Ativar Auto-Tmux",
+    "autoTmuxAskWhenOne": "Perguntar quando existe uma sessão",
+    "autoTmuxAskWhenOneDesc": "Mostrar o seletor de sessões mesmo com uma sessão tmux, para que uma nova aba possa iniciar a sua própria sessão em vez de se juntar a ela",
     "enableAutoTmuxDesc": "Mantenha o seu shell e tudo o que nele estiver a correr ativo durante desconexões e reinícios do navegador, executando dentro de tmux (tmux deve estar instalado no host)",
     "fastScrollModifier": "Modificador de Rápida Rolagem",
     "fastScrollModifierAlt": "Alt",
@@ -496,8 +517,9 @@
     "lineHeight": "Altura da Linha",
     "lineHeightLabel": "Altura da Linha",
     "linkClickBehaviorConfirm": "Mostrar popup para abrir ou copiar",
-    "linkClickBehaviorDesc": "Controla o que acontece ao clicar num link no terminal. Use 'Predefinição' para seguir a configuração a nível da aplicação.",
+    "linkClickBehaviorDesc": "Controla o que acontece quando clica num link no terminal. Ctrl+clique (Cmd+clique no Mac) abre-o sempre imediatamente. Use 'Predefinição' para seguir a definição a nível da app.",
     "linkClickBehaviorDirect": "Abrir diretamente",
+    "linkClickBehaviorModifier": "Abrir com Ctrl+clique (Cmd+clique no Mac)",
     "linkClickBehaviorLabel": "Comportamento ao Clicar em Links",
     "loadingHost": "A carregar host...",
     "localEchoAuto": "Automático",
@@ -530,6 +552,8 @@
     "sudoPasswordAutoFill": "Preenchimento Automático de Palavra-passe Sudo",
     "sudoPasswordAutoFillDesc": "Guardar uma palavra-passe sudo para que as métricas do host, os prompts do terminal e outros possam executar comandos privilegiados automaticamente.",
     "sudoPasswordAutoFillLabel": "Preenchimento Automático de Palavra-passe Sudo",
+    "suPasswordAutoFillLabel": "Preenchimento automático da palavra-passe Su",
+    "suPasswordAutoFillDesc": "Num prompt de su, oferecer a palavra-passe guardada noutro host com o mesmo endereço e o utilizador para o qual o su alterna",
     "syntaxCategoryIpAddresses": "Endereços IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Níveis de Log",
@@ -712,5 +736,12 @@
   "plugin": {
     "name": "Terminal SSH",
     "description": "Sessões de terminal SSH com abas, ecrã dividido, histórico, macros e um terminal local na aplicação desktop."
+  },
+  "zmodem": {
+    "waiting": "O host está à espera de ficheiros (rz).",
+    "choose": "Selecionar ficheiros",
+    "sending": "A carregar {{name}}",
+    "receiving": "A transferir {{name}}",
+    "cancel": "Cancelar transferência"
   }
 }

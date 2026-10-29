@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "ক্লিপবোর্ড পড়া যায়নি। কিছু ব্রাউজার HTTPS-এর বাইরে ক্লিপবোর্ড অ্যাক্সেস সীমিত করে - এর পরিবর্তে Ctrl+V চেষ্টা করুন, অথবা HTTPS-এর মাধ্যমে Termix চালান।",
     "connecting": "সংযোগ হচ্ছে...",
     "connectionLost": "সংযোগ বিচ্ছিন্ন হয়েছে",
+    "editHost": "হোস্ট সম্পাদনা করুন",
     "connectionRejected": "সার্ভার দ্বারা সংযোগ প্রত্যাখ্যান করা হয়েছে। অনুগ্রহ করে আপনার প্রমাণীকরণ এবং নেটওয়ার্ক কনফিগারেশন পরীক্ষা করুন।",
     "connectionTimeout": "সংযোগের সময় শেষ হয়েছে",
     "hostKeyRejected": "SSH হোস্ট কী যাচাইকরণ প্রত্যাখ্যান করা হয়েছে। সংযোগ বাতিল করা হয়েছে।",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "সর্বোচ্চ পুনঃসংযোগের চেষ্টা সম্পন্ন হয়েছে",
     "noHostSelected": "কোনো হোস্ট নির্বাচন করা হয়নি",
     "passwordPromptFillTitle": "এই প্রম্পটে সংরক্ষিত পাসওয়ার্ডটি বসান?",
+    "suPasswordFillTitle": "{{user}} এর জন্য সংরক্ষিত পাসওয়ার্ড পূরণ করবেন?",
     "reconnect": "পুনঃসংযোগ",
     "reconnected": "সফলভাবে পুনঃসংযুক্ত হয়েছে",
     "reconnecting": "পুনঃসংযুক্ত হচ্ছে... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "কমান্ড হিস্ট্রি",
         "description": "হিস্ট্রি এবং অটোকমপ্লিটের জন্য এই টার্মিনালে চালানো কমান্ড রেকর্ড করুন"
       },
+      "connectFrom": {
+        "label": "সংযোগ করুন (মোবাইল অ্যাপ থেকে)",
+        "description": "মোবাইল অ্যাপটি এই হোস্টের জন্য SSH কোথায় খুলবে: ফোন, এই সার্ভার, অথবা ফোন যখন এটি হোস্টের সাথে সংযোগ স্থাপন করতে পারে।",
+        "auto": "স্বয়ংক্রিয়",
+        "device": "ফোন",
+        "server": "এই সার্ভার"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare টানেল",
         "description": "WebSocket এর মাধ্যমে Cloudflare Zero Trust এর উপর দিয়ে SSH ট্রাফিক রাউট করুন"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "স্বয়ংক্রিয় tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "একটি tmux সেশন থাকলে জিজ্ঞাসা করুন"
+      },
       "useSSHTitle": {
         "label": "SSH শিরোনাম ব্যবহার করুন"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "sudo প্রম্পট পূরণ করুন"
+      },
+      "suPasswordAutoFill": {
+        "label": "su প্রম্পট পূরণ করুন"
       },
       "autoReconnect": {
         "label": "স্বয়ংক্রিয়ভাবে পুনরায় সংযোগ করুন"
@@ -400,7 +415,11 @@
         "label": "সর্বদা ইতিহাস বাটন দেখান",
         "description": "প্রতিটি কমান্ডের নিচের কপি এবং মুছে ফেলার বাটন সর্বদা দৃশ্যমান রাখুন। শুধুমাত্র হোভার করলে দেখানোর জন্য বন্ধ করুন।"
       },
-      "displayTitle": "ডিসপ্লে"
+      "displayTitle": "ডিসপ্লে",
+      "zmodem": {
+        "label": "rz এবং sz ফাইল স্থানান্তর",
+        "description": "টার্মিনালে সরাসরি rz এবং sz (lrzsz) ব্যবহার করে ফাইল আপলোড এবং ডাউনলোড করুন।"
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "অটো-মোশ সক্রিয় করুন",
     "enableAutoMoshDesc": "যদি উপলব্ধ থাকে তবে SSH এর পরিবর্তে মোশ পছন্দ করুন",
     "enableAutoTmux": "অটো-tmux সক্রিয় করুন",
+    "autoTmuxAskWhenOne": "একটি সেশন থাকলে জিজ্ঞাসা করুন",
+    "autoTmuxAskWhenOneDesc": "একটি tmux সেশন থাকলেও সেশন পিকার দেখান, যাতে নতুন ট্যাবটি নিজস্ব সেশন শুরু করতে পারে এবং এতে যোগদান না করে",
     "enableAutoTmuxDesc": "ডিসকানেক্ট এবং ব্রাউজার রিস্টার্টের সময় আপনার শেল এবং এতে চলমান যেকোনো কিছু জীবিত রাখতে tmux এর ভেতরে চালান (tmux হোস্টে ইনস্টল করা থাকতে হবে)",
     "fastScrollModifier": "দ্রুত স্ক্রল মডিফায়ার",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "লাইন হাইট",
     "lineHeightLabel": "লাইন হাইট",
     "linkClickBehaviorConfirm": "খোলা বা কপি করার জন্য পপআপ দেখান",
-    "linkClickBehaviorDesc": "টার্মিনালে লিঙ্কে ক্লিক করলে কী হবে তা নিয়ন্ত্রণ করে। অ্যাপ-লেভেল সেটিং অনুসরণ করতে 'ডিফল্ট' ব্যবহার করুন।",
+    "linkClickBehaviorDesc": "টার্মিনালে একটি লিংকে ক্লিক করলে কী হবে তা নিয়ন্ত্রণ করে। Ctrl+click (ম্যাকে Cmd+click) সবসময় এটি সাথে সাথে খোলে। অ্যাপ-লেভেল সেটিং অনুসরণ করতে 'ডিফল্ট' ব্যবহার করুন।",
     "linkClickBehaviorDirect": "সরাসরি খুলুন",
+    "linkClickBehaviorModifier": "Ctrl+click (ম্যাকে Cmd+click) দিয়ে খুলুন",
     "linkClickBehaviorLabel": "লিঙ্ক ক্লিক আচরণ",
     "loadingHost": "হোস্ট লোড হচ্ছে...",
     "localEchoAuto": "স্বয়ংক্রিয়",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo পাসওয়ার্ড অটো-ফিল",
     "sudoPasswordAutoFillDesc": "হোস্ট মেট্রিক্স, টার্মিনাল প্রম্পট এবং অন্যান্যরা স্বয়ংক্রিয়ভাবে প্রাইভিলেজড কমান্ড চালানোর জন্য একটি sudo পাসওয়ার্ড সংরক্ষণ করুন।",
     "sudoPasswordAutoFillLabel": "Sudo পাসওয়ার্ড অটো-ফিল",
+    "suPasswordAutoFillLabel": "Su পাসওয়ার্ড অটো-ফিল",
+    "suPasswordAutoFillDesc": "su প্রম্পটে, একই ঠিকানা এবং su সুইচ করে এমন ব্যবহারকারী সহ অন্য হোস্টে সংরক্ষিত পাসওয়ার্ড অফার করুন",
     "syntaxCategoryIpAddresses": "IP ঠিকানা",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "লগ লেভেল",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH টার্মিনাল",
     "description": "ট্যাব, স্প্লিট স্ক্রিন, হিস্ট্রি, ম্যাক্রো এবং ডেস্কটপ অ্যাপে একটি স্থানীয় টার্মিনাল সহ SSH টার্মিনাল সেশন।"
+  },
+  "zmodem": {
+    "waiting": "হোস্ট ফাইলের জন্য অপেক্ষা করছে (rz)।",
+    "choose": "ফাইল নির্বাচন করুন",
+    "sending": "{{name}} আপলোড হচ্ছে",
+    "receiving": "{{name}} ডাউনলোড হচ্ছে",
+    "cancel": "স্থানান্তর বাতিল করুন"
   }
 }

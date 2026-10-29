@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Leikepöydän lukeminen epäonnistui. Jotkin selaimet rajoittavat leikepöydän käyttöä HTTPS:n ulkopuolella – kokeile Ctrl+V tai käytä Termixiä HTTPS:n kautta.",
     "connecting": "Yhdistetään...",
     "connectionLost": "Yhteys katkesi",
+    "editHost": "Muokkaa isäntää",
     "connectionRejected": "Palvelin hylkäsi yhteyden. Tarkista tunnistautumistiedot ja verkkokokoonpano.",
     "connectionTimeout": "Yhteyden aikakatkaisu",
     "hostKeyRejected": "SSH-palvelimen avaimen varmistus epäonnistui. Yhteys peruutettu.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Uudelleenyhteydenottoyritysten enimmäismäärä saavutettu",
     "noHostSelected": "Palainta ei valittu",
     "passwordPromptFillTitle": "Täytetäänkö tallennettu salasana tähän kehotteeseen?",
+    "suPasswordFillTitle": "Täytetäänko tallennettu salasana käyttäjälle {{user}}?",
     "reconnect": "Yhdistä uudelleen",
     "reconnected": "Yhteys muodostettu uudelleen onnistuneesti",
     "reconnecting": "Yhdistetään uudelleen... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Komentohistoria",
         "description": "Tallenna tämän terminaalissa suoritettujen komentojen historia ja automaattinen täydennys"
       },
+      "connectFrom": {
+        "label": "Yhdistä (mobiilisovellus)",
+        "description": "Missä mobiilisovellus avaa SSH-yhteyden tähän isäntään: puhelimessa, tässä palvelimessa vai puhelimessa, jos se pääsee yhteyteen isännän kanssa.",
+        "auto": "Automaattinen",
+        "device": "Puhelin",
+        "server": "Tämä palvelin"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-tunneli",
         "description": "Reititä SSH-liikenne Cloudflare Zero Trustin kautta WebSocketin välityksellä"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Automaattinen tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Kysy, kun yksi tmux-istunto on olemassa"
+      },
       "useSSHTitle": {
         "label": "Käytä SSH-otsikkoa"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Täytä sudo-pyyntöjä"
+      },
+      "suPasswordAutoFill": {
+        "label": "Täytä su-pyyntöjä"
       },
       "autoReconnect": {
         "label": "Yhdistä uudelleen automaattisesti"
@@ -400,7 +415,11 @@
         "label": "Näytä historian painikkeet aina",
         "description": "Pidä kopioi- ja poistopainikkeet näkyvissä jokaisen komennon alla. Ota pois käytöstä näkyäkseen vain hiiren vierityksellä."
       },
-      "displayTitle": "Näyttö"
+      "displayTitle": "Näyttö",
+      "zmodem": {
+        "label": "rz- ja sz-tiedostonsiirrot",
+        "description": "Lataa ja lataa tiedostoja rz- ja sz-komennoilla (lrzsz) suoraan terminaaliin."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Ota Auto-Mosh käyttöön",
     "enableAutoMoshDesc": "Käytä Moshia SSH:n sijaan, jos saatavilla",
     "enableAutoTmux": "Ota Auto-Tmux käyttöön",
+    "autoTmuxAskWhenOne": "Kysy, kun yksi istunto on olemassa",
+    "autoTmuxAskWhenOneDesc": "Näytä istuntojen valikko, vaikka vain yksi tmux-istunto olisi olemassa, jotta uusi välilehti voi aloittaa oman istuntonsa sen sijaan, että liittyisi siihen",
     "enableAutoTmuxDesc": "Pidä shell ja sen prosessit elossa katkoksiin ja selaimen uudelleenkäynnistyksiin huolimatta ajamalla ne tmuxin sisällä (tmux on oltava asennettuna isäntäpalvelimelle)",
     "fastScrollModifier": "Nopean vierityksen muuttin",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Riviväli",
     "lineHeightLabel": "Riviväli",
     "linkClickBehaviorConfirm": "Näytä ponnahdusikkuna avaamiseksi tai kopioimiseksi",
-    "linkClickBehaviorDesc": "Hallitsee, mitä tapahtuu, kun napsautat linkkiä pääteikkunassa. Käytä 'Oletus'-asetusta seurataksesi sovelluksen yleisiä asetuksia.",
+    "linkClickBehaviorDesc": "Hallitsee, mitä tapahtuu, kun napsautat linkkiä terminaalissa. Ctrl+napsautus (Cmd+napsautus Macissa) avaa sen aina välittömästi. Käytä 'Oletus'-asetusta noudattaaksesi sovelluksen tasoinen asetusta.",
     "linkClickBehaviorDirect": "Avaa suoraan",
+    "linkClickBehaviorModifier": "Avaa Ctrl+napsautuksella (Cmd+napsautus Macissa)",
     "linkClickBehaviorLabel": "Linkin napsautustoiminto",
     "loadingHost": "Ladataan isäntäpalvelinta...",
     "localEchoAuto": "Automaattinen",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo-salasanan automaattinen täyttö",
     "sudoPasswordAutoFillDesc": "Tallenna sudo-salasana, jotta isäntäpalvelimen metrikat, päätepäätteen pyynnöt ja muut voivat suorittaa oikeudelliset komennot automaattisesti.",
     "sudoPasswordAutoFillLabel": "Sudo-salasanan automaattinen täyttö",
+    "suPasswordAutoFillLabel": "Su-salasanan automaattinen täyttö",
+    "suPasswordAutoFillDesc": "Tarjoa su-pyyntöön tallennettu salasana toiselta isännältä, jolla on sama osoite ja käyttäjä, johon su vaihtaa",
     "syntaxCategoryIpAddresses": "IP-osoitteet",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Lokitason tasot",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH-terminaali",
     "description": "SSH-päätesessiot, joissa on välilehtiä, jaettu näkymä, historia, makrot ja paikallinen pääte työpöytäsovelluksessa."
+  },
+  "zmodem": {
+    "waiting": "Isäntä odottaa tiedostoja (rz).",
+    "choose": "Valitse tiedostot",
+    "sending": "Ladataan {{name}}",
+    "receiving": "Ladataan {{name}}",
+    "cancel": "Peruuta siirto"
   }
 }

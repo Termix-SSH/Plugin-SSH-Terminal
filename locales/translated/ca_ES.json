@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "No s'ha pogut llegir el porta-retalls. Alguns navegadors restringeixen l'accés al porta-retalls fora d'HTTPS; proveu de fer servir Ctrl+V o bé executeu Termix amb HTTPS.",
     "connecting": "Connectant...",
     "connectionLost": "Connexió perduda",
+    "editHost": "Edita l'amfitrió",
     "connectionRejected": "Connexió rebutjada pel servidor. Comproveu l'autenticació i la configuració de la xarxa.",
     "connectionTimeout": "Temps d'espera de la connexió esgotat",
     "hostKeyRejected": "Verificació de la clau d'amfitrió SSH rebutjada. Connexió cancel·lada.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "S'ha arribat al nombre màxim de intents de reconexió",
     "noHostSelected": "Cap amfitrió seleccionat",
     "passwordPromptFillTitle": "Voleu omplir aquest camp amb la contrasenya desada?",
+    "suPasswordFillTitle": "Vols omplir la contrasenya desada per a {{user}}?",
     "reconnect": "Torna a connectar",
     "reconnected": "Connexió restablerta correctament",
     "reconnecting": "Tornant a connectar... ({{attempt}}/{{max}})",
@@ -255,6 +257,13 @@
         "label": "Historial d'ordres",
         "description": "Enregistrar les ordres executades en aquest terminal per a l'historial i l'ompliment automàtic"
       },
+      "connectFrom": {
+        "label": "Connecta des de (aplicació mòbil)",
+        "description": "On l'aplicació mòbil obre SSH per a aquest amfitrió: el telèfon, aquest servidor o el telèfon quan pot arribar a l'amfitrió.",
+        "auto": "Automàtic",
+        "device": "El telèfon",
+        "server": "Aquest servidor"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Túnel de Cloudflare",
         "description": "Encamina el trànsit SSH a través de Cloudflare Zero Trust mitjançant WebSocket"
@@ -345,6 +354,9 @@
       "autoTmux": {
         "label": "Tmux automàtic"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Demana quan existeix una sessió de tmux"
+      },
       "useSSHTitle": {
         "label": "Utilitza el títol SSH"
       },
@@ -365,6 +377,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Omplir els camps de sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "Omple els indicis de su"
       },
       "autoReconnect": {
         "label": "Torna a connectar automàticament"
@@ -403,7 +418,11 @@
         "label": "Mostra sempre els botons de l'historial",
         "description": "Mantén visibles els botons de copiar i suprimir sota cada comandament. Desactiva-ho per mostrar-los només en passar el cursor per sobre."
       },
-      "displayTitle": "Pantalla"
+      "displayTitle": "Pantalla",
+      "zmodem": {
+        "label": "Transferències de fitxers rz i sz",
+        "description": "Pujar i baixar fitxers amb rz i sz (lrzsz) directament al terminal."
+      }
     }
   },
   "palette": {
@@ -475,6 +494,8 @@
     "enableAutoMosh": "Habilitar Auto-Mosh",
     "enableAutoMoshDesc": "Preferir Mosh sobre SSH si està disponible",
     "enableAutoTmux": "Habilitar Auto-Tmux",
+    "autoTmuxAskWhenOne": "Demana quan existeix una sessió",
+    "autoTmuxAskWhenOneDesc": "Mostra el selector de sessions fins i tot amb una sessió de tmux, perquè una nova pestanya pugui iniciar la seva pròpia sessió en lloc d'unir-s'hi",
     "enableAutoTmuxDesc": "Mantén la teva shell i tot el que s'hi executa actiu durant les desconnexions i els reinicis del navegador executant-ho dins de tmux (tmux ha d'estar instal·lat a l'amfitrió)",
     "fastScrollModifier": "Modificador del desplaçament ràpid",
     "fastScrollModifierAlt": "Alt",
@@ -496,8 +517,9 @@
     "lineHeight": "Alçada de línia",
     "lineHeightLabel": "Alçada de línia",
     "linkClickBehaviorConfirm": "Mostra un emergent per obrir o copiar",
-    "linkClickBehaviorDesc": "Controla què passa quan fas clic en un enllaç al terminal. Utilitza «Predeterminat» per seguir la configuració a nivell d'aplicació.",
+    "linkClickBehaviorDesc": "Controla què passa quan fas clic en un enllaç al terminal. Ctrl+clic (Cmd+clic a Mac) sempre l'obre immediatament. Utilitza 'Per defecte' per seguir la configuració a nivell d'aplicació.",
     "linkClickBehaviorDirect": "Obrir directament",
+    "linkClickBehaviorModifier": "Obre amb Ctrl+clic (Cmd+clic a Mac)",
     "linkClickBehaviorLabel": "Comportament en fer clic en un enllaç",
     "loadingHost": "Carregant amfitrió...",
     "localEchoAuto": "Automàtic",
@@ -530,6 +552,8 @@
     "sudoPasswordAutoFill": "Ompliment automàtic de la contrasenya de sudo",
     "sudoPasswordAutoFillDesc": "Emmagatzema una contrasenya de sudo perquè les mètriques de l'amfitrió, les sol·licituds del terminal i altres puguin executar comandaments amb privilegis automàticament.",
     "sudoPasswordAutoFillLabel": "Ompliment automàtic de la contrasenya de sudo",
+    "suPasswordAutoFillLabel": "Ompliment automàtic de la contrasenya de su",
+    "suPasswordAutoFillDesc": "En un indici de su, ofereix la contrasenya desada en un altre amfitrió amb la mateixa adreça i l'usuari al qual canvia su",
     "syntaxCategoryIpAddresses": "Adreces IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Nivells de registre",
@@ -712,5 +736,12 @@
   "plugin": {
     "name": "Terminal SSH",
     "description": "Sessions de terminal SSH amb pestanyes, pantalla dividida, historial, macros i un terminal local a l'aplicació d'escriptori."
+  },
+  "zmodem": {
+    "waiting": "L'amfitrió està esperant fitxers (rz).",
+    "choose": "Tria fitxers",
+    "sending": "Pujant {{name}}",
+    "receiving": "Baixant {{name}}",
+    "cancel": "Cancel·la la transferència"
   }
 }

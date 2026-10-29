@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "تعذر قراءة الحافظة. بعض المتصفحات تقيد الوصول إلى الحافظة خارج HTTPS - جرّب Ctrl+V بدلاً من ذلك، أو قم بتشغيل Termix عبر HTTPS.",
     "connecting": "جارٍ الاتصال...",
     "connectionLost": "انقطع الاتصال",
+    "editHost": "تعديل المضيف",
     "connectionRejected": "رفض الخادم الاتصال. يرجى التحقق من إعدادات المصادقة والشبكة.",
     "connectionTimeout": "انتهت مهلة الاتصال",
     "hostKeyRejected": "فشل التحقق من مفتاح مضيف SSH. تم إلغاء الاتصال.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "تم الوصول إلى الحد الأقصى لمحاولات إعادة الاتصال",
     "noHostSelected": "لم يتم تحديد مضيف",
     "passwordPromptFillTitle": "هل تريد ملء كلمة المرور المحفوظة في هذا الطلب؟",
+    "suPasswordFillTitle": "هل تريد ملء كلمة المرور المحفوظة لـ {{user}}؟",
     "reconnect": "إعادة الاتصال",
     "reconnected": "تمت إعادة الاتصال بنجاح",
     "reconnecting": "جارٍ إعادة الاتصال... ({{attempt}}/{{max}})",
@@ -264,6 +266,13 @@
         "label": "سجل الأوامر",
         "description": "تسجيل الأوامر التي يتم تشغيلها في هذه الطرفية للسجل والإكمال التلقائي"
       },
+      "connectFrom": {
+        "label": "الاتصال من (تطبيق الهاتف)",
+        "description": "أين يفتح تطبيق الهاتف SSH لهذا المضيف: الهاتف، هذا الخادم، أو الهاتف عندما يتمكن من الوصول إلى المضيف.",
+        "auto": "تلقائي",
+        "device": "الهاتف",
+        "server": "هذا الخادم"
+      },
       "cloudflareTunnelEnabled": {
         "label": "نفق Cloudflare",
         "description": "توجيه حركة SSH عبر Cloudflare Zero Trust باستخدام WebSocket"
@@ -354,6 +363,9 @@
       "autoTmux": {
         "label": "تشغيل tmux تلقائياً"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "اسأل عندما توجد جلسة tmux واحدة"
+      },
       "useSSHTitle": {
         "label": "استخدام عنوان SSH"
       },
@@ -374,6 +386,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "ملء مطالبات sudo"
+      },
+      "suPasswordAutoFill": {
+        "label": "ملء مطالبات su"
       },
       "autoReconnect": {
         "label": "إعادة الاتصال تلقائياً"
@@ -412,7 +427,11 @@
         "label": "إظهار أزرار السجل دائماً",
         "description": "إبقاء أزرار النسخ والحذف أسفل كل أمر مرئية. عطّلها لإظهارها فقط عند التمرير فوقها."
       },
-      "displayTitle": "العرض"
+      "displayTitle": "العرض",
+      "zmodem": {
+        "label": "نقل الملفات rz و sz",
+        "description": "تحميل وتنزيل الملفات باستخدام rz و sz (lrzsz) مباشرة في الطرفية."
+      }
     }
   },
   "palette": {
@@ -484,6 +503,8 @@
     "enableAutoMosh": "تفعيل Mosh التلقائي",
     "enableAutoMoshDesc": "استخدام Mosh بدلاً من SSH إذا كان متاحاً",
     "enableAutoTmux": "تفعيل tmux التلقائي",
+    "autoTmuxAskWhenOne": "اسأل عندما توجد جلسة واحدة",
+    "autoTmuxAskWhenOneDesc": "إظهار منتقي الجلسات حتى مع وجود جلسة tmux واحدة، بحيث يمكن لعلامة تبويب جديدة بدء جلستها الخاصة بدلاً من الانضمام إليها",
     "enableAutoTmuxDesc": "الحفاظ على بقاء shell وأي عمليات تعمل فيه نشطة عبر انقطاعات الاتصال وإعادة تشغيل المتصفح من خلال التشغيل داخل tmux (يجب تثبيت tmux على المضيف)",
     "fastScrollModifier": "معدّل التمرير السريع",
     "fastScrollModifierAlt": "Alt",
@@ -505,8 +526,9 @@
     "lineHeight": "ارتفاع السطر",
     "lineHeightLabel": "ارتفاع السطر",
     "linkClickBehaviorConfirm": "إظهار نافذة منبثقة لفتح أو نسخ الرابط",
-    "linkClickBehaviorDesc": "يتحكم في ما يحدث عند النقر على رابط في الطرفية. استخدم 'الافتراضي' لاتباع إعداد مستوى التطبيق.",
+    "linkClickBehaviorDesc": "يتحكم في ما يحدث عند النقر على رابط في الطرفية. النقر مع Ctrl (Cmd على Mac) يفتحه دائماً على الفور. استخدم 'الافتراضي' لاتباع إعداد مستوى التطبيق.",
     "linkClickBehaviorDirect": "الفتح مباشرة",
+    "linkClickBehaviorModifier": "الفتح بالنقر مع Ctrl (Cmd على Mac)",
     "linkClickBehaviorLabel": "سلوك النقر على الرابط",
     "loadingHost": "جارٍ تحميل المضيف...",
     "localEchoAuto": "تلقائي",
@@ -539,6 +561,8 @@
     "sudoPasswordAutoFill": "ملء كلمة مرور Sudo تلقائياً",
     "sudoPasswordAutoFillDesc": "تخزين كلمة مرور sudo بحيث يمكن لمقاييس المضيف، ومطالبات الطرفي، وغيرها تشغيل الأوامر ذات الامتيازات تلقائياً.",
     "sudoPasswordAutoFillLabel": "ملء كلمة مرور Sudo تلقائياً",
+    "suPasswordAutoFillLabel": "الملء التلقائي لكلمة مرور Su",
+    "suPasswordAutoFillDesc": "عند مطالبة su، اعرض كلمة المرور المحفوظة على مضيف آخر بنفس العنوان والمستخدم الذي ينتقل إليه su",
     "syntaxCategoryIpAddresses": "عناوين IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1، 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "مستويات السجل",
@@ -730,5 +754,12 @@
   "plugin": {
     "name": "طرفية SSH",
     "description": "جلسات طرفية SSH مع علامات تبويب، وشاشة مقسمة، وسجل، ومacrOs، وطرفية محلية في تطبيق سطح المكتب."
+  },
+  "zmodem": {
+    "waiting": "المضيف في انتظار الملفات (rz).",
+    "choose": "اختر الملفات",
+    "sending": "جارٍ تحميل {{name}}",
+    "receiving": "جارٍ تنزيل {{name}}",
+    "cancel": "إلغاء النقل"
   }
 }

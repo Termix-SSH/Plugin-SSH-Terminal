@@ -1,7 +1,7 @@
 {
   "id": "ssh-terminal",
   "name": "SSH Terminal",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "SSH terminal sessions with tabs, split screen, history, macros and a local terminal in the desktop app.",
   "author": {
     "name": "Termix"
@@ -65,6 +65,7 @@
     "credentials:use",
     "credentials:read",
     "ssh:connect",
+    "ssh:transport",
     "network:serve",
     "db:own",
     "events:core",
@@ -369,6 +370,28 @@
             "default": true
           },
           {
+            "key": "connectFrom",
+            "type": "select",
+            "labelKey": "settings.host.connectFrom.label",
+            "descriptionKey": "settings.host.connectFrom.description",
+            "default": "auto",
+            "personal": true,
+            "options": [
+              {
+                "value": "auto",
+                "labelKey": "settings.host.connectFrom.auto"
+              },
+              {
+                "value": "device",
+                "labelKey": "settings.host.connectFrom.device"
+              },
+              {
+                "value": "server",
+                "labelKey": "settings.host.connectFrom.server"
+              }
+            ]
+          },
+          {
             "key": "cloudflareTunnelEnabled",
             "type": "boolean",
             "labelKey": "settings.host.cloudflareTunnelEnabled.label",
@@ -631,6 +654,13 @@
             "default": false
           },
           {
+            "key": "autoTmuxAskWhenOne",
+            "type": "boolean",
+            "labelKey": "settings.host.autoTmuxAskWhenOne.label",
+            "hidden": true,
+            "default": false
+          },
+          {
             "key": "useSSHTitle",
             "type": "boolean",
             "labelKey": "settings.host.useSSHTitle.label",
@@ -664,6 +694,10 @@
               {
                 "value": "direct",
                 "labelKey": "hosts.linkClickBehaviorDirect"
+              },
+              {
+                "value": "modifier",
+                "labelKey": "hosts.linkClickBehaviorModifier"
               }
             ]
           },
@@ -703,6 +737,13 @@
             "default": false
           },
           {
+            "key": "suPasswordAutoFill",
+            "type": "boolean",
+            "labelKey": "settings.host.suPasswordAutoFill.label",
+            "hidden": true,
+            "default": false
+          },
+          {
             "key": "autoReconnect",
             "type": "boolean",
             "labelKey": "settings.host.autoReconnect.label",
@@ -732,6 +773,13 @@
           "labelKey": "settings.user.commandAutocomplete.label",
           "descriptionKey": "settings.user.commandAutocomplete.description",
           "default": false
+        },
+        {
+          "key": "zmodem",
+          "type": "boolean",
+          "labelKey": "settings.user.zmodem.label",
+          "descriptionKey": "settings.user.zmodem.description",
+          "default": true
         },
         {
           "key": "macros",

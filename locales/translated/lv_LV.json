@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Neizdevās izlasīt starpliktuvi. Daži pārlūkprogrammas ierobežo piekļuvi starpliktuvei ārpus HTTPS — mēģiniet izmantot Ctrl+V vai palaidiet Termix pār HTTPS.",
     "connecting": "Notiek savienojums...",
     "connectionLost": "Savienojums zaudēts",
+    "editHost": "Rediģēt hostu",
     "connectionRejected": "Savienojums noraidīts no servera. Lūdzu, pārbaudiet autentifikācijas un tīkla konfigurāciju.",
     "connectionTimeout": "Savienojuma laika limits pārsniegts",
     "hostKeyRejected": "SSH hosta atslēgas verifikācija noraidīta. Savienojums atcelts.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Sasniegts maksimālais pārsavienojšanās mēģinājumu skaits",
     "noHostSelected": "Nav izvēlēts hosts",
     "passwordPromptFillTitle": "Aizpildīt saglabāto paroli šajā aicinājumā?",
+    "suPasswordFillTitle": "Aizpildīt saglabāto paroli lietotājam {{user}}?",
     "reconnect": "Pārsavienot",
     "reconnected": "Veiksmīgi pārsavienots",
     "reconnecting": "Notiek pārsavienojums... ({{attempt}}/{{max}})",
@@ -255,6 +257,13 @@
         "label": "Komandu vēsture",
         "description": "Ierakstīt šajā terminālī izpildītās komandas vēsturei un automātiskai aizpildei"
       },
+      "connectFrom": {
+        "label": "Savienoties no (mobilā lietotne)",
+        "description": "Kur mobilā lietotne atver SSH šim hostam: telefonā, šajā serverī vai telefonā, ja tas var sasniegt hostu.",
+        "auto": "Automātiski",
+        "device": "Telefons",
+        "server": "Šis serveris"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare tunelis",
         "description": "Maršrutēt SSH datplūsmu caur Cloudflare Zero Trust, izmantojot WebSocket"
@@ -345,6 +354,9 @@
       "autoTmux": {
         "label": "Automātisks tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Jautāt, ja eksistē viena tmux sesija"
+      },
       "useSSHTitle": {
         "label": "Izmantot SSH virsrakstu"
       },
@@ -365,6 +377,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Aizpildīt sudo pieprasījumus"
+      },
+      "suPasswordAutoFill": {
+        "label": "Aizpildīt su aicinājumus"
       },
       "autoReconnect": {
         "label": "Automātiski pārsavienot"
@@ -403,7 +418,11 @@
         "label": "Vienmēr rādīt vēstures pogas",
         "description": "Turēt redzamas kopēšanas un dzēšanas pogas zem katras komandas. Izslēdziet, lai tās rādītu tikai, novietojot peli virs tām."
       },
-      "displayTitle": "Attēlojums"
+      "displayTitle": "Attēlojums",
+      "zmodem": {
+        "label": "rz un sz failu pārsūtīšana",
+        "description": "Augšupielādēt un lejupielādēt failus ar rz un sz (lrzsz) tieši terminālī."
+      }
     }
   },
   "palette": {
@@ -475,6 +494,8 @@
     "enableAutoMosh": "Iespējot automātisko Mosh",
     "enableAutoMoshDesc": "Ja pieejams, dot priekšroku Mosh vietā SSH",
     "enableAutoTmux": "Iespējot automātisko tmux",
+    "autoTmuxAskWhenOne": "Jautāt, ja eksistē viena sesija",
+    "autoTmuxAskWhenOneDesc": "Rādīt sesiju izvēlni pat ar vienu tmux sesiju, lai jauna cilne varētu sākt savu sesiju, nevis pievienoties tai",
     "enableAutoTmuxDesc": "Uzturiet savu komandrindu un tajā izpildāmos procesus dzīvus pat pēc atvienošanās vai pārlūkprogrammas restarta, izmantojot tmux (tmux ir jābūt instalētam uz servera)",
     "fastScrollModifier": "Ātrās ritināšanas modificētājs",
     "fastScrollModifierAlt": "Alt",
@@ -496,8 +517,9 @@
     "lineHeight": "Rindas augstums",
     "lineHeightLabel": "Rindas augstums",
     "linkClickBehaviorConfirm": "Rādīt izlūkojumu, lai atvērtu vai kopētu",
-    "linkClickBehaviorDesc": "Nosaka, kas notiek, noklikšķinot uz saites terminālī. Izmantojiet 'Noklusējums', lai sekotu lietotnes līmeņa iestatījumam.",
+    "linkClickBehaviorDesc": "Kontrolē, kas notiek, kad noklikšķināt uz saites terminālī. Ctrl+klikšķis (Cmd+klikšķis Mac datorā) vienmēr to atver uzreiz. Izmantojiet 'Noklusējums', lai sekotu lietotnes līmeņa iestatījumam.",
     "linkClickBehaviorDirect": "Atvērt tieši",
+    "linkClickBehaviorModifier": "Atvērt ar Ctrl+klikšķi (Cmd+klikšķi Mac datorā)",
     "linkClickBehaviorLabel": "Saites noklikšķināšanas uzvedība",
     "loadingHost": "Ielādē serveri...",
     "localEchoAuto": "Automātiski",
@@ -530,6 +552,8 @@
     "sudoPasswordAutoFill": "Sudo paroles automātiskā aizpildīšana",
     "sudoPasswordAutoFillDesc": "Saglabājiet sudo paroli, lai hosta metrikas, termināļa pieprasījumi un citi varētu automātiski izpildīt privilēģiju komandas.",
     "sudoPasswordAutoFillLabel": "Sudo paroles automātiskā aizpildīšana",
+    "suPasswordAutoFillLabel": "Su paroles automātiskā aizpildīšana",
+    "suPasswordAutoFillDesc": "Su aicinājumā piedāvāt paroli, kas saglabāta citā hostā ar to pašu adresi un lietotāju, uz kuru su pārslēdzas",
     "syntaxCategoryIpAddresses": "IP adreses",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Žurnāla līmeņi",
@@ -712,5 +736,12 @@
   "plugin": {
     "name": "SSH terminālis",
     "description": "SSH termināļa sesijas ar ciltīm, sadalītu ekrānu, vēsturi, makro un vietējo termināli darbvirsmas lietotnē."
+  },
+  "zmodem": {
+    "waiting": "Hosts gaida failus (rz).",
+    "choose": "Izvēlieties failus",
+    "sending": "Augšupielādē {{name}}",
+    "receiving": "Lejupielādē {{name}}",
+    "cancel": "Atcelt pārsūtīšanu"
   }
 }

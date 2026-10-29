@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "無法讀取剪貼簿。部分瀏覽器限制在非 HTTPS 環境下存取剪貼簿，請嘗試改用 Ctrl+V，或透過 HTTPS 提供 Termix 服務。",
     "connecting": "連線中...",
     "connectionLost": "連線中斷",
+    "editHost": "編輯主機",
     "connectionRejected": "連線遭伺服器拒絕。請檢查您的驗證資訊與網路設定。",
     "connectionTimeout": "連線逾時",
     "hostKeyRejected": "SSH 主機金鑰驗證失敗。連線已取消。",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "已達到最大重新連線次數",
     "noHostSelected": "未選取主機",
     "passwordPromptFillTitle": "要將已儲存的密碼填入此提示嗎？",
+    "suPasswordFillTitle": "要填入 {{user}} 的已儲存密碼嗎？",
     "reconnect": "重新連線",
     "reconnected": "重新連線成功",
     "reconnecting": "重新連線中...（{{attempt}}/{{max}}）",
@@ -249,6 +251,13 @@
         "label": "命令歷史記錄",
         "description": "記錄在此終端機中執行的命令，用於歷史記錄和自動完成"
       },
+      "connectFrom": {
+        "label": "連線來源（行動裝置應用程式）",
+        "description": "行動裝置應用程式為此主機開啟 SSH 的位置：手機、此伺服器，或當手機能直接連線至主機時的手機。",
+        "auto": "自動",
+        "device": "手機",
+        "server": "此伺服器"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "透過 WebSocket 將 SSH 流量路由至 Cloudflare Zero Trust"
@@ -339,6 +348,9 @@
       "autoTmux": {
         "label": "自動 tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "當存在一個 tmux 工作階段時詢問"
+      },
       "useSSHTitle": {
         "label": "使用 SSH 標題"
       },
@@ -359,6 +371,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "填入 sudo 提示"
+      },
+      "suPasswordAutoFill": {
+        "label": "自動填入 su 提示"
       },
       "autoReconnect": {
         "label": "自動重新連線"
@@ -397,7 +412,11 @@
         "label": "始終顯示歷史記錄按鈕",
         "description": "保持每個指令下方的複製與刪除按鈕可見。關閉後僅在滑鼠懸停時顯示。"
       },
-      "displayTitle": "顯示"
+      "displayTitle": "顯示",
+      "zmodem": {
+        "label": "rz 與 sz 檔案傳輸",
+        "description": "在終端機中直接使用 rz 和 sz (lrzsz) 上傳與下載檔案。"
+      }
     }
   },
   "palette": {
@@ -469,6 +488,8 @@
     "enableAutoMosh": "啟用自動 Mosh",
     "enableAutoMoshDesc": "若可用，優先使用 Mosh 而非 SSH",
     "enableAutoTmux": "啟用自動 Tmux",
+    "autoTmuxAskWhenOne": "當存在一個工作階段時詢問",
+    "autoTmuxAskWhenOneDesc": "即使只有一個 tmux 工作階段也顯示工作階段選擇器，以便新分頁可以啟動自己的工作階段，而非加入現有工作階段",
     "enableAutoTmuxDesc": "透過在 tmux 中執行，讓您的 shell 及其中的程序在斷線或瀏覽器重啟時保持運行（主機必須已安裝 tmux）",
     "fastScrollModifier": "快速捲動修飾鍵",
     "fastScrollModifierAlt": "Alt",
@@ -490,8 +511,9 @@
     "lineHeight": "行高",
     "lineHeightLabel": "行高",
     "linkClickBehaviorConfirm": "顯示彈出視窗以開啟或複製",
-    "linkClickBehaviorDesc": "控制您在終端機中點擊連結時的行為。使用「預設」以遵循應用程式層級的設定。",
+    "linkClickBehaviorDesc": "控制您在終端機中點擊連結時的行為。Ctrl+點擊（Mac 上為 Cmd+點擊）會立即開啟連結。使用「預設」以遵循應用程式層級的設定。",
     "linkClickBehaviorDirect": "直接開啟",
+    "linkClickBehaviorModifier": "使用 Ctrl+點擊（Mac 上為 Cmd+點擊）開啟",
     "linkClickBehaviorLabel": "連結點擊行為",
     "loadingHost": "正在載入主機...",
     "localEchoAuto": "自動",
@@ -524,6 +546,8 @@
     "sudoPasswordAutoFill": "Sudo 密碼自動填入",
     "sudoPasswordAutoFillDesc": "儲存 sudo 密碼，以便主機指標、終端機提示等能自動執行具特權的指令。",
     "sudoPasswordAutoFillLabel": "Sudo 密碼自動填入",
+    "suPasswordAutoFillLabel": "Su 密碼自動填入",
+    "suPasswordAutoFillDesc": "在 su 提示時，提供與 su 切換到的使用者相同位址之其他主機上已儲存的密碼",
     "syntaxCategoryIpAddresses": "IP 位址",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "記錄層級",
@@ -700,5 +724,12 @@
   "plugin": {
     "name": "SSH 終端機",
     "description": "SSH 終端機工作階段，支援分頁、分割畫面、歷史記錄、巨集，桌面應用程式中還有本機終端機。"
+  },
+  "zmodem": {
+    "waiting": "主機正在等待檔案（rz）。",
+    "choose": "選擇檔案",
+    "sending": "正在上傳 {{name}}",
+    "receiving": "正在下載 {{name}}",
+    "cancel": "取消傳輸"
   }
 }

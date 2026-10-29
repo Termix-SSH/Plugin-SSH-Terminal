@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "क्लिपबोर्ड पढ़ने में असमर्थ। कुछ ब्राउज़र HTTPS के बाहर क्लिपबोर्ड एक्सेस को सीमित करते हैं - कृपया Ctrl+V का उपयोग करें, या Termix को HTTPS पर सर्व करें।",
     "connecting": "कनेक्ट हो रहा है...",
     "connectionLost": "कनेक्शन खो गया",
+    "editHost": "होस्ट संपादित करें",
     "connectionRejected": "सर्वर द्वारा कनेक्शन अस्वीकार किया गया। कृपया अपनी प्रमाणीकरण और नेटवर्क कॉन्फ़िगरेशन की जांच करें।",
     "connectionTimeout": "कनेक्शन टाइमआउट",
     "hostKeyRejected": "SSH होस्ट की सत्यापन अस्वीकार किया गया। कनेक्शन रद्द किया गया।",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "अधिकतम पुनः कनेक्ट प्रयास पूरे हो गए",
     "noHostSelected": "कोई होस्ट चयनित नहीं",
     "passwordPromptFillTitle": "इस प्रॉम्प्ट में सहेजे गए पासवर्ड को भरें?",
+    "suPasswordFillTitle": "{{user}} के लिए सहेजा गया पासवर्ड भरें?",
     "reconnect": "पुनः कनेक्ट करें",
     "reconnected": "सफलतापूर्वक पुनः कनेक्ट किया गया",
     "reconnecting": "पुनः कनेक्ट हो रहा है... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "कमांड इतिहास",
         "description": "इतिहास और ऑटोकंप्लीट के लिए इस टर्मिनल में चलाई गई कमांड्स को रिकॉर्ड करें"
       },
+      "connectFrom": {
+        "label": "कनेक्ट करें (मोबाइल ऐप से)",
+        "description": "मोबाइल ऐप इस होस्ट के लिए SSH कहाँ खोलता है: फोन, यह सर्वर, या फोन जब वह होस्ट तक पहुँच सके।",
+        "auto": "स्वचालित",
+        "device": "फोन",
+        "server": "यह सर्वर"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare टनल",
         "description": "WebSocket के माध्यम से Cloudflare Zero Trust के ऊपर SSH ट्रैफ़िक राउट करें"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "स्वचालित tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "जब एक tmux सत्र मौजूद हो तो पूछें"
+      },
       "useSSHTitle": {
         "label": "SSH शीर्षक का उपयोग करें"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "sudo प्रॉम्प्ट भरें"
+      },
+      "suPasswordAutoFill": {
+        "label": "su प्रॉम्प्ट भरें"
       },
       "autoReconnect": {
         "label": "स्वचालित रूप से पुनः कनेक्ट करें"
@@ -400,7 +415,11 @@
         "label": "हमेशा इतिहास बटन दिखाएं",
         "description": "प्रत्येक कमांड के नीचे कॉपी और हटाएं बटन दृश्यमान रखें। उन्हें केवल होवर पर दिखाने के लिए बंद करें।"
       },
-      "displayTitle": "डिस्प्ले"
+      "displayTitle": "डिस्प्ले",
+      "zmodem": {
+        "label": "rz और sz फ़ाइल स्थानांतरण",
+        "description": "rz और sz (lrzsz) के साथ फ़ाइलों को सीधे टर्मिनल में अपलोड और डाउनलोड करें।"
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "ऑटो-Mosh सक्षम करें",
     "enableAutoMoshDesc": "यदि उपलब्ध हो तो SSH के बजाय Mosh को प्राथमिकता दें",
     "enableAutoTmux": "ऑटो-Tmux सक्षम करें",
+    "autoTmuxAskWhenOne": "जब एक सत्र मौजूद हो तो पूछें",
+    "autoTmuxAskWhenOneDesc": "भले ही एक tmux सत्र मौजूद हो, सत्र पिकर दिखाएं, ताकि एक नया टैब उसमें शामिल होने के बजाय अपना स्वयं का सत्र शुरू कर सके",
     "enableAutoTmuxDesc": "अलग होने और ब्राउज़र पुनरारंभ के दौरान अपने शेल और उसमें चल रहे किसी भी काम को जीवित रखने के लिए tmux के अंदर चलाएं (tmux होस्ट पर इंस्टॉल होना चाहिए)",
     "fastScrollModifier": "फ़ास्ट स्क्रॉल मॉडिफ़ायर",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "लाइन ऊंचाई",
     "lineHeightLabel": "लाइन ऊंचाई",
     "linkClickBehaviorConfirm": "खोलने या कॉपी करने के लिए पॉपअप दिखाएं",
-    "linkClickBehaviorDesc": "यह नियंत्रित करता है कि जब आप टर्मिनल में किसी लिंक पर क्लिक करते हैं तो क्या होता है। ऐप-स्तर की सेटिंग का पालन करने के लिए 'डिफ़ॉल्ट' का उपयोग करें।",
+    "linkClickBehaviorDesc": "नियंत्रित करता है कि जब आप टर्मिनल में किसी लिंक पर क्लिक करते हैं तो क्या होता है। Ctrl+क्लिक (Mac पर Cmd+क्लिक) हमेशा इसे तुरंत खोलता है। ऐप-स्तर की सेटिंग का पालन करने के लिए 'डिफ़ॉल्ट' का उपयोग करें।",
     "linkClickBehaviorDirect": "सीधे खोलें",
+    "linkClickBehaviorModifier": "Ctrl+क्लिक (Mac पर Cmd+क्लिक) के साथ खोलें",
     "linkClickBehaviorLabel": "लिंक क्लिक व्यवहार",
     "loadingHost": "होस्ट लोड हो रहा है...",
     "localEchoAuto": "स्वचालित",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Sudo पासवर्ड ऑटो-फिल",
     "sudoPasswordAutoFillDesc": "एक sudo पासवर्ड स्टोर करें ताकि होस्ट मेट्रिक्स, टर्मिनल प्रॉम्प्ट और अन्य स्वचालित रूप से विशेषाधिकार प्राप्त कमांड चला सकें।",
     "sudoPasswordAutoFillLabel": "Sudo पासवर्ड ऑटो-फिल",
+    "suPasswordAutoFillLabel": "Su पासवर्ड ऑटो-फ़िल",
+    "suPasswordAutoFillDesc": "एक su प्रॉम्प्ट पर, उस पासवर्ड की पेशकश करें जो उसी पते वाले किसी अन्य होस्ट पर सहेजा गया है और जिस उपयोगकर्ता में su स्विच करता है",
     "syntaxCategoryIpAddresses": "IP पते",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "लॉग स्तर",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH टर्मिनल",
     "description": "डेस्कटॉप ऐप में टैब्स, स्प्लिट स्क्रीन, इतिहास, मैक्रो और स्थानीय टर्मिनल के साथ SSH टर्मिनल सत्र।"
+  },
+  "zmodem": {
+    "waiting": "होस्ट फ़ाइलों के लिए प्रतीक्षा कर रहा है (rz)।",
+    "choose": "फ़ाइलें चुनें",
+    "sending": "{{name}} अपलोड हो रहा है",
+    "receiving": "{{name}} डाउनलोड हो रहा है",
+    "cancel": "स्थानांतरण रद्द करें"
   }
 }

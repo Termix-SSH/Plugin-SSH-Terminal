@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Nepavyko perskaityti iškarpinės. Kai kurie naršyklės riboja iškarpinės prieigą ne HTTPS režimu – bandykite naudoti Ctrl+V arba paleiskite Termix per HTTPS.",
     "connecting": "Jungiamasi...",
     "connectionLost": "Ryšys prarastas",
+    "editHost": "Redaguoti serverį",
     "connectionRejected": "Serveris atmetė ryšį. Patikrinkite autentifikaciją ir tinklo konfigūraciją.",
     "connectionTimeout": "Ryšio laikas baigėsi",
     "hostKeyRejected": "SSH serverio rakto patikrinimas atmestas. Ryšys atšauktas.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Pasiektas maksimalus perkrovimo bandymų skaičius",
     "noHostSelected": "Nepasirinktas serveris",
     "passwordPromptFillTitle": "Įvesti išsaugotą slaptažodį į šį užklausą?",
+    "suPasswordFillTitle": "Įvesti išsaugotą slaptažodį vartotojui {{user}}?",
     "reconnect": "Perjungti",
     "reconnected": "Sėkmingai perjungta",
     "reconnecting": "Perjungiamasi... ({{attempt}}/{{max}})",
@@ -258,6 +260,13 @@
         "label": "Komandų istorija",
         "description": "Įrašyti šio terminalo vykdytas komandas istorijai ir automatiniam užpildymui"
       },
+      "connectFrom": {
+        "label": "Prisijungti iš (mobilioji programėlė)",
+        "description": "Kur mobilioji programėlė atidaro SSH šiam serveriui: telefone, šiame serveryje ar telefone, kai jis gali pasiekti serverį.",
+        "auto": "Automatiškai",
+        "device": "Telefone",
+        "server": "Šiame serveryje"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare tunelis",
         "description": "Maršrutuokite SSH srautą per Cloudflare Zero Trust naudojant WebSocket"
@@ -348,6 +357,9 @@
       "autoTmux": {
         "label": "Automatinis tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Klausti, kai egzistuoja viena tmux sesija"
+      },
       "useSSHTitle": {
         "label": "Naudoti SSH pavadinimą"
       },
@@ -368,6 +380,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Užpildyti sudo užklausas"
+      },
+      "suPasswordAutoFill": {
+        "label": "Užpildyti su užklausas"
       },
       "autoReconnect": {
         "label": "Automatiškai perkrauti"
@@ -406,7 +421,11 @@
         "label": "Visada rodyti istorijos mygtukus",
         "description": "Palikti kopijavimo ir šalinimo mygtukus po kiekviena komanda matomus. Išjungus, jie bus rodomi tik užvedus pelę."
       },
-      "displayTitle": "Ekrano nustatymai"
+      "displayTitle": "Ekrano nustatymai",
+      "zmodem": {
+        "label": "rz ir sz failų perdavimai",
+        "description": "Įkelkite ir atsisiųskite failus naudodami rz ir sz (lrzsz) tiesiai terminale."
+      }
     }
   },
   "palette": {
@@ -478,6 +497,8 @@
     "enableAutoMosh": "Įgalinti automatinį Mosh",
     "enableAutoMoshDesc": "Jei prieinamas, naudoti Mosh vietoj SSH",
     "enableAutoTmux": "Įgalinti automatinį tmux",
+    "autoTmuxAskWhenOne": "Klausti, kai egzistuoja viena sesija",
+    "autoTmuxAskWhenOneDesc": "Rodyti sesijos pasirinkimą net ir esant vienai tmux sesijai, kad nauja kortelė galėtų pradėti savo sesiją, o ne prisijungti prie esamos",
     "enableAutoTmuxDesc": "Paleidus komandinę eilutę tmux viduje, ji ir joje vykdomi procesai išliks aktyvūs net atjungus ar perkrovus naršyklę (tmux turi būti įdiegtas serveryje)",
     "fastScrollModifier": "Greito slinkimo modifikatorius",
     "fastScrollModifierAlt": "Alt",
@@ -499,8 +520,9 @@
     "lineHeight": "Eilučių aukštis",
     "lineHeightLabel": "Eilučių aukštis",
     "linkClickBehaviorConfirm": "Rodyti langą atidarymui arba kopijavimui",
-    "linkClickBehaviorDesc": "Valdo, kas įvyksta spustelėjus nuorodą terminale. Naudokite „Numatytasis“, kad būtų taikomas programos lygio nustatymas.",
+    "linkClickBehaviorDesc": "Valdo, kas nutinka paspaudus nuorodą terminale. Ctrl+paspaudimas (Cmd+paspaudimas „Mac“ kompiuteriuose) visada ją atidaro iškart. Naudokite „Numatytoji“, kad sekti programos lygio nustatymą.",
     "linkClickBehaviorDirect": "Atidaryti tiesiogiai",
+    "linkClickBehaviorModifier": "Atidaryti su Ctrl+paspaudimu (Cmd+paspaudimu „Mac“ kompiuteriuose)",
     "linkClickBehaviorLabel": "Nuorodos spustelėjimo elgsena",
     "loadingHost": "Įkeliamas serveris...",
     "localEchoAuto": "Automatinis",
@@ -533,6 +555,8 @@
     "sudoPasswordAutoFill": "„Sudo“ slaptažodžio automatinis įvedimas",
     "sudoPasswordAutoFillDesc": "Išsaugoti „sudo“ slaptažodį, kad hosto metrikos, terminalo užklausos ir kt. galėtų automatiškai vykdyti privilegijuotas komandas.",
     "sudoPasswordAutoFillLabel": "„Sudo“ slaptažodžio automatinis įvedimas",
+    "suPasswordAutoFillLabel": "Automatinis su slaptažodžio užpildymas",
+    "suPasswordAutoFillDesc": "Su užklausoje pasiūlyti slaptažodį, išsaugotą kitame serveryje su tuo pačiu adresu ir vartotoju, į kurį su perjungia",
     "syntaxCategoryIpAddresses": "IP adresai",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Žurnalų lygiai",
@@ -718,5 +742,12 @@
   "plugin": {
     "name": "SSH terminalas",
     "description": "SSH terminalo sesijos su skirtukais, padalintu ekranu, istorija, makrokomandomis ir vietine komandine eilute darbalaukio programoje."
+  },
+  "zmodem": {
+    "waiting": "Serveris laukia failų (rz).",
+    "choose": "Pasirinkti failus",
+    "sending": "Įkeliamas {{name}}",
+    "receiving": "Atsisiunčiamas {{name}}",
+    "cancel": "Atšaukti perdavimą"
   }
 }

@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "Kunne ikke lese utklippstavlen. Noen nettlesere begrenser tilgang til utklippstavlen utenfor HTTPS – prøv Ctrl+V i stedet, eller kjør Termix over HTTPS.",
     "connecting": "Kobler til...",
     "connectionLost": "Tilkobling tapt",
+    "editHost": "Rediger vert",
     "connectionRejected": "Tilkoblingen ble avvist av serveren. Vennligst sjekk autentisering og nettverkskonfigurasjon.",
     "connectionTimeout": "Tilkoblingstid utløpt",
     "hostKeyRejected": "Verifisering av SSH-vertsnøkkel avvist. Tilkoblingen ble kansellert.",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "Maksimalt antall gjenkoblingsforsøk nådd",
     "noHostSelected": "Ingen vert valgt",
     "passwordPromptFillTitle": "Fyll inn det lagrede passordet i denne forespørselen?",
+    "suPasswordFillTitle": "Fyll inn det lagrede passordet for {{user}}?",
     "reconnect": "Koble til på nytt",
     "reconnected": "Koblet til på nytt",
     "reconnecting": "Kobler til på nytt... ({{attempt}}/{{max}})",
@@ -252,6 +254,13 @@
         "label": "Kommandohistorikk",
         "description": "Registrer kommandoer kjørt i denne terminalen for historikk og autofullføring"
       },
+      "connectFrom": {
+        "label": "Koble fra (mobilapp)",
+        "description": "Hvor mobilappen åpner SSH for denne verten: telefonen, denne serveren, eller telefonen når den kan nå verten.",
+        "auto": "Automatisk",
+        "device": "Telefonen",
+        "server": "Denne serveren"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-tunnel",
         "description": "Send SSH-trafikk over Cloudflare Zero Trust via WebSocket"
@@ -342,6 +351,9 @@
       "autoTmux": {
         "label": "Automatisk tmux"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "Spør når én tmux-økt finnes"
+      },
       "useSSHTitle": {
         "label": "Bruk SSH-tittelen"
       },
@@ -362,6 +374,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "Fyll ut sudo-prompter"
+      },
+      "suPasswordAutoFill": {
+        "label": "Fyll ut su-forespørsler"
       },
       "autoReconnect": {
         "label": "Koble til automatisk på nytt"
@@ -400,7 +415,11 @@
         "label": "Vis alltid historikkknapper",
         "description": "Hold knappene for å kopiere og slette under hver kommando synlige. Slå av for å vise dem kun ved hover."
       },
-      "displayTitle": "Visning"
+      "displayTitle": "Visning",
+      "zmodem": {
+        "label": "rz- og sz-filoverføringer",
+        "description": "Last opp og ned filer med rz og sz (lrzsz) direkte i terminalen."
+      }
     }
   },
   "palette": {
@@ -472,6 +491,8 @@
     "enableAutoMosh": "Aktiver Auto-Mosh",
     "enableAutoMoshDesc": "Foretrekk Mosh fremfor SSH hvis tilgjengelig",
     "enableAutoTmux": "Aktiver Auto-Tmux",
+    "autoTmuxAskWhenOne": "Spør når én økt finnes",
+    "autoTmuxAskWhenOneDesc": "Vis øktsvelgeren selv med én tmux-økt, slik at en ny fane kan starte sin egen økt i stedet for å slutte seg til den",
     "enableAutoTmuxDesc": "Hold skallet og alt som kjører i det i live over frakoblinger og nettleseromstarter ved å kjøre inne i tmux (tmux må være installert på verten)",
     "fastScrollModifier": "Modifikator for rask rulling",
     "fastScrollModifierAlt": "Alt",
@@ -493,8 +514,9 @@
     "lineHeight": "Linjehøyde",
     "lineHeightLabel": "Linjehøyde",
     "linkClickBehaviorConfirm": "Vis popup for å åpne eller kopiere",
-    "linkClickBehaviorDesc": "Styrer hva som skjer når du klikker på en lenke i terminalen. Bruk 'Standard' for å følge innstillingen på app-nivå.",
+    "linkClickBehaviorDesc": "Styrer hva som skjer når du klikker på en lenke i terminalen. Ctrl+klikk (Cmd+klikk på Mac) åpner den alltid med en gang. Bruk 'Standard' for å følge innstillingen på app-nivå.",
     "linkClickBehaviorDirect": "Åpne direkte",
+    "linkClickBehaviorModifier": "Åpne med Ctrl+klikk (Cmd+klikk på Mac)",
     "linkClickBehaviorLabel": "Oppførsel ved klikk på lenke",
     "loadingHost": "Laster vert...",
     "localEchoAuto": "Automatisk",
@@ -527,6 +549,8 @@
     "sudoPasswordAutoFill": "Automatisk utfylling av sudo-passord",
     "sudoPasswordAutoFillDesc": "Lagre et sudo-passord slik at vertsmetrikker, terminalforespørsler og andre kan kjøre privilegerte kommandoer automatisk.",
     "sudoPasswordAutoFillLabel": "Automatisk utfylling av sudo-passord",
+    "suPasswordAutoFillLabel": "Automatisk utfylling av su-passord",
+    "suPasswordAutoFillDesc": "Ved en su-forespørsel, foreslå passordet lagret på en annen vert med samme adresse og brukeren su bytter til",
     "syntaxCategoryIpAddresses": "IP-adresser",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "Loggnivåer",
@@ -706,5 +730,12 @@
   "plugin": {
     "name": "SSH-terminal",
     "description": "SSH-terminaløkt med faner, delt skjerm, historikk, makroer og en lokal terminal i skrivebordsappen."
+  },
+  "zmodem": {
+    "waiting": "Verten venter på filer (rz).",
+    "choose": "Velg filer",
+    "sending": "Laster opp {{name}}",
+    "receiving": "Laster ned {{name}}",
+    "cancel": "Avbryt overføring"
   }
 }

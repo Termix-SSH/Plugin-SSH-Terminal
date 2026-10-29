@@ -14,8 +14,12 @@ import {
   createTerminalSelectionMouseUpHandler,
 } from "../../../src/frontend/terminal/terminal-clipboard";
 
-function createFakeTerminal({ selection = "" }: { selection?: string } = {}) {
+function createFakeTerminal({
+  selection = "",
+  mouseTrackingMode = "none",
+}: { selection?: string; mouseTrackingMode?: string } = {}) {
   return {
+    modes: { mouseTrackingMode },
     hasSelection: vi.fn(() => selection.length > 0),
     getSelection: vi.fn(() => selection),
     clearSelection: vi.fn(),
@@ -334,6 +338,29 @@ describe("createTerminalContextMenuHandler", () => {
     handler(e);
 
     expect(actions.writeTextToClipboard).toHaveBeenCalledWith("hello");
+  });
+
+  it("leaves the right-click to a program that reports the mouse", () => {
+    for (const preference of ["true", "false"]) {
+      getCookieMock.mockReturnValue(preference);
+      const terminal = createFakeTerminal({
+        selection: "hello",
+        mouseTrackingMode: "vt200",
+      });
+      const actions = createActions();
+      const handler = createTerminalContextMenuHandler(
+        terminal as unknown as Terminal,
+        actions,
+      );
+      const e = createMouseEvent();
+
+      handler(e);
+
+      expect(e.preventDefault).toHaveBeenCalled();
+      expect(terminal.paste).not.toHaveBeenCalled();
+      expect(actions.writeTextToClipboard).not.toHaveBeenCalled();
+      expect(actions.readTextFromClipboard).not.toHaveBeenCalled();
+    }
   });
 
   it("does nothing when the right-click preference is disabled", () => {

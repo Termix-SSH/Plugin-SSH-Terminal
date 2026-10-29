@@ -44,4 +44,38 @@ describe("terminal clipboard actions", () => {
       }),
     ).toBe("native");
   });
+
+  it("leaves the right button to a program that reports the mouse", () => {
+    for (const rightClickCopyPaste of [true, false]) {
+      expect(
+        resolveTerminalContextMenuAction({
+          rightClickCopyPaste,
+          copyOnSelect: false,
+          hasSelection: false,
+          mouseTracking: true,
+        }),
+      ).toBe("app");
+    }
+  });
+
+  it("keeps the terminal behavior with Shift while the mouse is reported", () => {
+    expect(
+      resolveTerminalContextMenuAction({
+        rightClickCopyPaste: true,
+        copyOnSelect: false,
+        hasSelection: false,
+        mouseTracking: true,
+        shiftKey: true,
+      }),
+    ).toBe("paste");
+    expect(
+      resolveTerminalContextMenuAction({
+        rightClickCopyPaste: false,
+        copyOnSelect: false,
+        hasSelection: false,
+        mouseTracking: true,
+        shiftKey: true,
+      }),
+    ).toBe("native");
+  });
 });

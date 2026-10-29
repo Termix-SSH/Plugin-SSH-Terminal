@@ -42,6 +42,7 @@ export const HOST_KEYS = {
   terminalToolbarFade: "terminalToolbarFade",
   enableCommandHistory: "enableCommandHistory",
   autoTmux: "autoTmux",
+  autoTmuxAskWhenOne: "autoTmuxAskWhenOne",
   cloudflareTunnelEnabled: "cloudflareTunnelEnabled",
   cloudflareTunnelHostname: "cloudflareTunnelHostname",
   cloudflareTunnelPort: "cloudflareTunnelPort",

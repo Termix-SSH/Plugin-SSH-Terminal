@@ -4,6 +4,7 @@ import { createTerminalLogger } from "./helpers.js";
 import { hostImportNormalizer, hostPayloadLegacy } from "./host-import.js";
 import { createHistoryRepository } from "./history-repository.js";
 import { registerTerminalRoutes } from "./routes.js";
+import { registerCloudflareTransport } from "./cloudflare-transport.js";
 import {
   DEFAULT_TIMEOUT_MINUTES,
   TerminalSessionManager,
@@ -88,8 +89,10 @@ export async function activate(ctx: PluginContext) {
   });
   ctx.disposables.add(() => sessionManager.destroyAll());
 
+  const cloudflare = registerCloudflareTransport(ctx);
   const socket = createTerminalSocket({
     ctx,
+    cloudflareClaims: cloudflare.claims,
     log,
     sessionManager,
     getTmux: () =>

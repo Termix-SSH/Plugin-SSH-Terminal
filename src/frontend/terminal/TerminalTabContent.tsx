@@ -66,6 +66,8 @@ export function TerminalTabContent({
 }: TabProps) {
   const tab = tabRecord as unknown as TerminalTabRecord;
   const host = hostRecord as unknown as Host | undefined;
+  // editHost is on the shell from Termix 26.10.6.
+  const editHost = (shell as { editHost?: (hostId: number) => void }).editHost;
   const { t } = useTranslation();
   const previewTerminalTheme = useThemePreview();
   const isMobile = useIsMobile();
@@ -146,6 +148,11 @@ export function TerminalTabContent({
               onSaveQuickConnect={
                 shell.saveQuickConnect && hostRecord?.quickConnectSavable
                   ? () => shell.saveQuickConnect!(tabRecord, hostRecord!)
+                  : undefined
+              }
+              onEditHost={
+                editHost && typeof host?.id === "number"
+                  ? () => editHost(host!.id as number)
                   : undefined
               }
               host={host}

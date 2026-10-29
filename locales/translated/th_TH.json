@@ -40,6 +40,7 @@
     "clipboardHttpWarning": "ไม่สามารถอ่านคลิปบอร์ดได้ บางเบราว์เซอร์จำกัดการเข้าถึงคลิปบอร์ดนอก HTTPS - ลองใช้ Ctrl+V แทน หรือให้บริการ Termix ผ่าน HTTPS",
     "connecting": "กำลังเชื่อมต่อ...",
     "connectionLost": "การเชื่อมต่อขาด",
+    "editHost": "แก้ไขโฮสต์",
     "connectionRejected": "เซิร์ฟเวอร์ปฏิเสธการเชื่อมต่อ โปรดตรวจสอบการยืนยันตัวตนและการตั้งค่าเครือข่ายของคุณ",
     "connectionTimeout": "การเชื่อมต่อหมดเวลา",
     "hostKeyRejected": "การตรวจสอบคีย์โฮสต์ SSH ถูกปฏิเสธ ยกเลิกการเชื่อมต่อ",
@@ -49,6 +50,7 @@
     "maxReconnectAttemptsReached": "ถึงจำนวนครั้งที่พยายามเชื่อมต่อใหม่สูงสุดแล้ว",
     "noHostSelected": "ไม่ได้เลือกโฮสต์",
     "passwordPromptFillTitle": "ต้องการกรอกรหัสผ่านที่บันทึกไว้ลงในช่องนี้หรือไม่?",
+    "suPasswordFillTitle": "กรอกรหัสผ่านที่บันทึกไว้สำหรับ {{user}} หรือไม่?",
     "reconnect": "เชื่อมต่อใหม่",
     "reconnected": "เชื่อมต่อใหม่สำเร็จ",
     "reconnecting": "กำลังเชื่อมต่อใหม่... ({{attempt}}/{{max}})",
@@ -249,6 +251,13 @@
         "label": "ประวัติคำสั่ง",
         "description": "บันทึกคำสั่งที่รันในเทอร์มินัลนี้เพื่อใช้สำหรับประวัติและการเติมอัตโนมัติ"
       },
+      "connectFrom": {
+        "label": "เชื่อมต่อจาก (แอปมือถือ)",
+        "description": "ตำแหน่งที่แอปมือถือเปิด SSH สำหรับโฮสต์นี้: โทรศัพท์, เซิร์ฟเวอร์นี้, หรือโทรศัพท์เมื่อสามารถเข้าถึงโฮสต์ได้",
+        "auto": "อัตโนมัติ",
+        "device": "โทรศัพท์",
+        "server": "เซิร์ฟเวอร์นี้"
+      },
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "กำหนดเส้นทาง SSH ผ่าน Cloudflare Zero Trust โดยใช้ WebSocket"
@@ -339,6 +348,9 @@
       "autoTmux": {
         "label": "เปิด tmux อัตโนมัติ"
       },
+      "autoTmuxAskWhenOne": {
+        "label": "ถามเมื่อมีเซสชัน tmux อยู่หนึ่งเซสชัน"
+      },
       "useSSHTitle": {
         "label": "ใช้ชื่อจาก SSH"
       },
@@ -359,6 +371,9 @@
       },
       "sudoPasswordAutoFill": {
         "label": "กรอกรหัสผ่าน sudo อัตโนมัติ"
+      },
+      "suPasswordAutoFill": {
+        "label": "กรอกคำสั่ง su อัตโนมัติ"
       },
       "autoReconnect": {
         "label": "เชื่อมต่อใหม่อัตโนมัติ"
@@ -397,7 +412,11 @@
         "label": "แสดงปุ่มประวัติเสมอ",
         "description": "คงปุ่มคัดลอกและลบไว้ใต้แต่ละคำสั่งให้มองเห็นได้ ปิดเพื่อแสดงเฉพาะเมื่อวางเมาส์เหนือ"
       },
-      "displayTitle": "การแสดงผล"
+      "displayTitle": "การแสดงผล",
+      "zmodem": {
+        "label": "การถ่ายโอนไฟล์ rz และ sz",
+        "description": "อัปโหลดและดาวน์โหลดไฟล์ด้วย rz และ sz (lrzsz) โดยตรงในเทอร์มินัล"
+      }
     }
   },
   "palette": {
@@ -469,6 +488,8 @@
     "enableAutoMosh": "เปิดใช้งาน Auto-Mosh",
     "enableAutoMoshDesc": "ใช้ Mosh แทน SSH หากมีให้ใช้งาน",
     "enableAutoTmux": "เปิดใช้งาน Auto-Tmux",
+    "autoTmuxAskWhenOne": "ถามเมื่อมีเซสชันอยู่หนึ่งเซสชัน",
+    "autoTmuxAskWhenOneDesc": "แสดงตัวเลือกเซสชันแม้จะมีเซสชัน tmux เพียงหนึ่งเซสชัน เพื่อให้แท็บใหม่สามารถเริ่มเซสชันของตัวเองแทนที่จะเข้าร่วมเซสชันนั้น",
     "enableAutoTmuxDesc": "รักษาเซสชัน shell และกระบวนการที่ทำงานอยู่ให้คงอยู่แม้การเชื่อมต่อจะขาดหายหรือเบราว์เซอร์ถูกปิดใหม่ โดยรันภายใน tmux (ต้องติดตั้ง tmux บนโฮสต์ไว้ก่อน)",
     "fastScrollModifier": "ปุ่มปรับความเร็วในการเลื่อน",
     "fastScrollModifierAlt": "Alt",
@@ -490,8 +511,9 @@
     "lineHeight": "ความสูงบรรทัด",
     "lineHeightLabel": "ความสูงบรรทัด",
     "linkClickBehaviorConfirm": "แสดงป๊อปอัปเพื่อยืนยันการเปิดหรือคัดลอก",
-    "linkClickBehaviorDesc": "ควบคุมสิ่งที่เกิดขึ้นเมื่อคุณคลิกลิงก์ในเทอร์มินัล ใช้ 'ค่าเริ่มต้น' เพื่อใช้การตั้งค่าระดับแอป",
+    "linkClickBehaviorDesc": "ควบคุมสิ่งที่เกิดขึ้นเมื่อคุณคลิกลิงก์ในเทอร์มินัล Ctrl+คลิก (Cmd+คลิกบน Mac) จะเปิดลิงก์ทันที ใช้ 'ค่าเริ่มต้น' เพื่อปฏิบัติตามการตั้งค่าระดับแอป",
     "linkClickBehaviorDirect": "เปิดโดยตรง",
+    "linkClickBehaviorModifier": "เปิดด้วย Ctrl+คลิก (Cmd+คลิกบน Mac)",
     "linkClickBehaviorLabel": "พฤติกรรมการคลิกลิงก์",
     "loadingHost": "กำลังโหลดโฮสต์...",
     "localEchoAuto": "อัตโนมัติ",
@@ -524,6 +546,8 @@
     "sudoPasswordAutoFill": "การกรอกรหัสผ่าน Sudo อัตโนมัติ",
     "sudoPasswordAutoFillDesc": "เก็บรหัสผ่าน sudo เพื่อให้เมตริกโฮสต์ คำขอในเทอร์มินัล และอื่นๆ สามารถรันคำสั่งที่มีสิทธิ์พิเศษได้โดยอัตโนมัติ",
     "sudoPasswordAutoFillLabel": "การกรอกรหัสผ่าน Sudo อัตโนมัติ",
+    "suPasswordAutoFillLabel": "กรอกรหัสผ่าน Su อัตโนมัติ",
+    "suPasswordAutoFillDesc": "ที่คำสั่ง su เสนอรหัสผ่านที่บันทึกไว้บนโฮสต์อื่นที่มีที่อยู่เดียวกันและผู้ใช้ที่ su สลับไป",
     "syntaxCategoryIpAddresses": "ที่อยู่ IP",
     "syntaxCategoryIpAddressesDesc": "192.168.1.1, 10.0.0.1:8080",
     "syntaxCategoryLogLevels": "ระดับล็อก",
@@ -700,5 +724,12 @@
   "plugin": {
     "name": "เทอร์มินัล SSH",
     "description": "เซสชันเทอร์มินัล SSH พร้อมแท็บ แบ่งหน้าจอ ประวัติ มาโคร และเทอร์มินัลท้องถิ่นในแอปเดสก์ท็อป"
+  },
+  "zmodem": {
+    "waiting": "โฮสต์กำลังรอไฟล์ (rz)",
+    "choose": "เลือกไฟล์",
+    "sending": "กำลังอัปโหลด {{name}}",
+    "receiving": "กำลังดาวน์โหลด {{name}}",
+    "cancel": "ยกเลิกการถ่ายโอน"
   }
 }
