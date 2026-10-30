@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FitAddon } from "@xterm/addon-fit";
 import { ClipboardAddon } from "@xterm/addon-clipboard";
 import { useXTerm } from "react-xtermjs";
@@ -16,6 +16,7 @@ import {
   readFromClipboard,
   Select2,
   pluginWsUrl,
+  ComponentSlot,
 } from "@termix-ssh/plugin-sdk/ui";
 import { resolveTermixThemeColors } from "../look/terminal-theme";
 import {
@@ -26,6 +27,12 @@ import { ensureTerminalFontsLoaded } from "../look/terminal-global-styles";
 import { usePluginApi, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import { getDefaultAppearance } from "../terminal-api";
 import { resolveTerminalFontFamily } from "../look/terminal-themes";
+import {
+  TERMINAL_OVERLAY_SLOT,
+  type TerminalOverlayProps,
+  type TerminalSessionMessage,
+} from "../terminal/terminal-slots";
+import { createTerminalInputAccess } from "../terminal/terminal-input-access";
 
 export function LocalTerminal({
   instanceId,
@@ -67,6 +74,18 @@ export function LocalTerminal({
     }
   }, []);
   const sessionReadyRef = useRef(false);
+  const sessionListenersRef = useRef(
+    new Set<(message: TerminalSessionMessage) => void>(),
+  );
+  const emitSessionMessage = useCallback((message: TerminalSessionMessage) => {
+    for (const listener of sessionListenersRef.current) {
+      try {
+        listener(message);
+      } catch (error) {
+        console.error("[local-terminal] overlay listener threw", error);
+      }
+    }
+  }, []);
   const visibleRef = useRef(isVisible);
   visibleRef.current = isVisible;
   const focusFrameRef = useRef<number | null>(null);
@@ -78,6 +97,28 @@ export function LocalTerminal({
       setIsWindows(platform === "win32");
     });
   }, []);
+
+  // The same overlay slot as SSH terminals, so plugins that work at the
+  // prompt (a command editor) work here too. There is no host and no
+  // connection flow: only the shell's own input.
+  const overlayProps = useMemo<TerminalOverlayProps>(
+    () => ({
+      host: undefined,
+      subscribe: (listener) => {
+        sessionListenersRef.current.add(listener);
+        return () => {
+          sessionListenersRef.current.delete(listener);
+        };
+      },
+      holdConnectTimeout: () => {},
+      fail: (message) => terminal?.write(`\r\n\x1b[31m${message}\x1b[0m\r\n`),
+      disconnect: () => socketRef.current?.close(),
+      send: (type, data) => sendFrame({ type, data }),
+      connectPayload: () => ({}),
+      input: createTerminalInputAccess(terminal),
+    }),
+    [sendFrame, terminal],
+  );
 
   const fit = useCallback(() => {
     const fitAddon = fitAddonRef.current;
@@ -213,6 +254,7 @@ export function LocalTerminal({
           if (frame.type === "data" && typeof frame.data === "string") {
             terminal.write(frame.data);
           } else if (frame.type === "exit") {
+            emitSessionMessage({ type: "session_closed" });
             terminal.write(
               `
 
@@ -263,7 +305,16 @@ export function LocalTerminal({
       fitAddonRef.current = null;
       fitAddon.dispose();
     };
-  }, [fit, focusWhenReady, instanceId, sendFrame, shell, terminal, xtermRef]);
+  }, [
+    emitSessionMessage,
+    fit,
+    focusWhenReady,
+    instanceId,
+    sendFrame,
+    shell,
+    terminal,
+    xtermRef,
+  ]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -287,7 +338,14 @@ export function LocalTerminal({
           </Select2>
         </div>
       )}
-      <div ref={xtermRef} className="min-h-0 flex-1 p-2" />
+      <div className="relative min-h-0 flex-1">
+        <div ref={xtermRef} className="h-full w-full p-2" />
+        <ComponentSlot
+          slotId={TERMINAL_OVERLAY_SLOT}
+          when={{ host: undefined }}
+          props={overlayProps as unknown as Record<string, unknown>}
+        />
+      </div>
     </div>
   );
 }

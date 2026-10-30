@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Terminal } from "@xterm/xterm";
-import { getTerminalBufferText } from "../../../src/frontend/terminal/terminal-buffer-text";
+import {
+  getTerminalBufferText,
+  getTerminalTextToCursor,
+} from "../../../src/frontend/terminal/terminal-buffer-text";
 
 interface FakeLine {
   text: string;
@@ -8,12 +11,17 @@ interface FakeLine {
 }
 
 /** Minimal stand-in for the parts of xterm this reads. */
-function fakeTerminal(lines: FakeLine[], rows = lines.length): Terminal {
+function fakeTerminal(
+  lines: FakeLine[],
+  rows = lines.length,
+  cursorY = rows - 1,
+): Terminal {
   return {
     rows,
     buffer: {
       active: {
         baseY: Math.max(0, lines.length - rows),
+        cursorY,
         getLine: (i: number) => {
           const line = lines[i];
           if (!line) return undefined;
@@ -95,5 +103,43 @@ describe("getTerminalBufferText", () => {
     } as unknown as Terminal;
 
     expect(getTerminalBufferText(disposed)).toBe("");
+  });
+});
+
+describe("getTerminalTextToCursor", () => {
+  it("returns an empty string for a missing terminal", () => {
+    expect(getTerminalTextToCursor(null)).toBe("");
+  });
+
+  it("ends at the cursor's line, leaving out what is drawn below it", () => {
+    const terminal = fakeTerminal(
+      [
+        { text: "$ ls" },
+        { text: "a b" },
+        { text: "$ git status" },
+        { text: "" },
+        { text: "[0] 0:bash*" },
+      ],
+      5,
+      2,
+    );
+
+    expect(getTerminalTextToCursor(terminal)).toBe("$ ls\na b\n$ git status");
+  });
+
+  it("keeps the rest of a cursor line that wraps further down", () => {
+    const terminal = fakeTerminal(
+      [
+        { text: "$ echo a-very-long-" },
+        { text: "command", wrapped: true },
+        { text: "status bar" },
+      ],
+      3,
+      0,
+    );
+
+    expect(getTerminalTextToCursor(terminal)).toBe(
+      "$ echo a-very-long-command",
+    );
   });
 });
