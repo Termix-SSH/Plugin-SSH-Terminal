@@ -73,7 +73,7 @@ describe("HostTerminalSettings", () => {
 
   it("defaults TCP_NODELAY off and saves the per-host toggle", () => {
     const { current } = renderSettings({ pluginSettings: {} });
-    const toggle = switchFor("Disable Nagle's Algorithm (TCP_NODELAY)");
+    const toggle = switchFor("settings.host.tcpNoDelay.label");
 
     fireEvent.click(toggle);
 

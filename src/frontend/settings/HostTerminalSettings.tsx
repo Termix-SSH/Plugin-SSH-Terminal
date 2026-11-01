@@ -698,8 +698,8 @@ export function HostTerminalSettings({
       >
         <div className="flex flex-col gap-4 py-3">
           <SettingRow
-            label="Disable Nagle's Algorithm (TCP_NODELAY)"
-            description="Disables TCP packet batching to reduce SSH input latency, especially on LAN connections. May increase network overhead."
+            label={t("settings.host.tcpNoDelay.label")}
+            description={t("settings.host.tcpNoDelay.description")}
           >
             <FakeSwitch
               checked={tcpNoDelay}
