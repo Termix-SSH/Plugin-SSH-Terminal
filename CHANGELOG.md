@@ -4,6 +4,7 @@
 
 ### Added
 
+- A per-host TCP_NODELAY option to reduce SSH terminal input latency when enabled
 - Connect from host setting for the mobile app: the phone, this server, or automatic
 - Auto-Tmux host option Ask when one session exists, so a new tab can start its own tmux session instead of joining the only one
 - Ctrl+click (Cmd+click on Mac) opens a link right away, and a new link setting opens links only that way so a plain click can select text
