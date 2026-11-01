@@ -3,6 +3,7 @@ import { EventEmitter } from "node:events";
 /** Stands in for ssh2's Client: records connect() and lets a test drive events. */
 export class FakeSshClient extends EventEmitter {
   connectConfig: Record<string, unknown> | null = null;
+  noDelayCalls: boolean[] = [];
   static instances: FakeSshClient[] = [];
 
   constructor() {
@@ -13,6 +14,18 @@ export class FakeSshClient extends EventEmitter {
   connect(config: Record<string, unknown>) {
     this.connectConfig = config;
     return this;
+  }
+
+  setNoDelay(noDelay: boolean) {
+    this.noDelayCalls.push(noDelay);
+    return this;
+  }
+
+  shell(
+    _options: unknown,
+    callback: (error: undefined, stream: EventEmitter) => void,
+  ) {
+    callback(undefined, new EventEmitter());
   }
 
   end() {}

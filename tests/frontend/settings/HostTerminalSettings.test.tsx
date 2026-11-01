@@ -71,6 +71,17 @@ describe("HostTerminalSettings", () => {
     });
   });
 
+  it("defaults TCP_NODELAY off and saves the per-host toggle", () => {
+    const { current } = renderSettings({ pluginSettings: {} });
+    const toggle = switchFor("Disable Nagle's Algorithm (TCP_NODELAY)");
+
+    fireEvent.click(toggle);
+
+    expect(current().pluginSettings).toEqual({
+      "ssh-terminal": { tcpNoDelay: true },
+    });
+  });
+
   it("writes a look change next to the host's other values", () => {
     const { current } = renderSettings({
       pluginSettings: { "ssh-terminal": { autoTmux: true } },
