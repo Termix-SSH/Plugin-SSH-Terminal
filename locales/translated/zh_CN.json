@@ -117,7 +117,8 @@
     "paste": "粘贴图像",
     "settingsTitle": "工具栏",
     "upload": "上传图像",
-    "uploadingImage": "上传中..."
+    "uploadingImage": "上传中...",
+    "tools": "工具"
   },
   "history": {
     "noTerminalSelected": "未选择终端",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "通过 WebSocket 将 SSH 流量路由到 Cloudflare Zero Trust"
+      },
+      "tcpNoDelay": {
+        "label": "禁用 Nagle 算法 (TCP_NODELAY)",
+        "description": "禁用 TCP 数据包批处理以降低 SSH 输入延迟，特别是在局域网连接中。可能会增加网络开销。"
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel 主机名",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "rz 和 sz 文件传输",
         "description": "在终端中直接使用 rz 和 sz (lrzsz) 上传和下载文件。"
+      },
+      "rightClickAction": {
+        "label": "终端中的右键操作",
+        "description": "按住 Shift 键可显示终端菜单，或者如果此处选择了菜单，则执行复制和粘贴操作",
+        "copyPaste": "复制或粘贴",
+        "menu": "终端菜单",
+        "native": "浏览器菜单"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V 粘贴",
+        "description": "关闭后，Ctrl+V 将发送给 Shell。Ctrl+Shift+V 仍用于粘贴"
+      },
+      "copyOnSelect": {
+        "label": "自动复制选中的文本",
+        "description": "在终端中选中文本后立即复制"
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "历史记录",
     "localTerminal": "本地终端",
-    "sshTools": "SSH 工具",
     "terminal": "终端",
     "macros": "宏"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "在此处输入以广播按键...",
-    "copyOnSelect": "自动复制选中的文本",
-    "enableRightClickCopyPaste": "启用右键复制/粘贴",
-    "ctrlVPaste": "Ctrl+V 粘贴（关闭后将 Ctrl+V 发送给 shell）",
-    "fillPassword": "填入密码",
-    "fillPasswordMissing_other": "{{count}} 个选中的终端没有保存的密码",
-    "fillPasswordSuccess_other": "已将密码填入 {{count}} 个终端",
-    "keyRecordingTitle": "按键录制",
-    "noTerminalTabsOpen": "没有打开的终端标签页",
-    "recordToTerminals": "录制到终端",
-    "selectAll": "全部",
-    "selectNone": "无",
-    "selectTerminalsAbove": "选择上方终端",
-    "settingsTitle": "设置",
-    "startRecording": "开始录制",
-    "stopRecording": "停止录制"
   },
   "keybindings": {
     "openLocalTerminal": "打开新的本地终端",
@@ -624,7 +625,8 @@
       "ctrlT": "向 Shell 发送 Ctrl+T（阻止打开浏览器标签页）",
       "ctrlN": "向 Shell 发送 Ctrl+N（阻止打开浏览器窗口）",
       "ctrlQ": "向 Shell 发送 Ctrl+Q（阻止退出浏览器）"
-    }
+    },
+    "toggleBroadcast": "开启或关闭广播"
   },
   "macros": {
     "title": "宏",
@@ -731,5 +733,91 @@
     "sending": "正在上传 {{name}}",
     "receiving": "正在下载 {{name}}",
     "cancel": "取消传输"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "广播输入",
+      "stop": "停止广播",
+      "stopShort": "停止",
+      "on": "广播已开启",
+      "paused": "广播已暂停",
+      "pausedForPassword": "在密码提示处暂停",
+      "pause": "暂停",
+      "resume": "恢复",
+      "members_other": "{{count}} 个终端",
+      "allOpen": "全部打开",
+      "thisSplit": "当前分屏",
+      "sameFolder": "同一文件夹",
+      "offline": "离线",
+      "offlineCount_other": "{{count}} 个离线",
+      "openMore": "打开另一个终端以向其广播",
+      "compose": "编写",
+      "composeHint": "编写命令。按 Ctrl+Enter 将其发送给组",
+      "send": "发送",
+      "pressEnter": "按 Enter",
+      "skipped_other": "跳过了 {{count}} 个离线或正在请求密码的终端"
+    },
+    "fill": {
+      "label": "填充密码",
+      "done_other": "已在 {{count}} 个终端中填充密码",
+      "noPassword_other": "{{count}} 个终端没有保存的密码",
+      "notAsking_other": "{{count}} 个终端未请求密码"
+    },
+    "find": {
+      "all": "在所有终端中查找",
+      "badRegex": "此正则表达式无效",
+      "capped": "显示前 {{count}} 个结果"
+    },
+    "watch": {
+      "title": "监视输出",
+      "note": "规则在 Termix 打开时运行。警报会注明规则和主机名称，绝不会包含输出内容。",
+      "name": "规则名称",
+      "when": "当...时警报",
+      "kindMatch": "输出匹配",
+      "kindQuiet": "输出停止",
+      "kindActivity": "后台有新输出",
+      "pattern": "要查找的文本",
+      "seconds": "静默秒数",
+      "add": "添加规则",
+      "delete": "删除规则",
+      "describeMatch": "匹配 {{pattern}}",
+      "describeQuiet_other": "静默 {{count}} 秒",
+      "describeActivity": "后台有新输出",
+      "nameRequired": "请为规则命名",
+      "patternRequired": "输入要查找的文本",
+      "badRegex": "此正则表达式无效",
+      "secondsRequired": "输入 1 秒或更多",
+      "fired": "{{rule}} 在 {{host}} 上触发",
+      "active_other": "{{count}} 个监视规则已开启"
+    },
+    "output": {
+      "save": "保存输出",
+      "copy": "复制输出",
+      "saveSelection": "保存选区",
+      "empty": "没有可保存的内容",
+      "copied": "输出已复制",
+      "copyFailed": "无法复制输出"
+    },
+    "fix": {
+      "resetDisplay": "重置显示",
+      "clearScrollback": "清除滚动缓冲区",
+      "resetShell": "重置 Shell",
+      "resetShellTitle": "重置 Shell？",
+      "resetShellDescription": "这将在提示符处输入 stty sane 和 reset。当前行上的任何文本都会随之执行。"
+    },
+    "keys": {
+      "title": "发送按键",
+      "custom": "Ctrl + 字母",
+      "customTitle": "发送 Ctrl + 字母",
+      "customDescription": "输入要与 Ctrl 一起发送的字母"
+    },
+    "menu": {
+      "copy": "复制",
+      "paste": "粘贴",
+      "selectAll": "全选",
+      "find": "查找",
+      "clear": "清除"
+    },
+    "openTerminalFirst": "打开 SSH 终端以使用其工具"
   }
 }

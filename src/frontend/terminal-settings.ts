@@ -41,7 +41,7 @@ export function loadTerminalClientSettings(
   return pending;
 }
 
-function peekTerminalClientSettings(): TerminalClientSettings | null {
+export function peekTerminalClientSettings(): TerminalClientSettings | null {
   return cached;
 }
 

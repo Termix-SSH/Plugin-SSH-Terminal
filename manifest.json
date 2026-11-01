@@ -1,7 +1,7 @@
 {
   "id": "ssh-terminal",
   "name": "SSH Terminal",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "SSH terminal sessions with tabs, split screen, history, macros and a local terminal in the desktop app.",
   "author": {
     "name": "Termix"
@@ -22,7 +22,10 @@
     "A toolbar with live stats and quick links to the host's other tools",
     "Command history with autocomplete",
     "Macros that automate logins and prompts",
-    "Send keystrokes to several terminals at once",
+    "Broadcast typing and commands to several terminals at once",
+    "Alerts when output matches, a job goes quiet or a background tab has news",
+    "Search all open terminals, and save or copy their output",
+    "Fix a garbled terminal and send keys that are hard to type",
     "A local terminal in the desktop app"
   ],
   "env": [
@@ -70,7 +73,8 @@
     "db:own",
     "events:core",
     "ui:surface",
-    "desktop:local"
+    "desktop:local",
+    "notify:send"
   ],
   "provides": [
     {
@@ -122,11 +126,6 @@
         "id": "history",
         "titleKey": "nav.history",
         "icon": "History"
-      },
-      {
-        "id": "ssh-tools",
-        "titleKey": "nav.sshTools",
-        "icon": "Hammer"
       },
       {
         "id": "macros",
@@ -790,6 +789,48 @@
           "default": true
         },
         {
+          "key": "rightClickAction",
+          "type": "select",
+          "labelKey": "settings.user.rightClickAction.label",
+          "descriptionKey": "settings.user.rightClickAction.description",
+          "default": "copyPaste",
+          "options": [
+            {
+              "value": "copyPaste",
+              "labelKey": "settings.user.rightClickAction.copyPaste"
+            },
+            {
+              "value": "menu",
+              "labelKey": "settings.user.rightClickAction.menu"
+            },
+            {
+              "value": "native",
+              "labelKey": "settings.user.rightClickAction.native"
+            }
+          ]
+        },
+        {
+          "key": "ctrlVPaste",
+          "type": "boolean",
+          "labelKey": "settings.user.ctrlVPaste.label",
+          "descriptionKey": "settings.user.ctrlVPaste.description",
+          "default": true
+        },
+        {
+          "key": "copyOnSelect",
+          "type": "boolean",
+          "labelKey": "settings.user.copyOnSelect.label",
+          "descriptionKey": "settings.user.copyOnSelect.description",
+          "default": false
+        },
+        {
+          "key": "watchRules",
+          "type": "json",
+          "labelKey": "terminalTools.watch.title",
+          "hidden": true,
+          "default": []
+        },
+        {
           "key": "macros",
           "type": "json",
           "labelKey": "macros.title",
@@ -847,6 +888,9 @@
       },
       {
         "id": "openLocalTerminal"
+      },
+      {
+        "id": "toggleBroadcast"
       }
     ],
     "uses": ["files.openEditor", "files.openHost", "snippets.startupCommand"]

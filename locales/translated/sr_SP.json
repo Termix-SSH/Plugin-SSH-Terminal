@@ -121,7 +121,8 @@
     "paste": "Налепи слику",
     "settingsTitle": "Алатна трака",
     "upload": "Отпреми слику",
-    "uploadingImage": "Отпремање..."
+    "uploadingImage": "Отпремање...",
+    "tools": "Алати"
   },
   "history": {
     "noTerminalSelected": "Није изабран терминал",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Усмерите SSH саобраћај преко Cloudflare Zero Trust путем WebSocket-а"
+      },
+      "tcpNoDelay": {
+        "label": "Онемогући Наглов алгоритам (TCP_NODELAY)",
+        "description": "Онемогућава груписање TCP пакета ради смањења кашњења SSH уноса, посебно на LAN везама. Може повећати мрежно оптерећење."
       },
       "cloudflareTunnelHostname": {
         "label": "Име хоста тунела",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "rz и sz преноси фајлова",
         "description": "Отпремајте и преузимајте фајлове помоћу rz и sz (lrzsz) директно у терминалу."
+      },
+      "rightClickAction": {
+        "label": "Десни клик у терминалу",
+        "description": "Држите Shift да бисте добили мени терминала уместо тога, или копирајте и залепите ако је мени ваш избор овде",
+        "copyPaste": "Копирај или залепи",
+        "menu": "Мени терминала",
+        "native": "Мени прегледача"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V лепи",
+        "description": "Искључите да бисте послали Ctrl+V шкољци. Ctrl+Shift+V и даље лепи"
+      },
+      "copyOnSelect": {
+        "label": "Аутоматски копирај изабрани текст",
+        "description": "Копира текст чим га изаберете у терминалу"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "Историја",
     "localTerminal": "Локални терминал",
-    "sshTools": "SSH алати",
     "terminal": "Терминал",
     "macros": "Макрои"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Куцајте овде да емитујете тастере...",
-    "copyOnSelect": "Аутоматски копирај изабрани текст",
-    "enableRightClickCopyPaste": "Омогући копирање/лепљење десним кликом",
-    "ctrlVPaste": "Ctrl+V лепи (искључите да бисте послали Ctrl+V у shelл)",
-    "fillPassword": "Унесите лозинку",
-    "fillPasswordMissing_one": "Нема сачуване лозинке за {{count}} изабрани терминал",
-    "fillPasswordMissing_few": "Нема сачуване лозинке за {{count}} изабрана терминала",
-    "fillPasswordMissing_other": "Нема сачуване лозинке за {{count}} изабраних терминала",
-    "fillPasswordSuccess_one": "Унета лозинка у {{count}} терминал",
-    "fillPasswordSuccess_few": "Унета лозинка у {{count}} терминала",
-    "fillPasswordSuccess_other": "Унета лозинка у {{count}} терминала",
-    "keyRecordingTitle": "Снимање тастатура",
-    "noTerminalTabsOpen": "Нема отворених терминалских картица",
-    "recordToTerminals": "Сними у терминале",
-    "selectAll": "Све",
-    "selectNone": "Ништа",
-    "selectTerminalsAbove": "Изаберите терминале изнад",
-    "settingsTitle": "Подешавања",
-    "startRecording": "Покрени снимање",
-    "stopRecording": "Заустави снимање"
   },
   "keybindings": {
     "openLocalTerminal": "Отвори нови локални терминал",
@@ -634,7 +631,8 @@
       "ctrlT": "Пошаљи Ctrl+T у шел (блокирано да не би отворило картицу прегледача)",
       "ctrlN": "Пошаљи Ctrl+N у шел (блокирано да не би отворило прозор прегледача)",
       "ctrlQ": "Пошаљи Ctrl+Q у шел (блокирано да не би затворило прегледач)"
-    }
+    },
+    "toggleBroadcast": "Укључи или искључи емитовање"
   },
   "macros": {
     "title": "Макрои",
@@ -743,5 +741,107 @@
     "sending": "Отпремање {{name}}",
     "receiving": "Преузимање {{name}}",
     "cancel": "Откажи пренос"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Емитовај унос",
+      "stop": "Заустави емитовање",
+      "stopShort": "Заустави",
+      "on": "Емитовање укључено",
+      "paused": "Емитовање паузирано",
+      "pausedForPassword": "Паузирано на захтеву за лозинку",
+      "pause": "Паузирај",
+      "resume": "Настави",
+      "members_one": "{{count}} терминал",
+      "members_few": "{{count}} терминала",
+      "members_other": "{{count}} терминала",
+      "allOpen": "Сви отворени",
+      "thisSplit": "Ова подела",
+      "sameFolder": "Иста фасцикла",
+      "offline": "Искључен",
+      "offlineCount_one": "{{count}} искључен",
+      "offlineCount_few": "{{count}} искључена",
+      "offlineCount_other": "{{count}} искључених",
+      "openMore": "Отворите још један терминал да бисте емитовали у њега",
+      "compose": "Састави",
+      "composeHint": "Напишите наредбу. Ctrl+Enter је шаље групи",
+      "send": "Пошаљи",
+      "pressEnter": "Притисните Enter",
+      "skipped_one": "Прескочен {{count}} терминал који је искључен или тражи лозинку",
+      "skipped_few": "Прескочена {{count}} терминала која су искључена или траже лозинку",
+      "skipped_other": "Прескочено {{count}} терминала која су искључена или траже лозинку"
+    },
+    "fill": {
+      "label": "Попуни лозинку",
+      "done_one": "Попуњена лозинка у {{count}} терминалу",
+      "done_few": "Попуњена лозинка у {{count}} терминала",
+      "done_other": "Попуњена лозинка у {{count}} терминала",
+      "noPassword_one": "Нема сачуване лозинке за {{count}} терминал",
+      "noPassword_few": "Нема сачуване лозинке за {{count}} терминала",
+      "noPassword_other": "Нема сачуване лозинке за {{count}} терминала",
+      "notAsking_one": "{{count}} терминал не тражи лозинку",
+      "notAsking_few": "{{count}} терминала не траже лозинку",
+      "notAsking_other": "{{count}} терминала не траже лозинку"
+    },
+    "find": {
+      "all": "Пронађи у свим терминалима",
+      "badRegex": "Ова регуларна експресија није исправна",
+      "capped": "Приказује првих {{count}} резултата"
+    },
+    "watch": {
+      "title": "Праћење излаза",
+      "note": "Правила се извршавају док је Termix отворен. Обавештења наводе име правила и домаћина, никада излаз.",
+      "name": "Име правила",
+      "when": "Обавести када",
+      "kindMatch": "Излаз се подудара",
+      "kindQuiet": "Излаз је тих",
+      "kindActivity": "Нови излаз у позадини",
+      "pattern": "Текст за претрагу",
+      "seconds": "Секунди тишине",
+      "add": "Додај правило",
+      "delete": "Обриши правило",
+      "describeMatch": "Подудара се са {{pattern}}",
+      "describeQuiet_one": "Тихо {{count}} секунду",
+      "describeQuiet_few": "Тихо {{count}} секунде",
+      "describeQuiet_other": "Тихо {{count}} секунди",
+      "describeActivity": "Нови излаз у позадини",
+      "nameRequired": "Дајте правилу име",
+      "patternRequired": "Унесите текст за претрагу",
+      "badRegex": "Ова регуларна експресија није исправна",
+      "secondsRequired": "Унесите 1 секунду или више",
+      "fired": "{{rule}} на {{host}}",
+      "active_one": "{{count}} правило праћења укључено",
+      "active_few": "{{count}} правила праћења укључена",
+      "active_other": "{{count}} правила праћења укључено"
+    },
+    "output": {
+      "save": "Сачувај излаз",
+      "copy": "Копирај излаз",
+      "saveSelection": "Сачувај избор",
+      "empty": "Нема ништа за чување",
+      "copied": "Излаз је копиран",
+      "copyFailed": "Није могуће копирати излаз"
+    },
+    "fix": {
+      "resetDisplay": "Ресетуј приказ",
+      "clearScrollback": "Обриши историју скроловања",
+      "resetShell": "Ресетуј шел",
+      "resetShellTitle": "Ресетовати шел?",
+      "resetShellDescription": "Ово куца `stty sane` и `reset` на командној линији. Било који текст на линији ће се извршити заједно са тим."
+    },
+    "keys": {
+      "title": "Пошаљи тастер",
+      "custom": "Ctrl + слово",
+      "customTitle": "Пошаљи Ctrl + слово",
+      "customDescription": "Унесите слово које желите да пошаљете са Ctrl"
+    },
+    "menu": {
+      "copy": "Копирај",
+      "paste": "Налепи",
+      "selectAll": "Изабери све",
+      "find": "Пронађи",
+      "clear": "Очисти"
+    },
+    "openTerminalFirst": "Отворите SSH терминал да бисте користили његове алате"
   }
 }

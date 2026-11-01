@@ -9,6 +9,12 @@ export interface TerminalSessionInfo {
   ip?: string;
   username?: string;
   port?: number;
+  /** The host's folder path. */
+  folder?: string;
+  /** The socket is open. */
+  connected?: boolean;
+  /** Shown on screen rather than behind another tab. */
+  visible?: boolean;
 }
 
 interface Session extends TerminalSessionInfo {
@@ -25,7 +31,7 @@ function notify(): void {
   for (const listener of [...listeners]) listener();
 }
 
-/** The open sessions, the same array until one opens or closes. */
+/** The open sessions, the same array until one changes. */
 export function sessionsSnapshot(): TerminalSessionInfo[] {
   return snapshot;
 }
@@ -44,7 +50,22 @@ export function registerSession(
   };
 }
 
-/** Called whenever a session opens or closes. Returns the unsubscribe. */
+/** Updates a session in place, so its place in the list and focus stay put. */
+export function updateSession(
+  id: string,
+  changes: Partial<Omit<Session, "id">>,
+): void {
+  const session = sessions.get(id);
+  if (!session) return;
+  const changed = (Object.keys(changes) as Array<keyof typeof changes>).some(
+    (key) => session[key] !== changes[key],
+  );
+  if (!changed) return;
+  sessions.set(id, { ...session, ...changes });
+  notify();
+}
+
+/** Called whenever a session opens, closes or changes. Returns the unsubscribe. */
 export function subscribeSessions(listener: () => void): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
@@ -55,17 +76,35 @@ export function getSessionHandle(sessionId: string): TerminalHandle | null {
   return sessions.get(sessionId)?.ref ?? null;
 }
 
+export function getSessionInfo(sessionId: string): TerminalSessionInfo | null {
+  const session = sessions.get(sessionId);
+  if (!session) return null;
+  const { ref: _ref, ...info } = session;
+  return info;
+}
+
 export function setActiveSession(id: string | null): void {
   activeId = id;
+}
+
+export function getActiveSessionId(): string | null {
+  return activeId;
 }
 
 export function listSessions(): TerminalSessionInfo[] {
   return [...sessions.values()].map(({ ref: _ref, ...info }) => info);
 }
 
-function send(session: Session, text: string, run?: boolean): void {
+// Older test fakes and embedders may not report a connection state.
+function isOpen(session: Session): boolean {
+  return session.ref.isConnected?.() ?? true;
+}
+
+function send(session: Session, text: string, run?: boolean): boolean {
+  if (!isOpen(session)) return false;
   if (run) session.ref.sendInput(text + "\r");
   else session.ref.paste(text);
+  return true;
 }
 
 export function sendToActive(text: string, opts?: { run?: boolean }): boolean {
@@ -74,8 +113,7 @@ export function sendToActive(text: string, opts?: { run?: boolean }): boolean {
     (activeId ? sessions.get(activeId) : undefined) ??
     [...sessions.values()].pop();
   if (!session) return false;
-  send(session, text, opts?.run);
-  return true;
+  return send(session, text, opts?.run);
 }
 
 export function sendToSession(
@@ -85,6 +123,5 @@ export function sendToSession(
 ): boolean {
   const session = sessions.get(sessionId);
   if (!session) return false;
-  send(session, text, opts?.run);
-  return true;
+  return send(session, text, opts?.run);
 }

@@ -21,7 +21,7 @@ describe("terminal clipboard actions", () => {
   it("pastes on right-click after copy-on-select", () => {
     expect(
       resolveTerminalContextMenuAction({
-        rightClickCopyPaste: true,
+        rightClickAction: "copyPaste",
         copyOnSelect: true,
         hasSelection: true,
       }),
@@ -31,14 +31,14 @@ describe("terminal clipboard actions", () => {
   it("preserves existing right-click and native-menu behavior", () => {
     expect(
       resolveTerminalContextMenuAction({
-        rightClickCopyPaste: true,
+        rightClickAction: "copyPaste",
         copyOnSelect: false,
         hasSelection: true,
       }),
     ).toBe("copy");
     expect(
       resolveTerminalContextMenuAction({
-        rightClickCopyPaste: false,
+        rightClickAction: "native",
         copyOnSelect: true,
         hasSelection: true,
       }),
@@ -46,10 +46,10 @@ describe("terminal clipboard actions", () => {
   });
 
   it("leaves the right button to a program that reports the mouse", () => {
-    for (const rightClickCopyPaste of [true, false]) {
+    for (const rightClickAction of ["copyPaste", "menu", "native"] as const) {
       expect(
         resolveTerminalContextMenuAction({
-          rightClickCopyPaste,
+          rightClickAction,
           copyOnSelect: false,
           hasSelection: false,
           mouseTracking: true,
@@ -61,7 +61,7 @@ describe("terminal clipboard actions", () => {
   it("keeps the terminal behavior with Shift while the mouse is reported", () => {
     expect(
       resolveTerminalContextMenuAction({
-        rightClickCopyPaste: true,
+        rightClickAction: "copyPaste",
         copyOnSelect: false,
         hasSelection: false,
         mouseTracking: true,
@@ -70,12 +70,47 @@ describe("terminal clipboard actions", () => {
     ).toBe("paste");
     expect(
       resolveTerminalContextMenuAction({
-        rightClickCopyPaste: false,
+        rightClickAction: "native",
         copyOnSelect: false,
         hasSelection: false,
         mouseTracking: true,
         shiftKey: true,
       }),
     ).toBe("native");
+  });
+
+  it("opens the menu when the setting asks for it", () => {
+    expect(
+      resolveTerminalContextMenuAction({
+        rightClickAction: "menu",
+        copyOnSelect: false,
+        hasSelection: true,
+      }),
+    ).toBe("menu");
+  });
+
+  it("uses Shift to reach the other way of working", () => {
+    const shifted = (rightClickAction: "copyPaste" | "menu" | "native") =>
+      resolveTerminalContextMenuAction({
+        rightClickAction,
+        copyOnSelect: false,
+        hasSelection: false,
+        shiftKey: true,
+      });
+    expect(shifted("copyPaste")).toBe("menu");
+    expect(shifted("native")).toBe("menu");
+    expect(shifted("menu")).toBe("paste");
+  });
+
+  it("runs the chosen action with Shift while the mouse is reported", () => {
+    expect(
+      resolveTerminalContextMenuAction({
+        rightClickAction: "menu",
+        copyOnSelect: false,
+        hasSelection: false,
+        mouseTracking: true,
+        shiftKey: true,
+      }),
+    ).toBe("menu");
   });
 });

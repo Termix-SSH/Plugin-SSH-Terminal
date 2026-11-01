@@ -158,9 +158,16 @@ export function TerminalTabContent({
               host={host}
               onOpenTab={(type) => shell.openTab(hostRecord!, type)}
               isFocusedPane={isFocusedPane}
+              sessionTabId={tab.id}
             />
           </div>
-          {isMobile && <MobileTerminalKeyboard terminalRef={terminalRef} />}
+          {isMobile && (
+            <MobileTerminalKeyboard
+              terminalRef={terminalRef}
+              sessionId={tab.id}
+              hostName={host.name || host.ip}
+            />
+          )}
         </div>
       </CommandHistoryProvider>
     </Suspense>

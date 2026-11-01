@@ -117,7 +117,8 @@
     "paste": "画像を貼り付け",
     "settingsTitle": "ツールバー",
     "upload": "画像をアップロード",
-    "uploadingImage": "アップロード中..."
+    "uploadingImage": "アップロード中...",
+    "tools": "ツール"
   },
   "history": {
     "noTerminalSelected": "ターミナルが選択されていません",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "WebSocket を介して Cloudflare Zero Trust 経由で SSH トラフィックをルーティングします"
+      },
+      "tcpNoDelay": {
+        "label": "ナグルアルゴリズムを無効化 (TCP_NODELAY)",
+        "description": "TCP パケットのバッチ処理を無効化して SSH の入力遅延を低減します。特に LAN 接続で効果的です。ネットワークのオーバーヘッドが増加する可能性があります。"
       },
       "cloudflareTunnelHostname": {
         "label": "トンネルホスト名",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "rz および sz によるファイル転送",
         "description": "ターミナル内で rz および sz (lrzsz) を使用してファイルをアップロードおよびダウンロードします。"
+      },
+      "rightClickAction": {
+        "label": "ターミナルでの右クリック動作",
+        "description": "Shift キーを押しながらクリックするとターミナルメニューを表示できます。ここでメニューを選択している場合は、コピー＆ペーストも可能です。",
+        "copyPaste": "コピーまたは貼り付け",
+        "menu": "ターミナルメニュー",
+        "native": "ブラウザメニュー"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V で貼り付け",
+        "description": "オフにすると Ctrl+V がシェルに送信されます。Ctrl+Shift+V は引き続き貼り付けとして機能します。"
+      },
+      "copyOnSelect": {
+        "label": "選択したテキストを自動的にコピー",
+        "description": "ターミナルでテキストを選択した瞬間にコピーします。"
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "履歴",
     "localTerminal": "ローカルターミナル",
-    "sshTools": "SSH ツール",
     "terminal": "ターミナル",
     "macros": "マクロ"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "ここにキー入力をタイプしてブロードキャスト...",
-    "copyOnSelect": "選択したテキストを自動的にコピー",
-    "enableRightClickCopyPaste": "右クリックによるコピー/ペーストを有効化",
-    "ctrlVPaste": "Ctrl+V でペースト（シェルに Ctrl+V を送信する場合はオフにしてください）",
-    "fillPassword": "パスワードを入力",
-    "fillPasswordMissing_other": "{{count}} 個の選択されたターミナルに保存されたパスワードがありません",
-    "fillPasswordSuccess_other": "{{count}} 個のターミナルにパスワードを入力しました",
-    "keyRecordingTitle": "キー記録",
-    "noTerminalTabsOpen": "ターミナルタブが開いていません",
-    "recordToTerminals": "ターミナルに記録",
-    "selectAll": "すべて",
-    "selectNone": "なし",
-    "selectTerminalsAbove": "上のターミナルを選択",
-    "settingsTitle": "設定",
-    "startRecording": "記録を開始",
-    "stopRecording": "記録を停止"
   },
   "keybindings": {
     "openLocalTerminal": "新しいローカルターミナルを開く",
@@ -624,7 +625,8 @@
       "ctrlT": "シェルに Ctrl+T を送信 (ブラウザタブの作成操作をブロック)",
       "ctrlN": "シェルに Ctrl+N を送信 (ブラウザウィンドウの作成操作をブロック)",
       "ctrlQ": "シェルに Ctrl+Q を送信 (ブラウザの終了操作をブロック)"
-    }
+    },
+    "toggleBroadcast": "ブロードキャストのオン/オフ"
   },
   "macros": {
     "title": "マクロ",
@@ -731,5 +733,91 @@
     "sending": "{{name}} をアップロード中",
     "receiving": "{{name}} をダウンロード中",
     "cancel": "転送をキャンセル"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "入力のブロードキャストを開始",
+      "stop": "ブロードキャストを停止",
+      "stopShort": "停止",
+      "on": "ブロードキャスト中",
+      "paused": "ブロードキャスト一時停止中",
+      "pausedForPassword": "パスワード入力で一時停止中",
+      "pause": "一時停止",
+      "resume": "再開",
+      "members_other": "{{count}} 個のターミナル",
+      "allOpen": "すべて開く",
+      "thisSplit": "この分割画面",
+      "sameFolder": "同じフォルダ",
+      "offline": "オフライン",
+      "offlineCount_other": "{{count}} 個オフライン",
+      "openMore": "ブロードキャスト対象として別のターミナルを開いてください",
+      "compose": "作成",
+      "composeHint": "コマンドを入力してください。Ctrl+Enter でグループに送信します。",
+      "send": "送信",
+      "pressEnter": "Enter キーを押す",
+      "skipped_other": "オフラインまたはパスワード入力を要求している {{count}} 個のターミナルをスキップしました"
+    },
+    "fill": {
+      "label": "パスワードを自動入力",
+      "done_other": "{{count}} 個のターミナルにパスワードを入力しました",
+      "noPassword_other": "{{count}} 個のターミナルに保存されたパスワードがありません",
+      "notAsking_other": "{{count}} 個のターミナルはパスワードを要求していません"
+    },
+    "find": {
+      "all": "すべてのターミナルで検索",
+      "badRegex": "この正規表現は無効です",
+      "capped": "最初の {{count}} 件の結果を表示しています"
+    },
+    "watch": {
+      "title": "出力の監視",
+      "note": "ルールは Termix が開いている間実行されます。アラートにはルール名とホスト名が表示され、出力内容は表示されません。",
+      "name": "ルール名",
+      "when": "アラート条件",
+      "kindMatch": "出力が一致した場合",
+      "kindQuiet": "出力が停止した場合",
+      "kindActivity": "バックグラウンドで新しい出力がある場合",
+      "pattern": "検索するテキスト",
+      "seconds": "停止時間（秒）",
+      "add": "ルールを追加",
+      "delete": "ルールを削除",
+      "describeMatch": "{{pattern}} に一致",
+      "describeQuiet_other": "{{count}} 秒間停止",
+      "describeActivity": "バックグラウンドで新しい出力がある場合",
+      "nameRequired": "ルールに名前を付けてください",
+      "patternRequired": "検索するテキストを入力してください",
+      "badRegex": "この正規表現は無効です",
+      "secondsRequired": "1 秒以上を入力してください",
+      "fired": "{{host}} 上の {{rule}}",
+      "active_other": "{{count}} 個の監視ルールが有効"
+    },
+    "output": {
+      "save": "出力を保存",
+      "copy": "出力をコピー",
+      "saveSelection": "選択範囲を保存",
+      "empty": "保存する内容がありません",
+      "copied": "出力をコピーしました",
+      "copyFailed": "出力をコピーできませんでした"
+    },
+    "fix": {
+      "resetDisplay": "表示をリセット",
+      "clearScrollback": "スクロールバックをクリア",
+      "resetShell": "シェルをリセット",
+      "resetShellTitle": "シェルをリセットしますか？",
+      "resetShellDescription": "プロンプトで `stty sane` と `reset` を入力します。現在の行にあるテキストも一緒に実行されます。"
+    },
+    "keys": {
+      "title": "キーを送信",
+      "custom": "Ctrl + 文字",
+      "customTitle": "Ctrl + 文字を送信",
+      "customDescription": "Ctrl と一緒に送信する文字を入力してください"
+    },
+    "menu": {
+      "copy": "コピー",
+      "paste": "貼り付け",
+      "selectAll": "すべて選択",
+      "find": "検索",
+      "clear": "クリア"
+    },
+    "openTerminalFirst": "ツールを使用するには SSH ターミナルを開いてください"
   }
 }

@@ -9,12 +9,17 @@ import {
   X,
   Plus,
   RotateCcw,
+  Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { TerminalHandle } from "./terminal-types";
+import { buildToolEntries, ToolsMenuItems } from "../terminal-tools/ToolsMenu";
 import {
   cn,
   Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
   Input,
   Sheet,
   SheetContent,
@@ -27,6 +32,9 @@ import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 
 interface MobileTerminalKeyboardProps {
   terminalRef: React.RefObject<TerminalHandle | null>;
+  /** Tab id, for the tools that work across terminals. */
+  sessionId?: string;
+  hostName?: string;
 }
 
 const CTRL_MAP: Record<string, string> = {
@@ -247,6 +255,8 @@ function CtrlPanel({ onSend }: CtrlPanelProps) {
 
 export function MobileTerminalKeyboard({
   terminalRef,
+  sessionId,
+  hostName = "",
 }: MobileTerminalKeyboardProps) {
   const { t } = useTranslation();
   const [ctrlActive, setCtrlActive] = useState(false);
@@ -255,7 +265,9 @@ export function MobileTerminalKeyboard({
   const [sheetOpen, setSheetOpen] = useState(false);
 
   function send(seq: string) {
-    terminalRef.current?.sendInput?.(seq);
+    const terminal = terminalRef.current;
+    if (terminal?.typeInput) terminal.typeInput(seq);
+    else terminal?.sendInput?.(seq);
   }
 
   async function handlePaste() {
@@ -263,7 +275,7 @@ export function MobileTerminalKeyboard({
       const text = window.electronClipboard
         ? await window.electronClipboard.readText()
         : ((await navigator.clipboard?.readText?.()) ?? "");
-      if (text) terminalRef.current?.paste?.(text);
+      if (text) terminalRef.current?.paste?.(text, { mirror: true });
       else toast.error(t("terminal.clipboardReadFailed"));
     } catch {
       toast.error(t("terminal.clipboardReadFailed"));
@@ -311,6 +323,29 @@ export function MobileTerminalKeyboard({
     <div className="md:hidden flex flex-col bg-sidebar border-t border-border shrink-0">
       {/* Row 1: special keys */}
       <div className="flex items-center gap-1 px-2 py-1.5 overflow-x-auto">
+        {/* Tools */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={cn(KEY_BASE, KEY_NORMAL, KEY_SM)}
+              title={t("terminalToolbar.tools")}
+              aria-label={t("terminalToolbar.tools")}
+            >
+              <Wrench className="size-3.5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start">
+            <ToolsMenuItems
+              entries={buildToolEntries(t, {
+                sessionId,
+                hostName,
+                handle: () => terminalRef.current,
+              })}
+              sendKeyLabel={t("terminalTools.keys.title")}
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         {/* ESC */}
         <button
           className={cn(KEY_BASE, KEY_NORMAL, KEY_MD)}

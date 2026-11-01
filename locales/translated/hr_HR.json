@@ -121,7 +121,8 @@
     "paste": "Zalijepi sliku",
     "settingsTitle": "Traka alata",
     "upload": "Otpremi sliku",
-    "uploadingImage": "Otpremanje..."
+    "uploadingImage": "Otpremanje...",
+    "tools": "Alati"
   },
   "history": {
     "noTerminalSelected": "Nije odabran terminal",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Usmjerite SSH promet preko Cloudflare Zero Trusta putem WebSocketa"
+      },
+      "tcpNoDelay": {
+        "label": "Onemogući Nagleov algoritam (TCP_NODELAY)",
+        "description": "Onemogućuje grupiranje TCP paketa kako bi se smanjila latencija SSH unosa, posebno na LAN vezama. Može povećati mrežno opterećenje."
       },
       "cloudflareTunnelHostname": {
         "label": "Naziv hosta tunela",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "rz i sz prijenosi datoteka",
         "description": "Prenosite datoteke pomoću rz i sz (lrzsz) izravno u terminalu."
+      },
+      "rightClickAction": {
+        "label": "Desni klik u terminalu",
+        "description": "Držite Shift za prikaz izbornika terminala umjesto toga, ili za kopiranje i lijepljenje ako je izbornik vaš izbor ovdje",
+        "copyPaste": "Kopiraj ili zalijepi",
+        "menu": "Izbornik terminala",
+        "native": "Izbornik preglednika"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V lijepljenje",
+        "description": "Isključite za slanje Ctrl+V u shell. Ctrl+Shift+V i dalje lijepljenje"
+      },
+      "copyOnSelect": {
+        "label": "Automatsko kopiranje odabranog teksta",
+        "description": "Kopira tekst čim ga odaberete u terminalu"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "Povijest",
     "localTerminal": "Lokalni terminal",
-    "sshTools": "SSH alati",
     "terminal": "Terminal",
     "macros": "Makroi"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Upiši ovdje za slanje znakova svima...",
-    "copyOnSelect": "Automatski kopiraj odabrani tekst",
-    "enableRightClickCopyPaste": "Omogući kopiranje/lijepanje desnim klikom",
-    "ctrlVPaste": "Ctrl+V lijepi (isključi za slanje Ctrl+V u shell)",
-    "fillPassword": "Ispuni lozinku",
-    "fillPasswordMissing_one": "Nema spremljene lozinke za {{count}} odabrani terminal",
-    "fillPasswordMissing_few": "Nema spremljene lozinke za {{count}} odabrana terminala",
-    "fillPasswordMissing_other": "Nema spremljene lozinke za {{count}} odabranih terminala",
-    "fillPasswordSuccess_one": "Lozinka unesena u {{count}} terminal",
-    "fillPasswordSuccess_few": "Lozinka unesena u {{count}} terminala",
-    "fillPasswordSuccess_other": "Lozinka unesena u {{count}} terminala",
-    "keyRecordingTitle": "Snimanje tipki",
-    "noTerminalTabsOpen": "Nema otvorenih kartica terminala",
-    "recordToTerminals": "Snimaj u terminale",
-    "selectAll": "Sve",
-    "selectNone": "Ništa",
-    "selectTerminalsAbove": "Odaberi terminale iznad",
-    "settingsTitle": "Postavke",
-    "startRecording": "Započni snimanje",
-    "stopRecording": "Zaustavi snimanje"
   },
   "keybindings": {
     "openLocalTerminal": "Otvori novi lokalni terminal",
@@ -634,7 +631,8 @@
       "ctrlT": "Pošalji Ctrl+T u shell (blokirano za otvaranje kartice preglednika)",
       "ctrlN": "Pošalji Ctrl+N u shell (blokirano za otvaranje prozora preglednika)",
       "ctrlQ": "Pošalji Ctrl+Q u shell (blokirano za zatvaranje preglednika)"
-    }
+    },
+    "toggleBroadcast": "Uključi ili isključi emitiranje"
   },
   "macros": {
     "title": "Makroi",
@@ -743,5 +741,107 @@
     "sending": "Prenosim {{name}}",
     "receiving": "Preuzimam {{name}}",
     "cancel": "Otkaži prijenos"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Emitiraj unos",
+      "stop": "Zaustavi emitiranje",
+      "stopShort": "Zaustavi",
+      "on": "Emitiranje uključeno",
+      "paused": "Emitiranje pauzirano",
+      "pausedForPassword": "Pauzirano na upitu za lozinku",
+      "pause": "Pauziraj",
+      "resume": "Nastavi",
+      "members_one": "{{count}} terminal",
+      "members_few": "{{count}} terminala",
+      "members_other": "{{count}} terminala",
+      "allOpen": "Svi otvoreni",
+      "thisSplit": "Ovaj podijeljeni prikaz",
+      "sameFolder": "Ista mapa",
+      "offline": "Van mreže",
+      "offlineCount_one": "{{count}} van mreže",
+      "offlineCount_few": "{{count}} van mreže",
+      "offlineCount_other": "{{count}} van mreže",
+      "openMore": "Otvorite još jedan terminal za emitiranje u njega",
+      "compose": "Sastavi",
+      "composeHint": "Napišite naredbu. Ctrl+Enter šalje grupi",
+      "send": "Pošalji",
+      "pressEnter": "Pritisnite Enter",
+      "skipped_one": "Preskočen {{count}} terminal koji je van mreže ili traži lozinku",
+      "skipped_few": "Preskočeno {{count}} terminala koji su van mreže ili traže lozinku",
+      "skipped_other": "Preskočeno {{count}} terminala koji su van mreže ili traže lozinku"
+    },
+    "fill": {
+      "label": "Popuni lozinku",
+      "done_one": "Lozinka popunjena u {{count}} terminalu",
+      "done_few": "Lozinka popunjena u {{count}} terminala",
+      "done_other": "Lozinka popunjena u {{count}} terminala",
+      "noPassword_one": "Nema spremljene lozinke za {{count}} terminal",
+      "noPassword_few": "Nema spremljene lozinke za {{count}} terminala",
+      "noPassword_other": "Nema spremljene lozinke za {{count}} terminala",
+      "notAsking_one": "{{count}} terminal ne traži lozinku",
+      "notAsking_few": "{{count}} terminala ne traže lozinku",
+      "notAsking_other": "{{count}} terminala ne traže lozinku"
+    },
+    "find": {
+      "all": "Pronađi u svim terminalima",
+      "badRegex": "Ovaj regex nije valjan",
+      "capped": "Prikazanih prvih {{count}} rezultata"
+    },
+    "watch": {
+      "title": "Prati izlaz",
+      "note": "Pravila se izvršavaju dok je Termix otvoren. Obavijesti navode ime pravila i hosta, nikada izlaz.",
+      "name": "Naziv pravila",
+      "when": "Obavijesti kada",
+      "kindMatch": "Izlaz se podudara",
+      "kindQuiet": "Izlaz utihne",
+      "kindActivity": "Novi izlaz u pozadini",
+      "pattern": "Tekst za pretraživanje",
+      "seconds": "Sekundi tišine",
+      "add": "Dodaj pravilo",
+      "delete": "Obriši pravilo",
+      "describeMatch": "Podudara se s {{pattern}}",
+      "describeQuiet_one": "Tišina {{count}} sekundu",
+      "describeQuiet_few": "Tišina {{count}} sekunde",
+      "describeQuiet_other": "Tišina {{count}} sekundi",
+      "describeActivity": "Novi izlaz u pozadini",
+      "nameRequired": "Dajte pravilu ime",
+      "patternRequired": "Unesite tekst za pretraživanje",
+      "badRegex": "Ovaj regex nije valjan",
+      "secondsRequired": "Unesite 1 sekundu ili više",
+      "fired": "{{rule}} na {{host}}",
+      "active_one": "{{count}} pravilo praćenja uključeno",
+      "active_few": "{{count}} pravila praćenja uključena",
+      "active_other": "{{count}} pravila praćenja uključeno"
+    },
+    "output": {
+      "save": "Spremi izlaz",
+      "copy": "Kopiraj izlaz",
+      "saveSelection": "Spremi odabir",
+      "empty": "Nema ništa za spremiti",
+      "copied": "Izlaz je kopiran",
+      "copyFailed": "Izlaz se nije mogao kopirati"
+    },
+    "fix": {
+      "resetDisplay": "Poništi prikaz",
+      "clearScrollback": "Obriši povijest skrolanja",
+      "resetShell": "Poništi shell",
+      "resetShellTitle": "Poništiti shell?",
+      "resetShellDescription": "Ovo upisuje `stty sane` i `reset` na pozivu. Bilo koji tekst na toj liniji izvršit će se zajedno s njima."
+    },
+    "keys": {
+      "title": "Pošalji tipku",
+      "custom": "Ctrl + slovo",
+      "customTitle": "Pošalji Ctrl + slovo",
+      "customDescription": "Upišite slovo koje želite poslati s Ctrl"
+    },
+    "menu": {
+      "copy": "Kopiraj",
+      "paste": "Zalijepi",
+      "selectAll": "Odaberi sve",
+      "find": "Pronađi",
+      "clear": "Očisti"
+    },
+    "openTerminalFirst": "Otvorite SSH terminal kako biste koristili njegove alate"
   }
 }

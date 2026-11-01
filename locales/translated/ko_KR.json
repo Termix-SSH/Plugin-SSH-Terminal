@@ -117,7 +117,8 @@
     "paste": "이미지 붙여넣기",
     "settingsTitle": "도구 모음",
     "upload": "이미지 업로드",
-    "uploadingImage": "업로드 중..."
+    "uploadingImage": "업로드 중...",
+    "tools": "도구"
   },
   "history": {
     "noTerminalSelected": "선택된 터미널 없음",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "WebSocket을 통해 Cloudflare Zero Trust로 SSH 트래픽 라우팅"
+      },
+      "tcpNoDelay": {
+        "label": "네글 알고리즘 비활성화 (TCP_NODELAY)",
+        "description": "특히 LAN 연결에서 SSH 입력 지연을 줄이기 위해 TCP 패킷 배칭을 비활성화합니다. 네트워크 오버헤드가 증가할 수 있습니다."
       },
       "cloudflareTunnelHostname": {
         "label": "터널 호스트명",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "rz 및 sz 파일 전송",
         "description": "터미널에서 직접 rz 및 sz (lrzsz)를 사용하여 파일을 업로드하고 다운로드합니다."
+      },
+      "rightClickAction": {
+        "label": "터미널에서 마우스 오른쪽 버튼 클릭",
+        "description": "여기서 메뉴를 선택했다면 Shift를 누르면 터미널 메뉴 대신 복사 및 붙여넣기를 사용할 수 있습니다.",
+        "copyPaste": "복사 또는 붙여넣기",
+        "menu": "터미널 메뉴",
+        "native": "브라우저 메뉴"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V로 붙여넣기",
+        "description": "끄면 Ctrl+V가 셸로 전송됩니다. Ctrl+Shift+V는 여전히 붙여넣기 동작을 합니다."
+      },
+      "copyOnSelect": {
+        "label": "선택한 텍스트 자동 복사",
+        "description": "터미널에서 텍스트를 선택하면 즉시 복사됩니다."
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "기록",
     "localTerminal": "로컬 터미널",
-    "sshTools": "SSH 도구",
     "terminal": "터미널",
     "macros": "매크로"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "여기에 입력하여 키 입력을 브로드캐스트하세요...",
-    "copyOnSelect": "선택한 텍스트를 자동으로 복사합니다",
-    "enableRightClickCopyPaste": "우클릭 복사/붙여넣기 활성화",
-    "ctrlVPaste": "Ctrl+V로 붙여넣기 (셸에 Ctrl+V를 보내려면 끄세요)",
-    "fillPassword": "비밀번호 채우기",
-    "fillPasswordMissing_other": "선택한 {{count}}개 터미널에 저장된 비밀번호가 없습니다",
-    "fillPasswordSuccess_other": "{{count}}개 터미널에 비밀번호를 입력했습니다",
-    "keyRecordingTitle": "키 녹화",
-    "noTerminalTabsOpen": "열린 터미널 탭이 없습니다",
-    "recordToTerminals": "터미널에 녹화",
-    "selectAll": "전체",
-    "selectNone": "없음",
-    "selectTerminalsAbove": "위쪽 터미널 선택",
-    "settingsTitle": "설정",
-    "startRecording": "녹화 시작",
-    "stopRecording": "녹화 중지"
   },
   "keybindings": {
     "openLocalTerminal": "새 로컬 터미널 열기",
@@ -624,7 +625,8 @@
       "ctrlT": "셸에 Ctrl+T 보내기 (브라우저 탭 열기 차단)",
       "ctrlN": "셸에 Ctrl+N 보내기 (브라우저 창 열기 차단)",
       "ctrlQ": "셸에 Ctrl+Q 보내기 (브라우저 종료 차단)"
-    }
+    },
+    "toggleBroadcast": "브로드캐스트 켜기/끄기"
   },
   "macros": {
     "title": "매크로",
@@ -731,5 +733,91 @@
     "sending": "{{name}} 업로드 중",
     "receiving": "{{name}} 다운로드 중",
     "cancel": "전송 취소"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "입력 브로드캐스트 시작",
+      "stop": "브로드캐스트 중지",
+      "stopShort": "중지",
+      "on": "브로드캐스트 켜짐",
+      "paused": "브로드캐스트 일시 중지됨",
+      "pausedForPassword": "비밀번호 입력창에서 일시 중지됨",
+      "pause": "일시 중지",
+      "resume": "재개",
+      "members_other": "{{count}}개 터미널",
+      "allOpen": "모두 열기",
+      "thisSplit": "이 분할 화면",
+      "sameFolder": "동일한 폴더",
+      "offline": "오프라인",
+      "offlineCount_other": "{{count}}개 오프라인",
+      "openMore": "브로드캐스트할 다른 터미널을 엽니다",
+      "compose": "작성",
+      "composeHint": "명령어를 작성하세요. Ctrl+Enter를 누르면 그룹으로 전송됩니다",
+      "send": "전송",
+      "pressEnter": "Enter 키 누르기",
+      "skipped_other": "오프라인이거나 비밀번호를 요청하는 {{count}}개 터미널을 건너뛰었습니다"
+    },
+    "fill": {
+      "label": "비밀번호 자동 입력",
+      "done_other": "{{count}}개 터미널에 비밀번호를 입력했습니다",
+      "noPassword_other": "{{count}}개 터미널에 저장된 비밀번호가 없습니다",
+      "notAsking_other": "{{count}}개 터미널이 비밀번호를 요청하지 않습니다"
+    },
+    "find": {
+      "all": "모든 터미널에서 찾기",
+      "badRegex": "이 정규식은 유효하지 않습니다",
+      "capped": "처음 {{count}}개 결과 표시 중"
+    },
+    "watch": {
+      "title": "출력 감시",
+      "note": "규칙은 Termix가 열려 있는 동안 실행됩니다. 알림에는 규칙 이름과 호스트만 표시되며 출력 내용은 포함되지 않습니다.",
+      "name": "규칙 이름",
+      "when": "알림 조건",
+      "kindMatch": "출력 일치",
+      "kindQuiet": "출력 정지",
+      "kindActivity": "백그라운드에서 새 출력 발생",
+      "pattern": "검색할 텍스트",
+      "seconds": "정지 시간(초)",
+      "add": "규칙 추가",
+      "delete": "규칙 삭제",
+      "describeMatch": "{{pattern}}과(와) 일치",
+      "describeQuiet_other": "{{count}}초간 정지",
+      "describeActivity": "백그라운드에서 새 출력 발생",
+      "nameRequired": "규칙에 이름을 지정하세요",
+      "patternRequired": "검색할 텍스트를 입력하세요",
+      "badRegex": "이 정규식은 유효하지 않습니다",
+      "secondsRequired": "1초 이상을 입력하세요",
+      "fired": "{{host}}에서 {{rule}} 발생",
+      "active_other": "{{count}}개 감시 규칙 활성화됨"
+    },
+    "output": {
+      "save": "출력 저장",
+      "copy": "출력 복사",
+      "saveSelection": "선택 항목 저장",
+      "empty": "저장할 내용이 없습니다",
+      "copied": "출력이 복사되었습니다",
+      "copyFailed": "출력을 복사할 수 없습니다"
+    },
+    "fix": {
+      "resetDisplay": "디스플레이 초기화",
+      "clearScrollback": "스크롤백 지우기",
+      "resetShell": "쉘 초기화",
+      "resetShellTitle": "쉘을 초기화하시겠습니까?",
+      "resetShellDescription": "프롬프트에서 stty sane 및 reset 명령을 실행합니다. 현재 줄에 있는 텍스트도 함께 실행됩니다."
+    },
+    "keys": {
+      "title": "키 보내기",
+      "custom": "Ctrl + 문자",
+      "customTitle": "Ctrl + 문자 보내기",
+      "customDescription": "Ctrl와 함께 보낼 문자를 입력하세요"
+    },
+    "menu": {
+      "copy": "복사",
+      "paste": "붙여넣기",
+      "selectAll": "전체 선택",
+      "find": "찾기",
+      "clear": "지우기"
+    },
+    "openTerminalFirst": "도구를 사용하려면 SSH 터미널을 여세요"
   }
 }

@@ -25,6 +25,7 @@ import {
 } from "../look/terminal-themes";
 import { ensureTerminalFontsLoaded } from "../look/terminal-global-styles";
 import { usePluginApi, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { TerminalContextMenu } from "../terminal-tools/TerminalContextMenu";
 import { getDefaultAppearance } from "../terminal-api";
 import { resolveTerminalFontFamily } from "../look/terminal-themes";
 import {
@@ -65,6 +66,7 @@ export function LocalTerminal({
     };
   }, [api]);
   const { instance: terminal, ref: xtermRef } = useXTerm();
+  const [menuAt, setMenuAt] = useState<{ x: number; y: number } | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const sendFrame = useCallback((payload: Record<string, unknown>) => {
@@ -216,6 +218,7 @@ export function LocalTerminal({
     const handleContextMenu = createTerminalContextMenuHandler(
       terminal,
       clipboardActions,
+      { onMenu: setMenuAt },
     );
     const element = xtermRef.current;
     element?.addEventListener("contextmenu", handleContextMenu);
@@ -344,6 +347,23 @@ export function LocalTerminal({
           slotId={TERMINAL_OVERLAY_SLOT}
           when={{ host: undefined }}
           props={overlayProps as unknown as Record<string, unknown>}
+        />
+        <TerminalContextMenu
+          at={menuAt}
+          onClose={() => {
+            setMenuAt(null);
+            setTimeout(() => terminal?.focus(), 0);
+          }}
+          actions={{
+            hasSelection: terminal?.hasSelection() ?? false,
+            onCopy: () => void copyToClipboard(terminal?.getSelection() ?? ""),
+            onPaste: () => {
+              void readFromClipboard().then((text) => {
+                if (text) terminal?.paste(text);
+              });
+            },
+            onSelectAll: () => terminal?.selectAll(),
+          }}
         />
       </div>
     </div>

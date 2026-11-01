@@ -119,7 +119,8 @@
     "paste": "Liitä kuva",
     "settingsTitle": "Työkalurivi",
     "upload": "Lataa kuva",
-    "uploadingImage": "Ladataan..."
+    "uploadingImage": "Ladataan...",
+    "tools": "Työkalut"
   },
   "history": {
     "noTerminalSelected": "Päätettä ei valittu",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-tunneli",
         "description": "Reititä SSH-liikenne Cloudflare Zero Trustin kautta WebSocketin välityksellä"
+      },
+      "tcpNoDelay": {
+        "label": "Poista Naglen algoritmi käytöstä (TCP_NODELAY)",
+        "description": "Poistaa TCP-pakettien erittelyn käytöstä SSH-syötteen latenssin vähentämiseksi, erityisesti LAN-yhteyksissä. Voi lisätä verkkokuluerää."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnelin isäntänimi",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz- ja sz-tiedostonsiirrot",
         "description": "Lataa ja lataa tiedostoja rz- ja sz-komennoilla (lrzsz) suoraan terminaaliin."
+      },
+      "rightClickAction": {
+        "label": "Oikea napsautus terminaalissa",
+        "description": "Pidä Shift-näppäintä painettuna saadaksesi terminaalivalikon, tai kopioi ja liitä, jos valikko on valintasi tässä",
+        "copyPaste": "Kopioi tai liitä",
+        "menu": "Terminaalin valikko",
+        "native": "Selaimen valikko"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V liittää",
+        "description": "Kytke pois päältä lähettääksesi Ctrl+V:n shellille. Ctrl+Shift+V liittää silti"
+      },
+      "copyOnSelect": {
+        "label": "Kopioi valittu teksti automaattisesti",
+        "description": "Kopioi tekstin heti, kun valitset sen terminaalissa"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Historia",
     "localTerminal": "Paikallinen pääte",
-    "sshTools": "SSH-työkalut",
     "terminal": "Pääte",
     "macros": "Makrot"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Kirjoita tähän lähettääksesi näppäinpainalluksia...",
-    "copyOnSelect": "Kopioi valittu teksti automaattisesti",
-    "enableRightClickCopyPaste": "Ota käyttöön oikean klikkauksen kopiointi/liittäminen",
-    "ctrlVPaste": "Ctrl+V liittää (poista käytöstä lähettääksesi Ctrl+V shellille)",
-    "fillPassword": "Täytä salasana",
-    "fillPasswordMissing_one": "Ei tallennettua salasanaa {{count}} valitulle terminaaliin",
-    "fillPasswordMissing_other": "Ei tallennettua salasanaa {{count}} valitulle terminaaliin",
-    "fillPasswordSuccess_one": "Salasana täytetty {{count}} terminaaliin",
-    "fillPasswordSuccess_other": "Salasana täytetty {{count}} terminaaliin",
-    "keyRecordingTitle": "Näppäinmerkintä",
-    "noTerminalTabsOpen": "Ei avoimia terminaali-välilehtiä",
-    "recordToTerminals": "Merkitse terminaaleihin",
-    "selectAll": "Kaikki",
-    "selectNone": "Ei mitään",
-    "selectTerminalsAbove": "Valitse terminaalit yllä",
-    "settingsTitle": "Asetukset",
-    "startRecording": "Aloita merkintä",
-    "stopRecording": "Pysäytä merkintä"
   },
   "keybindings": {
     "openLocalTerminal": "Avaa uusi paikallinen pääte",
@@ -629,7 +628,8 @@
       "ctrlT": "Lähetä Ctrl+T shellille (estää selaimen välilehden avaamisen)",
       "ctrlN": "Lähetä Ctrl+N shellille (estää selaimen ikkunan avaamisen)",
       "ctrlQ": "Lähetä Ctrl+Q shellille (estää selaimen lopettamisen)"
-    }
+    },
+    "toggleBroadcast": "Kytke lähetys päälle tai pois päältä"
   },
   "macros": {
     "title": "Makrot",
@@ -737,5 +737,99 @@
     "sending": "Ladataan {{name}}",
     "receiving": "Ladataan {{name}}",
     "cancel": "Peruuta siirto"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Lähetä syöte",
+      "stop": "Lopeta lähetys",
+      "stopShort": "Lopeta",
+      "on": "Lähetys päällä",
+      "paused": "Lähetys keskeytetty",
+      "pausedForPassword": "Keskeytetty salasanan pyynnössä",
+      "pause": "Keskeytä",
+      "resume": "Jatka",
+      "members_one": "{{count}} terminaali",
+      "members_other": "{{count}} terminaalia",
+      "allOpen": "Kaikki auki",
+      "thisSplit": "Tämä jako",
+      "sameFolder": "Sama kansio",
+      "offline": "Ei yhteyttä",
+      "offlineCount_one": "{{count}} ei yhteyttä",
+      "offlineCount_other": "{{count}} ei yhteyttä",
+      "openMore": "Avaa toinen terminaali lähettääksesi siihen",
+      "compose": "Kirjoita",
+      "composeHint": "Kirjoita komento. Ctrl+Enter lähettää sen ryhmälle",
+      "send": "Lähetä",
+      "pressEnter": "Paina Enter",
+      "skipped_one": "Ohitettu {{count}} terminaali, joka on ilman yhteyttä tai pyytää salasanaa",
+      "skipped_other": "Ohitettu {{count}} terminaalia, jotka ovat ilman yhteyttä tai pyytävät salasanaa"
+    },
+    "fill": {
+      "label": "Täytä salasana",
+      "done_one": "Salasana täytetty {{count}} terminaaliin",
+      "done_other": "Salasana täytetty {{count}} terminaaliin",
+      "noPassword_one": "Ei tallennettua salasanaa {{count}} terminaaliin",
+      "noPassword_other": "Ei tallennettua salasanaa {{count}} terminaaliin",
+      "notAsking_one": "{{count}} terminaali ei pyydä salasanaa",
+      "notAsking_other": "{{count}} terminaalia eivät pyydä salasanaa"
+    },
+    "find": {
+      "all": "Etsi kaikista terminaaleista",
+      "badRegex": "Tämä säännöllinen lauseke ei ole kelvollinen",
+      "capped": "Näytetään ensimmäiset {{count}} tulosta"
+    },
+    "watch": {
+      "title": "Seuraa tulostetta",
+      "note": "Säännöt toimivat, kun Termix on auki. Ilmoitukset mainitsevat säännön ja isäntäkonen, ei tulostetta.",
+      "name": "Säännön nimi",
+      "when": "Ilmoita, kun",
+      "kindMatch": "Tuloste vastaa",
+      "kindQuiet": "Tuloste hiljenee",
+      "kindActivity": "Uusi tuloste taustalla",
+      "pattern": "Etsittävä teksti",
+      "seconds": "Hiljaisuuden sekunteja",
+      "add": "Lisää sääntö",
+      "delete": "Poista sääntö",
+      "describeMatch": "Vastaa {{pattern}}:ää",
+      "describeQuiet_one": "Hiljaa {{count}} sekunti",
+      "describeQuiet_other": "Hiljaa {{count}} sekuntia",
+      "describeActivity": "Uusi tuloste taustalla",
+      "nameRequired": "Anna säännölle nimi",
+      "patternRequired": "Syötä etsittävä teksti",
+      "badRegex": "Tämä säännöllinen lauseke ei ole kelvollinen",
+      "secondsRequired": "Syötä 1 sekunti tai enemmän",
+      "fired": "{{rule}} isäntäkonessa {{host}}",
+      "active_one": "{{count}} seurantasääntö päällä",
+      "active_other": "{{count}} seurantasääntöä päällä"
+    },
+    "output": {
+      "save": "Tallenna tuloste",
+      "copy": "Kopioi tuloste",
+      "saveSelection": "Tallenna valinta",
+      "empty": "Tallennettavaa ei ole",
+      "copied": "Tuloste kopioitu",
+      "copyFailed": "Tulostetta ei voitu kopioida"
+    },
+    "fix": {
+      "resetDisplay": "Palauta näyttö",
+      "clearScrollback": "Tyhjennä vierityshistoria",
+      "resetShell": "Palauta shell",
+      "resetShellTitle": "Palautetaanko shell?",
+      "resetShellDescription": "Tämä syöttää komennot stty sane ja reset promptiin. Rivillä oleva teksti suoritetaan niiden mukana."
+    },
+    "keys": {
+      "title": "Lähetä näppäin",
+      "custom": "Ctrl + kirjain",
+      "customTitle": "Lähetä Ctrl + kirjain",
+      "customDescription": "Kirjoita kirjain, joka lähetetään Ctrl:n kanssa"
+    },
+    "menu": {
+      "copy": "Kopioi",
+      "paste": "Liitä",
+      "selectAll": "Valitse kaikki",
+      "find": "Etsi",
+      "clear": "Tyhjennä"
+    },
+    "openTerminalFirst": "Avaa SSH-pääte käyttääksesi sen työkaluja"
   }
 }

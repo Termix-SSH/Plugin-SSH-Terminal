@@ -119,7 +119,8 @@
     "paste": "Plak beeld",
     "settingsTitle": "Balk",
     "upload": "Laai beeld op",
-    "uploadingImage": "Laai op..."
+    "uploadingImage": "Laai op...",
+    "tools": "Gereedskap"
   },
   "history": {
     "noTerminalSelected": "Geen terminaal gekies nie",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-tunnel",
         "description": "Rig SSH-verkeer oor Cloudflare Zero Trust via WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Deaktiveer Nagle se algoritme (TCP_NODELAY)",
+        "description": "Deaktiveer TCP-pakketbundeling om SSH-invoerlatensie te verminder, veral op LAN-verbindinge. Kan netwerkbelasting verhoog."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-hostnaam",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz en sz-lêeroordrae",
         "description": "Laai lêers op en af met rz en sz (lrzsz) reg in die terminaal."
+      },
+      "rightClickAction": {
+        "label": "Regs-klik in die terminaal",
+        "description": "Hou Shift ingedruk om die terminaalmenu te kry, of kopieer en plak as die menu jou keuse hier is",
+        "copyPaste": "Kopieer of plak",
+        "menu": "Terminaalmenu",
+        "native": "Blaaiermenu"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V plak",
+        "description": "Skakel af om Ctrl+V na die shell te stuur. Ctrl+Shift+V plak steeds"
+      },
+      "copyOnSelect": {
+        "label": "Kopieer geselekteerde teks outomaties",
+        "description": "Kopieer teks sodra jy dit in die terminaal selekteer"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Geskiedenis",
     "localTerminal": "Plaaslike Terminaal",
-    "sshTools": "SSH-gereedskap",
     "terminal": "Terminaal",
     "macros": "Makro's"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Tik hier om toetsaanslae uit te saai...",
-    "copyOnSelect": "Kopieer geselekteerde teks outomaties",
-    "enableRightClickCopyPaste": "Aktiveer regsklik-kopieer/plak",
-    "ctrlVPaste": "Ctrl+V plak (skakel af om Ctrl+V na die skul te stuur)",
-    "fillPassword": "Vul wagwoord in",
-    "fillPasswordMissing_one": "Geen opgeslate wagwoord vir {{count}} geselekteerde terminaal nie",
-    "fillPasswordMissing_other": "Geen opgeslate wagwoord vir {{count}} geselekteerde terminale nie",
-    "fillPasswordSuccess_one": "Wagwoord ingevul in {{count}} terminaal",
-    "fillPasswordSuccess_other": "Wagwoord ingevul in {{count}} terminale",
-    "keyRecordingTitle": "Sleutelopname",
-    "noTerminalTabsOpen": "Geen terminaal-oortjies oop nie",
-    "recordToTerminals": "Neem op na terminale",
-    "selectAll": "Alles",
-    "selectNone": "Geen",
-    "selectTerminalsAbove": "Selekteer terminale hierbo",
-    "settingsTitle": "Instellings",
-    "startRecording": "Begin opname",
-    "stopRecording": "Stop opname"
   },
   "keybindings": {
     "openLocalTerminal": "Maak nuwe plaaslike terminaal oop",
@@ -629,7 +628,8 @@
       "ctrlT": "Stuur Ctrl+T na shell (geblokkeer van oopmaak blaaier-oortjie)",
       "ctrlN": "Stuur Ctrl+N na shell (geblokkeer van oopmaak blaaier-venster)",
       "ctrlQ": "Stuur Ctrl+Q na shell (geblokkeer van verlaat blaaier)"
-    }
+    },
+    "toggleBroadcast": "Skakel uitsaai aan of af"
   },
   "macros": {
     "title": "Makro's",
@@ -737,5 +737,99 @@
     "sending": "Laai {{name}} op",
     "receiving": "Laai {{name}} af",
     "cancel": "Kanselleer oordrag"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Begin uitsaai van invoer",
+      "stop": "Stop uitsaai",
+      "stopShort": "Stop",
+      "on": "Uitsaai aan",
+      "paused": "Uitsaai gepouseer",
+      "pausedForPassword": "Gepouseer by wagwoordpromp",
+      "pause": "Pouseer",
+      "resume": "Hervat",
+      "members_one": "{{count}} terminaal",
+      "members_other": "{{count}} terminale",
+      "allOpen": "Almal oop",
+      "thisSplit": "Hierdie splitsing",
+      "sameFolder": "Selfde gids",
+      "offline": "Vanlyn",
+      "offlineCount_one": "{{count}} vanlyn",
+      "offlineCount_other": "{{count}} vanlyn",
+      "openMore": "Maak 'n ander terminaal oop om daarheen uit te saai",
+      "compose": "Stel saam",
+      "composeHint": "Skryf 'n opdrag. Ctrl+Enter stuur dit na die groep",
+      "send": "Stuur",
+      "pressEnter": "Druk Enter",
+      "skipped_one": "Het {{count}} terminaal oorgeslaan wat vanlyn is of 'n wagwoord vra",
+      "skipped_other": "Het {{count}} terminale oorgeslaan wat vanlyn is of 'n wagwoord vra"
+    },
+    "fill": {
+      "label": "Vul wagwoord in",
+      "done_one": "Het die wagwoord in {{count}} terminaal ingevul",
+      "done_other": "Het die wagwoord in {{count}} terminale ingevul",
+      "noPassword_one": "Geen gestoorde wagwoord vir {{count}} terminaal nie",
+      "noPassword_other": "Geen gestoorde wagwoord vir {{count}} terminale nie",
+      "notAsking_one": "{{count}} terminaal vra nie vir 'n wagwoord nie",
+      "notAsking_other": "{{count}} terminale vra nie vir 'n wagwoord nie"
+    },
+    "find": {
+      "all": "Soek in alle terminale",
+      "badRegex": "Hierdie regex is nie geldig nie",
+      "capped": "Wys die eerste {{count}} resultate"
+    },
+    "watch": {
+      "title": "Monitor uitvoer",
+      "note": "Reëls word uitgevoer terwyl Termix oop is. Waarskuwings noem die reël en gasheer, nooit die uitvoer nie.",
+      "name": "Reël naam",
+      "when": "Waarskuwing wanneer",
+      "kindMatch": "Uitvoer stem ooreen",
+      "kindQuiet": "Uitvoer word stil",
+      "kindActivity": "Nuwe uitvoer in die agtergrond",
+      "pattern": "Teks om na te soek",
+      "seconds": "Sekondes van stilte",
+      "add": "Voeg reël by",
+      "delete": "Verwyder reël",
+      "describeMatch": "Stem ooreen met {{pattern}}",
+      "describeQuiet_one": "Stil vir {{count}} sekonde",
+      "describeQuiet_other": "Stil vir {{count}} sekondes",
+      "describeActivity": "Nuwe uitvoer in die agtergrond",
+      "nameRequired": "Geef die reël 'n naam",
+      "patternRequired": "Voer die teks in om na te soek",
+      "badRegex": "Hierdie regex is nie geldig nie",
+      "secondsRequired": "Voer 1 sekonde of meer in",
+      "fired": "{{rule}} op {{host}}",
+      "active_one": "{{count}} monitorreël aan",
+      "active_other": "{{count}} monitorreëls aan"
+    },
+    "output": {
+      "save": "Stoor uitset",
+      "copy": "Kopieer uitset",
+      "saveSelection": "Stoor seleksie",
+      "empty": "Daar is niks om te stoor nie",
+      "copied": "Uitset gekopieer",
+      "copyFailed": "Kon nie die uitset kopieer nie"
+    },
+    "fix": {
+      "resetDisplay": "Stel vertoning terug",
+      "clearScrollback": "Vee scrollback uit",
+      "resetShell": "Stel shell terug",
+      "resetShellTitle": "Stel die shell terug?",
+      "resetShellDescription": "Dit tik stty sane en reset by die prompt. Enige teks op die lyn word daarmee uitgevoer."
+    },
+    "keys": {
+      "title": "Stuur sleutel",
+      "custom": "Ctrl + letter",
+      "customTitle": "Stuur Ctrl + letter",
+      "customDescription": "Tik die letter om saam met Ctrl te stuur"
+    },
+    "menu": {
+      "copy": "Kopieer",
+      "paste": "Plak",
+      "selectAll": "Selekteer alles",
+      "find": "Soek",
+      "clear": "Vee uit"
+    },
+    "openTerminalFirst": "Maak 'n SSH-terminal oop om sy gereedskap te gebruik"
   }
 }

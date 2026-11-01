@@ -1,5 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { moveLocalTerminalPreferences } from "../../../src/frontend/settings/local-preferences-migration";
+const preferences = vi.hoisted(() => ({}) as Record<string, string>);
+
+vi.mock("@termix-ssh/plugin-sdk/frontend", async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  getClientPreference: (name: string) => preferences[name],
+  setClientPreference: (name: string, value: string) => {
+    preferences[name] = value;
+  },
+}));
+
+import {
+  moveClipboardPreferences,
+  moveLocalTerminalPreferences,
+} from "../../../src/frontend/settings/local-preferences-migration";
 import { resetTerminalClientSettings } from "../../../src/frontend/terminal-settings";
 
 function api(user: Record<string, unknown>) {
@@ -11,10 +24,59 @@ function api(user: Record<string, unknown>) {
 
 beforeEach(() => {
   localStorage.clear();
+  for (const key of Object.keys(preferences)) delete preferences[key];
   resetTerminalClientSettings();
 });
 
 afterEach(() => resetTerminalClientSettings());
+
+describe("moveClipboardPreferences", () => {
+  const defaults = {
+    rightClickAction: "copyPaste",
+    ctrlVPaste: true,
+    copyOnSelect: false,
+  };
+
+  it("moves the old cookies to the account once", async () => {
+    preferences.rightClickCopyPaste = "false";
+    preferences.ctrlVPaste = "false";
+    preferences.copyOnSelect = "true";
+    const client = api(defaults);
+
+    await moveClipboardPreferences({ api: client as never });
+
+    expect(client.put).toHaveBeenCalledWith("/user-settings", {
+      rightClickAction: "native",
+      ctrlVPaste: false,
+      copyOnSelect: true,
+    });
+    await moveClipboardPreferences({ api: client as never });
+    expect(client.put).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not overwrite a choice already made on the account", async () => {
+    preferences.rightClickCopyPaste = "false";
+    const client = api({ ...defaults, rightClickAction: "menu" });
+    await moveClipboardPreferences({ api: client as never });
+    expect(client.put).not.toHaveBeenCalled();
+    expect(preferences.terminalClipboardMoved).toBe("true");
+  });
+
+  it("sends nothing when the browser kept the defaults", async () => {
+    preferences.rightClickCopyPaste = "true";
+    const client = api(defaults);
+    await moveClipboardPreferences({ api: client as never });
+    expect(client.put).not.toHaveBeenCalled();
+  });
+
+  it("tries again next time when saving fails", async () => {
+    preferences.copyOnSelect = "true";
+    const client = api(defaults);
+    client.put.mockRejectedValueOnce(new Error("offline"));
+    await moveClipboardPreferences({ api: client as never });
+    expect(preferences.terminalClipboardMoved).toBeUndefined();
+  });
+});
 
 describe("moveLocalTerminalPreferences", () => {
   it("does nothing when the browser kept nothing", async () => {

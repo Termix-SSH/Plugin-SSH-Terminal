@@ -119,7 +119,8 @@
     "paste": "Görüntü yapıştır",
     "settingsTitle": "Araç çubuğu",
     "upload": "Görüntü yükle",
-    "uploadingImage": "Yükleniyor..."
+    "uploadingImage": "Yükleniyor...",
+    "tools": "Araçlar"
   },
   "history": {
     "noTerminalSelected": "Hiçbir terminal seçili değil",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "SSH trafiğini WebSocket üzerinden Cloudflare Zero Trust'a yönlendir"
+      },
+      "tcpNoDelay": {
+        "label": "Nagle Algoritmasını Devre Dışı Bırak (TCP_NODELAY)",
+        "description": "Özellikle LAN bağlantılarında SSH girdi gecikmesini azaltmak için TCP paket toplamasını devre dışı bırakır. Ağ yükünü artırabilir."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel Ana Bilgisayar Adı",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz ve sz dosya aktarımları",
         "description": "rz ve sz (lrzsz) kullanarak dosyaları doğrudan terminalde yükleyin ve indirin."
+      },
+      "rightClickAction": {
+        "label": "Terminalde sağ tıkla",
+        "description": "Terminal menüsünü açmak için Shift tuşuna basılı tutun veya burada menüyü seçtiyseniz kopyala/yapıştır yapın",
+        "copyPaste": "Kopyala veya yapıştır",
+        "menu": "Terminal menüsü",
+        "native": "Tarayıcı menüsü"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V ile yapıştır",
+        "description": "Ctrl+V'yi kabuğa göndermek için kapatın. Ctrl+Shift+V yine de yapıştırır"
+      },
+      "copyOnSelect": {
+        "label": "Seçili metni otomatik kopyala",
+        "description": "Terminalde metni seçtiğiniz anda kopyalar"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Geçmiş",
     "localTerminal": "Yerel Terminal",
-    "sshTools": "SSH Araçları",
     "terminal": "Terminal",
     "macros": "Makrolar"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Tuş vuruşlarını yayınlamak için buraya yazın...",
-    "copyOnSelect": "Seçili metni otomatik olarak kopyala",
-    "enableRightClickCopyPaste": "Sağ tıkla kopyala/yapıştırı etkinleştir",
-    "ctrlVPaste": "Ctrl+V yapıştırır (kabuğa Ctrl+V göndermek için kapatın)",
-    "fillPassword": "Şifreyi doldur",
-    "fillPasswordMissing_one": "{{count}} seçili terminal için kayıtlı şifre yok",
-    "fillPasswordMissing_other": "{{count}} seçili terminal için kayıtlı şifre yok",
-    "fillPasswordSuccess_one": "Şifre {{count}} terminaline dolduruldu",
-    "fillPasswordSuccess_other": "Şifre {{count}} terminaline dolduruldu",
-    "keyRecordingTitle": "Tuş Kaydı",
-    "noTerminalTabsOpen": "Açık terminal sekmesi yok",
-    "recordToTerminals": "Terminallere kaydet",
-    "selectAll": "Tümü",
-    "selectNone": "Hiçbiri",
-    "selectTerminalsAbove": "Yukarıdaki terminalleri seç",
-    "settingsTitle": "Ayarlar",
-    "startRecording": "Kaydı Başlat",
-    "stopRecording": "Kaydı Durdur"
   },
   "keybindings": {
     "openLocalTerminal": "Yeni Yerel Terminal Aç",
@@ -629,7 +628,8 @@
       "ctrlT": "Ctrl+T'yi kabuğa gönder (tarayıcı sekmesinin açılmasını engeller)",
       "ctrlN": "Ctrl+N'yi kabuğa gönder (tarayıcı penceresinin açılmasını engeller)",
       "ctrlQ": "Ctrl+Q'yu kabuğa gönder (tarayıcının kapanmasını engeller)"
-    }
+    },
+    "toggleBroadcast": "Yayını aç veya kapat"
   },
   "macros": {
     "title": "Makrolar",
@@ -737,5 +737,99 @@
     "sending": "{{name}} yükleniyor",
     "receiving": "{{name}} indiriliyor",
     "cancel": "Aktarımı iptal et"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Girdiyi yayınla",
+      "stop": "Yayını durdur",
+      "stopShort": "Durdur",
+      "on": "Yayın açık",
+      "paused": "Yayın duraklatıldı",
+      "pausedForPassword": "Şifre isteminde duraklatıldı",
+      "pause": "Duraklat",
+      "resume": "Devam et",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminal",
+      "allOpen": "Tümü açık",
+      "thisSplit": "Bu bölünmüş görünüm",
+      "sameFolder": "Aynı klasör",
+      "offline": "Çevrimdışı",
+      "offlineCount_one": "{{count}} çevrimdışı",
+      "offlineCount_other": "{{count}} çevrimdışı",
+      "openMore": "Yayın yapmak için başka bir terminal açın",
+      "compose": "Oluştur",
+      "composeHint": "Bir komut yazın. Ctrl+Enter grubuna gönderir",
+      "send": "Gönder",
+      "pressEnter": "Enter'a basın",
+      "skipped_one": "Çevrimdışı veya şifre isteyen {{count}} terminal atlandı",
+      "skipped_other": "Çevrimdışı veya şifre isteyen {{count}} terminal atlandı"
+    },
+    "fill": {
+      "label": "Şifreyi doldur",
+      "done_one": "{{count}} terminalde şifre dolduruldu",
+      "done_other": "{{count}} terminalde şifre dolduruldu",
+      "noPassword_one": "{{count}} terminal için kayıtlı şifre yok",
+      "noPassword_other": "{{count}} terminal için kayıtlı şifre yok",
+      "notAsking_one": "{{count}} terminal şifre istemiyor",
+      "notAsking_other": "{{count}} terminal şifre istemiyor"
+    },
+    "find": {
+      "all": "Tüm terminallerde bul",
+      "badRegex": "Bu regex geçerli değil",
+      "capped": "İlk {{count}} sonuç gösteriliyor"
+    },
+    "watch": {
+      "title": "Çıktıyı izle",
+      "note": "Kurallar Termix açıkken çalışır. Uyarılar kural ve ana bilgisayarı adlandırır, asla çıktıyı değil.",
+      "name": "Kural adı",
+      "when": "Uyarı zamanı",
+      "kindMatch": "Çıktı eşleşirse",
+      "kindQuiet": "Çıktı sessizleşirse",
+      "kindActivity": "Arka planda yeni çıktı varsa",
+      "pattern": "Aranacak metin",
+      "seconds": "Sessizlik süresi (saniye)",
+      "add": "Kural ekle",
+      "delete": "Kuralı sil",
+      "describeMatch": "{{pattern}} ile eşleşir",
+      "describeQuiet_one": "{{count}} saniye sessiz",
+      "describeQuiet_other": "{{count}} saniye sessiz",
+      "describeActivity": "Arka planda yeni çıktı",
+      "nameRequired": "Kurala bir ad verin",
+      "patternRequired": "Aranacak metni girin",
+      "badRegex": "Bu regex geçerli değil",
+      "secondsRequired": "1 saniye veya daha fazla girin",
+      "fired": "{{rule}} üzerinde {{host}}",
+      "active_one": "{{count}} izleme kuralı açık",
+      "active_other": "{{count}} izleme kuralı açık"
+    },
+    "output": {
+      "save": "Çıktıyı kaydet",
+      "copy": "Çıktıyı kopyala",
+      "saveSelection": "Seçimi kaydet",
+      "empty": "Kaydedilecek bir şey yok",
+      "copied": "Çıktı kopyalandı",
+      "copyFailed": "Çıktı kopyalanamadı"
+    },
+    "fix": {
+      "resetDisplay": "Ekranı sıfırla",
+      "clearScrollback": "Kaydırma geçmişini temizle",
+      "resetShell": "Kabuk (shell) sıfırla",
+      "resetShellTitle": "Kabuk sıfırlansın mı?",
+      "resetShellDescription": "Bu işlem, komut isteminde stty sane ve reset komutlarını çalıştırır. Satırda bulunan herhangi bir metin de birlikte çalıştırılır."
+    },
+    "keys": {
+      "title": "Tuş gönder",
+      "custom": "Ctrl + harf",
+      "customTitle": "Ctrl + harf gönder",
+      "customDescription": "Ctrl ile birlikte gönderilecek harfi yazın"
+    },
+    "menu": {
+      "copy": "Kopyala",
+      "paste": "Yapıştır",
+      "selectAll": "Tümünü seç",
+      "find": "Bul",
+      "clear": "Temizle"
+    },
+    "openTerminalFirst": "Araçları kullanmak için bir SSH terminali açın"
   }
 }

@@ -119,7 +119,8 @@
     "paste": "Paste image",
     "settingsTitle": "Toolbar",
     "upload": "Upload image",
-    "uploadingImage": "Uploading..."
+    "uploadingImage": "Uploading...",
+    "tools": "Tools"
   },
   "history": {
     "noTerminalSelected": "No terminal selected",
@@ -423,6 +424,21 @@
       "zmodem": {
         "label": "rz and sz file transfers",
         "description": "Upload and download files with rz and sz (lrzsz) right in the terminal."
+      },
+      "rightClickAction": {
+        "label": "Right click in the terminal",
+        "description": "Hold Shift to get the terminal menu instead, or copy and paste if the menu is your choice here",
+        "copyPaste": "Copy or paste",
+        "menu": "Terminal menu",
+        "native": "Browser menu"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V pastes",
+        "description": "Turn off to send Ctrl+V to the shell. Ctrl+Shift+V still pastes"
+      },
+      "copyOnSelect": {
+        "label": "Copy selected text automatically",
+        "description": "Copies text as soon as you select it in the terminal"
       }
     }
   },
@@ -587,29 +603,8 @@
   "nav": {
     "history": "History",
     "localTerminal": "Local Terminal",
-    "sshTools": "SSH Tools",
     "terminal": "Terminal",
     "macros": "Macros"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Type here to broadcast keystrokes...",
-    "copyOnSelect": "Copy selected text automatically",
-    "enableRightClickCopyPaste": "Enable right-click copy/paste",
-    "ctrlVPaste": "Ctrl+V pastes (turn off to send Ctrl+V to the shell)",
-    "fillPassword": "Fill password",
-    "fillPasswordMissing_one": "No saved password for {{count}} selected terminal",
-    "fillPasswordMissing_other": "No saved password for {{count}} selected terminals",
-    "fillPasswordSuccess_one": "Filled password into {{count}} terminal",
-    "fillPasswordSuccess_other": "Filled password into {{count}} terminals",
-    "keyRecordingTitle": "Key Recording",
-    "noTerminalTabsOpen": "No terminal tabs open",
-    "recordToTerminals": "Record to terminals",
-    "selectAll": "All",
-    "selectNone": "None",
-    "selectTerminalsAbove": "Select terminals above",
-    "settingsTitle": "Settings",
-    "startRecording": "Start Recording",
-    "stopRecording": "Stop Recording"
   },
   "keybindings": {
     "openLocalTerminal": "Open new Local Terminal",
@@ -633,7 +628,8 @@
       "ctrlT": "Send Ctrl+T to shell (blocked from opening browser tab)",
       "ctrlN": "Send Ctrl+N to shell (blocked from opening browser window)",
       "ctrlQ": "Send Ctrl+Q to shell (blocked from quitting browser)"
-    }
+    },
+    "toggleBroadcast": "Turn broadcast on or off"
   },
   "macros": {
     "title": "Macros",
@@ -741,5 +737,99 @@
     "sending": "Uploading {{name}}",
     "receiving": "Downloading {{name}}",
     "cancel": "Cancel transfer"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Broadcast input",
+      "stop": "Stop broadcast",
+      "stopShort": "Stop",
+      "on": "Broadcast on",
+      "paused": "Broadcast paused",
+      "pausedForPassword": "Paused at password prompt",
+      "pause": "Pause",
+      "resume": "Resume",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminals",
+      "allOpen": "All open",
+      "thisSplit": "This split",
+      "sameFolder": "Same folder",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Open another terminal to broadcast to it",
+      "compose": "Compose",
+      "composeHint": "Write a command. Ctrl+Enter sends it to the group",
+      "send": "Send",
+      "pressEnter": "Press Enter",
+      "skipped_one": "Skipped {{count}} terminal that is offline or asking for a password",
+      "skipped_other": "Skipped {{count}} terminals that are offline or asking for a password"
+    },
+    "fill": {
+      "label": "Fill password",
+      "done_one": "Filled the password in {{count}} terminal",
+      "done_other": "Filled the password in {{count}} terminals",
+      "noPassword_one": "No saved password for {{count}} terminal",
+      "noPassword_other": "No saved password for {{count}} terminals",
+      "notAsking_one": "{{count}} terminal is not asking for a password",
+      "notAsking_other": "{{count}} terminals are not asking for a password"
+    },
+    "find": {
+      "all": "Find in all terminals",
+      "badRegex": "This regex is not valid",
+      "capped": "Showing the first {{count}} results"
+    },
+    "watch": {
+      "title": "Watch output",
+      "note": "Rules run while Termix is open. Alerts name the rule and host, never the output.",
+      "name": "Rule name",
+      "when": "Alert when",
+      "kindMatch": "Output matches",
+      "kindQuiet": "Output goes quiet",
+      "kindActivity": "New output in the background",
+      "pattern": "Text to look for",
+      "seconds": "Seconds of quiet",
+      "add": "Add rule",
+      "delete": "Delete rule",
+      "describeMatch": "Matches {{pattern}}",
+      "describeQuiet_one": "Quiet for {{count}} second",
+      "describeQuiet_other": "Quiet for {{count}} seconds",
+      "describeActivity": "New output in the background",
+      "nameRequired": "Give the rule a name",
+      "patternRequired": "Enter the text to look for",
+      "badRegex": "This regex is not valid",
+      "secondsRequired": "Enter 1 second or more",
+      "fired": "{{rule}} on {{host}}",
+      "active_one": "{{count}} watch rule on",
+      "active_other": "{{count}} watch rules on"
+    },
+    "output": {
+      "save": "Save output",
+      "copy": "Copy output",
+      "saveSelection": "Save selection",
+      "empty": "There is nothing to save",
+      "copied": "Output copied",
+      "copyFailed": "Could not copy the output"
+    },
+    "fix": {
+      "resetDisplay": "Reset display",
+      "clearScrollback": "Clear scrollback",
+      "resetShell": "Reset shell",
+      "resetShellTitle": "Reset the shell?",
+      "resetShellDescription": "This types stty sane and reset at the prompt. Any text on the line runs with it."
+    },
+    "keys": {
+      "title": "Send key",
+      "custom": "Ctrl + letter",
+      "customTitle": "Send Ctrl + letter",
+      "customDescription": "Type the letter to send with Ctrl"
+    },
+    "menu": {
+      "copy": "Copy",
+      "paste": "Paste",
+      "selectAll": "Select all",
+      "find": "Find",
+      "clear": "Clear"
+    },
+    "openTerminalFirst": "Open an SSH terminal to use its tools"
   }
 }

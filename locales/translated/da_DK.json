@@ -119,7 +119,8 @@
     "paste": "Indsæt billede",
     "settingsTitle": "Værktøjslinje",
     "upload": "Upload billede",
-    "uploadingImage": "Uploader..."
+    "uploadingImage": "Uploader...",
+    "tools": "Værktøjer"
   },
   "history": {
     "noTerminalSelected": "Ingen terminal valgt",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Diriger SSH-trafik over Cloudflare Zero Trust via WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Deaktiver Nagle's algoritme (TCP_NODELAY)",
+        "description": "Deaktiverer samling af TCP-pakker for at reducere SSH-inputforsinkelse, især på LAN-forbindelser. Kan øge netværksbelastningen."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-værtsnavn",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz og sz filoverførsler",
         "description": "Upload og download filer med rz og sz (lrzsz) direkte i terminalen."
+      },
+      "rightClickAction": {
+        "label": "Højreklik i terminalen",
+        "description": "Hold Shift nede for at få terminalmenuen i stedet, eller kopier og indsæt, hvis menuen er dit valg her",
+        "copyPaste": "Kopier eller indsæt",
+        "menu": "Terminalmenu",
+        "native": "Browsermenu"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V indsætter",
+        "description": "Slå fra for at sende Ctrl+V til shell'en. Ctrl+Shift+V indsætter stadig"
+      },
+      "copyOnSelect": {
+        "label": "Kopier valgt tekst automatisk",
+        "description": "Kopierer tekst, så snart du markerer den i terminalen"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Historik",
     "localTerminal": "Lokal terminal",
-    "sshTools": "SSH-værktøjer",
     "terminal": "Terminal",
     "macros": "Makroer"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Skriv her for at sende tastetryk til alle...",
-    "copyOnSelect": "Kopier valgt tekst automatisk",
-    "enableRightClickCopyPaste": "Aktivér højreklik-kopiér/indsæt",
-    "ctrlVPaste": "Ctrl+V indsætter (slå fra for at sende Ctrl+V til shell)",
-    "fillPassword": "Udfyld adgangskode",
-    "fillPasswordMissing_one": "Ingen gemt adgangskode til {{count}} valgt terminal",
-    "fillPasswordMissing_other": "Ingen gemt adgangskode til {{count}} valgte terminaler",
-    "fillPasswordSuccess_one": "Indsat adgangskode i {{count}} terminal",
-    "fillPasswordSuccess_other": "Indsat adgangskode i {{count}} terminaler",
-    "keyRecordingTitle": "Tastatur-optagelse",
-    "noTerminalTabsOpen": "Ingen terminalfaner åbne",
-    "recordToTerminals": "Optag til terminaler",
-    "selectAll": "Alle",
-    "selectNone": "Ingen",
-    "selectTerminalsAbove": "Vælg terminaler ovenfor",
-    "settingsTitle": "Indstillinger",
-    "startRecording": "Start optagelse",
-    "stopRecording": "Stop optagelse"
   },
   "keybindings": {
     "openLocalTerminal": "Åbn ny lokal terminal",
@@ -629,7 +628,8 @@
       "ctrlT": "Send Ctrl+T til shell (blokeret fra at åbne browserfane)",
       "ctrlN": "Send Ctrl+N til shell (blokeret fra at åbne browservindue)",
       "ctrlQ": "Send Ctrl+Q til shell (blokeret fra at afslutte browser)"
-    }
+    },
+    "toggleBroadcast": "Slå broadcast til eller fra"
   },
   "macros": {
     "title": "Makroer",
@@ -737,5 +737,99 @@
     "sending": "Uploader {{name}}",
     "receiving": "Downloader {{name}}",
     "cancel": "Annuller overførsel"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Start broadcast af input",
+      "stop": "Stop broadcast",
+      "stopShort": "Stop",
+      "on": "Broadcast til",
+      "paused": "Broadcast på pause",
+      "pausedForPassword": "På pause ved adgangskodeprompt",
+      "pause": "Pause",
+      "resume": "Genoptag",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminaler",
+      "allOpen": "Alle åbne",
+      "thisSplit": "Denne split",
+      "sameFolder": "Samme mappe",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Åbn en anden terminal for at broadcaste til den",
+      "compose": "Skriv",
+      "composeHint": "Skriv en kommando. Ctrl+Enter sender den til gruppen",
+      "send": "Send",
+      "pressEnter": "Tryk Enter",
+      "skipped_one": "Sprang over {{count}} terminal, der er offline eller beder om adgangskode",
+      "skipped_other": "Sprang over {{count}} terminaler, der er offline eller beder om adgangskode"
+    },
+    "fill": {
+      "label": "Udfyld adgangskode",
+      "done_one": "Udfyldte adgangskoden i {{count}} terminal",
+      "done_other": "Udfyldte adgangskoden i {{count}} terminaler",
+      "noPassword_one": "Ingen gemt adgangskode til {{count}} terminal",
+      "noPassword_other": "Ingen gemt adgangskode til {{count}} terminaler",
+      "notAsking_one": "{{count}} terminal beder ikke om adgangskode",
+      "notAsking_other": "{{count}} terminaler beder ikke om adgangskode"
+    },
+    "find": {
+      "all": "Find i alle terminaler",
+      "badRegex": "Dette regex er ikke gyldigt",
+      "capped": "Viser de første {{count}} resultater"
+    },
+    "watch": {
+      "title": "Overvåg output",
+      "note": "Regler kører, mens Termix er åben. Advarsler nævner reglen og værten, aldrig outputtet.",
+      "name": "Regelnavn",
+      "when": "Advar, når",
+      "kindMatch": "Output matcher",
+      "kindQuiet": "Output bliver stille",
+      "kindActivity": "Nyt output i baggrunden",
+      "pattern": "Tekst, der skal søges efter",
+      "seconds": "Sekunder af stilhed",
+      "add": "Tilføj regel",
+      "delete": "Slet regel",
+      "describeMatch": "Matcher {{pattern}}",
+      "describeQuiet_one": "Stille i {{count}} sekund",
+      "describeQuiet_other": "Stille i {{count}} sekunder",
+      "describeActivity": "Nyt output i baggrunden",
+      "nameRequired": "Giv reglen et navn",
+      "patternRequired": "Indtast teksten, der skal søges efter",
+      "badRegex": "Dette regex er ikke gyldigt",
+      "secondsRequired": "Indtast 1 sekund eller mere",
+      "fired": "{{rule}} på {{host}}",
+      "active_one": "{{count}} overvågningsregel til",
+      "active_other": "{{count}} overvågningsregler til"
+    },
+    "output": {
+      "save": "Gem output",
+      "copy": "Kopier output",
+      "saveSelection": "Gem markering",
+      "empty": "Der er intet at gemme",
+      "copied": "Output kopieret",
+      "copyFailed": "Kunne ikke kopiere output"
+    },
+    "fix": {
+      "resetDisplay": "Nulstil visning",
+      "clearScrollback": "Ryd scrollback",
+      "resetShell": "Nulstil shell",
+      "resetShellTitle": "Nulstil shell?",
+      "resetShellDescription": "Dette sender kommandoerne stty sane og reset ved prompten. Eventuel tekst på linjen køres med."
+    },
+    "keys": {
+      "title": "Send tast",
+      "custom": "Ctrl + bogstav",
+      "customTitle": "Send Ctrl + bogstav",
+      "customDescription": "Indtast det bogstav, der skal sendes med Ctrl"
+    },
+    "menu": {
+      "copy": "Kopier",
+      "paste": "Indsæt",
+      "selectAll": "Vælg alt",
+      "find": "Find",
+      "clear": "Ryd"
+    },
+    "openTerminalFirst": "Åbn et SSH-terminalvindue for at bruge dets værktøjer"
   }
 }

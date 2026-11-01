@@ -119,7 +119,8 @@
     "paste": "Kép beillesztése",
     "settingsTitle": "Eszköztár",
     "upload": "Kép feltöltése",
-    "uploadingImage": "Feltöltés..."
+    "uploadingImage": "Feltöltés...",
+    "tools": "Eszközök"
   },
   "history": {
     "noTerminalSelected": "Nincs kijelölve terminál",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-alagút",
         "description": "Az SSH-forgalom irányítása a Cloudflare Zero Truston keresztül WebSocketen"
+      },
+      "tcpNoDelay": {
+        "label": "Nagle-algoritmus letiltása (TCP_NODELAY)",
+        "description": "A TCP-csomagok csoportosítását letiltja az SSH bemeneti késleltetés csökkentése érdekében, különösen LAN-csatlakozások esetén. Növelheti a hálózati terhelést."
       },
       "cloudflareTunnelHostname": {
         "label": "Alagút hosztneve",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz és sz fájlküldések",
         "description": "Fájlok feltöltése és letöltése az rz és sz (lrzsz) segítségével közvetlenül a terminálban."
+      },
+      "rightClickAction": {
+        "label": "Jobb klikk a terminálban",
+        "description": "Tartsa lenyomva a Shift billentyűt a terminálmenü megjelenítéséhez, vagy másoljon és illesszen be, ha a menü a választott opció",
+        "copyPaste": "Másolás vagy beillesztés",
+        "menu": "Terminálmenü",
+        "native": "Böngészőmenü"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V beillesztés",
+        "description": "Kapcsolja ki, ha a Ctrl+V-t a shell-nek szeretné elküldeni. A Ctrl+Shift+V továbbra is beilleszt"
+      },
+      "copyOnSelect": {
+        "label": "Kijelölt szöveg automatikus másolása",
+        "description": "A szöveget azonnal másolja, amikor kijelöli a terminálban"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Előzmények",
     "localTerminal": "Helyi terminál",
-    "sshTools": "SSH eszközök",
     "terminal": "Terminál",
     "macros": "Makrók"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Írj ide a billentyűleütések széles körű továbbításához...",
-    "copyOnSelect": "A kijelölt szöveg automatikus másolása",
-    "enableRightClickCopyPaste": "Jobb klikkes másolás/beillesztés engedélyezése",
-    "ctrlVPaste": "Ctrl+V beilleszt (kapcsold ki, ha a Ctrl+V-t a shell-nek szeretnéd elküldeni)",
-    "fillPassword": "Jelszó kitöltése",
-    "fillPasswordMissing_one": "Nincs mentett jelszó a kiválasztott {{count}} terminálhoz",
-    "fillPasswordMissing_other": "Nincs mentett jelszó a kiválasztott {{count}} terminálhoz",
-    "fillPasswordSuccess_one": "Jelszó beírva {{count}} terminálba",
-    "fillPasswordSuccess_other": "Jelszó beírva {{count}} terminálba",
-    "keyRecordingTitle": "Billentyűfelvétel",
-    "noTerminalTabsOpen": "Nincs megnyitott terminálfül",
-    "recordToTerminals": "Felvétel terminálokba",
-    "selectAll": "Összes",
-    "selectNone": "Egyik sem",
-    "selectTerminalsAbove": "Terminálok kijelölése fent",
-    "settingsTitle": "Beállítások",
-    "startRecording": "Felvétel indítása",
-    "stopRecording": "Felvétel leállítása"
   },
   "keybindings": {
     "openLocalTerminal": "Új helyi terminál megnyitása",
@@ -629,7 +628,8 @@
       "ctrlT": "Ctrl+T küldése a shellnek (megakadályozza az új böngészőfül megnyitását)",
       "ctrlN": "Ctrl+N küldése a shellnek (megakadályozza az új böngészőablak megnyitását)",
       "ctrlQ": "Ctrl+Q küldése a shellnek (megakadályozza a böngésző kilépését)"
-    }
+    },
+    "toggleBroadcast": "Adatküldés be- vagy kikapcsolása"
   },
   "macros": {
     "title": "Makrók",
@@ -737,5 +737,99 @@
     "sending": "{{name}} feltöltése",
     "receiving": "{{name}} letöltése",
     "cancel": "Átvitel megszakítása"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Bemenet adatküldése",
+      "stop": "Adatküldés leállítása",
+      "stopShort": "Leállítás",
+      "on": "Adatküldés bekapcsolva",
+      "paused": "Adatküldés szüneteltetve",
+      "pausedForPassword": "Szüneteltetve jelszó-kérésnél",
+      "pause": "Szüneteltetés",
+      "resume": "Folytatás",
+      "members_one": "{{count}} terminál",
+      "members_other": "{{count}} terminál",
+      "allOpen": "Összes nyitva",
+      "thisSplit": "Ez a felosztás",
+      "sameFolder": "Ugyanaz a mappa",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Nyisson meg egy másik terminált az adatküldéshez",
+      "compose": "Összeállítás",
+      "composeHint": "Írjon be egy parancsot. A Ctrl+Enter elküldi a csoportnak",
+      "send": "Küldés",
+      "pressEnter": "Enter megnyomása",
+      "skipped_one": "{{count}} offline vagy jelszót kérő terminál kihagyva",
+      "skipped_other": "{{count}} offline vagy jelszót kérő terminál kihagyva"
+    },
+    "fill": {
+      "label": "Jelszó kitöltése",
+      "done_one": "A jelszót {{count}} terminálban kitöltve",
+      "done_other": "A jelszót {{count}} terminálban kitöltve",
+      "noPassword_one": "Nincs mentett jelszó {{count}} terminálhoz",
+      "noPassword_other": "Nincs mentett jelszó {{count}} terminálhoz",
+      "notAsking_one": "{{count}} terminál nem kér jelszót",
+      "notAsking_other": "{{count}} terminál nem kér jelszót"
+    },
+    "find": {
+      "all": "Keresés az összes terminálban",
+      "badRegex": "Ez a reguláris kifejezés érvénytelen",
+      "capped": "Az első {{count}} találat megjelenítése"
+    },
+    "watch": {
+      "title": "Kimenet figyelése",
+      "note": "A szabályok akkor futnak, amikor a Termix nyitva van. Az értesítések a szabály és a host nevét tartalmazzák, soha a kimenetet.",
+      "name": "Szabály neve",
+      "when": "Értesítés, ha",
+      "kindMatch": "A kimenet egyezik",
+      "kindQuiet": "A kimenet csendes",
+      "kindActivity": "Új kimenet a háttérben",
+      "pattern": "Keresendő szöveg",
+      "seconds": "Csendes másodpercek",
+      "add": "Szabály hozzáadása",
+      "delete": "Szabály törlése",
+      "describeMatch": "Egyezik: {{pattern}}",
+      "describeQuiet_one": "Csendes {{count}} másodpercig",
+      "describeQuiet_other": "Csendes {{count}} másodpercig",
+      "describeActivity": "Új kimenet a háttérben",
+      "nameRequired": "Adjon nevet a szabálynak",
+      "patternRequired": "Adja meg a keresendő szöveget",
+      "badRegex": "Ez a reguláris kifejezés érvénytelen",
+      "secondsRequired": "Adjon meg 1 vagy több másodpercet",
+      "fired": "{{rule}} a(z) {{host}} hoston",
+      "active_one": "{{count}} figyelő szabály bekapcsolva",
+      "active_other": "{{count}} figyelő szabály bekapcsolva"
+    },
+    "output": {
+      "save": "Kimenet mentése",
+      "copy": "Kimenet másolása",
+      "saveSelection": "Kijelölés mentése",
+      "empty": "Nincs mit menteni",
+      "copied": "Kimenet másolva",
+      "copyFailed": "A kimenet nem másolható"
+    },
+    "fix": {
+      "resetDisplay": "Kijelző visszaállítása",
+      "clearScrollback": "Görgetési előzmények törlése",
+      "resetShell": "Parancssor visszaállítása",
+      "resetShellTitle": "Parancssor visszaállítása?",
+      "resetShellDescription": "Ez a parancs a stty sane és reset utasításokat adja meg a parancssorban. A soron lévő összes szöveg végrehajtódik."
+    },
+    "keys": {
+      "title": "Billentyű küldése",
+      "custom": "Ctrl + betű",
+      "customTitle": "Ctrl + betű küldése",
+      "customDescription": "Írja be a Ctrl-vel együtt küldeni kívánt betűt"
+    },
+    "menu": {
+      "copy": "Másolás",
+      "paste": "Beillesztés",
+      "selectAll": "Összes kijelölése",
+      "find": "Keresés",
+      "clear": "Törlés"
+    },
+    "openTerminalFirst": "Nyisson meg egy SSH terminált az eszközei használatához"
   }
 }

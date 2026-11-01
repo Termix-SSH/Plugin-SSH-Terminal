@@ -32,6 +32,21 @@ import {
   type ImageSftpClient,
 } from "./images/image-storage.js";
 
+const WATCH_RULE_NAME_MAX = 120;
+const WATCH_ALERTS_PER_MINUTE = 30;
+const watchAlertTimes = new Map<string, number[]>();
+
+/** A user's browser sends these, so a runaway rule can't flood their channels. */
+function allowWatchAlert(userId: string, now = Date.now()): boolean {
+  const recent = (watchAlertTimes.get(userId) ?? []).filter(
+    (at) => now - at < 60_000,
+  );
+  const allowed = recent.length < WATCH_ALERTS_PER_MINUTE;
+  if (allowed) recent.push(now);
+  watchAlertTimes.set(userId, recent);
+  return allowed;
+}
+
 function isNonEmptyString(val: unknown): val is string {
   return typeof val === "string" && val.trim().length > 0;
 }
@@ -560,7 +575,7 @@ export function registerTerminalRoutes(
    * /plugin-api/ssh-terminal/user-settings:
    *   put:
    *     summary: Save some of the caller's terminal settings
-   *     description: Writes the caller's command autocomplete setting. The terminal uses it once, to move a value a browser kept before 2.9.0.
+   *     description: Writes the caller's command autocomplete and clipboard settings. The terminal uses it once, to move values a browser kept locally.
    *     tags:
    *       - Terminal
    *     requestBody:
@@ -571,6 +586,13 @@ export function registerTerminalRoutes(
    *             type: object
    *             properties:
    *               commandAutocomplete:
+   *                 type: boolean
+   *               rightClickAction:
+   *                 type: string
+   *                 enum: [copyPaste, menu, native]
+   *               ctrlVPaste:
+   *                 type: boolean
+   *               copyOnSelect:
    *                 type: boolean
    *     responses:
    *       200:
@@ -591,6 +613,78 @@ export function registerTerminalRoutes(
       res.json({ success: true });
     } catch (err) {
       res.status(400).json({ error: getErrorMessage(err, "Invalid setting") });
+    }
+  });
+
+  /**
+   * @openapi
+   * /plugin-api/ssh-terminal/watch-alert:
+   *   post:
+   *     summary: Send the caller an alert for a watch rule that fired
+   *     description: Sends a notification naming the rule and the host, through the caller's alert channels. Terminal output is never part of it. Needs connect access to the host and allows a limited number of alerts a minute.
+   *     tags:
+   *       - Terminal
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               hostId:
+   *                 type: integer
+   *               rule:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Sent.
+   *       400:
+   *         description: Invalid host or rule name.
+   *       401:
+   *         description: Not signed in.
+   *       403:
+   *         description: No connect access to the host.
+   *       429:
+   *         description: Too many alerts this minute.
+   */
+  router.post("/watch-alert", json, async (req, res) => {
+    const userId = ctx.currentActor();
+    if (!userId) return res.status(401).json({ error: "Sign in first" });
+    const { hostId, rule } = (req.body ?? {}) as {
+      hostId?: unknown;
+      rule?: unknown;
+    };
+    if (
+      !Number.isInteger(hostId) ||
+      typeof rule !== "string" ||
+      !rule.trim() ||
+      rule.length > WATCH_RULE_NAME_MAX
+    ) {
+      return res.status(400).json({ error: "Invalid host or rule" });
+    }
+    try {
+      const id = hostId as number;
+      const access = await ctx.hosts.checkAccess(id, "connect");
+      if (!access.hasAccess) {
+        return res.status(403).json({ error: "Access denied to host" });
+      }
+      if (!allowWatchAlert(userId)) {
+        return res.status(429).json({ error: "Too many alerts" });
+      }
+      const host = await ctx.hosts.get(id).catch(() => null);
+      const hostName = host?.name || host?.ip || `#${id}`;
+      await ctx.notify.send({
+        title: `${rule} on ${hostName}`,
+        severity: "info",
+        category: "ssh-terminal.watch_rule",
+        audience: { userId },
+        dedupeKey: `ssh-terminal:watch:${id}:${rule}`,
+        context: { hostId: id, hostName },
+      });
+      res.json({ success: true });
+    } catch (err) {
+      log.error("Failed to send a watch alert", err);
+      res.status(500).json({ error: "Failed to send the alert" });
     }
   });
 

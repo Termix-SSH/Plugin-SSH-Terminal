@@ -82,6 +82,26 @@ describe("readUserSettings", () => {
       customThemes: [{ id: "a", name: "A", colors: {} }],
       commandAutocomplete: false,
       zmodem: false,
+      rightClickAction: "copyPaste",
+      ctrlVPaste: true,
+      copyOnSelect: false,
     });
+  });
+
+  it("reads the clipboard settings and refuses an unknown right click choice", () => {
+    expect(
+      readUserSettings({
+        rightClickAction: "menu",
+        ctrlVPaste: false,
+        copyOnSelect: true,
+      }),
+    ).toMatchObject({
+      rightClickAction: "menu",
+      ctrlVPaste: false,
+      copyOnSelect: true,
+    });
+    expect(readUserSettings({ rightClickAction: "x" }).rightClickAction).toBe(
+      "copyPaste",
+    );
   });
 });

@@ -1,4 +1,8 @@
-import type { TermixApp } from "@termix-ssh/plugin-sdk/frontend";
+import {
+  getClientPreference,
+  setClientPreference,
+  type TermixApp,
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   invalidateTerminalClientSettings,
   loadTerminalClientSettings,
@@ -21,6 +25,43 @@ const LOCAL_KEYS: Array<{
       raw === "true" ? true : raw === "false" ? false : undefined,
   },
 ];
+
+const CLIPBOARD_MOVED = "terminalClipboardMoved";
+
+/**
+ * The SSH Tools panel kept these in a cookie per browser. Moved once, and only
+ * over a default, so an old cookie can't undo a choice made somewhere else.
+ */
+export async function moveClipboardPreferences(
+  app: Pick<TermixApp, "api">,
+): Promise<void> {
+  if (getClientPreference(CLIPBOARD_MOVED) === "true") return;
+  const found: Record<string, unknown> = {};
+  if (getClientPreference("rightClickCopyPaste") === "false") {
+    found.rightClickAction = "native";
+  }
+  if (getClientPreference("ctrlVPaste") === "false") found.ctrlVPaste = false;
+  if (getClientPreference("copyOnSelect") === "true") found.copyOnSelect = true;
+
+  try {
+    const { user } = await loadTerminalClientSettings(app.api);
+    const current = user as unknown as Record<string, unknown>;
+    const defaults = DEFAULT_USER_SETTINGS as unknown as Record<
+      string,
+      unknown
+    >;
+    const values = Object.fromEntries(
+      Object.entries(found).filter(([key]) => current[key] === defaults[key]),
+    );
+    if (Object.keys(values).length > 0) {
+      await app.api.put("/user-settings", values);
+      invalidateTerminalClientSettings();
+    }
+    setClientPreference(CLIPBOARD_MOVED, "true");
+  } catch {
+    // Try again next time the plugin starts.
+  }
+}
 
 function readStorage(key: string): string | null {
   try {

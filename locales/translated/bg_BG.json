@@ -119,7 +119,8 @@
     "paste": "Поставяне на изображение",
     "settingsTitle": "Лента с инструменти",
     "upload": "Качване на изображение",
-    "uploadingImage": "Качване..."
+    "uploadingImage": "Качване...",
+    "tools": "Инструменти"
   },
   "history": {
     "noTerminalSelected": "Не е избран терминал",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Посочете SSH трафика през Cloudflare Zero Trust чрез WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Изключване на алгоритъма на Нейл (TCP_NODELAY)",
+        "description": "Изключва пакетизирането на TCP, за да намали латентността при въвеждане в SSH, особено при LAN връзки. Може да увеличи мрежовия трафик."
       },
       "cloudflareTunnelHostname": {
         "label": "Име на хоста на тунела",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "Прехвърляне на файлове с rz и sz",
         "description": "Качване и изтегляне на файлове с rz и sz (lrzsz) директно в терминала."
+      },
+      "rightClickAction": {
+        "label": "Десен клик в терминала",
+        "description": "Задръжте Shift, за да получите менюто на терминала, или копирайте и поставяйте, ако менюто е вашият избор тук",
+        "copyPaste": "Копиране или поставяне",
+        "menu": "Меню на терминала",
+        "native": "Меню на браузъра"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V поставя",
+        "description": "Изключете, за да изпращате Ctrl+V към обвивката. Ctrl+Shift+V все още поставя"
+      },
+      "copyOnSelect": {
+        "label": "Автоматично копиране на избрания текст",
+        "description": "Копира текста веднага щом го изберете в терминала"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "История",
     "localTerminal": "Локален терминал",
-    "sshTools": "SSH инструменти",
     "terminal": "Терминал",
     "macros": "Макроси"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Напишете тук, за да разпространите натисканията...",
-    "copyOnSelect": "Автоматично копиране на избрания текст",
-    "enableRightClickCopyPaste": "Включване на копиране/поставяне с десен клик",
-    "ctrlVPaste": "Ctrl+V поставя (изключете, за да изпращате Ctrl+V към shell-а)",
-    "fillPassword": "Попълване на парола",
-    "fillPasswordMissing_one": "Няма запазена парола за {{count}} избран терминал",
-    "fillPasswordMissing_other": "Няма запазена парола за {{count}} избрани терминала",
-    "fillPasswordSuccess_one": "Паролата е попълнена в {{count}} терминал",
-    "fillPasswordSuccess_other": "Паролата е попълнена в {{count}} терминала",
-    "keyRecordingTitle": "Запис на клавиши",
-    "noTerminalTabsOpen": "Няма отворени терминални таблове",
-    "recordToTerminals": "Запис към терминали",
-    "selectAll": "Всички",
-    "selectNone": "Някои",
-    "selectTerminalsAbove": "Изберете терминалите по-горе",
-    "settingsTitle": "Настройки",
-    "startRecording": "Стартиране на запис",
-    "stopRecording": "Спиране на запис"
   },
   "keybindings": {
     "openLocalTerminal": "Отвори нов локален терминал",
@@ -629,7 +628,8 @@
       "ctrlT": "Изпращане на Ctrl+T към shell (блокирано за отваряне на браузър табло)",
       "ctrlN": "Изпращане на Ctrl+N към shell (блокирано за отваряне на браузър прозорец)",
       "ctrlQ": "Изпращане на Ctrl+Q към shell (блокирано за изход от браузъра)"
-    }
+    },
+    "toggleBroadcast": "Включване или изключване на разпространението"
   },
   "macros": {
     "title": "Макроси",
@@ -737,5 +737,99 @@
     "sending": "Качване на {{name}}",
     "receiving": "Изтегляне на {{name}}",
     "cancel": "Отказ от прехвърляне"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Разпространение на входа",
+      "stop": "Спиране на разпространението",
+      "stopShort": "Спри",
+      "on": "Разпространение включено",
+      "paused": "Разпространението е на пауза",
+      "pausedForPassword": "На пауза при поискване на парола",
+      "pause": "Пауза",
+      "resume": "Продължи",
+      "members_one": "{{count}} терминал",
+      "members_other": "{{count}} терминала",
+      "allOpen": "Всички отворени",
+      "thisSplit": "Това разделяне",
+      "sameFolder": "Същата папка",
+      "offline": "Извън линия",
+      "offlineCount_one": "{{count}} извън линия",
+      "offlineCount_other": "{{count}} извън линия",
+      "openMore": "Отворете друг терминал, за да разпространявате към него",
+      "compose": "Съставяне",
+      "composeHint": "Напишете команда. Ctrl+Enter я изпраща към групата",
+      "send": "Изпрати",
+      "pressEnter": "Натиснете Enter",
+      "skipped_one": "Пропуснат {{count}} терминал, който е извън линия или пита за парола",
+      "skipped_other": "Пропуснати {{count}} терминала, които са извън линия или питат за парола"
+    },
+    "fill": {
+      "label": "Попълване на парола",
+      "done_one": "Попълнена е паролата в {{count}} терминал",
+      "done_other": "Попълнена е паролата в {{count}} терминала",
+      "noPassword_one": "Няма запазена парола за {{count}} терминал",
+      "noPassword_other": "Няма запазена парола за {{count}} терминала",
+      "notAsking_one": "{{count}} терминал не пита за парола",
+      "notAsking_other": "{{count}} терминала не питат за парола"
+    },
+    "find": {
+      "all": "Търсене във всички терминали",
+      "badRegex": "Това регулярното изражение не е валидно",
+      "capped": "Показани са първите {{count}} резултата"
+    },
+    "watch": {
+      "title": "Наблюдение на изхода",
+      "note": "Правилата се изпълняват, докато Termix е отворен. Известията посочват името на правилото и хоста, но никога изхода.",
+      "name": "Име на правилото",
+      "when": "Известие, когато",
+      "kindMatch": "Изходът съвпада",
+      "kindQuiet": "Изходът замълчава",
+      "kindActivity": "Нов изход във фонов режим",
+      "pattern": "Текст за търсене",
+      "seconds": "Секунди тишина",
+      "add": "Добавяне на правило",
+      "delete": "Изтриване на правило",
+      "describeMatch": "Съвпада с {{pattern}}",
+      "describeQuiet_one": "Тишина за {{count}} секунда",
+      "describeQuiet_other": "Тишина за {{count}} секунди",
+      "describeActivity": "Нов изход във фонов режим",
+      "nameRequired": "Дайте име на правилото",
+      "patternRequired": "Въведете текста за търсене",
+      "badRegex": "Това регулярното изражение не е валидно",
+      "secondsRequired": "Въведете 1 секунда или повече",
+      "fired": "{{rule}} на {{host}}",
+      "active_one": "{{count}} правило за наблюдение включено",
+      "active_other": "{{count}} правила за наблюдение включени"
+    },
+    "output": {
+      "save": "Запази изхода",
+      "copy": "Копирай изхода",
+      "saveSelection": "Запази селекцията",
+      "empty": "Няма нищо за запазване",
+      "copied": "Изходът е копиран",
+      "copyFailed": "Неуспешно копиране на изхода"
+    },
+    "fix": {
+      "resetDisplay": "Нулиране на дисплея",
+      "clearScrollback": "Изчистване на историята на скрола",
+      "resetShell": "Нулиране на shell-а",
+      "resetShellTitle": "Нулиране на shell-а?",
+      "resetShellDescription": "Това изпълнява `stty sane` и `reset` в командния ред. Всичък текст на текущия ред ще бъде изпълнен заедно с тях."
+    },
+    "keys": {
+      "title": "Изпрати клавиш",
+      "custom": "Ctrl + буква",
+      "customTitle": "Изпрати Ctrl + буква",
+      "customDescription": "Въведете буквата, която да се изпрати с Ctrl"
+    },
+    "menu": {
+      "copy": "Копирай",
+      "paste": "Постави",
+      "selectAll": "Избери всичко",
+      "find": "Търси",
+      "clear": "Изчисти"
+    },
+    "openTerminalFirst": "Отворете SSH терминал, за да използвате неговите инструменти"
   }
 }

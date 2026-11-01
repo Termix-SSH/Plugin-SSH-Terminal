@@ -123,7 +123,8 @@
     "paste": "Vložiť obrázok",
     "settingsTitle": "Panel nástrojov",
     "upload": "Nahrať obrázok",
-    "uploadingImage": "Nahrávanie..."
+    "uploadingImage": "Nahrávanie...",
+    "tools": "Nástroje"
   },
   "history": {
     "noTerminalSelected": "Nie je vybraný žiadny terminál",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Presmerovať SSH prevádzku cez Cloudflare Zero Trust prostredníctvom WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Zakázať Nagleov algoritmus (TCP_NODELAY)",
+        "description": "Zakáže spájanie TCP paketov na zníženie oneskorenia SSH vstupu, najmä pri LAN pripojeniach. Môže zvýšiť sieťovú záťaž."
       },
       "cloudflareTunnelHostname": {
         "label": "Meno hostiteľa tunela",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "Prenos súborov rz a sz",
         "description": "Nahrávajte a sťahujte súbory pomocou rz a sz (lrzsz) priamo v termináli."
+      },
+      "rightClickAction": {
+        "label": "Kliknutie pravým tlačidlom v termináli",
+        "description": "Podržte Shift pre zobrazenie ponuky terminálu, alebo pre kopírovanie a vkladanie, ak ste si tu vybrali ponuku",
+        "copyPaste": "Kopírovať alebo vložiť",
+        "menu": "Ponuka terminálu",
+        "native": "Ponuka prehliadača"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V vkladá",
+        "description": "Vypnutím sa odošle Ctrl+V do shellu. Ctrl+Shift+V stále vkladá"
+      },
+      "copyOnSelect": {
+        "label": "Automaticky kopírovať vybraný text",
+        "description": "Text sa skopíruje hneď po jeho výbere v termináli"
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "História",
     "localTerminal": "Lokálny terminál",
-    "sshTools": "SSH nástroje",
     "terminal": "Terminál",
     "macros": "Makrá"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Zadajte sem na vysielanie stlačení klávesov...",
-    "copyOnSelect": "Automatické kopírovanie vybraného textu",
-    "enableRightClickCopyPaste": "Povoliť kopírovanie/vkladanie kliknutím pravým tlačidlom",
-    "ctrlVPaste": "Ctrl+V vkladá (vypnutím sa odošle Ctrl+V do shellu)",
-    "fillPassword": "Vložiť heslo",
-    "fillPasswordMissing_one": "Žiadne uložené heslo pre {{count}} vybraný terminál",
-    "fillPasswordMissing_few": "Žiadne uložené heslo pre {{count}} vybrané terminály",
-    "fillPasswordMissing_many": "Žiadne uložené heslo pre {{count}} vybraných terminálov",
-    "fillPasswordMissing_other": "Žiadne uložené heslo pre {{count}} vybraných terminálov",
-    "fillPasswordSuccess_one": "Heslo vyplnené do {{count}} terminálu",
-    "fillPasswordSuccess_few": "Heslo vyplnené do {{count}} terminálov",
-    "fillPasswordSuccess_many": "Heslo vyplnené do {{count}} terminálov",
-    "fillPasswordSuccess_other": "Heslo vyplnené do {{count}} terminálov",
-    "keyRecordingTitle": "Záznam kláves",
-    "noTerminalTabsOpen": "Žiadne otvorené karty terminálu",
-    "recordToTerminals": "Zaznamenať do terminálov",
-    "selectAll": "Všetky",
-    "selectNone": "Žiadne",
-    "selectTerminalsAbove": "Vyberte terminály vyššie",
-    "settingsTitle": "Nastavenia",
-    "startRecording": "Spustiť záznam",
-    "stopRecording": "Zastaviť záznam"
   },
   "keybindings": {
     "openLocalTerminal": "Otvoriť nový lokálny terminál",
@@ -639,7 +634,8 @@
       "ctrlT": "Poslať Ctrl+T do shellu (zablokované, aby sa neotvorila karta prehliadača)",
       "ctrlN": "Poslať Ctrl+N do shellu (zablokované, aby sa neotvorilo okno prehliadača)",
       "ctrlQ": "Poslať Ctrl+Q do shellu (zablokované, aby sa neukončil prehliadač)"
-    }
+    },
+    "toggleBroadcast": "Zapnúť alebo vypnúť vysielanie"
   },
   "macros": {
     "title": "Makrá",
@@ -749,5 +745,115 @@
     "sending": "Nahrávanie {{name}}",
     "receiving": "Sťahovanie {{name}}",
     "cancel": "Zrušiť prenos"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Vysielať vstup",
+      "stop": "Zastaviť vysielanie",
+      "stopShort": "Zastaviť",
+      "on": "Vysielanie zapnuté",
+      "paused": "Vysielanie pozastavené",
+      "pausedForPassword": "Pozastavené pri výzve na zadanie hesla",
+      "pause": "Pozastaviť",
+      "resume": "Pokračovať",
+      "members_one": "{{count}} terminál",
+      "members_few": "{{count}} terminály",
+      "members_many": "{{count}} terminálov",
+      "members_other": "{{count}} terminálov",
+      "allOpen": "Všetky otvorené",
+      "thisSplit": "Toto rozdelenie",
+      "sameFolder": "Rovnaký priečinok",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_few": "{{count}} offline",
+      "offlineCount_many": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Otvorte ďalší terminál pre vysielanie do neho",
+      "compose": "Skladať",
+      "composeHint": "Napíšte príkaz. Ctrl+Enter ho odošle do skupiny",
+      "send": "Odoslať",
+      "pressEnter": "Stlačte Enter",
+      "skipped_one": "Preskočený {{count}} terminál, ktorý je offline alebo sa pýta na heslo",
+      "skipped_few": "Preskočené {{count}} terminály, ktoré sú offline alebo sa pýtajú na heslo",
+      "skipped_many": "Preskočených {{count}} terminálov, ktoré sú offline alebo sa pýtajú na heslo",
+      "skipped_other": "Preskočených {{count}} terminálov, ktoré sú offline alebo sa pýtajú na heslo"
+    },
+    "fill": {
+      "label": "Doplň heslo",
+      "done_one": "Heslo bolo doplnené v {{count}} termináli",
+      "done_few": "Heslo bolo doplnené v {{count}} termináloch",
+      "done_many": "Heslo bolo doplnené v {{count}} termináloch",
+      "done_other": "Heslo bolo doplnené v {{count}} termináloch",
+      "noPassword_one": "Žiadne uložené heslo pre {{count}} terminál",
+      "noPassword_few": "Žiadne uložené heslo pre {{count}} terminály",
+      "noPassword_many": "Žiadne uložené heslo pre {{count}} terminálov",
+      "noPassword_other": "Žiadne uložené heslo pre {{count}} terminálov",
+      "notAsking_one": "{{count}} terminál sa nepýta na heslo",
+      "notAsking_few": "{{count}} terminály sa nepýtajú na heslo",
+      "notAsking_many": "{{count}} terminálov sa nepýta na heslo",
+      "notAsking_other": "{{count}} terminálov sa nepýta na heslo"
+    },
+    "find": {
+      "all": "Hľadať vo všetkých termináloch",
+      "badRegex": "Tento regulárny výraz nie je platný",
+      "capped": "Zobrazujú sa prvé {{count}} výsledky"
+    },
+    "watch": {
+      "title": "Sledovať výstup",
+      "note": "Pravidlá bežia, kým je Termix otvorený. Upozornenia uvádzajú názov pravidla a hostiteľa, nikdy nie výstup.",
+      "name": "Názov pravidla",
+      "when": "Upozorniť, keď",
+      "kindMatch": "Výstup zodpovedá",
+      "kindQuiet": "Výstup sa zastaví",
+      "kindActivity": "Nový výstup na pozadí",
+      "pattern": "Text na vyhľadávanie",
+      "seconds": "Sekundy ticha",
+      "add": "Pridať pravidlo",
+      "delete": "Odstrániť pravidlo",
+      "describeMatch": "Zodpovedá {{pattern}}",
+      "describeQuiet_one": "Ticho po dobu {{count}} sekundy",
+      "describeQuiet_few": "Ticho po dobu {{count}} sekúnd",
+      "describeQuiet_many": "Ticho po dobu {{count}} sekúnd",
+      "describeQuiet_other": "Ticho po dobu {{count}} sekúnd",
+      "describeActivity": "Nový výstup na pozadí",
+      "nameRequired": "Pravidlu zadajte názov",
+      "patternRequired": "Zadajte text na vyhľadávanie",
+      "badRegex": "Tento regulárny výraz nie je platný",
+      "secondsRequired": "Zadajte 1 sekundu alebo viac",
+      "fired": "{{rule}} na {{host}}",
+      "active_one": "{{count}} pravidlo sledovania zapnuté",
+      "active_few": "{{count}} pravidlá sledovania zapnuté",
+      "active_many": "{{count}} pravidiel sledovania zapnutých",
+      "active_other": "{{count}} pravidiel sledovania zapnutých"
+    },
+    "output": {
+      "save": "Uložiť výstup",
+      "copy": "Kopírovať výstup",
+      "saveSelection": "Uložiť výber",
+      "empty": "Nie je nič na uloženie",
+      "copied": "Výstup skopírovaný",
+      "copyFailed": "Výstup sa nepodarilo skopírovať"
+    },
+    "fix": {
+      "resetDisplay": "Obnoviť zobrazenie",
+      "clearScrollback": "Vymazať históriu posúvania",
+      "resetShell": "Obnoviť shell",
+      "resetShellTitle": "Obnoviť shell?",
+      "resetShellDescription": "Toto zadá príkazy stty sane a reset na riadku príkazov. Akýkoľvek text na riadku sa spustí spolu s nimi."
+    },
+    "keys": {
+      "title": "Poslať kláves",
+      "custom": "Ctrl + písmeno",
+      "customTitle": "Poslať Ctrl + písmeno",
+      "customDescription": "Zadajte písmeno, ktoré chcete poslať s Ctrl"
+    },
+    "menu": {
+      "copy": "Kopírovať",
+      "paste": "Vložiť",
+      "selectAll": "Označiť všetko",
+      "find": "Hľadať",
+      "clear": "Vymazať"
+    },
+    "openTerminalFirst": "Otvorte SSH terminál na použitie jeho nástrojov"
   }
 }

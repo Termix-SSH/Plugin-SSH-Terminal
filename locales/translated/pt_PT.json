@@ -121,7 +121,8 @@
     "paste": "Colar imagem",
     "settingsTitle": "Barra de ferramentas",
     "upload": "Carregar imagem",
-    "uploadingImage": "A carregar..."
+    "uploadingImage": "A carregar...",
+    "tools": "Ferramentas"
   },
   "history": {
     "noTerminalSelected": "Nenhum terminal selecionado",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Encaminhar tráfego SSH através do Cloudflare Zero Trust via WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Desativar algoritmo de Nagle (TCP_NODELAY)",
+        "description": "Desativa o agrupamento de pacotes TCP para reduzir a latência de entrada SSH, especialmente em ligações LAN. Pode aumentar o tráfego de rede."
       },
       "cloudflareTunnelHostname": {
         "label": "Nome do Host do Túnel",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "Transferências de ficheiros rz e sz",
         "description": "Carregar e transferir ficheiros com rz e sz (lrzsz) diretamente no terminal."
+      },
+      "rightClickAction": {
+        "label": "Clique direito no terminal",
+        "description": "Mantenha Shift premido para obter o menu do terminal, ou copiar e colar se o menu for a sua escolha aqui",
+        "copyPaste": "Copiar ou colar",
+        "menu": "Menu do terminal",
+        "native": "Menu do navegador"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V cola",
+        "description": "Desative para enviar Ctrl+V para o shell. Ctrl+Shift+V continua a colar"
+      },
+      "copyOnSelect": {
+        "label": "Copiar texto selecionado automaticamente",
+        "description": "Copia o texto assim que o selecionar no terminal"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "Histórico",
     "localTerminal": "Terminal Local",
-    "sshTools": "Ferramentas SSH",
     "terminal": "Terminal",
     "macros": "Macros"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Escreva aqui para transmitir teclas...",
-    "copyOnSelect": "Copiar texto selecionado automaticamente",
-    "enableRightClickCopyPaste": "Ativar copiar/colar com clique direito",
-    "ctrlVPaste": "Ctrl+V cola (desative para enviar Ctrl+V para o shell)",
-    "fillPassword": "Preencher palavra-passe",
-    "fillPasswordMissing_one": "Sem palavra-passe guardada para {{count}} terminal selecionado",
-    "fillPasswordMissing_many": "Sem palavra-passe guardada para {{count}} terminais selecionados",
-    "fillPasswordMissing_other": "Sem palavra-passe guardada para {{count}} terminais selecionados",
-    "fillPasswordSuccess_one": "Palavra-passe preenchida em {{count}} terminal",
-    "fillPasswordSuccess_many": "Palavra-passe preenchida em {{count}} terminais",
-    "fillPasswordSuccess_other": "Palavra-passe preenchida em {{count}} terminais",
-    "keyRecordingTitle": "Gravação de Teclas",
-    "noTerminalTabsOpen": "Nenhum separador de terminal aberto",
-    "recordToTerminals": "Gravar nos terminais",
-    "selectAll": "Todos",
-    "selectNone": "Nenhum",
-    "selectTerminalsAbove": "Selecionar terminais acima",
-    "settingsTitle": "Definições",
-    "startRecording": "Iniciar Gravação",
-    "stopRecording": "Parar Gravação"
   },
   "keybindings": {
     "openLocalTerminal": "Abrir novo terminal local",
@@ -634,7 +631,8 @@
       "ctrlT": "Enviar Ctrl+T para o shell (impede a abertura de um separador do navegador)",
       "ctrlN": "Enviar Ctrl+N para o shell (impede a abertura de uma janela do navegador)",
       "ctrlQ": "Enviar Ctrl+Q para o shell (impede o fecho do navegador)"
-    }
+    },
+    "toggleBroadcast": "Ativar ou desativar transmissão"
   },
   "macros": {
     "title": "Macros",
@@ -743,5 +741,107 @@
     "sending": "A carregar {{name}}",
     "receiving": "A transferir {{name}}",
     "cancel": "Cancelar transferência"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Transmitir entrada",
+      "stop": "Parar transmissão",
+      "stopShort": "Parar",
+      "on": "Transmissão ativa",
+      "paused": "Transmissão em pausa",
+      "pausedForPassword": "Em pausa no pedido de palavra-passe",
+      "pause": "Pausar",
+      "resume": "Retomar",
+      "members_one": "{{count}} terminal",
+      "members_many": "{{count}} terminais",
+      "members_other": "{{count}} terminais",
+      "allOpen": "Todos abertos",
+      "thisSplit": "Esta divisão",
+      "sameFolder": "Mesma pasta",
+      "offline": "Desligado",
+      "offlineCount_one": "{{count}} desligado",
+      "offlineCount_many": "{{count}} desligados",
+      "offlineCount_other": "{{count}} desligados",
+      "openMore": "Abra outro terminal para transmitir para ele",
+      "compose": "Compor",
+      "composeHint": "Escreva um comando. Ctrl+Enter envia-o para o grupo",
+      "send": "Enviar",
+      "pressEnter": "Prima Enter",
+      "skipped_one": "Ignorado {{count}} terminal que está desligado ou a pedir palavra-passe",
+      "skipped_many": "Ignorados {{count}} terminais que estão desligados ou a pedir palavra-passe",
+      "skipped_other": "Ignorados {{count}} terminais que estão desligados ou a pedir palavra-passe"
+    },
+    "fill": {
+      "label": "Preencher palavra-passe",
+      "done_one": "Palavra-passe preenchida em {{count}} terminal",
+      "done_many": "Palavra-passe preenchida em {{count}} terminais",
+      "done_other": "Palavra-passe preenchida em {{count}} terminais",
+      "noPassword_one": "Sem palavra-passe guardada para {{count}} terminal",
+      "noPassword_many": "Sem palavra-passe guardada para {{count}} terminais",
+      "noPassword_other": "Sem palavra-passe guardada para {{count}} terminais",
+      "notAsking_one": "{{count}} terminal não está a pedir palavra-passe",
+      "notAsking_many": "{{count}} terminais não estão a pedir palavra-passe",
+      "notAsking_other": "{{count}} terminais não estão a pedir palavra-passe"
+    },
+    "find": {
+      "all": "Procurar em todos os terminais",
+      "badRegex": "Esta expressão regular não é válida",
+      "capped": "A mostrar os primeiros {{count}} resultados"
+    },
+    "watch": {
+      "title": "Monitorizar saída",
+      "note": "As regras executam-se enquanto o Termix estiver aberto. As alertas indicam o nome da regra e do host, nunca a saída.",
+      "name": "Nome da regra",
+      "when": "Alertar quando",
+      "kindMatch": "Saída corresponde a",
+      "kindQuiet": "Saída fica silenciosa",
+      "kindActivity": "Nova saída em segundo plano",
+      "pattern": "Texto a procurar",
+      "seconds": "Segundos de silêncio",
+      "add": "Adicionar regra",
+      "delete": "Eliminar regra",
+      "describeMatch": "Corresponde a {{pattern}}",
+      "describeQuiet_one": "Silencioso por {{count}} segundo",
+      "describeQuiet_many": "Silencioso por {{count}} segundos",
+      "describeQuiet_other": "Silencioso por {{count}} segundos",
+      "describeActivity": "Nova saída em segundo plano",
+      "nameRequired": "Dê um nome à regra",
+      "patternRequired": "Introduza o texto a procurar",
+      "badRegex": "Esta expressão regular não é válida",
+      "secondsRequired": "Introduza 1 segundo ou mais",
+      "fired": "{{rule}} em {{host}}",
+      "active_one": "{{count}} regra de monitorização ativa",
+      "active_many": "{{count}} regras de monitorização ativas",
+      "active_other": "{{count}} regras de monitorização ativas"
+    },
+    "output": {
+      "save": "Guardar saída",
+      "copy": "Copiar saída",
+      "saveSelection": "Guardar seleção",
+      "empty": "Não há nada para guardar",
+      "copied": "Saída copiada",
+      "copyFailed": "Não foi possível copiar a saída"
+    },
+    "fix": {
+      "resetDisplay": "Repor ecrã",
+      "clearScrollback": "Limpar histórico de rolagem",
+      "resetShell": "Repor shell",
+      "resetShellTitle": "Repor o shell?",
+      "resetShellDescription": "Isto executa `stty sane` e `reset` no prompt. Qualquer texto na linha será executado juntamente com eles."
+    },
+    "keys": {
+      "title": "Enviar tecla",
+      "custom": "Ctrl + letra",
+      "customTitle": "Enviar Ctrl + letra",
+      "customDescription": "Escreva a letra a enviar com Ctrl"
+    },
+    "menu": {
+      "copy": "Copiar",
+      "paste": "Colar",
+      "selectAll": "Selecionar tudo",
+      "find": "Pesquisar",
+      "clear": "Limpar"
+    },
+    "openTerminalFirst": "Abra um terminal SSH para usar as suas ferramentas"
   }
 }

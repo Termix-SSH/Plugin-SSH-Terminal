@@ -121,7 +121,8 @@
     "paste": "Enganxar imatge",
     "settingsTitle": "Barra d'eines",
     "upload": "Pujar imatge",
-    "uploadingImage": "Pujant..."
+    "uploadingImage": "Pujant...",
+    "tools": "Eines"
   },
   "history": {
     "noTerminalSelected": "Cap terminal seleccionat",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Túnel de Cloudflare",
         "description": "Encamina el trànsit SSH a través de Cloudflare Zero Trust mitjançant WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Desactiva l'algorisme de Nagle (TCP_NODELAY)",
+        "description": "Desactiva l'agrupament de paquets TCP per reduir la latència d'entrada SSH, especialment en connexions LAN. Pot augmentar la càrrega de xarxa."
       },
       "cloudflareTunnelHostname": {
         "label": "Nom d'amfitrió del túnel",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "Transferències de fitxers rz i sz",
         "description": "Pujar i baixar fitxers amb rz i sz (lrzsz) directament al terminal."
+      },
+      "rightClickAction": {
+        "label": "Clic dret al terminal",
+        "description": "Mantén premuda la tecla Shift per obtenir el menú del terminal, o copia i enganxa si has triat el menú aquí",
+        "copyPaste": "Copia o enganxa",
+        "menu": "Menú del terminal",
+        "native": "Menú del navegador"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V enganxa",
+        "description": "Desactiva-ho per enviar Ctrl+V al shell. Ctrl+Shift+V continua enganxant"
+      },
+      "copyOnSelect": {
+        "label": "Copia automàticament el text seleccionat",
+        "description": "Copia el text tan bon punt el selecciones al terminal"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "Historial",
     "localTerminal": "Terminal local",
-    "sshTools": "Eines SSH",
     "terminal": "Terminal",
     "macros": "Macros"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Escriu aquí per difondre les tecles...",
-    "copyOnSelect": "Copia el text seleccionat automàticament",
-    "enableRightClickCopyPaste": "Activa la còpia/enganxament amb clic dret",
-    "ctrlVPaste": "Ctrl+V enganxa (desactiva-ho per enviar Ctrl+V a la shell)",
-    "fillPassword": "Omplir la contrasenya",
-    "fillPasswordMissing_one": "No hi ha cap contrasenya desada per a {{count}} terminal seleccionada",
-    "fillPasswordMissing_many": "No hi ha cap contrasenya desada per a {{count}} terminals seleccionades",
-    "fillPasswordMissing_other": "No hi ha cap contrasenya desada per a {{count}} terminals seleccionades",
-    "fillPasswordSuccess_one": "S'ha omplert la contrasenya a {{count}} terminal",
-    "fillPasswordSuccess_many": "S'ha omplert la contrasenya a {{count}} terminals",
-    "fillPasswordSuccess_other": "S'ha omplert la contrasenya a {{count}} terminals",
-    "keyRecordingTitle": "Enregistrament de tecles",
-    "noTerminalTabsOpen": "No hi ha cap pestanya de terminal oberta",
-    "recordToTerminals": "Enregistrar a les terminals",
-    "selectAll": "Totes",
-    "selectNone": "Cap",
-    "selectTerminalsAbove": "Selecciona les terminals de dalt",
-    "settingsTitle": "Configuració",
-    "startRecording": "Inicia l'enregistrament",
-    "stopRecording": "Atura l'enregistrament"
   },
   "keybindings": {
     "openLocalTerminal": "Obrir un nou terminal local",
@@ -634,7 +631,8 @@
       "ctrlT": "Envia Ctrl+T al shell (bloquejat per evitar obrir una pestanya del navegador)",
       "ctrlN": "Envia Ctrl+N al shell (bloquejat per evitar obrir una finestra del navegador)",
       "ctrlQ": "Envia Ctrl+Q al shell (bloquejat per evitar sortir del navegador)"
-    }
+    },
+    "toggleBroadcast": "Activa o desactiva la difusió"
   },
   "macros": {
     "title": "Macros",
@@ -743,5 +741,107 @@
     "sending": "Pujant {{name}}",
     "receiving": "Baixant {{name}}",
     "cancel": "Cancel·la la transferència"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Difon l'entrada",
+      "stop": "Atura la difusió",
+      "stopShort": "Atura",
+      "on": "Difusió activada",
+      "paused": "Difusió en pausa",
+      "pausedForPassword": "En pausa a la sol·licitud de contrasenya",
+      "pause": "Pausa",
+      "resume": "Reprèn",
+      "members_one": "{{count}} terminal",
+      "members_many": "{{count}} terminals",
+      "members_other": "{{count}} terminals",
+      "allOpen": "Tots oberts",
+      "thisSplit": "Aquesta divisió",
+      "sameFolder": "Mateixa carpeta",
+      "offline": "Desconnectat",
+      "offlineCount_one": "{{count}} desconnectat",
+      "offlineCount_many": "{{count}} desconnectats",
+      "offlineCount_other": "{{count}} desconnectats",
+      "openMore": "Obre un altre terminal per difondre-hi",
+      "compose": "Compon",
+      "composeHint": "Escriu un comandament. Ctrl+Enter l'envia al grup",
+      "send": "Envia",
+      "pressEnter": "Prem Enter",
+      "skipped_one": "S'ha omès {{count}} terminal que està desconnectat o demanant una contrasenya",
+      "skipped_many": "S'han omès {{count}} terminals que estan desconnectats o demanant una contrasenya",
+      "skipped_other": "S'han omès {{count}} terminals que estan desconnectats o demanant una contrasenya"
+    },
+    "fill": {
+      "label": "Omplir la contrasenya",
+      "done_one": "S'ha omplert la contrasenya a {{count}} terminal",
+      "done_many": "S'ha omplert la contrasenya a {{count}} terminals",
+      "done_other": "S'ha omplert la contrasenya a {{count}} terminals",
+      "noPassword_one": "No hi ha cap contrasenya desada per a {{count}} terminal",
+      "noPassword_many": "No hi ha cap contrasenya desada per a {{count}} terminals",
+      "noPassword_other": "No hi ha cap contrasenya desada per a {{count}} terminals",
+      "notAsking_one": "{{count}} terminal no demana una contrasenya",
+      "notAsking_many": "{{count}} terminals no demanen una contrasenya",
+      "notAsking_other": "{{count}} terminals no demanen una contrasenya"
+    },
+    "find": {
+      "all": "Cerca en tots els terminals",
+      "badRegex": "Aquesta expressió regular no és vàlida",
+      "capped": "Es mostren els primers {{count}} resultats"
+    },
+    "watch": {
+      "title": "Vigila la sortida",
+      "note": "Les regles s'executen mentre Termix està obert. Les alertes indiquen el nom de la regla i l'amfitrió, mai la sortida.",
+      "name": "Nom de la regla",
+      "when": "Alerta quan",
+      "kindMatch": "La sortida coincideix",
+      "kindQuiet": "La sortida es queda en silenci",
+      "kindActivity": "Nova sortida en segon pla",
+      "pattern": "Text a buscar",
+      "seconds": "Segons de silenci",
+      "add": "Afegeix una regla",
+      "delete": "Suprimeix la regla",
+      "describeMatch": "Coincideix amb {{pattern}}",
+      "describeQuiet_one": "Silenci durant {{count}} segon",
+      "describeQuiet_many": "Silenci durant {{count}} segons",
+      "describeQuiet_other": "Silenci durant {{count}} segons",
+      "describeActivity": "Nova sortida en segon pla",
+      "nameRequired": "Dona un nom a la regla",
+      "patternRequired": "Introdueix el text a buscar",
+      "badRegex": "Aquesta expressió regular no és vàlida",
+      "secondsRequired": "Introdueix 1 segon o més",
+      "fired": "{{rule}} a {{host}}",
+      "active_one": "{{count}} regla de vigilància activada",
+      "active_many": "{{count}} regles de vigilància activades",
+      "active_other": "{{count}} regles de vigilància activades"
+    },
+    "output": {
+      "save": "Desa la sortida",
+      "copy": "Copia la sortida",
+      "saveSelection": "Desa la selecció",
+      "empty": "No hi ha res per desar",
+      "copied": "Sortida copiada",
+      "copyFailed": "No s'ha pogut copiar la sortida"
+    },
+    "fix": {
+      "resetDisplay": "Restableix la visualització",
+      "clearScrollback": "Esborra l'historial de desplaçament",
+      "resetShell": "Restableix la shell",
+      "resetShellTitle": "Vols restablir la shell?",
+      "resetShellDescription": "Això escriu `stty sane` i `reset` a l'indicador. Qualsevol text a la línia s'executarà amb ells."
+    },
+    "keys": {
+      "title": "Envia una tecla",
+      "custom": "Ctrl + lletra",
+      "customTitle": "Envia Ctrl + lletra",
+      "customDescription": "Escriu la lletra que vols enviar amb Ctrl"
+    },
+    "menu": {
+      "copy": "Copia",
+      "paste": "Enganxa",
+      "selectAll": "Selecciona-ho tot",
+      "find": "Cerca",
+      "clear": "Esborra"
+    },
+    "openTerminalFirst": "Obre un terminal SSH per utilitzar-ne les eines"
   }
 }

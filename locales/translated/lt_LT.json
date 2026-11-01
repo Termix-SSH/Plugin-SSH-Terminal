@@ -123,7 +123,8 @@
     "paste": "Įklijuoti paveikslėlį",
     "settingsTitle": "Įrankių juosta",
     "upload": "Įkelti paveikslėlį",
-    "uploadingImage": "Įkeliamas..."
+    "uploadingImage": "Įkeliamas...",
+    "tools": "Įrankiai"
   },
   "history": {
     "noTerminalSelected": "Nepasirinktas terminalas",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare tunelis",
         "description": "Maršrutuokite SSH srautą per Cloudflare Zero Trust naudojant WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Išjungti Nagle algoritmą (TCP_NODELAY)",
+        "description": "Išjungia TCP paketų grupavimą, kad sumažintų SSH įvesties vėlavimą, ypač vietiniame tinkle. Tai gali padidinti tinklo apkrovą."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunelio pavadinimas",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "rz ir sz failų perdavimai",
         "description": "Įkelkite ir atsisiųskite failus naudodami rz ir sz (lrzsz) tiesiai terminale."
+      },
+      "rightClickAction": {
+        "label": "Dešinysis pelės spustelėjimas terminale",
+        "description": "Laikykite nuspaustą „Shift“, kad atidarytumėte terminalo meniu vietoj to, arba kopijuokite ir įklijuokite, jei čia pasirinkote meniu.",
+        "copyPaste": "Kopijuoti arba įklijuoti",
+        "menu": "Terminalo meniu",
+        "native": "Naršyklės meniu"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V įklijuoja",
+        "description": "Išjungus, Ctrl+V bus siunčiamas į shell aplinką. Ctrl+Shift+V vis tiek įklijuos."
+      },
+      "copyOnSelect": {
+        "label": "Automatiškai kopijuoti pažymėtą tekstą",
+        "description": "Tekstas kopijuojamas iškart jį pažymėjus terminale."
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "Istorija",
     "localTerminal": "Vietinis terminalas",
-    "sshTools": "SSH įrankiai",
     "terminal": "Terminalas",
     "macros": "Makrokomandos"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Rašykite čia, kad transliuotumėte klavišų paspaudimus...",
-    "copyOnSelect": "Automatiškai kopijuoti pažymėtą tekstą",
-    "enableRightClickCopyPaste": "Įgalinti dešiniojo pelės klavišo kopijavimą/lipdymą",
-    "ctrlVPaste": "Ctrl+V lipdo (išjunkite, kad Ctrl+V būtų siunčiama į shell)",
-    "fillPassword": "Įvesti slaptažodį",
-    "fillPasswordMissing_one": "Nėra išsaugoto slaptažodžio {{count}} pasirinktam terminalui",
-    "fillPasswordMissing_few": "Nėra išsaugotų slaptažodžių {{count}} pasirinktiems terminalams",
-    "fillPasswordMissing_many": "Nėra išsaugotų slaptažodžių {{count}} pasirinktų terminalų",
-    "fillPasswordMissing_other": "Nėra išsaugotų slaptažodžių {{count}} pasirinktų terminalų",
-    "fillPasswordSuccess_one": "Slaptažodis įvestas į {{count}} terminalą",
-    "fillPasswordSuccess_few": "Slaptažodžiai įvesti į {{count}} terminalus",
-    "fillPasswordSuccess_many": "Slaptažodžiai įvesti į {{count}} terminalų",
-    "fillPasswordSuccess_other": "Slaptažodžiai įvesti į {{count}} terminalų",
-    "keyRecordingTitle": "Raktų įrašymas",
-    "noTerminalTabsOpen": "Atidarytų terminalų skirtukų nėra",
-    "recordToTerminals": "Įrašyti į terminalus",
-    "selectAll": "Visi",
-    "selectNone": "Niekas",
-    "selectTerminalsAbove": "Pasirinkti terminalus viršuje",
-    "settingsTitle": "Nustatymai",
-    "startRecording": "Pradėti įrašymą",
-    "stopRecording": "Sustabdyti įrašymą"
   },
   "keybindings": {
     "openLocalTerminal": "Atidaryti naują vietinę komandinę eilutę",
@@ -639,7 +634,8 @@
       "ctrlT": "Siųsti Ctrl+T į shell (užblokuota, kad neatvertų naršyklės skirtuko)",
       "ctrlN": "Siųsti Ctrl+N į shell (užblokuota, kad neatvertų naršyklės lango)",
       "ctrlQ": "Siųsti Ctrl+Q į shell (užblokuota, kad neišeitų iš naršyklės)"
-    }
+    },
+    "toggleBroadcast": "Įjungti arba išjungti transliavimą"
   },
   "macros": {
     "title": "Makrokomandos",
@@ -749,5 +745,115 @@
     "sending": "Įkeliamas {{name}}",
     "receiving": "Atsisiunčiamas {{name}}",
     "cancel": "Atšaukti perdavimą"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Transliuoti įvestį",
+      "stop": "Sustabdyti transliavimą",
+      "stopShort": "Sustabdyti",
+      "on": "Transliavimas įjungtas",
+      "paused": "Transliavimas pristabdytas",
+      "pausedForPassword": "Pristabdyta laukiant slaptažodžio",
+      "pause": "Pristabdyti",
+      "resume": "Tęsti",
+      "members_one": "{{count}} terminalas",
+      "members_few": "{{count}} terminalai",
+      "members_many": "{{count}} terminalų",
+      "members_other": "{{count}} terminalų",
+      "allOpen": "Visi atidaryti",
+      "thisSplit": "Šis padalintas vaizdas",
+      "sameFolder": "Toje pačioje aplankelyje",
+      "offline": "Neprisijungę",
+      "offlineCount_one": "{{count}} neprisijungęs",
+      "offlineCount_few": "{{count}} neprisijungę",
+      "offlineCount_many": "{{count}} neprisijungusių",
+      "offlineCount_other": "{{count}} neprisijungusių",
+      "openMore": "Atidarykite kitą terminalą, kad galėtumėte transliuoti į jį",
+      "compose": "Rašyti",
+      "composeHint": "Parašykite komandą. Ctrl+Enter išsiųs ją grupei",
+      "send": "Siųsti",
+      "pressEnter": "Paspauskite Enter",
+      "skipped_one": "Praleistas {{count}} terminalas, kuris yra neprisijungęs arba prašo slaptažodžio",
+      "skipped_few": "Praleisti {{count}} terminalai, kurie yra neprisijungę arba prašo slaptažodžio",
+      "skipped_many": "Praleista {{count}} terminalų, kurie yra neprisijungę arba prašo slaptažodžio",
+      "skipped_other": "Praleista {{count}} terminalų, kurie yra neprisijungę arba prašo slaptažodžio"
+    },
+    "fill": {
+      "label": "Užpildyti slaptažodį",
+      "done_one": "Slaptažodis užpildytas {{count}} terminaluose",
+      "done_few": "Slaptažodis užpildytas {{count}} terminaluose",
+      "done_many": "Slaptažodis užpildytas {{count}} terminalų",
+      "done_other": "Slaptažodis užpildytas {{count}} terminalų",
+      "noPassword_one": "Nėra išsaugoto slaptažodžio {{count}} terminalui",
+      "noPassword_few": "Nėra išsaugoto slaptažodžio {{count}} terminalams",
+      "noPassword_many": "Nėra išsaugoto slaptažodžio {{count}} terminalų",
+      "noPassword_other": "Nėra išsaugoto slaptažodžio {{count}} terminalų",
+      "notAsking_one": "{{count}} terminalas neprašo slaptažodžio",
+      "notAsking_few": "{{count}} terminalai neprašo slaptažodžio",
+      "notAsking_many": "{{count}} terminalų neprašo slaptažodžio",
+      "notAsking_other": "{{count}} terminalų neprašo slaptažodžio"
+    },
+    "find": {
+      "all": "Ieškoti visuose terminaluose",
+      "badRegex": "Ši reguliarioji išraiška neteisinga",
+      "capped": "Rodomi pirmieji {{count}} rezultatai"
+    },
+    "watch": {
+      "title": "Stebėti išvestį",
+      "note": "Taisyklės veikia, kol Termix yra atidarytas. Pranešimuose nurodoma taisyklės ir serverio pavadinimai, bet niekada ne pati išvestis.",
+      "name": "Taisyklės pavadinimas",
+      "when": "Pranešti, kai",
+      "kindMatch": "Išvestis atitinka",
+      "kindQuiet": "Išvestis nutyla",
+      "kindActivity": "Nauja išvestis fone",
+      "pattern": "Tekstas, kurį ieškoti",
+      "seconds": "Tylos sekundžių skaičius",
+      "add": "Pridėti taisyklę",
+      "delete": "Šalinti taisyklę",
+      "describeMatch": "Atitinka {{pattern}}",
+      "describeQuiet_one": "Tyla {{count}} sekundę",
+      "describeQuiet_few": "Tyla {{count}} sekundes",
+      "describeQuiet_many": "Tyla {{count}} sekundžių",
+      "describeQuiet_other": "Tyla {{count}} sekundžių",
+      "describeActivity": "Nauja išvestis fone",
+      "nameRequired": "Pavadinkite taisyklę",
+      "patternRequired": "Įveskite tekstą, kurį ieškoti",
+      "badRegex": "Ši reguliarioji išraiška neteisinga",
+      "secondsRequired": "Įveskite 1 sekundę arba daugiau",
+      "fired": "{{rule}} serveryje {{host}}",
+      "active_one": "{{count}} stebėjimo taisyklė įjungta",
+      "active_few": "{{count}} stebėjimo taisyklės įjungtos",
+      "active_many": "{{count}} stebėjimo taisyklių įjungta",
+      "active_other": "{{count}} stebėjimo taisyklių įjungta"
+    },
+    "output": {
+      "save": "Išsaugoti išvestį",
+      "copy": "Kopijuoti išvestį",
+      "saveSelection": "Išsaugoti pasirinkimą",
+      "empty": "Nėra ko išsaugoti",
+      "copied": "Išvestis nukopijuota",
+      "copyFailed": "Nepavyko nukopijuoti išvesties"
+    },
+    "fix": {
+      "resetDisplay": "Atstatyti ekraną",
+      "clearScrollback": "Išvalyti slinkimo istoriją",
+      "resetShell": "Atstatyti komandinę eilutę",
+      "resetShellTitle": "Atstatyti komandinę eilutę?",
+      "resetShellDescription": "Tai komandinėje eilutėje įveda „stty sane“ ir „reset“. Bet koks eilutėje esantis tekstas bus paleistas kartu."
+    },
+    "keys": {
+      "title": "Siųsti klavišą",
+      "custom": "Ctrl + raidė",
+      "customTitle": "Siųsti Ctrl + raidę",
+      "customDescription": "Įveskite raidę, kurią norite siųsti su Ctrl"
+    },
+    "menu": {
+      "copy": "Kopijuoti",
+      "paste": "Įklijuoti",
+      "selectAll": "Pažymėti viską",
+      "find": "Ieškoti",
+      "clear": "Išvalyti"
+    },
+    "openTerminalFirst": "Atidarykite SSH terminalą, kad galėtumėte naudoti jo įrankius"
   }
 }

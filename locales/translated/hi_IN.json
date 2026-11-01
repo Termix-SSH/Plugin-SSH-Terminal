@@ -119,7 +119,8 @@
     "paste": "इमेज पेस्ट करें",
     "settingsTitle": "टूलबार",
     "upload": "इमेज अपलोड करें",
-    "uploadingImage": "अपलोड हो रहा है..."
+    "uploadingImage": "अपलोड हो रहा है...",
+    "tools": "उपकरण"
   },
   "history": {
     "noTerminalSelected": "कोई टर्मिनल चयनित नहीं",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare टनल",
         "description": "WebSocket के माध्यम से Cloudflare Zero Trust के ऊपर SSH ट्रैफ़िक राउट करें"
+      },
+      "tcpNoDelay": {
+        "label": "नेगल्स एल्गोरिदम अक्षम करें (TCP_NODELAY)",
+        "description": "LAN कनेक्शन पर विशेष रूप से SSH इनपुट लेटेंसी कम करने के लिए TCP पैकेट बैचिंग को अक्षम करता है। नेटवर्क ओवरहेड बढ़ सकता है।"
       },
       "cloudflareTunnelHostname": {
         "label": "टनल होस्टनेम",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz और sz फ़ाइल स्थानांतरण",
         "description": "rz और sz (lrzsz) के साथ फ़ाइलों को सीधे टर्मिनल में अपलोड और डाउनलोड करें।"
+      },
+      "rightClickAction": {
+        "label": "टर्मिनल में राइट क्लिक",
+        "description": "टर्मिनल मेनू प्राप्त करने के लिए Shift दबाए रखें, या यदि यहाँ मेनू आपका विकल्प है तो कॉपी और पेस्ट करें",
+        "copyPaste": "कॉपी या पेस्ट करें",
+        "menu": "टर्मिनल मेनू",
+        "native": "ब्राउज़र मेनू"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V पेस्ट करता है",
+        "description": "Ctrl+V को शेल को भेजने के लिए बंद करें। Ctrl+Shift+V अभी भी पेस्ट करता है"
+      },
+      "copyOnSelect": {
+        "label": "चयनित टेक्स्ट स्वचालित रूप से कॉपी करें",
+        "description": "जैसे ही आप टर्मिनल में टेक्स्ट चयन करते हैं, उसे कॉपी करता है"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "इतिहास",
     "localTerminal": "स्थानीय टर्मिनल",
-    "sshTools": "SSH टूल्स",
     "terminal": "टर्मिनल",
     "macros": "मैक्रो"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "कीस्ट्रोक ब्रॉडकास्ट करने के लिए यहाँ टाइप करें...",
-    "copyOnSelect": "चयनित पाठ स्वचालित रूप से कॉपी करें",
-    "enableRightClickCopyPaste": "राइट-क्लिक कॉपी/पेस्ट सक्षम करें",
-    "ctrlVPaste": "Ctrl+V पेस्ट करता है (शेल को Ctrl+V भेजने के लिए बंद करें)",
-    "fillPassword": "पासवर्ड भरें",
-    "fillPasswordMissing_one": "{{count}} चयनित टर्मिनल के लिए कोई सहेजा हुआ पासवर्ड नहीं",
-    "fillPasswordMissing_other": "{{count}} चयनित टर्मिनलों के लिए कोई सहेजा हुआ पासवर्ड नहीं",
-    "fillPasswordSuccess_one": "{{count}} टर्मिनल में पासवर्ड भर दिया गया",
-    "fillPasswordSuccess_other": "{{count}} टर्मिनलों में पासवर्ड भर दिया गया",
-    "keyRecordingTitle": "की रिकॉर्डिंग",
-    "noTerminalTabsOpen": "कोई टर्मिनल टैब खुला नहीं है",
-    "recordToTerminals": "टर्मिनल में रिकॉर्ड करें",
-    "selectAll": "सभी",
-    "selectNone": "कोई नहीं",
-    "selectTerminalsAbove": "ऊपर टर्मिनल चयनित करें",
-    "settingsTitle": "सेटिंग्स",
-    "startRecording": "रिकॉर्डिंग शुरू करें",
-    "stopRecording": "रिकॉर्डिंग बंद करें"
   },
   "keybindings": {
     "openLocalTerminal": "नया स्थानीय टर्मिनल खोलें",
@@ -629,7 +628,8 @@
       "ctrlT": "शेल को Ctrl+T भेजें (ब्राउज़र टैब खुलने से रोका गया)",
       "ctrlN": "शेल को Ctrl+N भेजें (ब्राउज़र विंडो खुलने से रोका गया)",
       "ctrlQ": "शेल को Ctrl+Q भेजें (ब्राउज़र बंद होने से रोका गया)"
-    }
+    },
+    "toggleBroadcast": "ब्रॉडकास्ट चालू या बंद करें"
   },
   "macros": {
     "title": "मैक्रो",
@@ -737,5 +737,99 @@
     "sending": "{{name}} अपलोड हो रहा है",
     "receiving": "{{name}} डाउनलोड हो रहा है",
     "cancel": "स्थानांतरण रद्द करें"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "इनपुट ब्रॉडकास्ट करें",
+      "stop": "ब्रॉडकास्ट बंद करें",
+      "stopShort": "बंद करें",
+      "on": "ब्रॉडकास्ट चालू",
+      "paused": "ब्रॉडकास्ट रूका हुआ",
+      "pausedForPassword": "पासवर्ड प्रॉम्प्ट पर रूका हुआ",
+      "pause": "रोकें",
+      "resume": "फिर से शुरू करें",
+      "members_one": "{{count}} टर्मिनल",
+      "members_other": "{{count}} टर्मिनल",
+      "allOpen": "सभी खुले",
+      "thisSplit": "यह स्प्लिट",
+      "sameFolder": "समान फ़ोल्डर",
+      "offline": "ऑफ़लाइन",
+      "offlineCount_one": "{{count}} ऑफ़लाइन",
+      "offlineCount_other": "{{count}} ऑफ़लाइन",
+      "openMore": "इसमें ब्रॉडकास्ट करने के लिए एक और टर्मिनल खोलें",
+      "compose": "रचें",
+      "composeHint": "एक कमांड लिखें। Ctrl+Enter इसे ग्रुप को भेजता है",
+      "send": "भेजें",
+      "pressEnter": "Enter दबाएं",
+      "skipped_one": "{{count}} टर्मिनल को छोड़ दिया गया जो ऑफ़लाइन है या पासवर्ड मांग रहा है",
+      "skipped_other": "{{count}} टर्मिनल को छोड़ दिया गया जो ऑफ़लाइन हैं या पासवर्ड मांग रहे हैं"
+    },
+    "fill": {
+      "label": "पासवर्ड भरें",
+      "done_one": "{{count}} टर्मिनल में पासवर्ड भरा गया",
+      "done_other": "{{count}} टर्मिनल में पासवर्ड भरा गया",
+      "noPassword_one": "{{count}} टर्मिनल के लिए कोई सेव पासवर्ड नहीं",
+      "noPassword_other": "{{count}} टर्मिनल के लिए कोई सेव पासवर्ड नहीं",
+      "notAsking_one": "{{count}} टर्मिनल पासवर्ड नहीं मांग रहा",
+      "notAsking_other": "{{count}} टर्मिनल पासवर्ड नहीं मांग रहे"
+    },
+    "find": {
+      "all": "सभी टर्मिनल में खोजें",
+      "badRegex": "यह रेगुलर एक्सप्रेशन वैध नहीं है",
+      "capped": "पहले {{count}} परिणाम दिखाए जा रहे हैं"
+    },
+    "watch": {
+      "title": "आउटपुट देखें",
+      "note": "नियम तब तक चलते हैं जब तक Termix खुला हो। अलर्ट नियम और होस्ट का नाम बताते हैं, कभी भी आउटपुट का नहीं।",
+      "name": "नियम का नाम",
+      "when": "अलर्ट जब",
+      "kindMatch": "आउटपुट मेल खाता है",
+      "kindQuiet": "आउटपुट शांत हो जाता है",
+      "kindActivity": "बैकग्राउंड में नया आउटपुट",
+      "pattern": "खोजने के लिए टेक्स्ट",
+      "seconds": "शांति की सेकंडें",
+      "add": "नियम जोड़ें",
+      "delete": "नियम हटाएं",
+      "describeMatch": "{{pattern}} से मेल खाता है",
+      "describeQuiet_one": "{{count}} सेकंड के लिए शांत",
+      "describeQuiet_other": "{{count}} सेकंड के लिए शांत",
+      "describeActivity": "बैकग्राउंड में नया आउटपुट",
+      "nameRequired": "नियम को एक नाम दें",
+      "patternRequired": "खोजने के लिए टेक्स्ट दर्ज करें",
+      "badRegex": "यह रेगुलर एक्सप्रेशन वैध नहीं है",
+      "secondsRequired": "1 सेकंड या अधिक दर्ज करें",
+      "fired": "{{host}} पर {{rule}}",
+      "active_one": "{{count}} वॉच नियम चालू",
+      "active_other": "{{count}} वॉच नियम चालू"
+    },
+    "output": {
+      "save": "आउटपुट सहेजें",
+      "copy": "आउटपुट कॉपी करें",
+      "saveSelection": "चयन सहेजें",
+      "empty": "सहेजने के लिए कुछ नहीं है",
+      "copied": "आउटपुट कॉपी किया गया",
+      "copyFailed": "आउटपुट कॉपी नहीं किया जा सका"
+    },
+    "fix": {
+      "resetDisplay": "डिस्प्ले रीसेट करें",
+      "clearScrollback": "स्क्रॉलबैक साफ़ करें",
+      "resetShell": "शेल रीसेट करें",
+      "resetShellTitle": "शेल रीसेट करें?",
+      "resetShellDescription": "यह प्रॉम्प्ट पर stty sane और reset टाइप करता है। लाइन पर मौजूद कोई भी पाठ इसके साथ चलेगा।"
+    },
+    "keys": {
+      "title": "की भेजें",
+      "custom": "Ctrl + अक्षर",
+      "customTitle": "Ctrl + अक्षर भेजें",
+      "customDescription": "Ctrl के साथ भेजने के लिए अक्षर टाइप करें"
+    },
+    "menu": {
+      "copy": "कॉपी करें",
+      "paste": "पेस्ट करें",
+      "selectAll": "सभी का चयन करें",
+      "find": "खोजें",
+      "clear": "साफ़ करें"
+    },
+    "openTerminalFirst": "उसके टूल्स का उपयोग करने के लिए एक SSH टर्मिनल खोलें"
   }
 }

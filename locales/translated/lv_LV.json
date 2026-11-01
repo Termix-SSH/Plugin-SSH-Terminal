@@ -121,7 +121,8 @@
     "paste": "Ielīmēt attēlu",
     "settingsTitle": "Rīkjosla",
     "upload": "Augšupielādēt attēlu",
-    "uploadingImage": "Augšupielāde..."
+    "uploadingImage": "Augšupielāde...",
+    "tools": "Rīki"
   },
   "history": {
     "noTerminalSelected": "Terminālis nav izvēlēts",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare tunelis",
         "description": "Maršrutēt SSH datplūsmu caur Cloudflare Zero Trust, izmantojot WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Atspējot Nagle algoritmu (TCP_NODELAY)",
+        "description": "Atspējo TCP paketu grupēšanu, lai samazinātu SSH ievades latenci, īpaši LAN savienojumos. Var palielināt tīkla slodzi."
       },
       "cloudflareTunnelHostname": {
         "label": "Tuneļa resursdators",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "rz un sz failu pārsūtīšana",
         "description": "Augšupielādēt un lejupielādēt failus ar rz un sz (lrzsz) tieši terminālī."
+      },
+      "rightClickAction": {
+        "label": "Labais klikšķis terminālī",
+        "description": "Nospiediet Shift, lai iegūtu termināļa izvēlni, vai arī, ja šeit izvēlaties izvēlni, varat kopēt un ielīmēt",
+        "copyPaste": "Kopēt vai ielīmēt",
+        "menu": "Termināļa izvēlne",
+        "native": "Pārlūkprogrammas izvēlne"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V ielīmē",
+        "description": "Atspējojiet, lai nosūtītu Ctrl+V čaulai. Ctrl+Shift+V joprojām ielīmē"
+      },
+      "copyOnSelect": {
+        "label": "Automātiski kopēt atlasīto tekstu",
+        "description": "Teksts tiek kopēts tiklīdz to atlasāt terminālī"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "Vēsture",
     "localTerminal": "Lokālais terminālis",
-    "sshTools": "SSH rīki",
     "terminal": "Terminālis",
     "macros": "Makro"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Rakstiet šeit, lai translētu taustienu spiedienus...",
-    "copyOnSelect": "Automātiski kopēt atlasīto tekstu",
-    "enableRightClickCopyPaste": "Iespējot labā klikšķa kopēšanu/līmēšanu",
-    "ctrlVPaste": "Ctrl+V līmē (izslēdziet, lai nosūtītu Ctrl+V čaulai)",
-    "fillPassword": "Aizpildīt paroli",
-    "fillPasswordMissing_zero": "Nav saglabāta parole nevienam no atlasītajiem termināļiem",
-    "fillPasswordMissing_one": "Nav saglabātas paroles {{count}} atlasītajam terminālim",
-    "fillPasswordMissing_other": "Nav saglabātas paroles {{count}} atlasītajiem termināļiem",
-    "fillPasswordSuccess_zero": "Parole ievietota 0 termināļos",
-    "fillPasswordSuccess_one": "Parole ievietota {{count}} terminālī",
-    "fillPasswordSuccess_other": "Parole ievietota {{count}} termināļos",
-    "keyRecordingTitle": "Atslēgu ierakstīšana",
-    "noTerminalTabsOpen": "Nav atvērts neviens termināļa cilne",
-    "recordToTerminals": "Ierakstīt termināļos",
-    "selectAll": "Visi",
-    "selectNone": "Neviens",
-    "selectTerminalsAbove": "Atlasīt termināļus augstāk",
-    "settingsTitle": "Iestatījumi",
-    "startRecording": "Sākt ierakstīšanu",
-    "stopRecording": "Apturēt ierakstīšanu"
   },
   "keybindings": {
     "openLocalTerminal": "Atvērt jaunu vietējo termināli",
@@ -634,7 +631,8 @@
       "ctrlT": "Sūtīt Ctrl+T čaulai (bloķēts, lai neatvērtu pārlūkprogrammas cilni)",
       "ctrlN": "Sūtīt Ctrl+N čaulai (bloķēts, lai neatvērtu pārlūkprogrammas logu)",
       "ctrlQ": "Sūtīt Ctrl+Q čaulai (bloķēts, lai neizietu no pārlūkprogrammas)"
-    }
+    },
+    "toggleBroadcast": "Ieslēgt vai izslēgt translāciju"
   },
   "macros": {
     "title": "Makrokomandas",
@@ -743,5 +741,107 @@
     "sending": "Augšupielādē {{name}}",
     "receiving": "Lejupielādē {{name}}",
     "cancel": "Atcelt pārsūtīšanu"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Translēt ievadi",
+      "stop": "Apturēt translāciju",
+      "stopShort": "Apturēt",
+      "on": "Translācija ieslēgta",
+      "paused": "Translācija apturēta",
+      "pausedForPassword": "Apturēts pie paroles pieprasījuma",
+      "pause": "Apturēt",
+      "resume": "Turpināt",
+      "members_zero": "0 termināļi",
+      "members_one": "{{count}} terminālis",
+      "members_other": "{{count}} termināļi",
+      "allOpen": "Visi atvērtie",
+      "thisSplit": "Šī sadalījuma skats",
+      "sameFolder": "Tāds pats mape",
+      "offline": "Bezsaistē",
+      "offlineCount_zero": "0 bezsaistē",
+      "offlineCount_one": "{{count}} bezsaistē",
+      "offlineCount_other": "{{count}} bezsaistē",
+      "openMore": "Atveriet citu termināli, lai translētu uz to",
+      "compose": "Sastādīt",
+      "composeHint": "Rakstiet komandu. Ctrl+Enter nosūta to grupai",
+      "send": "Nosūtīt",
+      "pressEnter": "Nospiediet Enter",
+      "skipped_zero": "Izlaisti 0 termināļi, kas ir bezsaistē vai prasa paroli",
+      "skipped_one": "Izlaists {{count}} terminālis, kas ir bezsaistē vai prasa paroli",
+      "skipped_other": "Izlaisti {{count}} termināļi, kas ir bezsaistē vai prasa paroli"
+    },
+    "fill": {
+      "label": "Aizpildīt paroli",
+      "done_zero": "Parole aizpildīta 0 termināļos",
+      "done_one": "Parole aizpildīta {{count}} terminālī",
+      "done_other": "Parole aizpildīta {{count}} termināļos",
+      "noPassword_zero": "Nav saglabātas paroles 0 termināļiem",
+      "noPassword_one": "Nav saglabātas paroles {{count}} terminālim",
+      "noPassword_other": "Nav saglabātas paroles {{count}} termināļiem",
+      "notAsking_zero": "0 termināļi neprasa paroli",
+      "notAsking_one": "{{count}} terminālis neprasa paroli",
+      "notAsking_other": "{{count}} termināļi neprasa paroli"
+    },
+    "find": {
+      "all": "Meklēt visos termināļos",
+      "badRegex": "Šī regulārā izteiksme nav derīga",
+      "capped": "Tiek rādīti pirmie {{count}} rezultāti"
+    },
+    "watch": {
+      "title": "Vērot izvadi",
+      "note": "Noteikumi darbojas, kamēr Termix ir atvērts. Brīdinājumi nosauc noteikumu un hosti, nekad ne izvadi.",
+      "name": "Noteikuma nosaukums",
+      "when": "Brīdināt, kad",
+      "kindMatch": "Izvade sakrīt ar",
+      "kindQuiet": "Izvade kļūst klusa",
+      "kindActivity": "Jauna izvade fonā",
+      "pattern": "Meklējamais teksts",
+      "seconds": "Klusuma sekundes",
+      "add": "Pievienot noteikumu",
+      "delete": "Dzēst noteikumu",
+      "describeMatch": "Sakrīt ar {{pattern}}",
+      "describeQuiet_zero": "Klusums 0 sekundes",
+      "describeQuiet_one": "Klusums {{count}} sekundi",
+      "describeQuiet_other": "Klusums {{count}} sekundes",
+      "describeActivity": "Jauna izvade fonā",
+      "nameRequired": "Dodiet noteikumam nosaukumu",
+      "patternRequired": "Ievadiet meklējamo tekstu",
+      "badRegex": "Šī regulārā izteiksme nav derīga",
+      "secondsRequired": "Ievadiet 1 vai vairāk sekundes",
+      "fired": "{{rule}} uz {{host}}",
+      "active_zero": "0 vērošanas noteikumi ieslēgti",
+      "active_one": "{{count}} vērošanas noteikums ieslēgts",
+      "active_other": "{{count}} vērošanas noteikumi ieslēgti"
+    },
+    "output": {
+      "save": "Saglabāt izvadi",
+      "copy": "Kopēt izvadi",
+      "saveSelection": "Saglabāt atlasi",
+      "empty": "Nav nekas saglabājams",
+      "copied": "Izvade nokopēta",
+      "copyFailed": "Neizdevās kopēt izvadi"
+    },
+    "fix": {
+      "resetDisplay": "Atiestatīt displeju",
+      "clearScrollback": "Notīrīt ritināšanas vēsturi",
+      "resetShell": "Atiestatīt komandrindu",
+      "resetShellTitle": "Atiestatīt komandrindu?",
+      "resetShellDescription": "Tiks ievadītas komandas stty sane un reset. Jebkuru tekstu uz pašreizējās rindas tiks izpildīts kopā ar tām."
+    },
+    "keys": {
+      "title": "Nosūtīt taustiņu",
+      "custom": "Ctrl + burts",
+      "customTitle": "Nosūtīt Ctrl + burts",
+      "customDescription": "Ierakstiet burtu, ko nosūtīt kopā ar Ctrl"
+    },
+    "menu": {
+      "copy": "Kopēt",
+      "paste": "Ielīmēt",
+      "selectAll": "Atlasīt visu",
+      "find": "Meklēt",
+      "clear": "Notīrīt"
+    },
+    "openTerminalFirst": "Atveriet SSH termināli, lai izmantotu tā rīkus"
   }
 }

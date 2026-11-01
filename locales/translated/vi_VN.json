@@ -117,7 +117,8 @@
     "paste": "Dán hình ảnh",
     "settingsTitle": "Thanh công cụ",
     "upload": "Tải lên hình ảnh",
-    "uploadingImage": "Đang tải lên..."
+    "uploadingImage": "Đang tải lên...",
+    "tools": "Công cụ"
   },
   "history": {
     "noTerminalSelected": "Chưa chọn terminal nào",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Định tuyến lưu lượng SSH qua Cloudflare Zero Trust thông qua WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Tắt thuật toán Nagle (TCP_NODELAY)",
+        "description": "Tắt việc gom gói TCP để giảm độ trễ đầu vào SSH, đặc biệt trên kết nối LAN. Có thể làm tăng tải mạng."
       },
       "cloudflareTunnelHostname": {
         "label": "Tên máy chủ Tunnel",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "Truyền tệp rz và sz",
         "description": "Tải lên và tải xuống tệp bằng rz và sz (lrzsz) trực tiếp trong terminal."
+      },
+      "rightClickAction": {
+        "label": "Nhấp chuột phải trong terminal",
+        "description": "Giữ Shift để hiển thị menu terminal thay thế, hoặc sao chép/dán nếu bạn chọn menu ở đây",
+        "copyPaste": "Sao chép hoặc dán",
+        "menu": "Menu terminal",
+        "native": "Menu trình duyệt"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V để dán",
+        "description": "Tắt để gửi Ctrl+V đến shell. Ctrl+Shift+V vẫn dùng để dán"
+      },
+      "copyOnSelect": {
+        "label": "Tự động sao chép văn bản đã chọn",
+        "description": "Sao chép văn bản ngay khi bạn chọn nó trong terminal"
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "Lịch sử",
     "localTerminal": "Terminal cục bộ",
-    "sshTools": "Công cụ SSH",
     "terminal": "Terminal",
     "macros": "Macro"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Nhập ở đây để phát sóng thao tác gõ...",
-    "copyOnSelect": "Tự động sao chép văn bản đã chọn",
-    "enableRightClickCopyPaste": "Bật sao chép/dán bằng nhấp chuột phải",
-    "ctrlVPaste": "Ctrl+V để dán (tắt để gửi Ctrl+V đến shell)",
-    "fillPassword": "Điền mật khẩu",
-    "fillPasswordMissing_other": "Không có mật khẩu đã lưu cho {{count}} terminal được chọn",
-    "fillPasswordSuccess_other": "Đã điền mật khẩu vào {{count}} terminal",
-    "keyRecordingTitle": "Ghi phím",
-    "noTerminalTabsOpen": "Không có tab terminal nào đang mở",
-    "recordToTerminals": "Ghi vào các terminal",
-    "selectAll": "Tất cả",
-    "selectNone": "Không có",
-    "selectTerminalsAbove": "Chọn terminal ở trên",
-    "settingsTitle": "Cài đặt",
-    "startRecording": "Bắt đầu ghi",
-    "stopRecording": "Dừng ghi"
   },
   "keybindings": {
     "openLocalTerminal": "Mở Terminal Cục bộ mới",
@@ -624,7 +625,8 @@
       "ctrlT": "Gửi Ctrl+T đến shell (ngăn chặn việc mở tab trình duyệt)",
       "ctrlN": "Gửi Ctrl+N đến shell (ngăn chặn việc mở cửa sổ trình duyệt)",
       "ctrlQ": "Gửi Ctrl+Q đến shell (ngăn chặn việc thoát trình duyệt)"
-    }
+    },
+    "toggleBroadcast": "Bật hoặc tắt phát sóng"
   },
   "macros": {
     "title": "Macro",
@@ -731,5 +733,91 @@
     "sending": "Đang tải lên {{name}}",
     "receiving": "Đang tải xuống {{name}}",
     "cancel": "Hủy truyền tệp"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Phát sóng đầu vào",
+      "stop": "Dừng phát sóng",
+      "stopShort": "Dừng",
+      "on": "Đang phát sóng",
+      "paused": "Đã tạm dừng phát sóng",
+      "pausedForPassword": "Tạm dừng tại yêu cầu mật khẩu",
+      "pause": "Tạm dừng",
+      "resume": "Tiếp tục",
+      "members_other": "{{count}} terminal",
+      "allOpen": "Tất cả đang mở",
+      "thisSplit": "Chia màn hình này",
+      "sameFolder": "Cùng thư mục",
+      "offline": "Ngoại tuyến",
+      "offlineCount_other": "{{count}} ngoại tuyến",
+      "openMore": "Mở thêm terminal để phát sóng đến",
+      "compose": "Soạn thảo",
+      "composeHint": "Viết lệnh. Ctrl+Enter để gửi đến nhóm",
+      "send": "Gửi",
+      "pressEnter": "Nhấn Enter",
+      "skipped_other": "Bỏ qua {{count}} terminal đang ngoại tuyến hoặc yêu cầu mật khẩu"
+    },
+    "fill": {
+      "label": "Điền mật khẩu",
+      "done_other": "Đã điền mật khẩu vào {{count}} terminal",
+      "noPassword_other": "Không có mật khẩu đã lưu cho {{count}} terminal",
+      "notAsking_other": "{{count}} terminal không yêu cầu mật khẩu"
+    },
+    "find": {
+      "all": "Tìm trong tất cả terminal",
+      "badRegex": "Biểu thức chính quy này không hợp lệ",
+      "capped": "Hiển thị {{count}} kết quả đầu tiên"
+    },
+    "watch": {
+      "title": "Theo dõi đầu ra",
+      "note": "Quy tắc chạy khi Termix đang mở. Cảnh báo nêu tên quy tắc và host, không bao gồm nội dung đầu ra.",
+      "name": "Tên quy tắc",
+      "when": "Cảnh báo khi",
+      "kindMatch": "Đầu ra khớp với",
+      "kindQuiet": "Đầu ra im lặng",
+      "kindActivity": "Có đầu ra mới ở nền",
+      "pattern": "Văn bản cần tìm",
+      "seconds": "Giây im lặng",
+      "add": "Thêm quy tắc",
+      "delete": "Xóa quy tắc",
+      "describeMatch": "Khớp với {{pattern}}",
+      "describeQuiet_other": "Im lặng trong {{count}} giây",
+      "describeActivity": "Có đầu ra mới ở nền",
+      "nameRequired": "Đặt tên cho quy tắc",
+      "patternRequired": "Nhập văn bản cần tìm",
+      "badRegex": "Biểu thức chính quy này không hợp lệ",
+      "secondsRequired": "Nhập 1 giây trở lên",
+      "fired": "{{rule}} trên {{host}}",
+      "active_other": "{{count}} quy tắc theo dõi đang bật"
+    },
+    "output": {
+      "save": "Lưu kết quả",
+      "copy": "Sao chép kết quả",
+      "saveSelection": "Lưu phần đã chọn",
+      "empty": "Không có gì để lưu",
+      "copied": "Đã sao chép kết quả",
+      "copyFailed": "Không thể sao chép kết quả"
+    },
+    "fix": {
+      "resetDisplay": "Đặt lại hiển thị",
+      "clearScrollback": "Xóa lịch sử cuộn",
+      "resetShell": "Đặt lại shell",
+      "resetShellTitle": "Đặt lại shell?",
+      "resetShellDescription": "Hành động này sẽ gõ lệnh stty sane và reset tại dấu nhắc lệnh. Bất kỳ văn bản nào trên dòng hiện tại sẽ được thực thi cùng với nó."
+    },
+    "keys": {
+      "title": "Gửi phím",
+      "custom": "Ctrl + chữ cái",
+      "customTitle": "Gửi Ctrl + chữ cái",
+      "customDescription": "Nhập chữ cái cần gửi kèm với Ctrl"
+    },
+    "menu": {
+      "copy": "Sao chép",
+      "paste": "Dán",
+      "selectAll": "Chọn tất cả",
+      "find": "Tìm kiếm",
+      "clear": "Xóa"
+    },
+    "openTerminalFirst": "Mở một terminal SSH để sử dụng các công cụ của nó"
   }
 }

@@ -11,6 +11,18 @@ export function isPasswordPrompt(output: string): boolean {
   return PASSWORD_PROMPT.test(output);
 }
 
+/**
+ * Whether the terminal is waiting at a password prompt now. Only the last
+ * line counts, since a prompt already answered stays in recent output.
+ */
+export function isAtPasswordPrompt(output: string): boolean {
+  const lineStart = Math.max(
+    output.lastIndexOf("\n"),
+    output.lastIndexOf("\r"),
+  );
+  return isPasswordPrompt(output.slice(lineStart + 1));
+}
+
 export function isSudoCommand(line: string): boolean {
   return SUDO_COMMAND.test(line);
 }

@@ -1,10 +1,10 @@
 // The terminal surfaces need xterm's own stylesheet.
 import "@xterm/xterm/css/xterm.css";
 import { lazy, Suspense, type ComponentType } from "react";
+import { toast } from "sonner";
 import {
   Braces,
   Copy,
-  Hammer,
   History,
   Laptop,
   SquareTerminal,
@@ -28,7 +28,14 @@ import {
   TERMINAL_TOOLBAR_STATUS_SLOT,
 } from "./terminal/terminal-slots";
 import { TerminalTabWithRegistry } from "./TerminalTabWithRegistry";
-import { listSessions, sendToActive, sendToSession } from "./session-registry";
+import {
+  getActiveSessionId,
+  getSessionHandle,
+  getSessionInfo,
+  listSessions,
+  sendToActive,
+  sendToSession,
+} from "./session-registry";
 import { TerminalView } from "./TerminalView";
 import { HistoryPanel } from "./history/HistoryPanel";
 import { TouchInputSettings } from "./settings/TouchInputSettings";
@@ -37,7 +44,16 @@ import { HostTerminalSection } from "./settings/HostTerminalSection";
 import { resetTouchInputSettingsCache } from "./terminal/touch-input-settings-store";
 import { hostSetting } from "./terminal-api";
 import { readPanelSettings } from "./terminal/panel-settings";
-import { SshToolsPanel } from "./ssh-tools/SshToolsPanel";
+import {
+  resetBroadcastStore,
+  toggleBroadcast,
+} from "./terminal-tools/broadcast/broadcast-store";
+import { buildToolEntries } from "./terminal-tools/ToolsMenu";
+import {
+  resetWatchStore,
+  setWatchAlertSender,
+} from "./terminal-tools/watch/watch-store";
+import { TabBarToolsButton } from "./terminal-tools/TabBarToolsButton";
 import { MacrosPanel } from "./macros/MacrosPanel";
 import {
   TERMINAL_KEYBINDING_DEFAULTS,
@@ -58,9 +74,13 @@ import {
 } from "./look/look-actions";
 import {
   invalidateTerminalClientSettings,
+  loadTerminalClientSettings,
   resetTerminalClientSettings,
 } from "./terminal-settings";
-import { moveLocalTerminalPreferences } from "./settings/local-preferences-migration";
+import {
+  moveClipboardPreferences,
+  moveLocalTerminalPreferences,
+} from "./settings/local-preferences-migration";
 
 const LocalTerminal = lazy(() =>
   import("./local-terminal/LocalTerminal").then((m) => ({
@@ -140,6 +160,46 @@ export function activate(app: TermixApp): void {
       const target = tab as PluginTabRecord | undefined;
       return target?.type === "terminal" && !!target.host;
     },
+  });
+
+  // The tools in the tab bar, beside split view (Classic Layout 1.1.1+).
+  app.registerSlotContribution("tabbar.actions", {
+    actionId: "terminal.tools",
+    titleKey: "terminalToolbar.tools",
+    kind: "component",
+    component: TabBarToolsButton as unknown as ComponentType<
+      Record<string, unknown>
+    >,
+  });
+
+  // The terminal's tools in the command palette, on the active terminal.
+  const toolsFor = (sessionId: string) => {
+    const session = getSessionInfo(sessionId);
+    return buildToolEntries(app.t, {
+      sessionId,
+      hostName: session?.hostName || session?.ip || "",
+      handle: () => getSessionHandle(sessionId),
+    });
+  };
+  app.registerPaletteGroup({
+    id: "terminal-tools",
+    titleKey: "terminalToolbar.tools",
+    order: 20,
+    load: () =>
+      toolsFor("palette")
+        .filter((entry) => entry.group !== "keys")
+        .map((entry) => ({
+          id: entry.key,
+          title: entry.label,
+          icon: entry.icon,
+          needsTarget: true,
+          run: ({ targetTab }) => {
+            if (!targetTab) return;
+            toolsFor(targetTab.id)
+              .find((tool) => tool.key === entry.key)
+              ?.run();
+          },
+        })),
   });
 
   app.registerHostAction({
@@ -225,22 +285,6 @@ export function activate(app: TermixApp): void {
   });
 
   app.registerPanel(
-    "ssh-tools",
-    SshToolsPanel as unknown as ComponentType<PanelProps>,
-  );
-  app.registerRailItem({
-    id: "ssh-tools",
-    icon: Hammer,
-    titleKey: "nav.sshTools",
-    after: "quick-connect",
-    hideable: true,
-    mobilePrimary: true,
-    promotable: true,
-    rightDockable: true,
-    separatorAfter: true,
-  });
-
-  app.registerPanel(
     "macros",
     MacrosPanel as unknown as ComponentType<PanelProps>,
   );
@@ -248,7 +292,7 @@ export function activate(app: TermixApp): void {
     id: "macros",
     icon: Braces,
     titleKey: "nav.macros",
-    after: "ssh-tools",
+    after: "quick-connect",
     hideable: true,
     promotable: true,
     rightDockable: true,
@@ -278,6 +322,14 @@ export function activate(app: TermixApp): void {
     titleKey: "keybindings.sendText",
     editor: SendTextEditor,
     validate: validateSendText,
+  });
+  app.registerKeybindingAction({
+    id: "toggleBroadcast",
+    titleKey: "keybindings.toggleBroadcast",
+    run: () => {
+      const sessionId = getActiveSessionId();
+      if (sessionId) toggleBroadcast(sessionId);
+    },
   });
   for (const binding of TERMINAL_KEYBINDING_DEFAULTS) {
     app.registerKeybindingDefault(binding);
@@ -362,8 +414,29 @@ export function activate(app: TermixApp): void {
   app.registerSettingsComponent("imageStorageTest", ImageStorageTest);
 
   app.onSettingsChanged(() => invalidateTerminalClientSettings());
-  if (!app.guest) void moveLocalTerminalPreferences(app);
+  if (!app.guest) {
+    void moveLocalTerminalPreferences(app);
+    void moveClipboardPreferences(app);
+    // The clipboard settings are read on each click, with no hook to wait in.
+    void loadTerminalClientSettings(app.api).catch(() => {});
+  }
+
+  setWatchAlertSender((sessionId, rule, hit) => {
+    const session = getSessionInfo(sessionId);
+    const host = session?.hostName || session?.ip || "";
+    toast.info(app.t("terminalTools.watch.fired", { rule: rule.name, host }), {
+      description: hit.line,
+    });
+    if (app.guest || !session?.hostId) return;
+    void app.api
+      .post("/watch-alert", { hostId: session.hostId, rule: rule.name })
+      .catch(() => {
+        // The toast already told the user.
+      });
+  });
 
   app.onDispose(resetTouchInputSettingsCache);
   app.onDispose(resetTerminalClientSettings);
+  app.onDispose(resetBroadcastStore);
+  app.onDispose(resetWatchStore);
 }

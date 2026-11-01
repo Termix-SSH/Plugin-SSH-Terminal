@@ -127,7 +127,8 @@
     "paste": "لصق صورة",
     "settingsTitle": "شريط الأدوات",
     "upload": "رفع صورة",
-    "uploadingImage": "جارٍ الرفع..."
+    "uploadingImage": "جارٍ الرفع...",
+    "tools": "الأدوات"
   },
   "history": {
     "noTerminalSelected": "لم يتم تحديد محطة طرفية",
@@ -276,6 +277,10 @@
       "cloudflareTunnelEnabled": {
         "label": "نفق Cloudflare",
         "description": "توجيه حركة SSH عبر Cloudflare Zero Trust باستخدام WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "تعطيل خوارزمية ناغل (TCP_NODELAY)",
+        "description": "يعطل تجميع حزم TCP لتقليل زمن استجابة الإدخال في SSH، خاصة في اتصالات الشبكة المحلية. قد يزيد من الحمل على الشبكة."
       },
       "cloudflareTunnelHostname": {
         "label": "اسم مضيف النفق",
@@ -431,6 +436,21 @@
       "zmodem": {
         "label": "نقل الملفات rz و sz",
         "description": "تحميل وتنزيل الملفات باستخدام rz و sz (lrzsz) مباشرة في الطرفية."
+      },
+      "rightClickAction": {
+        "label": "النقر بزر الماوس الأيمن في الطرفية",
+        "description": "اضغط باستمرار على Shift لعرض قائمة الطرفية بدلاً من ذلك، أو للنسخ واللصق إذا كانت القائمة هي خيارك هنا",
+        "copyPaste": "نسخ أو لصق",
+        "menu": "قائمة الطرفية",
+        "native": "قائمة المتصفح"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V للصق",
+        "description": "قم بإيقاف التشغيل لإرسال Ctrl+V إلى shell. لا يزال Ctrl+Shift+V للصق"
+      },
+      "copyOnSelect": {
+        "label": "نسخ النص المحدد تلقائيًا",
+        "description": "ينسخ النص بمجرد تحديده في الطرفية"
       }
     }
   },
@@ -595,37 +615,8 @@
   "nav": {
     "history": "السجل",
     "localTerminal": "طرفي محلي",
-    "sshTools": "أدوات SSH",
     "terminal": "طرفي",
     "macros": "الماكرو"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "اكتب هنا لبث الضربات...",
-    "copyOnSelect": "نسخ النص المحدد تلقائياً",
-    "enableRightClickCopyPaste": "تمكين النسخ/اللصق بالنقر بزر الماوس الأيمن",
-    "ctrlVPaste": "Ctrl+V للصق (عطّل لإرسال Ctrl+V إلى shell)",
-    "fillPassword": "ملء كلمة المرور",
-    "fillPasswordMissing_zero": "لا يوجد كلمة مرور محفوظة لـ 0 طرفيات محددة",
-    "fillPasswordMissing_one": "لا توجد كلمة مرور محفوظة للطرفية المحددة الواحدة",
-    "fillPasswordMissing_two": "لا توجد كلمة مرور محفوظة للطرفيتين المحددتين",
-    "fillPasswordMissing_few": "لا توجد كلمة مرور محفوظة لـ {{count}} طرفيات محددة",
-    "fillPasswordMissing_many": "لا توجد كلمة مرور محفوظة لـ {{count}} طرفية محددة",
-    "fillPasswordMissing_other": "لا توجد كلمة مرور محفوظة لـ {{count}} طرفية محددة",
-    "fillPasswordSuccess_zero": "تم ملء كلمة المرور في 0 طرفيات",
-    "fillPasswordSuccess_one": "تم ملء كلمة المرور في الطرفية المحددة الواحدة",
-    "fillPasswordSuccess_two": "تم ملء كلمة المرور في الطرفيتين المحددتين",
-    "fillPasswordSuccess_few": "تم ملء كلمة المرور في {{count}} طرفيات محددة",
-    "fillPasswordSuccess_many": "تم ملء كلمة المرور في {{count}} طرفية محددة",
-    "fillPasswordSuccess_other": "تم ملء كلمة المرور في {{count}} طرفية محددة",
-    "keyRecordingTitle": "تسجيل المفاتيح",
-    "noTerminalTabsOpen": "لا توجد علامات تبويب طرفية مفتوحة",
-    "recordToTerminals": "التسجيل في الأطراف الطرفية",
-    "selectAll": "الكل",
-    "selectNone": "لا شيء",
-    "selectTerminalsAbove": "حدد الأطراف الطرفية أعلاه",
-    "settingsTitle": "الإعدادات",
-    "startRecording": "بدء التسجيل",
-    "stopRecording": "إيقاف التسجيل"
   },
   "keybindings": {
     "openLocalTerminal": "فتح نافذة طرفية محلية جديدة",
@@ -649,7 +640,8 @@
       "ctrlT": "إرسال Ctrl+T إلى shell (تم حظر فتح علامة تبويب المتصفح)",
       "ctrlN": "إرسال Ctrl+N إلى shell (تم حظر فتح نافذة المتصفح)",
       "ctrlQ": "إرسال Ctrl+Q إلى shell (تم حظر إغلاق المتصفح)"
-    }
+    },
+    "toggleBroadcast": "تفعيل أو إيقاف البث"
   },
   "macros": {
     "title": "الماكرو",
@@ -761,5 +753,131 @@
     "sending": "جارٍ تحميل {{name}}",
     "receiving": "جارٍ تنزيل {{name}}",
     "cancel": "إلغاء النقل"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "بث الإدخال",
+      "stop": "إيقاف البث",
+      "stopShort": "إيقاف",
+      "on": "البث مفعّل",
+      "paused": "البث متوقف مؤقتًا",
+      "pausedForPassword": "متوقف مؤقتًا عند مطالبة كلمة المرور",
+      "pause": "إيقاف مؤقت",
+      "resume": "استئناف",
+      "members_zero": "لا توجد طرفيات",
+      "members_one": "طرفية واحدة",
+      "members_two": "طرفيتان",
+      "members_few": "{{count}} طرفيات",
+      "members_many": "{{count}} طرفية",
+      "members_other": "{{count}} طرفية",
+      "allOpen": "الكل مفتوح",
+      "thisSplit": "هذا التقسيم",
+      "sameFolder": "نفس المجلد",
+      "offline": "غير متصل",
+      "offlineCount_zero": "لا يوجد غير متصل",
+      "offlineCount_one": "واحد غير متصل",
+      "offlineCount_two": "اثنان غير متصلين",
+      "offlineCount_few": "{{count}} غير متصلين",
+      "offlineCount_many": "{{count}} غير متصل",
+      "offlineCount_other": "{{count}} غير متصل",
+      "openMore": "افتح طرفية أخرى للبث إليها",
+      "compose": "تأليف",
+      "composeHint": "اكتب أمرًا. يرسل Ctrl+Enter الأمر إلى المجموعة",
+      "send": "إرسال",
+      "pressEnter": "اضغط Enter",
+      "skipped_zero": "تم تخطي 0 طرفيات غير متصلة أو تطلب كلمة مرور",
+      "skipped_one": "تم تخطي طرفية واحدة غير متصلة أو تطلب كلمة مرور",
+      "skipped_two": "تم تخطي طرفيتين غير متصلتين أو تطلبان كلمة مرور",
+      "skipped_few": "تم تخطي {{count}} طرفيات غير متصلة أو تطلب كلمة مرور",
+      "skipped_many": "تم تخطي {{count}} طرفية غير متصلة أو تطلب كلمة مرور",
+      "skipped_other": "تم تخطي {{count}} طرفية غير متصلة أو تطلب كلمة مرور"
+    },
+    "fill": {
+      "label": "ملء كلمة المرور",
+      "done_zero": "تم ملء كلمة المرور في 0 طرفيات",
+      "done_one": "تم ملء كلمة المرور في طرفية واحدة",
+      "done_two": "تم ملء كلمة المرور في طرفيتين",
+      "done_few": "تم ملء كلمة المرور في {{count}} طرفيات",
+      "done_many": "تم ملء كلمة المرور في {{count}} طرفية",
+      "done_other": "تم ملء كلمة المرور في {{count}} طرفية",
+      "noPassword_zero": "لا توجد كلمة مرور محفوظة لـ 0 طرفيات",
+      "noPassword_one": "لا توجد كلمة مرور محفوظة لطرفية واحدة",
+      "noPassword_two": "لا توجد كلمة مرور محفوظة لطرفيتين",
+      "noPassword_few": "لا توجد كلمة مرور محفوظة لـ {{count}} طرفيات",
+      "noPassword_many": "لا توجد كلمة مرور محفوظة لـ {{count}} طرفية",
+      "noPassword_other": "لا توجد كلمة مرور محفوظة لـ {{count}} طرفية",
+      "notAsking_zero": "0 طرفيات لا تطلب كلمة مرور",
+      "notAsking_one": "طرفية واحدة لا تطلب كلمة مرور",
+      "notAsking_two": "طرفيتان لا تطلبان كلمة مرور",
+      "notAsking_few": "{{count}} طرفيات لا تطلب كلمة مرور",
+      "notAsking_many": "{{count}} طرفية لا تطلب كلمة مرور",
+      "notAsking_other": "{{count}} طرفية لا تطلب كلمة مرور"
+    },
+    "find": {
+      "all": "البحث في جميع الطرفيات",
+      "badRegex": "هذا التعبير النمطي غير صالح",
+      "capped": "عرض أول {{count}} نتيجة"
+    },
+    "watch": {
+      "title": "مراقبة المخرجات",
+      "note": "تعمل القواعد أثناء فتح Termix. تذكر التنبيهات اسم القاعدة والمضيف، وليس المخرجات.",
+      "name": "اسم القاعدة",
+      "when": "تنبيه عند",
+      "kindMatch": "تطابق المخرجات",
+      "kindQuiet": "تصبح المخرجات صامتة",
+      "kindActivity": "مخرجات جديدة في الخلفية",
+      "pattern": "النص للبحث عنه",
+      "seconds": "ثوانٍ من الصمت",
+      "add": "إضافة قاعدة",
+      "delete": "حذف القاعدة",
+      "describeMatch": "يتطابق مع {{pattern}}",
+      "describeQuiet_zero": "صامت لمدة 0 ثانية",
+      "describeQuiet_one": "صامت لمدة ثانية واحدة",
+      "describeQuiet_two": "صامت لمدة ثانيتين",
+      "describeQuiet_few": "صامت لمدة {{count}} ثوانٍ",
+      "describeQuiet_many": "صامت لمدة {{count}} ثانية",
+      "describeQuiet_other": "صامت لمدة {{count}} ثانية",
+      "describeActivity": "مخرجات جديدة في الخلفية",
+      "nameRequired": "أعطِ القاعدة اسمًا",
+      "patternRequired": "أدخل النص للبحث عنه",
+      "badRegex": "هذا التعبير النمطي غير صالح",
+      "secondsRequired": "أدخل ثانية واحدة أو أكثر",
+      "fired": "{{rule}} على {{host}}",
+      "active_zero": "لا توجد قواعد مراقبة مفعّلة",
+      "active_one": "قاعدة مراقبة واحدة مفعّلة",
+      "active_two": "قاعدتا مراقبة مفعّلتان",
+      "active_few": "{{count}} قواعد مراقبة مفعّلة",
+      "active_many": "{{count}} قاعدة مراقبة مفعّلة",
+      "active_other": "{{count}} قاعدة مراقبة مفعّلة"
+    },
+    "output": {
+      "save": "حفظ المخرجات",
+      "copy": "نسخ المخرجات",
+      "saveSelection": "حفظ التحديد",
+      "empty": "لا يوجد شيء لحفظه",
+      "copied": "تم نسخ المخرجات",
+      "copyFailed": "تعذر نسخ المخرجات"
+    },
+    "fix": {
+      "resetDisplay": "إعادة تعيين العرض",
+      "clearScrollback": "مسح سجل التمرير",
+      "resetShell": "إعادة تعيين shell",
+      "resetShellTitle": "إعادة تعيين shell؟",
+      "resetShellDescription": "سيقوم هذا بإدخال أمرَي stty sane و reset في سطر الأوامر. سيتم تنفيذ أي نص موجود على السطر معهما."
+    },
+    "keys": {
+      "title": "إرسال مفتاح",
+      "custom": "Ctrl + حرف",
+      "customTitle": "إرسال Ctrl + حرف",
+      "customDescription": "اكتب الحرف المراد إرساله مع Ctrl"
+    },
+    "menu": {
+      "copy": "نسخ",
+      "paste": "لصق",
+      "selectAll": "تحديد الكل",
+      "find": "بحث",
+      "clear": "مسح"
+    },
+    "openTerminalFirst": "افتح طرفية SSH لاستخدام أدواتها"
   }
 }

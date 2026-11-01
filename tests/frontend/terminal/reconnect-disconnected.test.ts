@@ -9,7 +9,7 @@ const source = fs.readFileSync(
 );
 const reconnect = source.slice(
   source.indexOf("    function reconnectTerminal()"),
-  source.indexOf("    useImperativeHandle("),
+  source.indexOf("    const findOptions = useMemo("),
 );
 const methods = source.slice(
   source.indexOf("        reconnect: reconnectTerminal,"),

@@ -5,6 +5,7 @@ import {
   isSudoPrompt,
   stripAnsi,
   suTargetUser,
+  isAtPasswordPrompt,
 } from "../../../src/frontend/terminal/password-prompt";
 
 describe("isPasswordPrompt", () => {
@@ -78,5 +79,25 @@ describe("suTargetUser", () => {
     expect(suTargetUser("sudo su -")).toBeNull();
     expect(suTargetUser("sumo")).toBeNull();
     expect(suTargetUser("ls su")).toBeNull();
+  });
+});
+
+describe("isAtPasswordPrompt", () => {
+  it("is true while the prompt is the last line", () => {
+    expect(isAtPasswordPrompt("$ sudo ls\r\n[sudo] password for me: ")).toBe(
+      true,
+    );
+    expect(isAtPasswordPrompt("Password:")).toBe(true);
+  });
+
+  it("is false once the prompt was answered, even with it still in view", () => {
+    expect(isAtPasswordPrompt("Password: \r\n")).toBe(false);
+    expect(isAtPasswordPrompt("Password: \r\nfile.txt\r\nme@host:~$ ")).toBe(
+      false,
+    );
+  });
+
+  it("is false at a normal prompt", () => {
+    expect(isAtPasswordPrompt("me@host:~$ ")).toBe(false);
   });
 });

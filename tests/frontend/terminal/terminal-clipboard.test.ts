@@ -8,7 +8,7 @@ vi.mock("@termix-ssh/plugin-sdk/frontend", () => ({
 }));
 
 import {
-  getUseRightClickCopyPaste,
+  getRightClickAction,
   handleTerminalClipboardKeyEvent,
   createTerminalContextMenuHandler,
   createTerminalSelectionMouseUpHandler,
@@ -71,18 +71,18 @@ beforeEach(() => {
   getCookieMock.mockReturnValue(undefined);
 });
 
-describe("getUseRightClickCopyPaste", () => {
+describe("getRightClickAction", () => {
   it("defaults to enabled when the cookie is unset", () => {
     getCookieMock.mockReturnValue(undefined);
-    expect(getUseRightClickCopyPaste()).toBe(true);
+    expect(getRightClickAction()).toBe("copyPaste");
   });
 
   it('is disabled only when the cookie is explicitly "false"', () => {
     getCookieMock.mockReturnValue("false");
-    expect(getUseRightClickCopyPaste()).toBe(false);
+    expect(getRightClickAction()).toBe("native");
 
     getCookieMock.mockReturnValue("true");
-    expect(getUseRightClickCopyPaste()).toBe(true);
+    expect(getRightClickAction()).toBe("copyPaste");
   });
 });
 

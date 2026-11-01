@@ -7,6 +7,8 @@ import type {
 export interface KeybindingDispatchContext {
   terminal: Terminal;
   webSocketRef: React.MutableRefObject<WebSocket | null>;
+  /** Sends as if typed, so a broadcast group gets it too. */
+  send?: (data: string) => void;
   writeTextToClipboard: (text: string) => Promise<boolean>;
   readTextFromClipboard: () => Promise<string>;
 }
@@ -46,7 +48,8 @@ export function dispatchKeybindingAction(
   action: KeybindingAction,
   ctx: KeybindingDispatchContext,
 ): boolean {
-  const sendRaw = (data: string) => sendRawToSocket(ctx.webSocketRef, data);
+  const sendRaw = (data: string) =>
+    ctx.send ? ctx.send(data) : sendRawToSocket(ctx.webSocketRef, data);
 
   switch (action.type) {
     case "copy": {

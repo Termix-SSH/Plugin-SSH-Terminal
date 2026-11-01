@@ -213,18 +213,26 @@ export interface SavedCustomTheme {
   colors: TerminalThemeColors;
 }
 
+export type RightClickAction = "copyPaste" | "menu" | "native";
+
 /** The ssh-terminal user settings the terminal reads. */
 export interface TerminalUserSettings {
   customThemes: SavedCustomTheme[];
   commandAutocomplete: boolean;
   /** rz and sz file transfers in the browser. */
   zmodem: boolean;
+  rightClickAction: RightClickAction;
+  ctrlVPaste: boolean;
+  copyOnSelect: boolean;
 }
 
 export const DEFAULT_USER_SETTINGS: TerminalUserSettings = {
   customThemes: [],
   commandAutocomplete: false,
   zmodem: true,
+  rightClickAction: "copyPaste",
+  ctrlVPaste: true,
+  copyOnSelect: false,
 };
 
 const ENUMS: Record<string, readonly string[]> = {
@@ -378,6 +386,12 @@ export function readUserSettings(
     ),
     commandAutocomplete: source.commandAutocomplete === true,
     zmodem: source.zmodem !== false,
+    rightClickAction:
+      source.rightClickAction === "menu" || source.rightClickAction === "native"
+        ? source.rightClickAction
+        : "copyPaste",
+    ctrlVPaste: source.ctrlVPaste !== false,
+    copyOnSelect: source.copyOnSelect === true,
   };
 }
 

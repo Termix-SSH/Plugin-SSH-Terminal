@@ -123,7 +123,8 @@
     "paste": "Vložit obrázek",
     "settingsTitle": "Panel nástrojů",
     "upload": "Nahrát obrázek",
-    "uploadingImage": "Nahrávání..."
+    "uploadingImage": "Nahrávání...",
+    "tools": "Nástroje"
   },
   "history": {
     "noTerminalSelected": "Nebyl vybrán žádný terminál",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Směrovat SSH provoz přes Cloudflare Zero Trust pomocí WebSocketu"
+      },
+      "tcpNoDelay": {
+        "label": "Zakázat Nagleův algoritmus (TCP_NODELAY)",
+        "description": "Zakáže seskupování TCP paketů pro snížení latence SSH vstupu, zejména při připojení v LAN. Může zvýšit síťovou zátěž."
       },
       "cloudflareTunnelHostname": {
         "label": "Název tunelu",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "Přenosy souborů rz a sz",
         "description": "Nahrávání a stahování souborů pomocí rz a sz (lrzsz) přímo v terminálu."
+      },
+      "rightClickAction": {
+        "label": "Kliknutí pravým tlačítkem v terminálu",
+        "description": "Podržte Shift pro zobrazení nabídky terminálu, nebo pro kopírování a vkládání, pokud je zde vybrána nabídka",
+        "copyPaste": "Kopírovat nebo vložit",
+        "menu": "Nabídka terminálu",
+        "native": "Nabídka prohlížeče"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V vkládá",
+        "description": "Vypněte pro odeslání Ctrl+V do shellu. Ctrl+Shift+V stále vkládá"
+      },
+      "copyOnSelect": {
+        "label": "Automaticky kopírovat vybraný text",
+        "description": "Text se zkopíruje ihned po jeho výběru v terminálu"
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "Historie",
     "localTerminal": "Lokální terminál",
-    "sshTools": "SSH nástroje",
     "terminal": "Terminál",
     "macros": "Makra"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Zde pište pro vysílání stisků kláves...",
-    "copyOnSelect": "Automaticky kopírovat vybraný text",
-    "enableRightClickCopyPaste": "Povolit kopírování/vkládání pravým tlačítkem",
-    "ctrlVPaste": "Ctrl+V vkládá (vypněte pro odeslání Ctrl+V do shellu)",
-    "fillPassword": "Doplnit heslo",
-    "fillPasswordMissing_one": "Žádné uložené heslo pro {{count}} vybraný terminál",
-    "fillPasswordMissing_few": "Žádné uložené heslo pro {{count}} vybrané terminály",
-    "fillPasswordMissing_many": "Žádné uložené heslo pro {{count}} vybraných terminálů",
-    "fillPasswordMissing_other": "Žádné uložené heslo pro {{count}} vybraných terminálů",
-    "fillPasswordSuccess_one": "Heslo vyplněno do {{count}} terminálu",
-    "fillPasswordSuccess_few": "Heslo vyplněno do {{count}} terminálů",
-    "fillPasswordSuccess_many": "Heslo vyplněno do {{count}} terminálů",
-    "fillPasswordSuccess_other": "Heslo vyplněno do {{count}} terminálů",
-    "keyRecordingTitle": "Nahrávání kláves",
-    "noTerminalTabsOpen": "Žádné otevřené karty terminálu",
-    "recordToTerminals": "Nahrávat do terminálů",
-    "selectAll": "Vše",
-    "selectNone": "Žádné",
-    "selectTerminalsAbove": "Vybrat terminály výše",
-    "settingsTitle": "Nastavení",
-    "startRecording": "Spustit nahrávání",
-    "stopRecording": "Zastavit nahrávání"
   },
   "keybindings": {
     "openLocalTerminal": "Otevřít nový místní terminál",
@@ -639,7 +634,8 @@
       "ctrlT": "Poslat Ctrl+T do shellu (zablokováno pro otevření karty prohlížeče)",
       "ctrlN": "Poslat Ctrl+N do shellu (zablokováno pro otevření okna prohlížeče)",
       "ctrlQ": "Poslat Ctrl+Q do shellu (zablokováno pro ukončení prohlížeče)"
-    }
+    },
+    "toggleBroadcast": "Zapnout nebo vypnout vysílání"
   },
   "macros": {
     "title": "Makra",
@@ -749,5 +745,115 @@
     "sending": "Nahrávání {{name}}",
     "receiving": "Stahování {{name}}",
     "cancel": "Zrušit přenos"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Vysílat vstup",
+      "stop": "Zastavit vysílání",
+      "stopShort": "Zastavit",
+      "on": "Vysílání zapnuto",
+      "paused": "Vysílání pozastaveno",
+      "pausedForPassword": "Pozastaveno při výzvě k zadání hesla",
+      "pause": "Pozastavit",
+      "resume": "Obnovit",
+      "members_one": "{{count}} terminál",
+      "members_few": "{{count}} terminály",
+      "members_many": "{{count}} terminálů",
+      "members_other": "{{count}} terminálů",
+      "allOpen": "Všechny otevřené",
+      "thisSplit": "Tento rozdělený pohled",
+      "sameFolder": "Stejná složka",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_few": "{{count}} offline",
+      "offlineCount_many": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Otevřete další terminál pro vysílání do něj",
+      "compose": "Sestavit",
+      "composeHint": "Napište příkaz. Ctrl+Enter ji odešle do skupiny",
+      "send": "Odeslat",
+      "pressEnter": "Stiskněte Enter",
+      "skipped_one": "Přeskočen {{count}} terminál, který je offline nebo žádá o heslo",
+      "skipped_few": "Přeskočeno {{count}} terminálů, které jsou offline nebo žádají o heslo",
+      "skipped_many": "Přeskočeno {{count}} terminálů, které jsou offline nebo žádají o heslo",
+      "skipped_other": "Přeskočeno {{count}} terminálů, které jsou offline nebo žádají o heslo"
+    },
+    "fill": {
+      "label": "Vyplnit heslo",
+      "done_one": "Heslo vyplněno v {{count}} terminálu",
+      "done_few": "Heslo vyplněno v {{count}} terminálech",
+      "done_many": "Heslo vyplněno v {{count}} terminálech",
+      "done_other": "Heslo vyplněno v {{count}} terminálech",
+      "noPassword_one": "Žádné uložené heslo pro {{count}} terminál",
+      "noPassword_few": "Žádné uložené heslo pro {{count}} terminály",
+      "noPassword_many": "Žádné uložené heslo pro {{count}} terminálů",
+      "noPassword_other": "Žádné uložené heslo pro {{count}} terminálů",
+      "notAsking_one": "{{count}} terminál neptá na heslo",
+      "notAsking_few": "{{count}} terminály se neptají na heslo",
+      "notAsking_many": "{{count}} terminálů se neptá na heslo",
+      "notAsking_other": "{{count}} terminálů se neptá na heslo"
+    },
+    "find": {
+      "all": "Hledat ve všech terminálech",
+      "badRegex": "Tento regulární výraz není platný",
+      "capped": "Zobrazují se první {{count}} výsledků"
+    },
+    "watch": {
+      "title": "Sledovat výstup",
+      "note": "Pravidla běží, když je Termix otevřený. Upozornění obsahují název pravidla a hostitele, nikdy ne výstup.",
+      "name": "Název pravidla",
+      "when": "Upozornit, když",
+      "kindMatch": "Výstup odpovídá",
+      "kindQuiet": "Výstup utichne",
+      "kindActivity": "Nový výstup na pozadí",
+      "pattern": "Text k vyhledání",
+      "seconds": "Sekundy ticha",
+      "add": "Přidat pravidlo",
+      "delete": "Smazat pravidlo",
+      "describeMatch": "Odpovídá {{pattern}}",
+      "describeQuiet_one": "Ticho po dobu {{count}} sekundy",
+      "describeQuiet_few": "Ticho po dobu {{count}} sekund",
+      "describeQuiet_many": "Ticho po dobu {{count}} sekund",
+      "describeQuiet_other": "Ticho po dobu {{count}} sekund",
+      "describeActivity": "Nový výstup na pozadí",
+      "nameRequired": "Najmenujte pravidlo",
+      "patternRequired": "Zadejte text k vyhledání",
+      "badRegex": "Tento regulární výraz není platný",
+      "secondsRequired": "Zadejte 1 sekundu nebo více",
+      "fired": "{{rule}} na {{host}}",
+      "active_one": "{{count}} pravidlo sledování zapnuto",
+      "active_few": "{{count}} pravidla sledování zapnuta",
+      "active_many": "{{count}} pravidel sledování zapnuto",
+      "active_other": "{{count}} pravidel sledování zapnuto"
+    },
+    "output": {
+      "save": "Uložit výstup",
+      "copy": "Kopírovat výstup",
+      "saveSelection": "Uložit výběr",
+      "empty": "Není co ukládat",
+      "copied": "Výstup zkopírován",
+      "copyFailed": "Výstup se nepodařilo zkopírovat"
+    },
+    "fix": {
+      "resetDisplay": "Obnovit zobrazení",
+      "clearScrollback": "Vymazat historii scrollování",
+      "resetShell": "Obnovit shell",
+      "resetShellTitle": "Obnovit shell?",
+      "resetShellDescription": "Tím se na příkazovém řádku zadá `stty sane` a `reset`. Jakýkoli text na řádku se spustí spolu s nimi."
+    },
+    "keys": {
+      "title": "Odeslat klávesu",
+      "custom": "Ctrl + písmeno",
+      "customTitle": "Odeslat Ctrl + písmeno",
+      "customDescription": "Zadejte písmeno, které chcete odeslat s Ctrl"
+    },
+    "menu": {
+      "copy": "Kopírovat",
+      "paste": "Vložit",
+      "selectAll": "Vybrat vše",
+      "find": "Hledat",
+      "clear": "Vymazat"
+    },
+    "openTerminalFirst": "Otevřete SSH terminál pro použití jeho nástrojů"
   }
 }

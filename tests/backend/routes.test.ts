@@ -168,6 +168,9 @@ describe("terminal settings routes", () => {
       customThemes: [],
       commandAutocomplete: true,
       zmodem: true,
+      rightClickAction: "copyPaste",
+      ctrlVPaste: true,
+      copyOnSelect: false,
     });
     expect(body).not.toHaveProperty("newHostDefaults");
     const other = await server.request("GET", "/client-settings", {
@@ -191,6 +194,33 @@ describe("terminal settings routes", () => {
     expect(
       await server.mock.ctx.settings.getUser("user-2", "commandAutocomplete"),
     ).not.toBe(true);
+  });
+
+  it("moves browser clipboard preferences to the account", async () => {
+    server = await startServer();
+    const saved = await server.request("PUT", "/user-settings", {
+      body: {
+        rightClickAction: "native",
+        ctrlVPaste: false,
+        copyOnSelect: true,
+      },
+    });
+    expect(saved.status).toBe(200);
+    const { body } = await server.request("GET", "/client-settings");
+    expect(body.user).toMatchObject({
+      rightClickAction: "native",
+      ctrlVPaste: false,
+      copyOnSelect: true,
+    });
+  });
+
+  it("falls back to the default for a right click choice that does not exist", async () => {
+    server = await startServer();
+    await server.request("PUT", "/user-settings", {
+      body: { rightClickAction: "nonsense" },
+    });
+    const { body } = await server.request("GET", "/client-settings");
+    expect(body.user.rightClickAction).toBe("copyPaste");
   });
 
   it("turns auto tmux on for a host the user can edit", async () => {

@@ -119,7 +119,8 @@
     "paste": "Bild einfügen",
     "settingsTitle": "Symbolleiste",
     "upload": "Bild hochladen",
-    "uploadingImage": "Wird hochgeladen..."
+    "uploadingImage": "Wird hochgeladen...",
+    "tools": "Werkzeuge"
   },
   "history": {
     "noTerminalSelected": "Kein Terminal ausgewählt",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "SSH-Verkehr über Cloudflare Zero Trust via WebSocket leiten"
+      },
+      "tcpNoDelay": {
+        "label": "Nagle-Algorithmus deaktivieren (TCP_NODELAY)",
+        "description": "Deaktiviert das Batching von TCP-Paketen, um die Eingabelatenz bei SSH zu verringern, insbesondere bei LAN-Verbindungen. Kann den Netzwerk-Overhead erhöhen."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-Hostname",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz- und sz-Dateitransfers",
         "description": "Dateien mit rz und sz (lrzsz) direkt im Terminal hoch- und herunterladen."
+      },
+      "rightClickAction": {
+        "label": "Rechtsklick im Terminal",
+        "description": "Halten Sie Shift gedrückt, um stattdessen das Terminal-Menü zu erhalten, oder kopieren und einfügen, wenn das Menü hier Ihre Wahl ist.",
+        "copyPaste": "Kopieren oder einfügen",
+        "menu": "Terminal-Menü",
+        "native": "Browser-Menü"
+      },
+      "ctrlVPaste": {
+        "label": "Strg+V zum Einfügen",
+        "description": "Deaktivieren, um Strg+V an die Shell zu senden. Strg+Shift+V fügt weiterhin ein."
+      },
+      "copyOnSelect": {
+        "label": "Ausgewählten Text automatisch kopieren",
+        "description": "Kopiert den Text, sobald Sie ihn im Terminal auswählen."
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Verlauf",
     "localTerminal": "Lokales Terminal",
-    "sshTools": "SSH-Tools",
     "terminal": "Terminal",
     "macros": "Makros"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Hier eingeben, um Tastenanschläge zu übertragen...",
-    "copyOnSelect": "Ausgewählten Text automatisch kopieren",
-    "enableRightClickCopyPaste": "Rechtsklick-Kopieren/Einfügen aktivieren",
-    "ctrlVPaste": "Strg+V fügt ein (deaktivieren, um Strg+V an die Shell zu senden)",
-    "fillPassword": "Passwort ausfüllen",
-    "fillPasswordMissing_one": "Kein gespeichertes Passwort für {{count}} ausgewähltes Terminal",
-    "fillPasswordMissing_other": "Kein gespeichertes Passwort für {{count}} ausgewählte Terminals",
-    "fillPasswordSuccess_one": "Passwort in {{count}} Terminal eingefügt",
-    "fillPasswordSuccess_other": "Passwort in {{count}} Terminals eingefügt",
-    "keyRecordingTitle": "Tastatureingabe aufnehmen",
-    "noTerminalTabsOpen": "Keine Terminal-Registerkarten geöffnet",
-    "recordToTerminals": "Auf Terminal(s) aufzeichnen",
-    "selectAll": "Alle",
-    "selectNone": "Keine",
-    "selectTerminalsAbove": "Terminals oben auswählen",
-    "settingsTitle": "Einstellungen",
-    "startRecording": "Aufnahme starten",
-    "stopRecording": "Aufnahme stoppen"
   },
   "keybindings": {
     "openLocalTerminal": "Neues lokales Terminal öffnen",
@@ -629,7 +628,8 @@
       "ctrlT": "Sende Strg+T an Shell (Blockiert das Öffnen eines Browser-Tabs)",
       "ctrlN": "Sende Strg+N an Shell (Blockiert das Öffnen eines Browser-Fensters)",
       "ctrlQ": "Sende Strg+Q an Shell (Blockiert das Beenden des Browsers)"
-    }
+    },
+    "toggleBroadcast": "Broadcast ein- oder ausschalten"
   },
   "macros": {
     "title": "Makros",
@@ -737,5 +737,99 @@
     "sending": "{{name}} wird hochgeladen",
     "receiving": "{{name}} wird heruntergeladen",
     "cancel": "Transfer abbrechen"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Eingabe übertragen",
+      "stop": "Übertragung stoppen",
+      "stopShort": "Stopp",
+      "on": "Übertragung aktiv",
+      "paused": "Übertragung pausiert",
+      "pausedForPassword": "Pausiert bei Passwortabfrage",
+      "pause": "Pause",
+      "resume": "Fortsetzen",
+      "members_one": "{{count}} Terminal",
+      "members_other": "{{count}} Terminals",
+      "allOpen": "Alle geöffnet",
+      "thisSplit": "Diese Aufteilung",
+      "sameFolder": "Gleicher Ordner",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Öffnen Sie ein weiteres Terminal, um daran zu übertragen.",
+      "compose": "Zusammenstellen",
+      "composeHint": "Schreiben Sie einen Befehl. Strg+Enter sendet ihn an die Gruppe.",
+      "send": "Senden",
+      "pressEnter": "Enter drücken",
+      "skipped_one": "{{count}} Terminal übersprungen, das offline ist oder nach einem Passwort fragt",
+      "skipped_other": "{{count}} Terminals übersprungen, die offline sind oder nach einem Passwort fragen"
+    },
+    "fill": {
+      "label": "Passwort ausfüllen",
+      "done_one": "Passwort in {{count}} Terminal ausgefüllt",
+      "done_other": "Passwort in {{count}} Terminals ausgefüllt",
+      "noPassword_one": "Kein gespeichertes Passwort für {{count}} Terminal",
+      "noPassword_other": "Kein gespeichertes Passwort für {{count}} Terminals",
+      "notAsking_one": "{{count}} Terminal fragt nicht nach einem Passwort",
+      "notAsking_other": "{{count}} Terminals fragen nicht nach einem Passwort"
+    },
+    "find": {
+      "all": "In allen Terminals suchen",
+      "badRegex": "Dieser reguläre Ausdruck ist ungültig",
+      "capped": "Zeige die ersten {{count}} Ergebnisse"
+    },
+    "watch": {
+      "title": "Ausgabe beobachten",
+      "note": "Regeln werden ausgeführt, solange Termix geöffnet ist. Benachrichtigungen nennen die Regel und den Host, niemals die Ausgabe.",
+      "name": "Regelname",
+      "when": "Benachrichtigen, wenn",
+      "kindMatch": "Ausgabe stimmt überein",
+      "kindQuiet": "Ausgabe wird still",
+      "kindActivity": "Neue Ausgabe im Hintergrund",
+      "pattern": "Zu suchender Text",
+      "seconds": "Sekunden Stille",
+      "add": "Regel hinzufügen",
+      "delete": "Regel löschen",
+      "describeMatch": "Stimmt mit {{pattern}} überein",
+      "describeQuiet_one": "{{count}} Sekunde still",
+      "describeQuiet_other": "{{count}} Sekunden still",
+      "describeActivity": "Neue Ausgabe im Hintergrund",
+      "nameRequired": "Geben Sie der Regel einen Namen",
+      "patternRequired": "Geben Sie den zu suchenden Text ein",
+      "badRegex": "Dieser reguläre Ausdruck ist ungültig",
+      "secondsRequired": "Geben Sie 1 Sekunde oder mehr ein",
+      "fired": "{{rule}} auf {{host}}",
+      "active_one": "{{count}} Beobachtungsregel aktiv",
+      "active_other": "{{count}} Beobachtungsregeln aktiv"
+    },
+    "output": {
+      "save": "Ausgabe speichern",
+      "copy": "Ausgabe kopieren",
+      "saveSelection": "Auswahl speichern",
+      "empty": "Es gibt nichts zu speichern",
+      "copied": "Ausgabe kopiert",
+      "copyFailed": "Ausgabe konnte nicht kopiert werden"
+    },
+    "fix": {
+      "resetDisplay": "Anzeige zurücksetzen",
+      "clearScrollback": "Scrollverlauf löschen",
+      "resetShell": "Shell zurücksetzen",
+      "resetShellTitle": "Shell zurücksetzen?",
+      "resetShellDescription": "Dies führt am Prompt `stty sane` und `reset` aus. Jeder Text auf der aktuellen Zeile wird mit ausgeführt."
+    },
+    "keys": {
+      "title": "Taste senden",
+      "custom": "Strg + Buchstabe",
+      "customTitle": "Strg + Buchstabe senden",
+      "customDescription": "Geben Sie den Buchstaben ein, der mit Strg gesendet werden soll"
+    },
+    "menu": {
+      "copy": "Kopieren",
+      "paste": "Einfügen",
+      "selectAll": "Alles auswählen",
+      "find": "Suchen",
+      "clear": "Leeren"
+    },
+    "openTerminalFirst": "Öffnen Sie ein SSH-Terminal, um dessen Werkzeuge zu nutzen"
   }
 }

@@ -117,7 +117,8 @@
     "paste": "貼上影像",
     "settingsTitle": "工具列",
     "upload": "上傳影像",
-    "uploadingImage": "上傳中..."
+    "uploadingImage": "上傳中...",
+    "tools": "工具"
   },
   "history": {
     "noTerminalSelected": "未選取終端機",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "透過 WebSocket 將 SSH 流量路由至 Cloudflare Zero Trust"
+      },
+      "tcpNoDelay": {
+        "label": "停用 Nagle 演算法 (TCP_NODELAY)",
+        "description": "停用 TCP 封包批次處理以降低 SSH 輸入延遲，特別是在區域網路連線時。可能會增加網路開銷。"
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel 主機名稱",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "rz 與 sz 檔案傳輸",
         "description": "在終端機中直接使用 rz 和 sz (lrzsz) 上傳與下載檔案。"
+      },
+      "rightClickAction": {
+        "label": "在終端機中按右鍵",
+        "description": "按住 Shift 鍵可顯示終端機選單，若在此處選擇選單，則可進行複製或貼上",
+        "copyPaste": "複製或貼上",
+        "menu": "終端機選單",
+        "native": "瀏覽器選單"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V 貼上",
+        "description": "關閉後會將 Ctrl+V 傳送至殼層。Ctrl+Shift+V 仍可貼上"
+      },
+      "copyOnSelect": {
+        "label": "自動複製選取的文字",
+        "description": "在終端機中選取文字時立即複製"
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "歷史記錄",
     "localTerminal": "本地終端機",
-    "sshTools": "SSH 工具",
     "terminal": "終端機",
     "macros": "巨集"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "在此輸入以廣播按鍵...",
-    "copyOnSelect": "自動複製選取的文字",
-    "enableRightClickCopyPaste": "啟用右鍵複製/貼上",
-    "ctrlVPaste": "Ctrl+V 貼上（關閉則將 Ctrl+V 發送給 Shell）",
-    "fillPassword": "填入密碼",
-    "fillPasswordMissing_other": "{{count}} 個選取的終端機沒有已儲存的密碼",
-    "fillPasswordSuccess_other": "已將密碼填入 {{count}} 個終端機",
-    "keyRecordingTitle": "鍵盤錄製",
-    "noTerminalTabsOpen": "沒有開啟的終端機分頁",
-    "recordToTerminals": "錄製到終端機",
-    "selectAll": "全部",
-    "selectNone": "無",
-    "selectTerminalsAbove": "選取上方的終端機",
-    "settingsTitle": "設定",
-    "startRecording": "開始錄製",
-    "stopRecording": "停止錄製"
   },
   "keybindings": {
     "openLocalTerminal": "開啟新的本機終端機",
@@ -624,7 +625,8 @@
       "ctrlT": "向 Shell 傳送 Ctrl+T（已阻擋開啟瀏覽器分頁的動作）",
       "ctrlN": "向 Shell 傳送 Ctrl+N（已阻擋開啟瀏覽器視窗的動作）",
       "ctrlQ": "向 Shell 傳送 Ctrl+Q（已阻擋退出瀏覽器的動作）"
-    }
+    },
+    "toggleBroadcast": "開啟或關閉廣播"
   },
   "macros": {
     "title": "巨集",
@@ -731,5 +733,91 @@
     "sending": "正在上傳 {{name}}",
     "receiving": "正在下載 {{name}}",
     "cancel": "取消傳輸"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "開始廣播輸入",
+      "stop": "停止廣播",
+      "stopShort": "停止",
+      "on": "廣播已開啟",
+      "paused": "廣播已暫停",
+      "pausedForPassword": "在密碼提示處暫停",
+      "pause": "暫停",
+      "resume": "繼續",
+      "members_other": "{{count}} 個終端機",
+      "allOpen": "全部開啟",
+      "thisSplit": "此分割視窗",
+      "sameFolder": "相同資料夾",
+      "offline": "離線",
+      "offlineCount_other": "{{count}} 個離線",
+      "openMore": "開啟另一個終端機以向其廣播",
+      "compose": "撰寫",
+      "composeHint": "撰寫指令。按 Ctrl+Enter 將其傳送至群組",
+      "send": "傳送",
+      "pressEnter": "按 Enter",
+      "skipped_other": "已跳過 {{count}} 個離線或正在要求密碼的終端機"
+    },
+    "fill": {
+      "label": "填入密碼",
+      "done_other": "已在 {{count}} 個終端機中填入密碼",
+      "noPassword_other": "{{count}} 個終端機沒有已儲存的密碼",
+      "notAsking_other": "{{count}} 個終端機未要求密碼"
+    },
+    "find": {
+      "all": "在所有終端機中尋找",
+      "badRegex": "此正規表示法無效",
+      "capped": "顯示前 {{count}} 個結果"
+    },
+    "watch": {
+      "title": "監控輸出",
+      "note": "規則在 Termix 開啟時執行。警示會顯示規則名稱與主機，不會顯示輸出內容。",
+      "name": "規則名稱",
+      "when": "警示時機",
+      "kindMatch": "輸出內容符合",
+      "kindQuiet": "輸出內容停止",
+      "kindActivity": "背景有新輸出",
+      "pattern": "要尋找的文字",
+      "seconds": "靜止秒數",
+      "add": "新增規則",
+      "delete": "刪除規則",
+      "describeMatch": "符合 {{pattern}}",
+      "describeQuiet_other": "靜止 {{count}} 秒",
+      "describeActivity": "背景有新輸出",
+      "nameRequired": "請為規則命名",
+      "patternRequired": "輸入要尋找的文字",
+      "badRegex": "此正規表示法無效",
+      "secondsRequired": "輸入 1 秒或更多",
+      "fired": "{{rule}} 在 {{host}} 上觸發",
+      "active_other": "{{count}} 個監控規則已開啟"
+    },
+    "output": {
+      "save": "儲存輸出",
+      "copy": "複製輸出",
+      "saveSelection": "儲存選取內容",
+      "empty": "沒有可儲存的內容",
+      "copied": "已複製輸出",
+      "copyFailed": "無法複製輸出"
+    },
+    "fix": {
+      "resetDisplay": "重設顯示",
+      "clearScrollback": "清除捲動記錄",
+      "resetShell": "重設 Shell",
+      "resetShellTitle": "要重設 Shell 嗎？",
+      "resetShellDescription": "這會在提示字元處輸入 stty sane 和 reset。該行上的任何文字都會一併執行。"
+    },
+    "keys": {
+      "title": "傳送按鍵",
+      "custom": "Ctrl + 字母",
+      "customTitle": "傳送 Ctrl + 字母",
+      "customDescription": "輸入要與 Ctrl 一起傳送的字母"
+    },
+    "menu": {
+      "copy": "複製",
+      "paste": "貼上",
+      "selectAll": "全選",
+      "find": "尋找",
+      "clear": "清除"
+    },
+    "openTerminalFirst": "開啟 SSH 終端機以使用其工具"
   }
 }

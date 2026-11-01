@@ -119,7 +119,8 @@
     "paste": "Kleebi pilt",
     "settingsTitle": "Tööriistariba",
     "upload": "Laadi pilt üles",
-    "uploadingImage": "Üleslaadimine..."
+    "uploadingImage": "Üleslaadimine...",
+    "tools": "Tööriistad"
   },
   "history": {
     "noTerminalSelected": "Terminali ei ole valitud",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare'i tunnel",
         "description": "Suuna SSH-liiklus Cloudflare Zero Trusti kaudu WebSocketi vahendusel"
+      },
+      "tcpNoDelay": {
+        "label": "Keela Nagle'i algoritm (TCP_NODELAY)",
+        "description": "Keelab TCP-pakettide partitsioneerimise, et vähendada SSH sisendi latentsust, eriti LAN-ühendustel. Võib suurendada võrgukoormust."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnele perenimi",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz ja sz failide ülekanded",
         "description": "Laadi faile üles ja alla rz ja sz (lrzsz) abil otse terminalis."
+      },
+      "rightClickAction": {
+        "label": "Paremklõps terminalis",
+        "description": "Hoidke Shift all, et saada terminali menüü, või kopeerida ja kleebida, kui menüü on siin teie valik",
+        "copyPaste": "Kopeeri või kleebi",
+        "menu": "Terminali menüü",
+        "native": "Brauseri menüü"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V kleebib",
+        "description": "Lülitage välja, et saata Ctrl+V käsureale. Ctrl+Shift+V kleebib ikka"
+      },
+      "copyOnSelect": {
+        "label": "Kopeeri valitud tekst automaatselt",
+        "description": "Kopeerib teksti kohe, kui selle terminalis valite"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Ajalugu",
     "localTerminal": "Kohalik terminal",
-    "sshTools": "SSH tööriistad",
     "terminal": "Terminal",
     "macros": "Makrod"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Kirjuta siia, et saata klahvivajutusi kõigile...",
-    "copyOnSelect": "Kopeeri valitud tekst automaatselt",
-    "enableRightClickCopyPaste": "Luba paremklõpsuga kopeerimine/liimimine",
-    "ctrlVPaste": "Ctrl+V liimib (lülita välja, et saata Ctrl+V shellile)",
-    "fillPassword": "Täida parool",
-    "fillPasswordMissing_one": "{{count}} valitud terminali jaoks pole salvestatud parooli",
-    "fillPasswordMissing_other": "{{count}} valitud terminali jaoks pole salvestatud parooli",
-    "fillPasswordSuccess_one": "Parool sisestatud {{count}} terminali",
-    "fillPasswordSuccess_other": "Parool sisestatud {{count}} terminali",
-    "keyRecordingTitle": "Klahvitrükkide salvestamine",
-    "noTerminalTabsOpen": "Ühtegi terminali vahelehte pole avatud",
-    "recordToTerminals": "Salvesta terminalidesse",
-    "selectAll": "Kõik",
-    "selectNone": "Ükski",
-    "selectTerminalsAbove": "Vali terminalid üleval",
-    "settingsTitle": "Seaded",
-    "startRecording": "Alusta salvestamist",
-    "stopRecording": "Peata salvestamine"
   },
   "keybindings": {
     "openLocalTerminal": "Ava uus kohalik käsurea aken",
@@ -629,7 +628,8 @@
       "ctrlT": "Saada Ctrl+T shellile (blokeeritud brauseri vahelehe avamisest)",
       "ctrlN": "Saada Ctrl+N shellile (blokeeritud brauseri akna avamisest)",
       "ctrlQ": "Saada Ctrl+Q shellile (blokeeritud brauseri sulgemisest)"
-    }
+    },
+    "toggleBroadcast": "Lülitab levitamise sisse või välja"
   },
   "macros": {
     "title": "Makrod",
@@ -737,5 +737,99 @@
     "sending": "Üleslaadimine {{name}}",
     "receiving": "Allalaadimine {{name}}",
     "cancel": "Katkesta ülekandmine"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Alusta sisendi levitamist",
+      "stop": "Peata levitamine",
+      "stopShort": "Peata",
+      "on": "Levitamine sees",
+      "paused": "Levitamine peatatud",
+      "pausedForPassword": "Peatatud paroolipäringul",
+      "pause": "Peata",
+      "resume": "Jätka",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminali",
+      "allOpen": "Kõik avatud",
+      "thisSplit": "See jagamine",
+      "sameFolder": "Samas kaustas",
+      "offline": "Võrgust väljas",
+      "offlineCount_one": "{{count}} võrgust väljas",
+      "offlineCount_other": "{{count}} võrgust väljas",
+      "openMore": "Avage veel üks terminal, et levitada sellele",
+      "compose": "Koosta",
+      "composeHint": "Kirjutage käsk. Ctrl+Enter saadab selle grupile",
+      "send": "Saada",
+      "pressEnter": "Vajuta Enter",
+      "skipped_one": "Jäeti vahele {{count}} terminal, mis on võrgust väljas või küsib parooli",
+      "skipped_other": "Jäeti vahele {{count}} terminali, mis on võrgust väljas või küsivad parooli"
+    },
+    "fill": {
+      "label": "Täida parool",
+      "done_one": "Täideti parool {{count}} terminalis",
+      "done_other": "Täideti parool {{count}} terminalis",
+      "noPassword_one": "Pole salvestatud parooli {{count}} terminali jaoks",
+      "noPassword_other": "Pole salvestatud parooli {{count}} terminali jaoks",
+      "notAsking_one": "{{count}} terminal ei küsi parooli",
+      "notAsking_other": "{{count}} terminali ei küsi parooli"
+    },
+    "find": {
+      "all": "Otsi kõigist terminalidest",
+      "badRegex": "See regulaaravaldis ei kehti",
+      "capped": "Kuvatakse esimesed {{count}} tulemust"
+    },
+    "watch": {
+      "title": "Jälgi väljundit",
+      "note": "Reeglid töötavad, kui Termix on avatud. Hoiatused nimetavad reegli ja hosti, mitte väljundit.",
+      "name": "Reegli nimi",
+      "when": "Hoiata, kui",
+      "kindMatch": "Väljund vastab",
+      "kindQuiet": "Väljund vaikib",
+      "kindActivity": "Uus väljund taustal",
+      "pattern": "Otsitav tekst",
+      "seconds": "Vaikuse sekundid",
+      "add": "Lisa reegel",
+      "delete": "Kustuta reegel",
+      "describeMatch": "Vastab {{pattern}}",
+      "describeQuiet_one": "Vaikus {{count}} sekundit",
+      "describeQuiet_other": "Vaikus {{count}} sekundit",
+      "describeActivity": "Uus väljund taustal",
+      "nameRequired": "Anna reeglile nimi",
+      "patternRequired": "Sisesta otsitav tekst",
+      "badRegex": "See regulaaravaldis ei kehti",
+      "secondsRequired": "Sisesta 1 sekund või rohkem",
+      "fired": "{{rule}} hostil {{host}}",
+      "active_one": "{{count}} jälgimisreegel sees",
+      "active_other": "{{count}} jälgimisreeglit sees"
+    },
+    "output": {
+      "save": "Salvesta väljund",
+      "copy": "Kopeeri väljund",
+      "saveSelection": "Salvesta valik",
+      "empty": "Salvestada ei ole midagi",
+      "copied": "Väljund kopeeritud",
+      "copyFailed": "Väljundit ei õnnestunud kopeerida"
+    },
+    "fix": {
+      "resetDisplay": "Lähtesta kuva",
+      "clearScrollback": "Tühjenda kerimisajalugu",
+      "resetShell": "Lähtesta käsurea keskkond",
+      "resetShellTitle": "Kas lähtestada käsurea keskkond?",
+      "resetShellDescription": "See sisestab käsu stty sane ja reset käsuviiba juurde. Kõik selles reas olev tekst käivitatakse koos nendega."
+    },
+    "keys": {
+      "title": "Saada klahv",
+      "custom": "Ctrl + täht",
+      "customTitle": "Saada Ctrl + täht",
+      "customDescription": "Sisesta täht, mida saadada koos Ctrl-iga"
+    },
+    "menu": {
+      "copy": "Kopeeri",
+      "paste": "Kleebi",
+      "selectAll": "Vali kõik",
+      "find": "Otsi",
+      "clear": "Tühjenda"
+    },
+    "openTerminalFirst": "Ava SSH-terminaal, et kasutada selle tööriistu"
   }
 }

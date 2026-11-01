@@ -119,7 +119,8 @@
     "paste": "Klistra in bild",
     "settingsTitle": "Verktygsfält",
     "upload": "Ladda upp bild",
-    "uploadingImage": "Laddar upp..."
+    "uploadingImage": "Laddar upp...",
+    "tools": "Verktyg"
   },
   "history": {
     "noTerminalSelected": "Ingen terminal vald",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Dirigera SSH-trafik över Cloudflare Zero Trust via WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Inaktivera Nagles algoritm (TCP_NODELAY)",
+        "description": "Inaktiverar sammanfogning av TCP-paket för att minska SSH-latens, särskilt på LAN-anslutningar. Kan öka nätverksbelastningen."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnelvärdnamn",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz- och sz-filöverföringar",
         "description": "Ladda upp och ladda ner filer med rz och sz (lrzsz) direkt i terminalen."
+      },
+      "rightClickAction": {
+        "label": "Högerklicka i terminalen",
+        "description": "Håll Shift för att få terminalmenyn istället, eller kopiera och klistra in om menyn är ditt val här",
+        "copyPaste": "Kopiera eller klistra in",
+        "menu": "Terminalmeny",
+        "native": "Webbläsarmeny"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V klistrar in",
+        "description": "Stäng av för att skicka Ctrl+V till skalet. Ctrl+Shift+V klistrar fortfarande in"
+      },
+      "copyOnSelect": {
+        "label": "Kopiera markerad text automatiskt",
+        "description": "Kopierar text så snart du markerar den i terminalen"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Historik",
     "localTerminal": "Lokal terminal",
-    "sshTools": "SSH-verktyg",
     "terminal": "Terminal",
     "macros": "Makron"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Skriv här för att sända tangenttryckningar...",
-    "copyOnSelect": "Kopiera markerad text automatiskt",
-    "enableRightClickCopyPaste": "Aktivera högerklick för kopiera/klistra in",
-    "ctrlVPaste": "Ctrl+V klistrar in (stäng av för att skicka Ctrl+V till skalet)",
-    "fillPassword": "Fyll i lösenord",
-    "fillPasswordMissing_one": "Inget sparade lösenord för {{count}} vald terminal",
-    "fillPasswordMissing_other": "Inget sparade lösenord för {{count}} valda terminaler",
-    "fillPasswordSuccess_one": "Fyllde i lösenord i {{count}} terminal",
-    "fillPasswordSuccess_other": "Fyllde i lösenord i {{count}} terminaler",
-    "keyRecordingTitle": "Tangentinspelning",
-    "noTerminalTabsOpen": "Inga terminalflikar öppna",
-    "recordToTerminals": "Spela in till terminaler",
-    "selectAll": "Alla",
-    "selectNone": "Inga",
-    "selectTerminalsAbove": "Välj terminaler ovan",
-    "settingsTitle": "Inställningar",
-    "startRecording": "Starta inspelning",
-    "stopRecording": "Stoppa inspelning"
   },
   "keybindings": {
     "openLocalTerminal": "Öppna ny lokal terminal",
@@ -629,7 +628,8 @@
       "ctrlT": "Skicka Ctrl+T till skal (blockeras från att öppna webbläsarflik)",
       "ctrlN": "Skicka Ctrl+N till skal (blockeras från att öppna webbläsarfönster)",
       "ctrlQ": "Skicka Ctrl+Q till skal (blockeras från att avsluta webbläsaren)"
-    }
+    },
+    "toggleBroadcast": "Växla sändning på eller av"
   },
   "macros": {
     "title": "Makron",
@@ -737,5 +737,99 @@
     "sending": "Laddar upp {{name}}",
     "receiving": "Laddar ner {{name}}",
     "cancel": "Avbryt överföring"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Sänd inmatning",
+      "stop": "Stoppa sändning",
+      "stopShort": "Stoppa",
+      "on": "Sändning på",
+      "paused": "Sändning pausad",
+      "pausedForPassword": "Pausad vid lösenordsfråga",
+      "pause": "Pausa",
+      "resume": "Återuppta",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminaler",
+      "allOpen": "Alla öppna",
+      "thisSplit": "Denna delning",
+      "sameFolder": "Samma mapp",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Öppna en annan terminal för att sända till den",
+      "compose": "Skriv",
+      "composeHint": "Skriv ett kommando. Ctrl+Enter skickar det till gruppen",
+      "send": "Skicka",
+      "pressEnter": "Tryck på Enter",
+      "skipped_one": "Hoppade över {{count}} terminal som är offline eller frågar efter lösenord",
+      "skipped_other": "Hoppade över {{count}} terminaler som är offline eller frågar efter lösenord"
+    },
+    "fill": {
+      "label": "Fyll i lösenord",
+      "done_one": "Fyllde i lösenordet i {{count}} terminal",
+      "done_other": "Fyllde i lösenordet i {{count}} terminaler",
+      "noPassword_one": "Inget sparade lösenord för {{count}} terminal",
+      "noPassword_other": "Inget sparade lösenord för {{count}} terminaler",
+      "notAsking_one": "{{count}} terminal frågar inte efter lösenord",
+      "notAsking_other": "{{count}} terminaler frågar inte efter lösenord"
+    },
+    "find": {
+      "all": "Sök i alla terminaler",
+      "badRegex": "Detta reguljära uttryck är inte giltigt",
+      "capped": "Visar de första {{count}} resultaten"
+    },
+    "watch": {
+      "title": "Övervaka utdata",
+      "note": "Regler körs medan Termix är öppet. Varningar nämner regeln och värdens namn, aldrig utdata.",
+      "name": "Regelns namn",
+      "when": "Varna när",
+      "kindMatch": "Utdata matchar",
+      "kindQuiet": "Utdata blir tyst",
+      "kindActivity": "Ny utdata i bakgrunden",
+      "pattern": "Text att leta efter",
+      "seconds": "Sekunder av tystnad",
+      "add": "Lägg till regel",
+      "delete": "Ta bort regel",
+      "describeMatch": "Matchar {{pattern}}",
+      "describeQuiet_one": "Tyst i {{count}} sekund",
+      "describeQuiet_other": "Tyst i {{count}} sekunder",
+      "describeActivity": "Ny utdata i bakgrunden",
+      "nameRequired": "Ge regeln ett namn",
+      "patternRequired": "Ange texten att leta efter",
+      "badRegex": "Detta reguljära uttryck är inte giltigt",
+      "secondsRequired": "Ange 1 sekund eller mer",
+      "fired": "{{rule}} på {{host}}",
+      "active_one": "{{count}} övervakningsregel på",
+      "active_other": "{{count}} övervakningsregler på"
+    },
+    "output": {
+      "save": "Spara utdata",
+      "copy": "Kopiera utdata",
+      "saveSelection": "Spara markering",
+      "empty": "Det finns inget att spara",
+      "copied": "Utdata kopierad",
+      "copyFailed": "Kunde inte kopiera utdata"
+    },
+    "fix": {
+      "resetDisplay": "Återställ visning",
+      "clearScrollback": "Rensa rullningsbuffert",
+      "resetShell": "Återställ skal",
+      "resetShellTitle": "Vill du återställa skalet?",
+      "resetShellDescription": "Detta skriver stty sane och reset vid kommandoraden. All text på raden körs med det."
+    },
+    "keys": {
+      "title": "Skicka tangent",
+      "custom": "Ctrl + bokstav",
+      "customTitle": "Skicka Ctrl + bokstav",
+      "customDescription": "Skriv in bokstaven som ska skickas med Ctrl"
+    },
+    "menu": {
+      "copy": "Kopiera",
+      "paste": "Klistra in",
+      "selectAll": "Markera allt",
+      "find": "Sök",
+      "clear": "Rensa"
+    },
+    "openTerminalFirst": "Öppna en SSH-terminal för att använda dess verktyg"
   }
 }

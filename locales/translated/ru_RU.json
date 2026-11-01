@@ -123,7 +123,8 @@
     "paste": "Вставить изображение",
     "settingsTitle": "Панель инструментов",
     "upload": "Загрузить изображение",
-    "uploadingImage": "Загрузка..."
+    "uploadingImage": "Загрузка...",
+    "tools": "Инструменты"
   },
   "history": {
     "noTerminalSelected": "Терминал не выбран",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Туннель Cloudflare",
         "description": "Маршрутизация SSH-трафика через Cloudflare Zero Trust по WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Отключить алгоритм Нейгла (TCP_NODELAY)",
+        "description": "Отключает пакетную обработку TCP для снижения задержки ввода SSH, особенно в локальной сети. Может увеличить сетевую нагрузку."
       },
       "cloudflareTunnelHostname": {
         "label": "Имя хоста туннеля",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "Передача файлов rz и sz",
         "description": "Загрузка и скачивание файлов с помощью rz и sz (lrzsz) прямо в терминале."
+      },
+      "rightClickAction": {
+        "label": "Действие правой кнопки мыши в терминале",
+        "description": "Зажмите Shift, чтобы открыть меню терминала, или используйте копирование и вставку, если это выбрано здесь",
+        "copyPaste": "Копировать или вставить",
+        "menu": "Меню терминала",
+        "native": "Меню браузера"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V вставляет текст",
+        "description": "Отключите, чтобы передавать Ctrl+V в оболочку. Ctrl+Shift+V всё равно вставляет текст"
+      },
+      "copyOnSelect": {
+        "label": "Автоматически копировать выделенный текст",
+        "description": "Текст копируется сразу после выделения в терминале"
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "История",
     "localTerminal": "Локальный терминал",
-    "sshTools": "Инструменты SSH",
     "terminal": "Терминал",
     "macros": "Макросы"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Введите здесь, чтобы транслировать нажатия клавиш...",
-    "copyOnSelect": "Автоматически копировать выделенный текст",
-    "enableRightClickCopyPaste": "Включить копирование/вставку по правому клику",
-    "ctrlVPaste": "Ctrl+V вставляет (отключите, чтобы отправлять Ctrl+V в оболочку)",
-    "fillPassword": "Вставить пароль",
-    "fillPasswordMissing_one": "Нет сохранённого пароля для {{count}} выбранного терминала",
-    "fillPasswordMissing_few": "Нет сохранённого пароля для {{count}} выбранных терминалов",
-    "fillPasswordMissing_many": "Нет сохранённого пароля для {{count}} выбранных терминалов",
-    "fillPasswordMissing_other": "Нет сохранённого пароля для {{count}} выбранных терминалов",
-    "fillPasswordSuccess_one": "Пароль введён в {{count}} терминал",
-    "fillPasswordSuccess_few": "Пароль введён в {{count}} терминала",
-    "fillPasswordSuccess_many": "Пароль введён в {{count}} терминалов",
-    "fillPasswordSuccess_other": "Пароль введён в {{count}} терминалов",
-    "keyRecordingTitle": "Запись нажатий",
-    "noTerminalTabsOpen": "Нет открытых вкладок терминала",
-    "recordToTerminals": "Записать в терминалы",
-    "selectAll": "Все",
-    "selectNone": "Ничего",
-    "selectTerminalsAbove": "Выберите терминалы выше",
-    "settingsTitle": "Настройки",
-    "startRecording": "Начать запись",
-    "stopRecording": "Остановить запись"
   },
   "keybindings": {
     "openLocalTerminal": "Открыть новый локальный терминал",
@@ -639,7 +634,8 @@
       "ctrlT": "Отправить Ctrl+T в оболочку (блокирует открытие новой вкладки браузера)",
       "ctrlN": "Отправить Ctrl+N в оболочку (блокирует открытие нового окна браузера)",
       "ctrlQ": "Отправить Ctrl+Q в оболочку (блокирует выход из браузера)"
-    }
+    },
+    "toggleBroadcast": "Включить или выключить трансляцию"
   },
   "macros": {
     "title": "Макросы",
@@ -749,5 +745,115 @@
     "sending": "Загрузка {{name}}",
     "receiving": "Скачивание {{name}}",
     "cancel": "Отменить передачу"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Начать трансляцию ввода",
+      "stop": "Остановить трансляцию",
+      "stopShort": "Стоп",
+      "on": "Трансляция включена",
+      "paused": "Трансляция приостановлена",
+      "pausedForPassword": "Приостановлено при запросе пароля",
+      "pause": "Пауза",
+      "resume": "Продолжить",
+      "members_one": "{{count}} терминал",
+      "members_few": "{{count}} терминала",
+      "members_many": "{{count}} терминалов",
+      "members_other": "{{count}} терминалов",
+      "allOpen": "Все открытые",
+      "thisSplit": "Этот раздел",
+      "sameFolder": "В той же папке",
+      "offline": "Не в сети",
+      "offlineCount_one": "{{count}} не в сети",
+      "offlineCount_few": "{{count}} не в сети",
+      "offlineCount_many": "{{count}} не в сети",
+      "offlineCount_other": "{{count}} не в сети",
+      "openMore": "Откройте ещё один терминал для трансляции в него",
+      "compose": "Составить",
+      "composeHint": "Введите команду. Ctrl+Enter отправит её группе",
+      "send": "Отправить",
+      "pressEnter": "Нажмите Enter",
+      "skipped_one": "Пропущен {{count}} терминал, который не в сети или запрашивает пароль",
+      "skipped_few": "Пропущено {{count}} терминала, которые не в сети или запрашивают пароль",
+      "skipped_many": "Пропущено {{count}} терминалов, которые не в сети или запрашивают пароль",
+      "skipped_other": "Пропущено {{count}} терминалов, которые не в сети или запрашивают пароль"
+    },
+    "fill": {
+      "label": "Заполнить пароль",
+      "done_one": "Пароль заполнен в {{count}} терминале",
+      "done_few": "Пароль заполнен в {{count}} терминалах",
+      "done_many": "Пароль заполнен в {{count}} терминалах",
+      "done_other": "Пароль заполнен в {{count}} терминалах",
+      "noPassword_one": "Нет сохранённого пароля для {{count}} терминала",
+      "noPassword_few": "Нет сохранённого пароля для {{count}} терминалов",
+      "noPassword_many": "Нет сохранённого пароля для {{count}} терминалов",
+      "noPassword_other": "Нет сохранённого пароля для {{count}} терминалов",
+      "notAsking_one": "{{count}} терминал не запрашивает пароль",
+      "notAsking_few": "{{count}} терминала не запрашивают пароль",
+      "notAsking_many": "{{count}} терминалов не запрашивают пароль",
+      "notAsking_other": "{{count}} терминалов не запрашивают пароль"
+    },
+    "find": {
+      "all": "Найти во всех терминалах",
+      "badRegex": "Это регулярное выражение недействительно",
+      "capped": "Показаны первые {{count}} результатов"
+    },
+    "watch": {
+      "title": "Наблюдение за выводом",
+      "note": "Правила работают, пока Termix открыт. В уведомлениях указывается имя правила и хост, но не вывод.",
+      "name": "Имя правила",
+      "when": "Оповещать, когда",
+      "kindMatch": "Вывод совпадает",
+      "kindQuiet": "Вывод прекращается",
+      "kindActivity": "Новый вывод на заднем плане",
+      "pattern": "Текст для поиска",
+      "seconds": "Секунд тишины",
+      "add": "Добавить правило",
+      "delete": "Удалить правило",
+      "describeMatch": "Совпадает с {{pattern}}",
+      "describeQuiet_one": "Тишина в течение {{count}} секунды",
+      "describeQuiet_few": "Тишина в течение {{count}} секунд",
+      "describeQuiet_many": "Тишина в течение {{count}} секунд",
+      "describeQuiet_other": "Тишина в течение {{count}} секунд",
+      "describeActivity": "Новый вывод на заднем плане",
+      "nameRequired": "Дайте правилу имя",
+      "patternRequired": "Введите текст для поиска",
+      "badRegex": "Это регулярное выражение недействительно",
+      "secondsRequired": "Введите 1 секунду или больше",
+      "fired": "{{rule}} на {{host}}",
+      "active_one": "{{count}} правило наблюдения активно",
+      "active_few": "{{count}} правила наблюдения активны",
+      "active_many": "{{count}} правил наблюдения активно",
+      "active_other": "{{count}} правил наблюдения активно"
+    },
+    "output": {
+      "save": "Сохранить вывод",
+      "copy": "Копировать вывод",
+      "saveSelection": "Сохранить выделенное",
+      "empty": "Нечего сохранять",
+      "copied": "Вывод скопирован",
+      "copyFailed": "Не удалось скопировать вывод"
+    },
+    "fix": {
+      "resetDisplay": "Сбросить отображение",
+      "clearScrollback": "Очистить прокрутку",
+      "resetShell": "Сбросить оболочку",
+      "resetShellTitle": "Сбросить оболочку?",
+      "resetShellDescription": "Это выполнит команды stty sane и reset в приглашении. Любой текст на текущей строке будет выполнен вместе с ними."
+    },
+    "keys": {
+      "title": "Отправить клавишу",
+      "custom": "Ctrl + буква",
+      "customTitle": "Отправить Ctrl + буква",
+      "customDescription": "Введите букву для отправки с Ctrl"
+    },
+    "menu": {
+      "copy": "Копировать",
+      "paste": "Вставить",
+      "selectAll": "Выделить всё",
+      "find": "Найти",
+      "clear": "Очистить"
+    },
+    "openTerminalFirst": "Откройте SSH-терминал, чтобы использовать его инструменты"
   }
 }

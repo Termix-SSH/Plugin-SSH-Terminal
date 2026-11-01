@@ -5,18 +5,36 @@ import {
   resolveTerminalContextMenuAction,
   selectedTextToCopy,
 } from "./terminal-clipboard-actions";
+import { peekTerminalClientSettings } from "../terminal-settings";
+import type { RightClickAction } from "../../shared/terminal-settings";
 
-export function getCopyOnSelect(): boolean {
-  return getClientPreference("copyOnSelect") === "true";
+// These are account settings. Guests on a share link have no account, so they
+// and a page still loading read this browser's old preference.
+function userSettings() {
+  return peekTerminalClientSettings()?.user;
 }
 
-export function getUseRightClickCopyPaste(): boolean {
-  return getClientPreference("rightClickCopyPaste") !== "false";
+export function getCopyOnSelect(): boolean {
+  return (
+    userSettings()?.copyOnSelect ??
+    getClientPreference("copyOnSelect") === "true"
+  );
+}
+
+export function getRightClickAction(): RightClickAction {
+  return (
+    userSettings()?.rightClickAction ??
+    (getClientPreference("rightClickCopyPaste") === "false"
+      ? "native"
+      : "copyPaste")
+  );
 }
 
 /** Off sends Ctrl+V to the shell (vim block select, lnext); Ctrl+Shift+V still pastes. */
 export function getCtrlVPastes(): boolean {
-  return getClientPreference("ctrlVPaste") !== "false";
+  return (
+    userSettings()?.ctrlVPaste ?? getClientPreference("ctrlVPaste") !== "false"
+  );
 }
 
 export interface TerminalClipboardActions {
@@ -130,17 +148,18 @@ export function handleTerminalClipboardKeyEvent(
 export interface TerminalContextMenuOptions {
   /** Optional Ctrl+right-click passthrough, e.g. to open a file manager. */
   onCtrlClick?: () => void;
+  /** Opens the terminal's own menu at the pointer. */
+  onMenu?: (position: { x: number; y: number }) => void;
 }
 
 /**
- * Builds a "contextmenu" listener implementing right-click copy/paste:
- * copies the selection unless copy-on-select is enabled, otherwise pastes. Gated behind the
- * user's "rightClickCopyPaste" preference cookie.
+ * Builds a "contextmenu" listener for the user's right click setting: copy
+ * or paste, the terminal's menu, or the browser's menu.
  */
 export function createTerminalContextMenuHandler(
   terminal: Terminal,
   { writeTextToClipboard, readTextFromClipboard }: TerminalClipboardActions,
-  { onCtrlClick }: TerminalContextMenuOptions = {},
+  { onCtrlClick, onMenu }: TerminalContextMenuOptions = {},
 ): (e: MouseEvent) => void {
   return (e: MouseEvent) => {
     if (e.ctrlKey && onCtrlClick) {
@@ -151,7 +170,7 @@ export function createTerminalContextMenuHandler(
     }
 
     const action = resolveTerminalContextMenuAction({
-      rightClickCopyPaste: getUseRightClickCopyPaste(),
+      rightClickAction: getRightClickAction(),
       copyOnSelect: getCopyOnSelect(),
       hasSelection: terminal.hasSelection(),
       mouseTracking: terminal.modes.mouseTrackingMode !== "none",
@@ -159,13 +178,17 @@ export function createTerminalContextMenuHandler(
     });
     if (action === "native") return;
     if (action === "app") {
+      // Keep the browser menu away; the program already got the click.
       e.preventDefault();
       return;
     }
+    if (action === "menu" && !onMenu) return;
 
     e.preventDefault();
     e.stopPropagation();
-    if (action === "copy") {
+    if (action === "menu") {
+      onMenu?.({ x: e.clientX, y: e.clientY });
+    } else if (action === "copy") {
       const text = terminal.getSelection();
       writeTextToClipboard(text).then(() => terminal.clearSelection());
     } else {

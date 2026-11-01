@@ -117,7 +117,8 @@
     "paste": "Tempel gambar",
     "settingsTitle": "Bilah alat",
     "upload": "Unggah gambar",
-    "uploadingImage": "Mengunggah..."
+    "uploadingImage": "Mengunggah...",
+    "tools": "Alat"
   },
   "history": {
     "noTerminalSelected": "Tidak ada terminal yang dipilih",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Arahkan lalu lintas SSH melalui Cloudflare Zero Trust via WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Nonaktifkan Algoritma Nagle (TCP_NODELAY)",
+        "description": "Menonaktifkan pengelompokan paket TCP untuk mengurangi latensi input SSH, terutama pada koneksi LAN. Dapat meningkatkan beban jaringan."
       },
       "cloudflareTunnelHostname": {
         "label": "Nama Host Terowongan",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "Transfer file rz dan sz",
         "description": "Unggah dan unduh file dengan rz dan sz (lrzsz) langsung di terminal."
+      },
+      "rightClickAction": {
+        "label": "Klik kanan di terminal",
+        "description": "Tahan Shift untuk menampilkan menu terminal, atau salin dan tempel jika menu adalah pilihan Anda di sini",
+        "copyPaste": "Salin atau tempel",
+        "menu": "Menu terminal",
+        "native": "Menu browser"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V untuk menempel",
+        "description": "Matikan untuk mengirim Ctrl+V ke shell. Ctrl+Shift+V tetap berfungsi untuk menempel"
+      },
+      "copyOnSelect": {
+        "label": "Salin teks yang dipilih secara otomatis",
+        "description": "Menyalin teks segera setelah Anda memilihnya di terminal"
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "Riwayat",
     "localTerminal": "Terminal Lokal",
-    "sshTools": "Alat SSH",
     "terminal": "Terminal",
     "macros": "Makro"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Ketik di sini untuk menyiarkan ketukan keyboard...",
-    "copyOnSelect": "Salin teks yang dipilih secara otomatis",
-    "enableRightClickCopyPaste": "Aktifkan salin/tempel klik kanan",
-    "ctrlVPaste": "Ctrl+V menempel (matikan untuk mengirim Ctrl+V ke shell)",
-    "fillPassword": "Isi kata sandi",
-    "fillPasswordMissing_other": "Tidak ada kata sandi tersimpan untuk {{count}} terminal yang dipilih",
-    "fillPasswordSuccess_other": "Kata sandi diisi ke {{count}} terminal",
-    "keyRecordingTitle": "Perekaman Tekan Tombol",
-    "noTerminalTabsOpen": "Tidak ada tab terminal yang terbuka",
-    "recordToTerminals": "Rekam ke terminal",
-    "selectAll": "Semua",
-    "selectNone": "Tidak ada",
-    "selectTerminalsAbove": "Pilih terminal di atas",
-    "settingsTitle": "Pengaturan",
-    "startRecording": "Mulai Rekam",
-    "stopRecording": "Berhenti Rekam"
   },
   "keybindings": {
     "openLocalTerminal": "Buka Terminal Lokal Baru",
@@ -624,7 +625,8 @@
       "ctrlT": "Kirim Ctrl+T ke shell (diblokir agar tidak membuka tab browser)",
       "ctrlN": "Kirim Ctrl+N ke shell (diblokir agar tidak membuka jendela browser)",
       "ctrlQ": "Kirim Ctrl+Q ke shell (diblokir agar tidak keluar dari browser)"
-    }
+    },
+    "toggleBroadcast": "Hidupkan atau matikan siaran"
   },
   "macros": {
     "title": "Makro",
@@ -731,5 +733,91 @@
     "sending": "Mengunggah {{name}}",
     "receiving": "Mengunduh {{name}}",
     "cancel": "Batalkan transfer"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Mulai siaran input",
+      "stop": "Hentikan siaran",
+      "stopShort": "Hentikan",
+      "on": "Siaran aktif",
+      "paused": "Siaran dijeda",
+      "pausedForPassword": "Dijeda pada permintaan kata sandi",
+      "pause": "Jeda",
+      "resume": "Lanjutkan",
+      "members_other": "{{count}} terminal",
+      "allOpen": "Semua terbuka",
+      "thisSplit": "Pembagian ini",
+      "sameFolder": "Folder yang sama",
+      "offline": "Luring",
+      "offlineCount_other": "{{count}} luring",
+      "openMore": "Buka terminal lain untuk menyiarkan ke sana",
+      "compose": "Susun",
+      "composeHint": "Tulis perintah. Ctrl+Enter mengirimnya ke grup",
+      "send": "Kirim",
+      "pressEnter": "Tekan Enter",
+      "skipped_other": "Melewati {{count}} terminal yang luring atau meminta kata sandi"
+    },
+    "fill": {
+      "label": "Isi kata sandi",
+      "done_other": "Mengisi kata sandi di {{count}} terminal",
+      "noPassword_other": "Tidak ada kata sandi tersimpan untuk {{count}} terminal",
+      "notAsking_other": "{{count}} terminal tidak meminta kata sandi"
+    },
+    "find": {
+      "all": "Cari di semua terminal",
+      "badRegex": "Regex ini tidak valid",
+      "capped": "Menampilkan {{count}} hasil pertama"
+    },
+    "watch": {
+      "title": "Pantau output",
+      "note": "Aturan berjalan saat Termix terbuka. Peringatan menyebutkan nama aturan dan host, bukan outputnya.",
+      "name": "Nama aturan",
+      "when": "Berikan peringatan saat",
+      "kindMatch": "Output cocok dengan",
+      "kindQuiet": "Output menjadi hening",
+      "kindActivity": "Output baru di latar belakang",
+      "pattern": "Teks yang dicari",
+      "seconds": "Detik keheningan",
+      "add": "Tambah aturan",
+      "delete": "Hapus aturan",
+      "describeMatch": "Cocok dengan {{pattern}}",
+      "describeQuiet_other": "Hening selama {{count}} detik",
+      "describeActivity": "Output baru di latar belakang",
+      "nameRequired": "Berikan nama pada aturan",
+      "patternRequired": "Masukkan teks yang dicari",
+      "badRegex": "Regex ini tidak valid",
+      "secondsRequired": "Masukkan 1 detik atau lebih",
+      "fired": "{{rule}} di {{host}}",
+      "active_other": "{{count}} aturan pantau aktif"
+    },
+    "output": {
+      "save": "Simpan output",
+      "copy": "Salin output",
+      "saveSelection": "Simpan pilihan",
+      "empty": "Tidak ada yang bisa disimpan",
+      "copied": "Output disalin",
+      "copyFailed": "Gagal menyalin output"
+    },
+    "fix": {
+      "resetDisplay": "Atur ulang tampilan",
+      "clearScrollback": "Bersihkan riwayat gulir",
+      "resetShell": "Atur ulang shell",
+      "resetShellTitle": "Atur ulang shell?",
+      "resetShellDescription": "Ini akan menjalankan perintah stty sane dan reset di prompt. Teks apa pun di baris tersebut akan dijalankan bersamanya."
+    },
+    "keys": {
+      "title": "Kirim tombol",
+      "custom": "Ctrl + huruf",
+      "customTitle": "Kirim Ctrl + huruf",
+      "customDescription": "Ketik huruf yang ingin dikirim bersama Ctrl"
+    },
+    "menu": {
+      "copy": "Salin",
+      "paste": "Tempel",
+      "selectAll": "Pilih semua",
+      "find": "Cari",
+      "clear": "Bersihkan"
+    },
+    "openTerminalFirst": "Buka terminal SSH untuk menggunakan alatnya"
   }
 }

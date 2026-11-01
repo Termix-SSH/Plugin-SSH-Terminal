@@ -34,7 +34,10 @@ Read the [docs](https://docs.termix.site/plugins/ssh-terminal) to set it up and 
 - A toolbar with live stats and quick links to the host's other tools
 - Command history with autocomplete
 - Macros that automate logins and prompts
-- Send keystrokes to several terminals at once
+- Broadcast typing and commands to several terminals at once
+- Alerts when output matches, a job goes quiet or a background tab has news
+- Search all open terminals, and save or copy their output
+- Fix a garbled terminal and send keys that are hard to type
 - A local terminal in the desktop app
 
 <br />

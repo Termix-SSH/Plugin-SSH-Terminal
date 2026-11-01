@@ -2357,7 +2357,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                   try {
                     const detection = await tmux.detect(conn);
                     const plan = planTmuxAttach(
-                      detection.sessions.length,
+                      detection.sessions,
                       autoTmuxAskWhenOne,
                     );
                     if (!detection.available) {

@@ -119,7 +119,8 @@
     "paste": "ইমেজ পেস্ট করুন",
     "settingsTitle": "টুলবার",
     "upload": "ইমেজ আপলোড করুন",
-    "uploadingImage": "আপলোড হচ্ছে..."
+    "uploadingImage": "আপলোড হচ্ছে...",
+    "tools": "টুলস"
   },
   "history": {
     "noTerminalSelected": "কোনো টার্মিনাল নির্বাচন করা হয়নি",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare টানেল",
         "description": "WebSocket এর মাধ্যমে Cloudflare Zero Trust এর উপর দিয়ে SSH ট্রাফিক রাউট করুন"
+      },
+      "tcpNoDelay": {
+        "label": "নেগলের অ্যালগরিদম বন্ধ করুন (TCP_NODELAY)",
+        "description": "LAN সংযোগে বিশেষ করে SSH ইনপুট ল্যাটেন্সি কমানোর জন্য TCP প্যাকেট ব্যাচিং বন্ধ করে। এটি নেটওয়ার্ক ওভারহেড বাড়তে পারে।"
       },
       "cloudflareTunnelHostname": {
         "label": "টানেল হোস্টনেম",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz এবং sz ফাইল স্থানান্তর",
         "description": "টার্মিনালে সরাসরি rz এবং sz (lrzsz) ব্যবহার করে ফাইল আপলোড এবং ডাউনলোড করুন।"
+      },
+      "rightClickAction": {
+        "label": "টার্মিনালে রাইট ক্লিক",
+        "description": "টার্মিনাল মেনু পেতে Shift ধরে রাখুন, অথবা যদি এখানে মেনু আপনার পছন্দ হয় তবে কপি এবং পেস্ট করুন",
+        "copyPaste": "কপি বা পেস্ট",
+        "menu": "টার্মিনাল মেনু",
+        "native": "ব্রাউজার মেনু"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V পেস্ট করে",
+        "description": "Ctrl+V শেলের কাছে পাঠাতে বন্ধ করুন। Ctrl+Shift+V এখনও পেস্ট করবে"
+      },
+      "copyOnSelect": {
+        "label": "নির্বাচিত টেক্সট স্বয়ংক্রিয়ভাবে কপি করুন",
+        "description": "টার্মিনালে এটি নির্বাচন করার সাথে সাথে টেক্সট কপি করে"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "ইতিহাস",
     "localTerminal": "লোকাল টার্মিনাল",
-    "sshTools": "SSH টুলস",
     "terminal": "টার্মিনাল",
     "macros": "ম্যাক্রো"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "কীবস্ট্রোক ব্রডকাস্ট করতে এখানে টাইপ করুন...",
-    "copyOnSelect": "নির্বাচিত টেক্সট স্বয়ংক্রিয়ভাবে কপি করুন",
-    "enableRightClickCopyPaste": "রাইট-ক্লিক কপি/পেস্ট সক্রিয় করুন",
-    "ctrlVPaste": "Ctrl+V পেস্ট করে (শেলে Ctrl+V পাঠাতে বন্ধ করুন)",
-    "fillPassword": "পাসওয়ার্ড পূরণ করুন",
-    "fillPasswordMissing_one": "{{count}} নির্বাচিত টার্মিনালের জন্য কোনো সংরক্ষিত পাসওয়ার্ড নেই",
-    "fillPasswordMissing_other": "{{count}} নির্বাচিত টার্মিনালের জন্য কোনো সংরক্ষিত পাসওয়ার্ড নেই",
-    "fillPasswordSuccess_one": "{{count}} টার্মিনালে পাসওয়ার্ড পূরণ করা হয়েছে",
-    "fillPasswordSuccess_other": "{{count}} টার্মিনালে পাসওয়ার্ড পূরণ করা হয়েছে",
-    "keyRecordingTitle": "কী রেকর্ডিং",
-    "noTerminalTabsOpen": "কোনো টার্মিনাল ট্যাব খোলা নেই",
-    "recordToTerminals": "টার্মিনালে রেকর্ড করুন",
-    "selectAll": "সব",
-    "selectNone": "কোনোটিই নয়",
-    "selectTerminalsAbove": "উপরের টার্মিনালগুলো নির্বাচন করুন",
-    "settingsTitle": "সেটিংস",
-    "startRecording": "রেকর্ডিং শুরু করুন",
-    "stopRecording": "রেকর্ডিং বন্ধ করুন"
   },
   "keybindings": {
     "openLocalTerminal": "নতুন স্থানীয় টার্মিনাল খুলুন",
@@ -629,7 +628,8 @@
       "ctrlT": "শেলে Ctrl+T পাঠান (ব্রাউজার ট্যাব খোলা হওয়া থেকে রোধ করা হয়েছে)",
       "ctrlN": "শেলে Ctrl+N পাঠান (ব্রাউজার উইন্ডো খোলা হওয়া থেকে রোধ করা হয়েছে)",
       "ctrlQ": "শেলে Ctrl+Q পাঠান (ব্রাউজার বন্ধ হওয়া থেকে রোধ করা হয়েছে)"
-    }
+    },
+    "toggleBroadcast": "ব্রডকাস্ট চালু বা বন্ধ করুন"
   },
   "macros": {
     "title": "ম্যাক্রো",
@@ -737,5 +737,99 @@
     "sending": "{{name}} আপলোড হচ্ছে",
     "receiving": "{{name}} ডাউনলোড হচ্ছে",
     "cancel": "স্থানান্তর বাতিল করুন"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "ইনপুট ব্রডকাস্ট করুন",
+      "stop": "ব্রডকাস্ট বন্ধ করুন",
+      "stopShort": "বন্ধ করুন",
+      "on": "ব্রডকাস্ট চালু",
+      "paused": "ব্রডকাস্ট বিরতিতে",
+      "pausedForPassword": "পাসওয়ার্ড প্রম্পটে বিরতি",
+      "pause": "বিরতি",
+      "resume": "পুনরায় শুরু",
+      "members_one": "{{count}} টার্মিনাল",
+      "members_other": "{{count}} টার্মিনাল",
+      "allOpen": "সব খোলা",
+      "thisSplit": "এই স্প্লিট",
+      "sameFolder": "একই ফোল্ডার",
+      "offline": "অফলাইন",
+      "offlineCount_one": "{{count}} অফলাইন",
+      "offlineCount_other": "{{count}} অফলাইন",
+      "openMore": "এটিতে ব্রডকাস্ট করতে আরেকটি টার্মিনাল খুলুন",
+      "compose": "রচনা",
+      "composeHint": "একটি কমান্ড লিখুন। Ctrl+Enter এটি গ্রুপের কাছে পাঠায়",
+      "send": "পাঠান",
+      "pressEnter": "Enter চাপুন",
+      "skipped_one": "অফলাইন বা পাসওয়ার্ড চাইছে এমন {{count}} টার্মিনাল বাদ দেওয়া হয়েছে",
+      "skipped_other": "অফলাইন বা পাসওয়ার্ড চাইছে এমন {{count}} টার্মিনাল বাদ দেওয়া হয়েছে"
+    },
+    "fill": {
+      "label": "পাসওয়ার্ড পূরণ করুন",
+      "done_one": "{{count}} টার্মিনালে পাসওয়ার্ড পূরণ করা হয়েছে",
+      "done_other": "{{count}} টার্মিনালে পাসওয়ার্ড পূরণ করা হয়েছে",
+      "noPassword_one": "{{count}} টার্মিনালের জন্য কোনো সংরক্ষিত পাসওয়ার্ড নেই",
+      "noPassword_other": "{{count}} টার্মিনালের জন্য কোনো সংরক্ষিত পাসওয়ার্ড নেই",
+      "notAsking_one": "{{count}} টার্মিনাল পাসওয়ার্ড চাইছে না",
+      "notAsking_other": "{{count}} টার্মিনাল পাসওয়ার্ড চাইছে না"
+    },
+    "find": {
+      "all": "সব টার্মিনালে খুঁজুন",
+      "badRegex": "এই রেগুলার এক্সপ্রেশন বৈধ নয়",
+      "capped": "প্রথম {{count}} ফলাফল দেখানো হচ্ছে"
+    },
+    "watch": {
+      "title": "আউটপুট পর্যবেক্ষণ করুন",
+      "note": "নিয়মগুলো Termix খোলা থাকাকালীন চলে। অ্যালার্টগুলো নিয়ম এবং হোস্টের নাম উল্লেখ করে, কখনোই আউটপুটের নয়।",
+      "name": "নিয়মের নাম",
+      "when": "কখন অ্যালার্ট করবেন",
+      "kindMatch": "আউটপুট মিলেছে",
+      "kindQuiet": "আউটপুট নীরব হয়ে গেছে",
+      "kindActivity": "ব্যাকগ্রাউন্ডে নতুন আউটপুট",
+      "pattern": "খুঁজতে টেক্সট",
+      "seconds": "নীরবতার সেকেন্ড",
+      "add": "নিয়ম যোগ করুন",
+      "delete": "নিয়ম মুছুন",
+      "describeMatch": "{{pattern}} এর সাথে মিলেছে",
+      "describeQuiet_one": "{{count}} সেকেন্ড ধরে নীরব",
+      "describeQuiet_other": "{{count}} সেকেন্ড ধরে নীরব",
+      "describeActivity": "ব্যাকগ্রাউন্ডে নতুন আউটপুট",
+      "nameRequired": "নিয়মটির একটি নাম দিন",
+      "patternRequired": "খুঁজতে টেক্সট লিখুন",
+      "badRegex": "এই রেগুলার এক্সপ্রেশন বৈধ নয়",
+      "secondsRequired": "১ সেকেন্ড বা তার বেশি লিখুন",
+      "fired": "{{host}} এ {{rule}}",
+      "active_one": "{{count}} ওয়াচ নিয়ম চালু",
+      "active_other": "{{count}} ওয়াচ নিয়ম চালু"
+    },
+    "output": {
+      "save": "আউটপুট সংরক্ষণ করুন",
+      "copy": "আউটপুট কপি করুন",
+      "saveSelection": "নির্বাচন সংরক্ষণ করুন",
+      "empty": "সংরক্ষণ করার মতো কিছু নেই",
+      "copied": "আউটপুট কপি হয়েছে",
+      "copyFailed": "আউটপুট কপি করা যায়নি"
+    },
+    "fix": {
+      "resetDisplay": "ডিসপ্লে রিসেট করুন",
+      "clearScrollback": "স্ক্রলব্যাক পরিষ্কার করুন",
+      "resetShell": "শেল রিসেট করুন",
+      "resetShellTitle": "শেল রিসেট করবেন?",
+      "resetShellDescription": "এটি প্রম্পটে stty sane এবং reset টাইপ করে। লাইনের যেকোনো টেক্সট এর সাথে চালিত হবে।"
+    },
+    "keys": {
+      "title": "কি পাঠান",
+      "custom": "Ctrl + অক্ষর",
+      "customTitle": "Ctrl + অক্ষর পাঠান",
+      "customDescription": "Ctrl এর সাথে পাঠানোর জন্য অক্ষরটি টাইপ করুন"
+    },
+    "menu": {
+      "copy": "কপি",
+      "paste": "পেস্ট",
+      "selectAll": "সব নির্বাচন করুন",
+      "find": "খুঁজুন",
+      "clear": "পরিষ্কার করুন"
+    },
+    "openTerminalFirst": "এর টুলস ব্যবহার করতে একটি SSH টার্মিনাল খুলুন"
   }
 }

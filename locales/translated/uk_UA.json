@@ -123,7 +123,8 @@
     "paste": "Вставити зображення",
     "settingsTitle": "Панель інструментів",
     "upload": "Завантажити зображення",
-    "uploadingImage": "Завантаження..."
+    "uploadingImage": "Завантаження...",
+    "tools": "Інструменти"
   },
   "history": {
     "noTerminalSelected": "Термінал не обрано",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Маршрутизація SSH-трафіку через Cloudflare Zero Trust за допомогою WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Вимкнути алгоритм Нейгла (TCP_NODELAY)",
+        "description": "Вимикає пакетну обробку TCP для зменшення затримки вводу SSH, особливо в локальних мережах. Може збільшити мережеве навантаження."
       },
       "cloudflareTunnelHostname": {
         "label": "Ім'я хоста тунелю",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "Передача файлів rz та sz",
         "description": "Завантажуйте та завантажуйте файли за допомогою rz та sz (lrzsz) прямо в терміналі."
+      },
+      "rightClickAction": {
+        "label": "Дія при натисканні правою кнопкою миші в терміналі",
+        "description": "Утримуйте Shift, щоб відкрити меню терміналу, або копіювати/вставити, якщо ви обрали меню тут",
+        "copyPaste": "Копіювати або вставити",
+        "menu": "Меню терміналу",
+        "native": "Меню браузера"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V вставляє текст",
+        "description": "Вимкніть, щоб надсилати Ctrl+V до оболонки. Ctrl+Shift+V все одно вставляє текст"
+      },
+      "copyOnSelect": {
+        "label": "Автоматично копіювати виділений текст",
+        "description": "Копіює текст одразу після його виділення в терміналі"
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "Історія",
     "localTerminal": "Локальний термінал",
-    "sshTools": "Інструменти SSH",
     "terminal": "Термінал",
     "macros": "Макроси"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Введіть тут, щоб розсилати введення...",
-    "copyOnSelect": "Автоматично копіювати виділений текст",
-    "enableRightClickCopyPaste": "Увімкнути копіювання/вставку правим кліком",
-    "ctrlVPaste": "Ctrl+V вставляє (вимкніть, щоб надсилати Ctrl+V в оболонку)",
-    "fillPassword": "Заповнити пароль",
-    "fillPasswordMissing_one": "Немає збереженого пароля для {{count}} обраного терміналу",
-    "fillPasswordMissing_few": "Немає збереженого пароля для {{count}} обраних терміналів",
-    "fillPasswordMissing_many": "Немає збереженого пароля для {{count}} обраних терміналів",
-    "fillPasswordMissing_other": "Немає збереженого пароля для {{count}} обраних терміналів",
-    "fillPasswordSuccess_one": "Пароль вставлено в {{count}} термінал",
-    "fillPasswordSuccess_few": "Пароль вставлено в {{count}} термінали",
-    "fillPasswordSuccess_many": "Пароль вставлено в {{count}} терміналів",
-    "fillPasswordSuccess_other": "Пароль вставлено в {{count}} терміналів",
-    "keyRecordingTitle": "Запис клавіш",
-    "noTerminalTabsOpen": "Немає відкритих вкладок терміналу",
-    "recordToTerminals": "Записати в термінали",
-    "selectAll": "Усі",
-    "selectNone": "Жодного",
-    "selectTerminalsAbove": "Оберіть термінали вище",
-    "settingsTitle": "Налаштування",
-    "startRecording": "Почати запис",
-    "stopRecording": "Зупинити запис"
   },
   "keybindings": {
     "openLocalTerminal": "Відкрити новий локальний термінал",
@@ -639,7 +634,8 @@
       "ctrlT": "Надіслати Ctrl+T у оболонку (блокує відкриття нової вкладки браузера)",
       "ctrlN": "Надіслати Ctrl+N у оболонку (блокує відкриття нового вікна браузера)",
       "ctrlQ": "Надіслати Ctrl+Q у оболонку (блокує вихід з браузера)"
-    }
+    },
+    "toggleBroadcast": "Увімкнути або вимкнути трансляцію"
   },
   "macros": {
     "title": "Макроси",
@@ -749,5 +745,115 @@
     "sending": "Завантаження {{name}}",
     "receiving": "Завантаження {{name}}",
     "cancel": "Скасувати передачу"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Транслювати ввід",
+      "stop": "Зупинити трансляцію",
+      "stopShort": "Зупинити",
+      "on": "Трансляція увімкнена",
+      "paused": "Трансляцію призупинено",
+      "pausedForPassword": "Призупинено на запиті пароля",
+      "pause": "Призупинити",
+      "resume": "Відновити",
+      "members_one": "{{count}} термінал",
+      "members_few": "{{count}} термінали",
+      "members_many": "{{count}} терміналів",
+      "members_other": "{{count}} терміналів",
+      "allOpen": "Всі відкриті",
+      "thisSplit": "Цей розділ",
+      "sameFolder": "Та сама папка",
+      "offline": "Не в мережі",
+      "offlineCount_one": "{{count}} не в мережі",
+      "offlineCount_few": "{{count}} не в мережі",
+      "offlineCount_many": "{{count}} не в мережі",
+      "offlineCount_other": "{{count}} не в мережі",
+      "openMore": "Відкрийте інший термінал, щоб транслювати до нього",
+      "compose": "Скласти",
+      "composeHint": "Напишіть команду. Ctrl+Enter надішле її до групи",
+      "send": "Надіслати",
+      "pressEnter": "Натисніть Enter",
+      "skipped_one": "Пропущено {{count}} термінал, який не в мережі або запитує пароль",
+      "skipped_few": "Пропущено {{count}} термінали, які не в мережі або запитують пароль",
+      "skipped_many": "Пропущено {{count}} терміналів, які не в мережі або запитують пароль",
+      "skipped_other": "Пропущено {{count}} терміналів, які не в мережі або запитують пароль"
+    },
+    "fill": {
+      "label": "Заповнити пароль",
+      "done_one": "Пароль заповнено в {{count}} терміналі",
+      "done_few": "Пароль заповнено в {{count}} терміналах",
+      "done_many": "Пароль заповнено в {{count}} терміналах",
+      "done_other": "Пароль заповнено в {{count}} терміналах",
+      "noPassword_one": "Немає збереженого пароля для {{count}} терміналу",
+      "noPassword_few": "Немає збереженого пароля для {{count}} терміналів",
+      "noPassword_many": "Немає збереженого пароля для {{count}} терміналів",
+      "noPassword_other": "Немає збереженого пароля для {{count}} терміналів",
+      "notAsking_one": "{{count}} термінал не запитує пароль",
+      "notAsking_few": "{{count}} термінали не запитують пароль",
+      "notAsking_many": "{{count}} терміналів не запитує пароль",
+      "notAsking_other": "{{count}} терміналів не запитує пароль"
+    },
+    "find": {
+      "all": "Знайти в усіх терміналах",
+      "badRegex": "Цей регулярний вираз недійсний",
+      "capped": "Показано перші {{count}} результатів"
+    },
+    "watch": {
+      "title": "Спостереження за виводом",
+      "note": "Правила працюють, поки Termix відкрито. Сповіщення називають правило та хост, але ніколи не показують вивід.",
+      "name": "Назва правила",
+      "when": "Сповістити, коли",
+      "kindMatch": "Вивід збігається",
+      "kindQuiet": "Вивід припиняється",
+      "kindActivity": "Новий вивід у фоновому режимі",
+      "pattern": "Текст для пошуку",
+      "seconds": "Секунд тиші",
+      "add": "Додати правило",
+      "delete": "Видалити правило",
+      "describeMatch": "Збігається з {{pattern}}",
+      "describeQuiet_one": "Тиша протягом {{count}} секунди",
+      "describeQuiet_few": "Тиша протягом {{count}} секунд",
+      "describeQuiet_many": "Тиша протягом {{count}} секунд",
+      "describeQuiet_other": "Тиша протягом {{count}} секунд",
+      "describeActivity": "Новий вивід у фоновому режимі",
+      "nameRequired": "Дайте правилу назву",
+      "patternRequired": "Введіть текст для пошуку",
+      "badRegex": "Цей регулярний вираз недійсний",
+      "secondsRequired": "Введіть 1 секунду або більше",
+      "fired": "{{rule}} на {{host}}",
+      "active_one": "{{count}} правило спостереження увімкнено",
+      "active_few": "{{count}} правила спостереження увімкнено",
+      "active_many": "{{count}} правил спостереження увімкнено",
+      "active_other": "{{count}} правил спостереження увімкнено"
+    },
+    "output": {
+      "save": "Зберегти вивід",
+      "copy": "Копіювати вивід",
+      "saveSelection": "Зберегти виділене",
+      "empty": "Немає нічого для збереження",
+      "copied": "Вивід скопійовано",
+      "copyFailed": "Не вдалося скопіювати вивід"
+    },
+    "fix": {
+      "resetDisplay": "Скинути відображення",
+      "clearScrollback": "Очистити історію прокрутки",
+      "resetShell": "Скинути оболонку",
+      "resetShellTitle": "Скинути оболонку?",
+      "resetShellDescription": "Це вводить команди stty sane та reset у командному рядку. Будь-який текст на поточному рядку буде виконаний разом із ними."
+    },
+    "keys": {
+      "title": "Надіслати клавішу",
+      "custom": "Ctrl + літера",
+      "customTitle": "Надіслати Ctrl + літера",
+      "customDescription": "Введіть літеру, яку потрібно надіслати разом із Ctrl"
+    },
+    "menu": {
+      "copy": "Копіювати",
+      "paste": "Вставити",
+      "selectAll": "Виділити все",
+      "find": "Знайти",
+      "clear": "Очистити"
+    },
+    "openTerminalFirst": "Відкрийте SSH-термінал, щоб використовувати його інструменти"
   }
 }

@@ -123,7 +123,8 @@
     "paste": "Prilepi sliko",
     "settingsTitle": "Orodna vrstica",
     "upload": "Naloži sliko",
-    "uploadingImage": "Nalaganje..."
+    "uploadingImage": "Nalaganje...",
+    "tools": "Orodja"
   },
   "history": {
     "noTerminalSelected": "Ni izbranega terminala",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Usmeri SSH promet prek Cloudflare Zero Trust z uporabo WebSocketa"
+      },
+      "tcpNoDelay": {
+        "label": "Onemogoči Naglejev algoritem (TCP_NODELAY)",
+        "description": "Onemogoči združevanje TCP paketov za zmanjšanje zakasnitve SSH vnosa, zlasti pri povezavah v lokalnem omrežju. To lahko poveča omrežno obremenitev."
       },
       "cloudflareTunnelHostname": {
         "label": "Ime gostitelja tunela",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "Prenosi datotek rz in sz",
         "description": "Nalaganje in prenos datotek z rz in sz (lrzsz) neposredno v terminalu."
+      },
+      "rightClickAction": {
+        "label": "Desni klik v terminalu",
+        "description": "Za prikaz menija terminala držite tipko Shift. Če je tukaj izbran meni, boste s tem kopirali ali prilepili besedilo.",
+        "copyPaste": "Kopiraj ali prilepi",
+        "menu": "Meni terminala",
+        "native": "Meni brskalnika"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V prilepi",
+        "description": "Če onemogočite, se Ctrl+V pošlje lupini. Ctrl+Shift+V še vedno prilepi."
+      },
+      "copyOnSelect": {
+        "label": "Samodejno kopiraj izbrano besedilo",
+        "description": "Besedilo se kopira takoj, ko ga izberete v terminalu."
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "Zgodovina",
     "localTerminal": "Lokalni terminal",
-    "sshTools": "SSH orodja",
     "terminal": "Terminal",
     "macros": "Makri"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Vnesite tukaj za oddajo tipkovnih vnosov...",
-    "copyOnSelect": "Samodejno kopiraj izbrano besedilo",
-    "enableRightClickCopyPaste": "Omogoči kopiranje/prilepanje z desnim klikom",
-    "ctrlVPaste": "Ctrl+V prilepi (izklopite, če želite poslati Ctrl+V v lupino)",
-    "fillPassword": "Izpolni geslo",
-    "fillPasswordMissing_one": "Za {{count}} izbrani terminal ni shranjenega gesla",
-    "fillPasswordMissing_two": "Za {{count}} izbrani terminala ni shranjenega gesla",
-    "fillPasswordMissing_few": "Za {{count}} izbrane terminale ni shranjenega gesla",
-    "fillPasswordMissing_other": "Za {{count}} izbranih terminalov ni shranjenega gesla",
-    "fillPasswordSuccess_one": "Geslo vneseno v {{count}} terminal",
-    "fillPasswordSuccess_two": "Geslo vneseno v {{count}} terminala",
-    "fillPasswordSuccess_few": "Geslo vneseno v {{count}} terminale",
-    "fillPasswordSuccess_other": "Geslo vneseno v {{count}} terminalov",
-    "keyRecordingTitle": "Snemanje tipkovnice",
-    "noTerminalTabsOpen": "Ni odprtih zavihkov terminala",
-    "recordToTerminals": "Snemaj v terminale",
-    "selectAll": "Vsi",
-    "selectNone": "Brez",
-    "selectTerminalsAbove": "Izberi terminale zgoraj",
-    "settingsTitle": "Nastavitve",
-    "startRecording": "Začni snemanje",
-    "stopRecording": "Ustavi snemanje"
   },
   "keybindings": {
     "openLocalTerminal": "Odpri nov lokalni terminal",
@@ -639,7 +634,8 @@
       "ctrlT": "Pošlji Ctrl+T lupini (blokirano za odpiranje zavihka brskalnika)",
       "ctrlN": "Pošlji Ctrl+N lupini (blokirano za odpiranje okna brskalnika)",
       "ctrlQ": "Pošlji Ctrl+Q lupini (blokirano za zapiranje brskalnika)"
-    }
+    },
+    "toggleBroadcast": "Vklopi ali izklopi prenos"
   },
   "macros": {
     "title": "Makri",
@@ -749,5 +745,115 @@
     "sending": "Nalaganje {{name}}",
     "receiving": "Prenos {{name}}",
     "cancel": "Prekliči prenos"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Začni prenos vnosa",
+      "stop": "Ustavi prenos",
+      "stopShort": "Ustavi",
+      "on": "Prenos vklopljen",
+      "paused": "Prenos začasno ustavljen",
+      "pausedForPassword": "Začasno ustavljeno ob vnosu gesla",
+      "pause": "Premor",
+      "resume": "Nadaljuj",
+      "members_one": "{{count}} terminal",
+      "members_two": "{{count}} terminala",
+      "members_few": "{{count}} terminali",
+      "members_other": "{{count}} terminalov",
+      "allOpen": "Vsi odprti",
+      "thisSplit": "Ta razdelitev",
+      "sameFolder": "Ena mapa",
+      "offline": "Brez povezave",
+      "offlineCount_one": "{{count}} brez povezave",
+      "offlineCount_two": "{{count}} brez povezave",
+      "offlineCount_few": "{{count}} brez povezave",
+      "offlineCount_other": "{{count}} brez povezave",
+      "openMore": "Odprite še en terminal za prenos vanj",
+      "compose": "Sestavi",
+      "composeHint": "Napišite ukaz. Ctrl+Enter ga pošlje skupini.",
+      "send": "Pošlji",
+      "pressEnter": "Pritisnite Enter",
+      "skipped_one": "Preskočen {{count}} terminal, ki je brez povezave ali zahteva geslo",
+      "skipped_two": "Preskočena {{count}} terminala, ki sta brez povezave ali zahtevata geslo",
+      "skipped_few": "Preskočenih {{count}} terminalov, ki so brez povezave ali zahtevajo geslo",
+      "skipped_other": "Preskočenih {{count}} terminalov, ki so brez povezave ali zahtevajo geslo"
+    },
+    "fill": {
+      "label": "Izpolni geslo",
+      "done_one": "Geslo izpolnjeno v {{count}} terminalu",
+      "done_two": "Geslo izpolnjeno v {{count}} terminalih",
+      "done_few": "Geslo izpolnjeno v {{count}} terminalih",
+      "done_other": "Geslo izpolnjeno v {{count}} terminalih",
+      "noPassword_one": "Za {{count}} terminal ni shranjenega gesla",
+      "noPassword_two": "Za {{count}} terminala ni shranjenega gesla",
+      "noPassword_few": "Za {{count}} terminalov ni shranjenega gesla",
+      "noPassword_other": "Za {{count}} terminalov ni shranjenega gesla",
+      "notAsking_one": "{{count}} terminal ne zahteva gesla",
+      "notAsking_two": "{{count}} terminala ne zahtevata gesla",
+      "notAsking_few": "{{count}} terminali ne zahtevajo gesla",
+      "notAsking_other": "{{count}} terminalov ne zahteva gesla"
+    },
+    "find": {
+      "all": "Išči v vseh terminalih",
+      "badRegex": "Ta regularni izraz ni veljaven",
+      "capped": "Prikazanih je prvih {{count}} rezultatov"
+    },
+    "watch": {
+      "title": "Spremljanje izpisa",
+      "note": "Pravila delujejo, ko je Termix odprt. Opozorila vsebujejo ime pravila in gostitelja, nikoli pa izpis.",
+      "name": "Ime pravila",
+      "when": "Opozori, ko",
+      "kindMatch": "Izpis se ujema",
+      "kindQuiet": "Izpis utihne",
+      "kindActivity": "Nov izpis v ozadju",
+      "pattern": "Besedilo za iskanje",
+      "seconds": "Sekund tišine",
+      "add": "Dodaj pravilo",
+      "delete": "Izbriši pravilo",
+      "describeMatch": "Ujema se z {{pattern}}",
+      "describeQuiet_one": "Tiho {{count}} sekundo",
+      "describeQuiet_two": "Tiho {{count}} sekundi",
+      "describeQuiet_few": "Tiho {{count}} sekund",
+      "describeQuiet_other": "Tiho {{count}} sekund",
+      "describeActivity": "Nov izpis v ozadju",
+      "nameRequired": "Pravilu določite ime",
+      "patternRequired": "Vnesite besedilo za iskanje",
+      "badRegex": "Ta regularni izraz ni veljaven",
+      "secondsRequired": "Vnesite 1 sekundo ali več",
+      "fired": "{{rule}} na {{host}}",
+      "active_one": "{{count}} pravilo spremljanja vklopljeno",
+      "active_two": "{{count}} pravili spremljanja vklopljena",
+      "active_few": "{{count}} pravila spremljanja vklopljena",
+      "active_other": "{{count}} pravil spremljanja vklopljenih"
+    },
+    "output": {
+      "save": "Shrani izhod",
+      "copy": "Kopiraj izhod",
+      "saveSelection": "Shrani izbor",
+      "empty": "Ničesar ni za shraniti",
+      "copied": "Izhod je kopiran",
+      "copyFailed": "Izhoda ni bilo mogoče kopirati"
+    },
+    "fix": {
+      "resetDisplay": "Ponastavi zaslon",
+      "clearScrollback": "Počisti zgodovino pomikanja",
+      "resetShell": "Ponastavi lupino",
+      "resetShellTitle": "Ponastaviti lupino?",
+      "resetShellDescription": "To na ukazni vrstici izvede ukaza stty sane in reset. Vse besedilo na vrstici se izvede skupaj z njima."
+    },
+    "keys": {
+      "title": "Pošlji tipko",
+      "custom": "Ctrl + črka",
+      "customTitle": "Pošlji Ctrl + črka",
+      "customDescription": "Vnesite črko, ki jo želite poslati s Ctrl"
+    },
+    "menu": {
+      "copy": "Kopiraj",
+      "paste": "Prilepi",
+      "selectAll": "Izberi vse",
+      "find": "Poišči",
+      "clear": "Počisti"
+    },
+    "openTerminalFirst": "Odprite SSH terminal, da uporabite njegova orodja"
   }
 }

@@ -119,7 +119,8 @@
     "paste": "Afbeelding plakken",
     "settingsTitle": "Werkbalk",
     "upload": "Afbeelding uploaden",
-    "uploadingImage": "Uploaden..."
+    "uploadingImage": "Uploaden...",
+    "tools": "Tools"
   },
   "history": {
     "noTerminalSelected": "Geen terminal geselecteerd",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Routeer SSH-verkeer via Cloudflare Zero Trust door WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Nagle's algoritme uitschakelen (TCP_NODELAY)",
+        "description": "Schakelt TCP-packet batching uit om SSH-ingangsvertraging te verminderen, vooral op LAN-verbindingen. Kan het netwerkoverhead verhogen."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-hostnaam",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz- en sz-bestandsoverdrachten",
         "description": "Bestanden uploaden en downloaden met rz en sz (lrzsz) direct in de terminal."
+      },
+      "rightClickAction": {
+        "label": "Rechtsklikken in de terminal",
+        "description": "Houd Shift ingedrukt voor het terminalmenu, of voor kopiëren en plakken als je hier het menu hebt gekozen",
+        "copyPaste": "Kopiëren of plakken",
+        "menu": "Terminalmenu",
+        "native": "Browsermenu"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V plakt",
+        "description": "Schakel uit om Ctrl+V naar de shell te sturen. Ctrl+Shift+V plakt nog steeds"
+      },
+      "copyOnSelect": {
+        "label": "Geselecteerde tekst automatisch kopiëren",
+        "description": "Kopieert tekst zodra je deze in de terminal selecteert"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Geschiedenis",
     "localTerminal": "Lokale terminal",
-    "sshTools": "SSH-hulpprogramma's",
     "terminal": "Terminal",
     "macros": "Macro's"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Typ hier om toetsaanslagen uit te zenden...",
-    "copyOnSelect": "Geselecteerde tekst automatisch kopiëren",
-    "enableRightClickCopyPaste": "Rechtsklik-kopiëren/plakken inschakelen",
-    "ctrlVPaste": "Ctrl+V plakt (uitschakelen om Ctrl+V naar de shell te sturen)",
-    "fillPassword": "Vul wachtwoord in",
-    "fillPasswordMissing_one": "Geen opgeslagen wachtwoord voor {{count}} geselecteerd terminalvenster",
-    "fillPasswordMissing_other": "Geen opgeslagen wachtwoord voor {{count}} geselecteerde terminalvensters",
-    "fillPasswordSuccess_one": "Wachtwoord ingevuld in {{count}} terminalvenster",
-    "fillPasswordSuccess_other": "Wachtwoord ingevuld in {{count}} terminalvensters",
-    "keyRecordingTitle": "Sleutelopname",
-    "noTerminalTabsOpen": "Geen terminaltabbladen open",
-    "recordToTerminals": "Opnemen naar terminals",
-    "selectAll": "Alles",
-    "selectNone": "Geen",
-    "selectTerminalsAbove": "Selecteer terminals hierboven",
-    "settingsTitle": "Instellingen",
-    "startRecording": "Opname starten",
-    "stopRecording": "Opname stoppen"
   },
   "keybindings": {
     "openLocalTerminal": "Nieuwe lokale terminal openen",
@@ -629,7 +628,8 @@
       "ctrlT": "Stuur Ctrl+T naar shell (voorkomt openen van browsertabblad)",
       "ctrlN": "Stuur Ctrl+N naar shell (voorkomt openen van browservenster)",
       "ctrlQ": "Stuur Ctrl+Q naar shell (voorkomt afsluiten van browser)"
-    }
+    },
+    "toggleBroadcast": "Uitzenden in- of uitschakelen"
   },
   "macros": {
     "title": "Macro's",
@@ -737,5 +737,99 @@
     "sending": "Uploaden van {{name}}",
     "receiving": "Downloaden van {{name}}",
     "cancel": "Overdracht annuleren"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Invoer uitzenden",
+      "stop": "Uitzenden stoppen",
+      "stopShort": "Stoppen",
+      "on": "Uitzenden aan",
+      "paused": "Uitzenden gepauzeerd",
+      "pausedForPassword": "Gepauzeerd bij wachtwoordprompt",
+      "pause": "Pauzeren",
+      "resume": "Hervatten",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminals",
+      "allOpen": "Alle open",
+      "thisSplit": "Deze splitsing",
+      "sameFolder": "Zelfde map",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Open een andere terminal om er naar uit te zenden",
+      "compose": "Opstellen",
+      "composeHint": "Schrijf een opdracht. Ctrl+Enter stuurt deze naar de groep",
+      "send": "Verzenden",
+      "pressEnter": "Druk op Enter",
+      "skipped_one": "{{count}} terminal overgeslagen die offline is of om een wachtwoord vraagt",
+      "skipped_other": "{{count}} terminals overgeslagen die offline zijn of om een wachtwoord vragen"
+    },
+    "fill": {
+      "label": "Wachtwoord invullen",
+      "done_one": "Wachtwoord ingevuld in {{count}} terminal",
+      "done_other": "Wachtwoord ingevuld in {{count}} terminals",
+      "noPassword_one": "Geen opgeslagen wachtwoord voor {{count}} terminal",
+      "noPassword_other": "Geen opgeslagen wachtwoord voor {{count}} terminals",
+      "notAsking_one": "{{count}} terminal vraagt niet om een wachtwoord",
+      "notAsking_other": "{{count}} terminals vragen niet om een wachtwoord"
+    },
+    "find": {
+      "all": "Zoeken in alle terminals",
+      "badRegex": "Deze regex is ongeldig",
+      "capped": "De eerste {{count}} resultaten worden weergegeven"
+    },
+    "watch": {
+      "title": "Uitvoer volgen",
+      "note": "Regels worden uitgevoerd terwijl Termix open is. Meldingen noemen de regel en de host, nooit de uitvoer.",
+      "name": "Regelnaam",
+      "when": "Melding wanneer",
+      "kindMatch": "Uitvoer komt overeen met",
+      "kindQuiet": "Uitvoer wordt stil",
+      "kindActivity": "Nieuwe uitvoer op de achtergrond",
+      "pattern": "Tekst om naar te zoeken",
+      "seconds": "Seconden stilte",
+      "add": "Regel toevoegen",
+      "delete": "Regel verwijderen",
+      "describeMatch": "Komt overeen met {{pattern}}",
+      "describeQuiet_one": "{{count}} seconde stil",
+      "describeQuiet_other": "{{count}} seconden stil",
+      "describeActivity": "Nieuwe uitvoer op de achtergrond",
+      "nameRequired": "Geef de regel een naam",
+      "patternRequired": "Voer de tekst in om naar te zoeken",
+      "badRegex": "Deze regex is ongeldig",
+      "secondsRequired": "Voer 1 seconde of meer in",
+      "fired": "{{rule}} op {{host}}",
+      "active_one": "{{count}} volgregel aan",
+      "active_other": "{{count}} volgregels aan"
+    },
+    "output": {
+      "save": "Uitvoer opslaan",
+      "copy": "Uitvoer kopiëren",
+      "saveSelection": "Selectie opslaan",
+      "empty": "Er is niets om op te slaan",
+      "copied": "Uitvoer gekopieerd",
+      "copyFailed": "Kon de uitvoer niet kopiëren"
+    },
+    "fix": {
+      "resetDisplay": "Weergave resetten",
+      "clearScrollback": "Scrollgeschiedenis wissen",
+      "resetShell": "Shell resetten",
+      "resetShellTitle": "Shell resetten?",
+      "resetShellDescription": "Dit voert 'stty sane' en 'reset' uit op de prompt. Eventuele tekst op de regel wordt mee uitgevoerd."
+    },
+    "keys": {
+      "title": "Toets verzenden",
+      "custom": "Ctrl + letter",
+      "customTitle": "Ctrl + letter verzenden",
+      "customDescription": "Typ de letter die samen met Ctrl moet worden verzonden"
+    },
+    "menu": {
+      "copy": "Kopiëren",
+      "paste": "Plakken",
+      "selectAll": "Alles selecteren",
+      "find": "Zoeken",
+      "clear": "Wissen"
+    },
+    "openTerminalFirst": "Open een SSH-terminal om de hulpprogramma's te gebruiken"
   }
 }

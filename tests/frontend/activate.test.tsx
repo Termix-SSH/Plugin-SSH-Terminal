@@ -85,6 +85,16 @@ describe(`${manifest.id} activate`, () => {
       },
     ]);
   });
+  it("puts the terminal tools in the tab bar", async () => {
+    rendered = await renderWithApp(plugin, { manifest, locales });
+    expect(rendered.registered.slot("tabbar.actions")).toContain(
+      "terminal.tools",
+    );
+    expect(rendered.registered.slot("tab.menu")).not.toContain(
+      "terminal.openTools",
+    );
+  });
+
   it("duplicates only the SSH connection configuration into a fresh tab", async () => {
     rendered = await renderWithApp(plugin, { manifest, locales });
     const host = { id: 7, name: "server", ip: "192.0.2.1", port: 22 };
@@ -167,12 +177,15 @@ describe(`${manifest.id} activate`, () => {
     ).resolves.toBe(false);
   });
 
-  it("owns the SSH Tools panel and its rail item", async () => {
+  it("has no SSH Tools panel, and its tools stay reachable", async () => {
     rendered = await renderWithApp(plugin, { manifest, locales });
-    expect(rendered.registered.panels()).toContain("ssh-tools");
-    expect(rendered.registered.railItems().map((item) => item.id)).toContain(
-      "ssh-tools",
-    );
+    expect(rendered.registered.panels()).not.toContain("ssh-tools");
+    expect(
+      rendered.registered.railItems().map((item) => item.id),
+    ).not.toContain("ssh-tools");
+    expect(manifest.contributes.keybindingActions).toContainEqual({
+      id: "toggleBroadcast",
+    });
   });
 
   it("registers its settings components", async () => {

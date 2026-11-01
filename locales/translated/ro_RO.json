@@ -121,7 +121,8 @@
     "paste": "Lipire imagine",
     "settingsTitle": "Bara de instrumente",
     "upload": "Încărcare imagine",
-    "uploadingImage": "Se încarcă..."
+    "uploadingImage": "Se încarcă...",
+    "tools": "Unelte"
   },
   "history": {
     "noTerminalSelected": "Niciun terminal selectat",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Tunel Cloudflare",
         "description": "Rutează traficul SSH prin Cloudflare Zero Trust folosind WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Dezactivează algoritmul Nagle (TCP_NODELAY)",
+        "description": "Dezactivează gruparea pachetelor TCP pentru a reduce latența intrării SSH, în special pe conexiunile LAN. Poate crește supraîncărcarea rețelei."
       },
       "cloudflareTunnelHostname": {
         "label": "Numele gazdei tunelului",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "Transferuri de fișiere rz și sz",
         "description": "Încarcă și descarcă fișiere cu rz și sz (lrzsz) direct în terminal."
+      },
+      "rightClickAction": {
+        "label": "Click dreapta în terminal",
+        "description": "Ține apăsat Shift pentru a afișa meniul terminalului, sau pentru a copia și lipi dacă ai ales meniul aici",
+        "copyPaste": "Copiază sau lipește",
+        "menu": "Meniul terminalului",
+        "native": "Meniul browserului"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V lipește",
+        "description": "Dezactivează pentru a trimite Ctrl+V către shell. Ctrl+Shift+V continuă să lipească"
+      },
+      "copyOnSelect": {
+        "label": "Copiază automat textul selectat",
+        "description": "Copiază textul imediat ce îl selectezi în terminal"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "Istoric",
     "localTerminal": "Terminal local",
-    "sshTools": "Unelte SSH",
     "terminal": "Terminal",
     "macros": "Macro-uri"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Tastați aici pentru a difuza tastele...",
-    "copyOnSelect": "Copiază textul selectat automat",
-    "enableRightClickCopyPaste": "Activează copierea/lipirea cu click dreapta",
-    "ctrlVPaste": "Ctrl+V lipește (dezactivați pentru a trimite Ctrl+V către shell)",
-    "fillPassword": "Completează parola",
-    "fillPasswordMissing_one": "Nicio parolă salvată pentru {{count}} terminal selectat",
-    "fillPasswordMissing_few": "Nicio parolă salvată pentru {{count}} terminale selectate",
-    "fillPasswordMissing_other": "Nicio parolă salvată pentru {{count}} terminale selectate",
-    "fillPasswordSuccess_one": "Parola completată în {{count}} terminal",
-    "fillPasswordSuccess_few": "Parola completată în {{count}} terminale",
-    "fillPasswordSuccess_other": "Parola completată în {{count}} terminale",
-    "keyRecordingTitle": "Înregistrare tastatură",
-    "noTerminalTabsOpen": "Niciun tab de terminal deschis",
-    "recordToTerminals": "Înregistrează în terminale",
-    "selectAll": "Toate",
-    "selectNone": "Niciunul",
-    "selectTerminalsAbove": "Selectează terminalele de mai sus",
-    "settingsTitle": "Setări",
-    "startRecording": "Începe înregistrarea",
-    "stopRecording": "Oprește înregistrarea"
   },
   "keybindings": {
     "openLocalTerminal": "Deschide un nou Terminal Local",
@@ -634,7 +631,8 @@
       "ctrlT": "Trimite Ctrl+T către shell (blocat pentru a nu deschide un tab în browser)",
       "ctrlN": "Trimite Ctrl+N către shell (blocat pentru a nu deschide o fereastră în browser)",
       "ctrlQ": "Trimite Ctrl+Q către shell (blocat pentru a nu închide browserul)"
-    }
+    },
+    "toggleBroadcast": "Activează sau dezactivează difuzarea"
   },
   "macros": {
     "title": "Macro-uri",
@@ -743,5 +741,107 @@
     "sending": "Se încarcă {{name}}",
     "receiving": "Se descarcă {{name}}",
     "cancel": "Anulează transferul"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Difuzează intrarea",
+      "stop": "Oprește difuzarea",
+      "stopShort": "Oprește",
+      "on": "Difuzare activă",
+      "paused": "Difuzare în pauză",
+      "pausedForPassword": "În pauză la solicitarea parolei",
+      "pause": "Pauză",
+      "resume": "Reia",
+      "members_one": "{{count}} terminal",
+      "members_few": "{{count}} terminale",
+      "members_other": "{{count}} terminale",
+      "allOpen": "Toate deschise",
+      "thisSplit": "Această divizare",
+      "sameFolder": "Același dosar",
+      "offline": "Deconectat",
+      "offlineCount_one": "{{count}} deconectat",
+      "offlineCount_few": "{{count}} deconectate",
+      "offlineCount_other": "{{count}} deconectate",
+      "openMore": "Deschide un alt terminal pentru a difuza către el",
+      "compose": "Compune",
+      "composeHint": "Scrie o comandă. Ctrl+Enter o trimite grupului",
+      "send": "Trimite",
+      "pressEnter": "Apasă Enter",
+      "skipped_one": "Am sărit peste {{count}} terminal care este deconectat sau solicită o parolă",
+      "skipped_few": "Am sărit peste {{count}} terminale care sunt deconectate sau solicită o parolă",
+      "skipped_other": "Am sărit peste {{count}} terminale care sunt deconectate sau solicită o parolă"
+    },
+    "fill": {
+      "label": "Completează parola",
+      "done_one": "Am completat parola în {{count}} terminal",
+      "done_few": "Am completat parola în {{count}} terminale",
+      "done_other": "Am completat parola în {{count}} terminale",
+      "noPassword_one": "Nicio parolă salvată pentru {{count}} terminal",
+      "noPassword_few": "Nicio parolă salvată pentru {{count}} terminale",
+      "noPassword_other": "Nicio parolă salvată pentru {{count}} terminale",
+      "notAsking_one": "{{count}} terminal nu solicită o parolă",
+      "notAsking_few": "{{count}} terminale nu solicită o parolă",
+      "notAsking_other": "{{count}} terminale nu solicită o parolă"
+    },
+    "find": {
+      "all": "Caută în toate terminalele",
+      "badRegex": "Această expresie regulată nu este validă",
+      "capped": "Se afișează primele {{count}} rezultate"
+    },
+    "watch": {
+      "title": "Monitorizează ieșirea",
+      "note": "Regulile se execută cât timp Termix este deschis. Alertele menționează regula și gazda, niciodată ieșirea.",
+      "name": "Numele regulii",
+      "when": "Alertează când",
+      "kindMatch": "Ieșirea se potrivește",
+      "kindQuiet": "Ieșirea devine liniștită",
+      "kindActivity": "Ieșire nouă în fundal",
+      "pattern": "Textul de căutat",
+      "seconds": "Secunde de liniște",
+      "add": "Adaugă regulă",
+      "delete": "Șterge regula",
+      "describeMatch": "Se potrivește cu {{pattern}}",
+      "describeQuiet_one": "Liniște timp de {{count}} secundă",
+      "describeQuiet_few": "Liniște timp de {{count}} secunde",
+      "describeQuiet_other": "Liniște timp de {{count}} secunde",
+      "describeActivity": "Ieșire nouă în fundal",
+      "nameRequired": "Dă un nume regulii",
+      "patternRequired": "Introdu textul de căutat",
+      "badRegex": "Această expresie regulată nu este validă",
+      "secondsRequired": "Introdu 1 secundă sau mai mult",
+      "fired": "{{rule}} pe {{host}}",
+      "active_one": "{{count}} regulă de monitorizare activă",
+      "active_few": "{{count}} reguli de monitorizare active",
+      "active_other": "{{count}} reguli de monitorizare active"
+    },
+    "output": {
+      "save": "Salvează ieșirea",
+      "copy": "Copiază ieșirea",
+      "saveSelection": "Salvează selecția",
+      "empty": "Nu există nimic de salvat",
+      "copied": "Ieșire copiată",
+      "copyFailed": "Nu s-a putut copia ieșirea"
+    },
+    "fix": {
+      "resetDisplay": "Resetează afișajul",
+      "clearScrollback": "Șterge istoricul derulării",
+      "resetShell": "Resetează shell-ul",
+      "resetShellTitle": "Resetezi shell-ul?",
+      "resetShellDescription": "Aceasta tastează `stty sane` și `reset` la prompt. Orice text de pe linie va fi executat împreună cu ele."
+    },
+    "keys": {
+      "title": "Trimite tasta",
+      "custom": "Ctrl + literă",
+      "customTitle": "Trimite Ctrl + literă",
+      "customDescription": "Tastează litera pe care să o trimiți împreună cu Ctrl"
+    },
+    "menu": {
+      "copy": "Copiază",
+      "paste": "Lipește",
+      "selectAll": "Selectează tot",
+      "find": "Caută",
+      "clear": "Șterge"
+    },
+    "openTerminalFirst": "Deschide un terminal SSH pentru a utiliza instrumentele sale"
   }
 }

@@ -119,7 +119,8 @@
     "paste": "Lim inn bilde",
     "settingsTitle": "Verktøylinje",
     "upload": "Last opp bilde",
-    "uploadingImage": "Laster opp..."
+    "uploadingImage": "Laster opp...",
+    "tools": "Verktøy"
   },
   "history": {
     "noTerminalSelected": "Ingen terminal valgt",
@@ -264,6 +265,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare-tunnel",
         "description": "Send SSH-trafikk over Cloudflare Zero Trust via WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Deaktiver Nagle-algoritmen (TCP_NODELAY)",
+        "description": "Deaktiverer samling av TCP-pakker for å redusere inndataforsinkelse i SSH, spesielt på LAN-tilkoblinger. Kan øke nettverksbelastningen."
       },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-vertnavn",
@@ -419,6 +424,21 @@
       "zmodem": {
         "label": "rz- og sz-filoverføringer",
         "description": "Last opp og ned filer med rz og sz (lrzsz) direkte i terminalen."
+      },
+      "rightClickAction": {
+        "label": "Høyreklikk i terminalen",
+        "description": "Hold Shift for å få terminalmenyen i stedet, eller kopier og lim inn hvis menyen er valget ditt her",
+        "copyPaste": "Kopier eller lim inn",
+        "menu": "Terminalmeny",
+        "native": "Nettlesermenyer"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V limer inn",
+        "description": "Slå av for å sende Ctrl+V til skallet. Ctrl+Shift+V limer fortsatt inn"
+      },
+      "copyOnSelect": {
+        "label": "Kopier valgt tekst automatisk",
+        "description": "Kopierer tekst så snart du velger den i terminalen"
       }
     }
   },
@@ -583,29 +603,8 @@
   "nav": {
     "history": "Historikk",
     "localTerminal": "Lokal terminal",
-    "sshTools": "SSH-verktøy",
     "terminal": "Terminal",
     "macros": "Makroer"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Skriv her for å sende tastetrykk til alle...",
-    "copyOnSelect": "Kopier markert tekst automatisk",
-    "enableRightClickCopyPaste": "Aktiver høyreklikk-kopier/lim inn",
-    "ctrlVPaste": "Ctrl+V limer inn (slå av for å sende Ctrl+V til skallet)",
-    "fillPassword": "Fyll inn passord",
-    "fillPasswordMissing_one": "Ingen lagret passord for {{count}} valgt terminal",
-    "fillPasswordMissing_other": "Ingen lagret passord for {{count}} valgte terminaler",
-    "fillPasswordSuccess_one": "Fylte inn passord i {{count}} terminal",
-    "fillPasswordSuccess_other": "Fylte inn passord i {{count}} terminaler",
-    "keyRecordingTitle": "Tastaturinnspilling",
-    "noTerminalTabsOpen": "Ingen terminalfaner åpne",
-    "recordToTerminals": "Spill inn til terminaler",
-    "selectAll": "Alle",
-    "selectNone": "Ingen",
-    "selectTerminalsAbove": "Velg terminaler over",
-    "settingsTitle": "Innstillinger",
-    "startRecording": "Start innspilling",
-    "stopRecording": "Stopp innspilling"
   },
   "keybindings": {
     "openLocalTerminal": "Åpne ny lokal terminal",
@@ -629,7 +628,8 @@
       "ctrlT": "Send Ctrl+T til skallet (blokkerer åpning av nettleserfane)",
       "ctrlN": "Send Ctrl+N til skallet (blokkerer åpning av nettleservindu)",
       "ctrlQ": "Send Ctrl+Q til skallet (blokkerer avslutning av nettleser)"
-    }
+    },
+    "toggleBroadcast": "Slå av/på kringkasting"
   },
   "macros": {
     "title": "Makroer",
@@ -737,5 +737,99 @@
     "sending": "Laster opp {{name}}",
     "receiving": "Laster ned {{name}}",
     "cancel": "Avbryt overføring"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Kringkast inndata",
+      "stop": "Stopp kringkasting",
+      "stopShort": "Stopp",
+      "on": "Kringkasting på",
+      "paused": "Kringkasting pauset",
+      "pausedForPassword": "Pauset ved passordforespørsel",
+      "pause": "Pause",
+      "resume": "Fortsett",
+      "members_one": "{{count}} terminal",
+      "members_other": "{{count}} terminaler",
+      "allOpen": "Alle åpne",
+      "thisSplit": "Denne inndelingen",
+      "sameFolder": "Samme mappe",
+      "offline": "Frakoblet",
+      "offlineCount_one": "{{count}} frakoblet",
+      "offlineCount_other": "{{count}} frakoblet",
+      "openMore": "Åpne en annen terminal for å kringkaste til den",
+      "compose": "Skriv",
+      "composeHint": "Skriv en kommando. Ctrl+Enter sender den til gruppen",
+      "send": "Send",
+      "pressEnter": "Trykk Enter",
+      "skipped_one": "Hoppet over {{count}} terminal som er frakoblet eller ber om passord",
+      "skipped_other": "Hoppet over {{count}} terminaler som er frakoblet eller ber om passord"
+    },
+    "fill": {
+      "label": "Fyll ut passord",
+      "done_one": "Fylte ut passordet i {{count}} terminal",
+      "done_other": "Fylte ut passordet i {{count}} terminaler",
+      "noPassword_one": "Ingen lagret passord for {{count}} terminal",
+      "noPassword_other": "Ingen lagret passord for {{count}} terminaler",
+      "notAsking_one": "{{count}} terminal ber ikke om passord",
+      "notAsking_other": "{{count}} terminaler ber ikke om passord"
+    },
+    "find": {
+      "all": "Søk i alle terminaler",
+      "badRegex": "Dette regulære uttrykket er ugyldig",
+      "capped": "Viser de første {{count}} resultatene"
+    },
+    "watch": {
+      "title": "Se på utdata",
+      "note": "Regler kjører mens Termix er åpen. Varlinger oppgir regel- og vertsnavn, aldri utdataene.",
+      "name": "Regelnavn",
+      "when": "Varsle når",
+      "kindMatch": "Utdata samsvarer med",
+      "kindQuiet": "Utdata blir stille",
+      "kindActivity": "Nye utdata i bakgrunnen",
+      "pattern": "Tekst å lete etter",
+      "seconds": "Sekunder med stilhet",
+      "add": "Legg til regel",
+      "delete": "Slett regel",
+      "describeMatch": "Samsvarer med {{pattern}}",
+      "describeQuiet_one": "Stille i {{count}} sekund",
+      "describeQuiet_other": "Stille i {{count}} sekunder",
+      "describeActivity": "Nye utdata i bakgrunnen",
+      "nameRequired": "Gi regelen et navn",
+      "patternRequired": "Skriv inn teksten du vil lete etter",
+      "badRegex": "Dette regulære uttrykket er ugyldig",
+      "secondsRequired": "Skriv inn 1 sekund eller mer",
+      "fired": "{{rule}} på {{host}}",
+      "active_one": "{{count}} overvåkningsregel på",
+      "active_other": "{{count}} overvåkningsregler på"
+    },
+    "output": {
+      "save": "Lagre utdata",
+      "copy": "Kopier utdata",
+      "saveSelection": "Lagre utvalg",
+      "empty": "Det er ingenting å lagre",
+      "copied": "Utdata kopiert",
+      "copyFailed": "Kunne ikke kopiere utdata"
+    },
+    "fix": {
+      "resetDisplay": "Tilbakestill visning",
+      "clearScrollback": "Tøm rullebuffer",
+      "resetShell": "Tilbakestill skal",
+      "resetShellTitle": "Tilbakestill skal?",
+      "resetShellDescription": "Dette skriver stty sane og reset ved kommandoprompten. All tekst på linjen kjøres med det."
+    },
+    "keys": {
+      "title": "Send tast",
+      "custom": "Ctrl + bokstav",
+      "customTitle": "Send Ctrl + bokstav",
+      "customDescription": "Skriv inn bokstaven som skal sendes med Ctrl"
+    },
+    "menu": {
+      "copy": "Kopier",
+      "paste": "Lim inn",
+      "selectAll": "Merk alt",
+      "find": "Søk",
+      "clear": "Tøm"
+    },
+    "openTerminalFirst": "Åpne et SSH-terminalvindu for å bruke verktøyene"
   }
 }

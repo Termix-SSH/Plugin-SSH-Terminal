@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Layers, X } from "lucide-react";
 import {
   Input,
   Button,
@@ -28,6 +28,11 @@ interface TerminalSearchBarProps {
   resultIndex: number;
   resultCount: number;
   inputRef: React.RefObject<HTMLInputElement | null>;
+  allTerminals?: boolean;
+  /** Left out for a terminal outside a tab. */
+  onToggleAllTerminals?: () => void;
+  /** Results from all terminals, under the bar. */
+  children?: React.ReactNode;
 }
 
 interface SearchToggleProps {
@@ -88,6 +93,9 @@ export function TerminalSearchBar({
   resultIndex,
   resultCount,
   inputRef,
+  allTerminals = false,
+  onToggleAllTerminals,
+  children,
 }: TerminalSearchBarProps) {
   const { t } = useTranslation();
 
@@ -131,118 +139,130 @@ export function TerminalSearchBar({
   return (
     <TooltipProvider delayDuration={500}>
       <div
-        className="absolute top-2 right-2 z-[130] flex items-center gap-1 border border-border bg-background/95 p-1 shadow-lg backdrop-blur-sm"
+        className="absolute top-2 right-2 z-[130] flex max-w-[calc(100%-1rem)] flex-col gap-1 border border-border bg-background/95 p-1 shadow-lg backdrop-blur-sm"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <div className="relative flex items-center">
-          <Input
-            ref={inputRef}
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("terminal.searchPlaceholder")}
-            aria-label={t("terminal.searchPlaceholder")}
-            className={cn(
-              "h-7 w-48 pr-16 font-mono",
-              noResults &&
-                "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
+        <div className="flex items-center gap-1">
+          <div className="relative flex items-center">
+            <Input
+              ref={inputRef}
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={t("terminal.searchPlaceholder")}
+              aria-label={t("terminal.searchPlaceholder")}
+              className={cn(
+                "h-7 w-48 pr-16 font-mono",
+                noResults &&
+                  "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
+              )}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck={false}
+            />
+            <span
+              className={cn(
+                "pointer-events-none absolute right-2 font-mono text-[11px] tabular-nums select-none",
+                noResults ? "text-destructive" : "text-muted-foreground",
+              )}
+            >
+              {resultLabel}
+            </span>
+          </div>
+
+          <Separator orientation="vertical" className="mx-0.5 !h-5" />
+
+          <div className="flex items-center gap-0.5">
+            <SearchToggle
+              label={t("terminal.searchCaseSensitive")}
+              active={caseSensitive}
+              onClick={onToggleCaseSensitive}
+            >
+              Aa
+            </SearchToggle>
+            <SearchToggle
+              label={t("terminal.searchWholeWord")}
+              active={wholeWord}
+              onClick={onToggleWholeWord}
+              className="underline underline-offset-2"
+            >
+              ab
+            </SearchToggle>
+            <SearchToggle
+              label={t("terminal.searchRegex")}
+              active={regex}
+              onClick={onToggleRegex}
+            >
+              .*
+            </SearchToggle>
+            {onToggleAllTerminals && (
+              <SearchToggle
+                label={t("terminalTools.find.all")}
+                active={allTerminals}
+                onClick={onToggleAllTerminals}
+              >
+                <Layers />
+              </SearchToggle>
             )}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="none"
-            spellCheck={false}
-          />
-          <span
-            className={cn(
-              "pointer-events-none absolute right-2 font-mono text-[11px] tabular-nums select-none",
-              noResults ? "text-destructive" : "text-muted-foreground",
-            )}
-          >
-            {resultLabel}
-          </span>
+          </div>
+
+          <Separator orientation="vertical" className="mx-0.5 !h-5" />
+
+          <div className="flex items-center gap-0.5">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label={t("terminal.searchPrevious")}
+                  disabled={!hasQuery || resultCount === 0}
+                  onClick={onFindPrevious}
+                >
+                  <ChevronUp />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={6}>
+                {t("terminal.searchPrevious")}
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label={t("terminal.searchNext")}
+                  disabled={!hasQuery || resultCount === 0}
+                  onClick={onFindNext}
+                >
+                  <ChevronDown />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={6}>
+                {t("terminal.searchNext")}
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label={t("terminal.searchClose")}
+                  onClick={onClose}
+                >
+                  <X />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={6}>
+                {t("terminal.searchClose")}
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
-
-        <Separator orientation="vertical" className="mx-0.5 !h-5" />
-
-        <div className="flex items-center gap-0.5">
-          <SearchToggle
-            label={t("terminal.searchCaseSensitive")}
-            active={caseSensitive}
-            onClick={onToggleCaseSensitive}
-          >
-            Aa
-          </SearchToggle>
-          <SearchToggle
-            label={t("terminal.searchWholeWord")}
-            active={wholeWord}
-            onClick={onToggleWholeWord}
-            className="underline underline-offset-2"
-          >
-            ab
-          </SearchToggle>
-          <SearchToggle
-            label={t("terminal.searchRegex")}
-            active={regex}
-            onClick={onToggleRegex}
-          >
-            .*
-          </SearchToggle>
-        </div>
-
-        <Separator orientation="vertical" className="mx-0.5 !h-5" />
-
-        <div className="flex items-center gap-0.5">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-xs"
-                aria-label={t("terminal.searchPrevious")}
-                disabled={!hasQuery || resultCount === 0}
-                onClick={onFindPrevious}
-              >
-                <ChevronUp />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>
-              {t("terminal.searchPrevious")}
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-xs"
-                aria-label={t("terminal.searchNext")}
-                disabled={!hasQuery || resultCount === 0}
-                onClick={onFindNext}
-              >
-                <ChevronDown />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>
-              {t("terminal.searchNext")}
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-xs"
-                aria-label={t("terminal.searchClose")}
-                onClick={onClose}
-              >
-                <X />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>
-              {t("terminal.searchClose")}
-            </TooltipContent>
-          </Tooltip>
-        </div>
+        {children}
       </div>
     </TooltipProvider>
   );

@@ -117,7 +117,8 @@
     "paste": "วางรูปภาพ",
     "settingsTitle": "แถบเครื่องมือ",
     "upload": "อัปโหลดรูปภาพ",
-    "uploadingImage": "กำลังอัปโหลด..."
+    "uploadingImage": "กำลังอัปโหลด...",
+    "tools": "เครื่องมือ"
   },
   "history": {
     "noTerminalSelected": "ไม่ได้เลือกเทอร์มินัล",
@@ -261,6 +262,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "กำหนดเส้นทาง SSH ผ่าน Cloudflare Zero Trust โดยใช้ WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "ปิดใช้งานอัลกอริทึมของเนเกล (TCP_NODELAY)",
+        "description": "ปิดการใช้งานการรวมกลุ่มแพ็กเก็ต TCP เพื่อลดความล่าช้าในการป้อนข้อมูล SSH โดยเฉพาะบนการเชื่อมต่อ LAN อาจเพิ่มภาระเครือข่าย"
       },
       "cloudflareTunnelHostname": {
         "label": "ชื่อโฮสต์ของ Tunnel",
@@ -416,6 +421,21 @@
       "zmodem": {
         "label": "การถ่ายโอนไฟล์ rz และ sz",
         "description": "อัปโหลดและดาวน์โหลดไฟล์ด้วย rz และ sz (lrzsz) โดยตรงในเทอร์มินัล"
+      },
+      "rightClickAction": {
+        "label": "คลิกขวาในเทอร์มินัล",
+        "description": "กด Shift ค้างไว้เพื่อแสดงเมนูเทอร์มินัลแทน หรือคัดลอกและวางหากเมนูเป็นตัวเลือกของคุณที่นี่",
+        "copyPaste": "คัดลอกหรือวาง",
+        "menu": "เมนูเทอร์มินัล",
+        "native": "เมนูเบราว์เซอร์"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V เพื่อวาง",
+        "description": "ปิดเพื่อส่ง Ctrl+V ไปยังเชลล์ Ctrl+Shift+V ยังคงใช้สำหรับวางได้"
+      },
+      "copyOnSelect": {
+        "label": "คัดลอกข้อความที่เลือกอัตโนมัติ",
+        "description": "คัดลอกข้อความทันทีที่คุณเลือกในเทอร์มินัล"
       }
     }
   },
@@ -580,27 +600,8 @@
   "nav": {
     "history": "ประวัติ",
     "localTerminal": "เทอร์มินัลท้องถิ่น",
-    "sshTools": "เครื่องมือ SSH",
     "terminal": "เทอร์มินัล",
     "macros": "มาโคร"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "พิมพ์ที่นี่เพื่อส่งคีย์สโตรกไปยังทุกที่...",
-    "copyOnSelect": "คัดลอกข้อความที่เลือกโดยอัตโนมัติ",
-    "enableRightClickCopyPaste": "เปิดใช้งานการคัดลอก/วางด้วยคลิกขวา",
-    "ctrlVPaste": "Ctrl+V ใช้สำหรับวาง (ปิดใช้งานเพื่อส่ง Ctrl+V ไปยังเชลล์)",
-    "fillPassword": "กรอกรหัสผ่าน",
-    "fillPasswordMissing_other": "ไม่มีรหัสผ่านที่บันทึกไว้สำหรับเทอร์มินัลที่เลือก {{count}} รายการ",
-    "fillPasswordSuccess_other": "กรอกรหัสผ่านลงในเทอร์มินัล {{count}} รายการ",
-    "keyRecordingTitle": "การบันทึกคีย์",
-    "noTerminalTabsOpen": "ไม่มีแท็บเทอร์มินัลที่เปิดอยู่",
-    "recordToTerminals": "บันทึกไปยังเทอร์มินัล",
-    "selectAll": "ทั้งหมด",
-    "selectNone": "ไม่มี",
-    "selectTerminalsAbove": "เลือกเทอร์มินัลด้านบน",
-    "settingsTitle": "การตั้งค่า",
-    "startRecording": "เริ่มบันทึก",
-    "stopRecording": "หยุดบันทึก"
   },
   "keybindings": {
     "openLocalTerminal": "เปิดเทอร์มินัลท้องถิ่นใหม่",
@@ -624,7 +625,8 @@
       "ctrlT": "ส่ง Ctrl+T ไปยัง shell (ป้องกันไม่ให้เปิดแท็บเบราว์เซอร์)",
       "ctrlN": "ส่ง Ctrl+N ไปยัง shell (ป้องกันไม่ให้เปิดหน้าต่างเบราว์เซอร์)",
       "ctrlQ": "ส่ง Ctrl+Q ไปยัง shell (ป้องกันไม่ให้ปิดเบราว์เซอร์)"
-    }
+    },
+    "toggleBroadcast": "เปิดหรือปิดการแพร่สัญญาณ"
   },
   "macros": {
     "title": "มาโคร",
@@ -731,5 +733,91 @@
     "sending": "กำลังอัปโหลด {{name}}",
     "receiving": "กำลังดาวน์โหลด {{name}}",
     "cancel": "ยกเลิกการถ่ายโอน"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "เริ่มแพร่สัญญาณข้อมูลป้อนเข้า",
+      "stop": "หยุดแพร่สัญญาณ",
+      "stopShort": "หยุด",
+      "on": "เปิดแพร่สัญญาณ",
+      "paused": "แพร่สัญญาณหยุดชั่วคราว",
+      "pausedForPassword": "หยุดชั่วคราวที่การแจ้งเตือนรหัสผ่าน",
+      "pause": "หยุดชั่วคราว",
+      "resume": "ดำเนินการต่อ",
+      "members_other": "เทอร์มินัล {{count}} ตัว",
+      "allOpen": "เปิดทั้งหมด",
+      "thisSplit": "การแบ่งหน้าจอปัจจุบัน",
+      "sameFolder": "โฟลเดอร์เดียวกัน",
+      "offline": "ออฟไลน์",
+      "offlineCount_other": "ออฟไลน์ {{count}} ตัว",
+      "openMore": "เปิดเทอร์มินัลอื่นเพื่อแพร่สัญญาณไปยังนั้น",
+      "compose": "เขียนคำสั่ง",
+      "composeHint": "เขียนคำสั่ง Ctrl+Enter เพื่อส่งไปยังกลุ่ม",
+      "send": "ส่ง",
+      "pressEnter": "กด Enter",
+      "skipped_other": "ข้ามเทอร์มินัล {{count}} ตัวที่ออฟไลน์หรือกำลังขอรหัสผ่าน"
+    },
+    "fill": {
+      "label": "กรอกรหัสผ่าน",
+      "done_other": "กรอกรหัสผ่านในเทอร์มินัล {{count}} ตัว",
+      "noPassword_other": "ไม่มีรหัสผ่านที่บันทึกไว้สำหรับเทอร์มินัล {{count}} ตัว",
+      "notAsking_other": "เทอร์มินัล {{count}} ตัวไม่กำลังขอรหัสผ่าน"
+    },
+    "find": {
+      "all": "ค้นหาในเทอร์มินัลทั้งหมด",
+      "badRegex": "Regex นี้ไม่ถูกต้อง",
+      "capped": "แสดงผลลัพธ์ {{count}} รายการแรก"
+    },
+    "watch": {
+      "title": "ดูผลลัพธ์",
+      "note": "กฎจะทำงานเมื่อ Termix เปิดอยู่ การแจ้งเตือนจะระบุชื่อกฎและโฮสต์ ไม่ระบุผลลัพธ์",
+      "name": "ชื่อกฎ",
+      "when": "แจ้งเตือนเมื่อ",
+      "kindMatch": "ผลลัพธ์ตรงกัน",
+      "kindQuiet": "ผลลัพธ์เงียบลง",
+      "kindActivity": "มีผลลัพธ์ใหม่ในพื้นหลัง",
+      "pattern": "ข้อความที่ต้องการค้นหา",
+      "seconds": "วินาทีของความเงียบ",
+      "add": "เพิ่มกฎ",
+      "delete": "ลบกฎ",
+      "describeMatch": "ตรงกับ {{pattern}}",
+      "describeQuiet_other": "เงียบเป็นเวลา {{count}} วินาที",
+      "describeActivity": "มีผลลัพธ์ใหม่ในพื้นหลัง",
+      "nameRequired": "ตั้งชื่อให้กับกฎ",
+      "patternRequired": "ป้อนข้อความที่ต้องการค้นหา",
+      "badRegex": "Regex นี้ไม่ถูกต้อง",
+      "secondsRequired": "ป้อน 1 วินาทีหรือมากกว่า",
+      "fired": "{{rule}} บน {{host}}",
+      "active_other": "กฎการเฝ้าระวัง {{count}} ตัวเปิดอยู่"
+    },
+    "output": {
+      "save": "บันทึกผลลัพธ์",
+      "copy": "คัดลอกผลลัพธ์",
+      "saveSelection": "บันทึกส่วนที่เลือก",
+      "empty": "ไม่มีอะไรให้บันทึก",
+      "copied": "คัดลอกผลลัพธ์แล้ว",
+      "copyFailed": "ไม่สามารถคัดลอกผลลัพธ์ได้"
+    },
+    "fix": {
+      "resetDisplay": "รีเซ็ตการแสดงผล",
+      "clearScrollback": "ล้างประวัติการเลื่อน",
+      "resetShell": "รีเซ็ต shell",
+      "resetShellTitle": "รีเซ็ต shell ใช่หรือไม่?",
+      "resetShellDescription": "คำสั่งนี้จะพิมพ์ stty sane และ reset ที่บรรทัดคำสั่ง ข้อความใดๆ บนบรรทัดนั้นจะถูกดำเนินการพร้อมกัน"
+    },
+    "keys": {
+      "title": "ส่งคีย์",
+      "custom": "Ctrl + ตัวอักษร",
+      "customTitle": "ส่ง Ctrl + ตัวอักษร",
+      "customDescription": "พิมพ์ตัวอักษรที่จะส่งพร้อมกับ Ctrl"
+    },
+    "menu": {
+      "copy": "คัดลอก",
+      "paste": "วาง",
+      "selectAll": "เลือกทั้งหมด",
+      "find": "ค้นหา",
+      "clear": "ล้าง"
+    },
+    "openTerminalFirst": "เปิดเทอร์มินัล SSH เพื่อใช้เครื่องมือ"
   }
 }

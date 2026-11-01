@@ -123,7 +123,8 @@
     "paste": "Wklej obraz",
     "settingsTitle": "Pasek narzędzi",
     "upload": "Prześlij obraz",
-    "uploadingImage": "Przesyłanie..."
+    "uploadingImage": "Przesyłanie...",
+    "tools": "Narzędzia"
   },
   "history": {
     "noTerminalSelected": "Nie wybrano terminala",
@@ -270,6 +271,10 @@
       "cloudflareTunnelEnabled": {
         "label": "Cloudflare Tunnel",
         "description": "Przekieruj ruch SSH przez Cloudflare Zero Trust za pomocą WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "Wyłącz algorytm Nagle'a (TCP_NODELAY)",
+        "description": "Wyłącza grupowanie pakietów TCP, aby zmniejszyć opóźnienie wejścia SSH, szczególnie w połączeniach LAN. Może zwiększyć obciążenie sieci."
       },
       "cloudflareTunnelHostname": {
         "label": "Nazwa hosta tunelu",
@@ -425,6 +430,21 @@
       "zmodem": {
         "label": "Przenoszenie plików rz i sz",
         "description": "Przesyłaj i pobieraj pliki za pomocą rz i sz (lrzsz) bezpośrednio w terminalu."
+      },
+      "rightClickAction": {
+        "label": "Kliknięcie prawym przyciskiem w terminalu",
+        "description": "Przytrzymaj Shift, aby uzyskać menu terminalu zamiast tego, lub kopiuj i wklejaj, jeśli menu jest Twoim wyborem tutaj",
+        "copyPaste": "Kopiuj lub wklej",
+        "menu": "Menu terminalu",
+        "native": "Menu przeglądarki"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V wkleja",
+        "description": "Wyłącz, aby wysłać Ctrl+V do powłoki. Ctrl+Shift+V nadal wkleja"
+      },
+      "copyOnSelect": {
+        "label": "Automatycznie kopiuj zaznaczony tekst",
+        "description": "Kopiuje tekst natychmiast po jego zaznaczeniu w terminalu"
       }
     }
   },
@@ -589,33 +609,8 @@
   "nav": {
     "history": "Historia",
     "localTerminal": "Lokalny terminal",
-    "sshTools": "Narzędzia SSH",
     "terminal": "Terminal",
     "macros": "Makra"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "Wpisz tutaj, aby nadawać znaki...",
-    "copyOnSelect": "Automatycznie kopiuj zaznaczony tekst",
-    "enableRightClickCopyPaste": "Włącz kopiowanie/wklejanie prawym przyciskiem myszy",
-    "ctrlVPaste": "Ctrl+V wkleja (wyłącz, aby wysyłać Ctrl+V do powłoki)",
-    "fillPassword": "Wypełnij hasło",
-    "fillPasswordMissing_one": "Brak zapisanego hasła dla {{count}} wybranego terminala",
-    "fillPasswordMissing_few": "Brak zapisanego hasła dla {{count}} wybranych terminali",
-    "fillPasswordMissing_many": "Brak zapisanego hasła dla {{count}} wybranych terminali",
-    "fillPasswordMissing_other": "Brak zapisanego hasła dla {{count}} wybranych terminali",
-    "fillPasswordSuccess_one": "Wypełniono hasło w {{count}} terminalu",
-    "fillPasswordSuccess_few": "Wypełniono hasło w {{count}} terminalach",
-    "fillPasswordSuccess_many": "Wypełniono hasło w {{count}} terminalach",
-    "fillPasswordSuccess_other": "Wypełniono hasło w {{count}} terminalach",
-    "keyRecordingTitle": "Nagrywanie klawiszy",
-    "noTerminalTabsOpen": "Brak otwartych kart terminala",
-    "recordToTerminals": "Nagraj do terminali",
-    "selectAll": "Wszystkie",
-    "selectNone": "Żaden",
-    "selectTerminalsAbove": "Wybierz terminale powyżej",
-    "settingsTitle": "Ustawienia",
-    "startRecording": "Rozpocznij nagrywanie",
-    "stopRecording": "Zatrzymaj nagrywanie"
   },
   "keybindings": {
     "openLocalTerminal": "Otwórz nowy lokalny terminal",
@@ -639,7 +634,8 @@
       "ctrlT": "Wyślij Ctrl+T do powłoki (zablokowane otwieranie karty przeglądarki)",
       "ctrlN": "Wyślij Ctrl+N do powłoki (zablokowane otwieranie okna przeglądarki)",
       "ctrlQ": "Wyślij Ctrl+Q do powłoki (zablokowane zamykanie przeglądarki)"
-    }
+    },
+    "toggleBroadcast": "Włącz lub wyłącz nadawanie"
   },
   "macros": {
     "title": "Makra",
@@ -749,5 +745,115 @@
     "sending": "Przesyłanie {{name}}",
     "receiving": "Pobieranie {{name}}",
     "cancel": "Anuluj transfer"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "Rozpocznij nadawanie",
+      "stop": "Zatrzymaj nadawanie",
+      "stopShort": "Zatrzymaj",
+      "on": "Nadawanie włączone",
+      "paused": "Nadawanie wstrzymane",
+      "pausedForPassword": "Wstrzymano przy monicie hasła",
+      "pause": "Wstrzymaj",
+      "resume": "Wznów",
+      "members_one": "{{count}} terminal",
+      "members_few": "{{count}} terminale",
+      "members_many": "{{count}} terminali",
+      "members_other": "{{count}} terminali",
+      "allOpen": "Wszystkie otwarte",
+      "thisSplit": "Ten podział",
+      "sameFolder": "Ten sam folder",
+      "offline": "Offline",
+      "offlineCount_one": "{{count}} offline",
+      "offlineCount_few": "{{count}} offline",
+      "offlineCount_many": "{{count}} offline",
+      "offlineCount_other": "{{count}} offline",
+      "openMore": "Otwórz inny terminal, aby nadawać do niego",
+      "compose": "Skomponuj",
+      "composeHint": "Napisz polecenie. Ctrl+Enter wysyła je do grupy",
+      "send": "Wyślij",
+      "pressEnter": "Naciśnij Enter",
+      "skipped_one": "Pominięto {{count}} terminal, który jest offline lub prosi o hasło",
+      "skipped_few": "Pominięto {{count}} terminale, które są offline lub proszą o hasło",
+      "skipped_many": "Pominięto {{count}} terminali, które są offline lub proszą o hasło",
+      "skipped_other": "Pominięto {{count}} terminali, które są offline lub proszą o hasło"
+    },
+    "fill": {
+      "label": "Wypełnij hasło",
+      "done_one": "Wypełniono hasło w {{count}} terminalu",
+      "done_few": "Wypełniono hasło w {{count}} terminalach",
+      "done_many": "Wypełniono hasło w {{count}} terminalach",
+      "done_other": "Wypełniono hasło w {{count}} terminalach",
+      "noPassword_one": "Brak zapisanego hasła dla {{count}} terminala",
+      "noPassword_few": "Brak zapisanego hasła dla {{count}} terminali",
+      "noPassword_many": "Brak zapisanego hasła dla {{count}} terminali",
+      "noPassword_other": "Brak zapisanego hasła dla {{count}} terminali",
+      "notAsking_one": "{{count}} terminal nie prosi o hasło",
+      "notAsking_few": "{{count}} terminale nie proszą o hasło",
+      "notAsking_many": "{{count}} terminali nie prosi o hasło",
+      "notAsking_other": "{{count}} terminali nie prosi o hasło"
+    },
+    "find": {
+      "all": "Szukaj we wszystkich terminalach",
+      "badRegex": "To wyrażenie regularne jest nieprawidłowe",
+      "capped": "Wyświetlanie pierwszych {{count}} wyników"
+    },
+    "watch": {
+      "title": "Obserwuj wyjście",
+      "note": "Zasady działają, gdy Termix jest otwarty. Alerty podają nazwę zasady i hosta, nigdy wyjścia.",
+      "name": "Nazwa zasady",
+      "when": "Alarmuj, gdy",
+      "kindMatch": "Wyjście pasuje",
+      "kindQuiet": "Wyjście jest ciche",
+      "kindActivity": "Nowe wyjście w tle",
+      "pattern": "Tekst do wyszukania",
+      "seconds": "Sekundy ciszy",
+      "add": "Dodaj zasadę",
+      "delete": "Usuń zasadę",
+      "describeMatch": "Pasuje do {{pattern}}",
+      "describeQuiet_one": "Cisza przez {{count}} sekundę",
+      "describeQuiet_few": "Cisza przez {{count}} sekundy",
+      "describeQuiet_many": "Cisza przez {{count}} sekund",
+      "describeQuiet_other": "Cisza przez {{count}} sekund",
+      "describeActivity": "Nowe wyjście w tle",
+      "nameRequired": "Podaj nazwę zasady",
+      "patternRequired": "Wpisz tekst do wyszukania",
+      "badRegex": "To wyrażenie regularne jest nieprawidłowe",
+      "secondsRequired": "Wpisz 1 sekundę lub więcej",
+      "fired": "{{rule}} na {{host}}",
+      "active_one": "{{count}} aktywna zasada obserwacji",
+      "active_few": "{{count}} aktywne zasady obserwacji",
+      "active_many": "{{count}} aktywnych zasad obserwacji",
+      "active_other": "{{count}} aktywnych zasad obserwacji"
+    },
+    "output": {
+      "save": "Zapisz wynik",
+      "copy": "Kopiuj wynik",
+      "saveSelection": "Zapisz zaznaczenie",
+      "empty": "Nie ma nic do zapisania",
+      "copied": "Wynik skopiowany",
+      "copyFailed": "Nie udało się skopiować wyniku"
+    },
+    "fix": {
+      "resetDisplay": "Resetuj wyświetlanie",
+      "clearScrollback": "Wyczyść historię przewijania",
+      "resetShell": "Resetuj powłokę",
+      "resetShellTitle": "Zresetować powłokę?",
+      "resetShellDescription": "To wpisze `stty sane` i `reset` w wierszu poleceń. Wszelki tekst na bieżącej linii zostanie wykonany razem z nimi."
+    },
+    "keys": {
+      "title": "Wyślij klawisz",
+      "custom": "Ctrl + litera",
+      "customTitle": "Wyślij Ctrl + litera",
+      "customDescription": "Wpisz literę, którą chcesz wysłać z Ctrl"
+    },
+    "menu": {
+      "copy": "Kopiuj",
+      "paste": "Wklej",
+      "selectAll": "Zaznacz wszystko",
+      "find": "Szukaj",
+      "clear": "Wyczyść"
+    },
+    "openTerminalFirst": "Otwórz terminal SSH, aby korzystać z jego narzędzi"
   }
 }

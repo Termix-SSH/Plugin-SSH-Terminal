@@ -121,7 +121,8 @@
     "paste": "הדבקת תמונה",
     "settingsTitle": "סרגל כלים",
     "upload": "העלאת תמונה",
-    "uploadingImage": "מעלה..."
+    "uploadingImage": "מעלה...",
+    "tools": "כלים"
   },
   "history": {
     "noTerminalSelected": "לא נבחר מסוף",
@@ -267,6 +268,10 @@
       "cloudflareTunnelEnabled": {
         "label": "מנהרת Cloudflare",
         "description": "העברת תעבורת SSH דרך Cloudflare Zero Trust באמצעות WebSocket"
+      },
+      "tcpNoDelay": {
+        "label": "השבת אלגוריתם נייגל (TCP_NODELAY)",
+        "description": "מבטל את חבילת חבילות TCP כדי להפחית את זמן התגובה של קלט SSH, במיוחד בחיבורי LAN. עשוי להגדיל את העומס הרשת."
       },
       "cloudflareTunnelHostname": {
         "label": "שם מארח של המנהרה",
@@ -422,6 +427,21 @@
       "zmodem": {
         "label": "העברות קבצים rz ו-sz",
         "description": "העלאה והורדה של קבצים עם rz ו-sz (lrzsz) ישירות בטרמינל."
+      },
+      "rightClickAction": {
+        "label": "לחיצה ימנית בטרמינל",
+        "description": "החזק Shift כדי לקבל את תפריט הטרמינל במקום זאת, או להעתיק ולהדביק אם התפריט הוא הבחירה שלך כאן",
+        "copyPaste": "העתקה או הדבקה",
+        "menu": "תפריט הטרמינל",
+        "native": "תפריט הדפדפן"
+      },
+      "ctrlVPaste": {
+        "label": "Ctrl+V מדביק",
+        "description": "כבה כדי לשלוח Ctrl+V ל-shell. Ctrl+Shift+V עדיין מדביק"
+      },
+      "copyOnSelect": {
+        "label": "העתק טקסט נבחר באופן אוטומטי",
+        "description": "מעתיק טקסט ברגע שבוחרים אותו בטרמינל"
       }
     }
   },
@@ -586,31 +606,8 @@
   "nav": {
     "history": "היסטוריה",
     "localTerminal": "מסוף מקומי",
-    "sshTools": "כלי SSH",
     "terminal": "מסוף",
     "macros": "מאקרו"
-  },
-  "sshTools": {
-    "broadcastInputPlaceholder": "הקלד כאן כדי לשדר הקשות...",
-    "copyOnSelect": "העתקת טקסט נבחר באופן אוטומטי",
-    "enableRightClickCopyPaste": "הפעלת העתקה/הדבקה בלחיצה ימנית",
-    "ctrlVPaste": "Ctrl+V מדביק (כבה כדי לשלוח Ctrl+V לקליפה)",
-    "fillPassword": "מלא סיסמה",
-    "fillPasswordMissing_one": "אין סיסמה שמורה ל-{{count}} מסוף שנבחר",
-    "fillPasswordMissing_two": "אין סיסמה שמורה ל-{{count}} מסופים שנבחרו",
-    "fillPasswordMissing_other": "אין סיסמה שמורה ל-{{count}} מסופים שנבחרו",
-    "fillPasswordSuccess_one": "הוספתי סיסמה ל-{{count}} מסוף",
-    "fillPasswordSuccess_two": "הוספתי סיסמה ל-{{count}} מסופים",
-    "fillPasswordSuccess_other": "הוספתי סיסמה ל-{{count}} מסופים",
-    "keyRecordingTitle": "הקלטת מקשים",
-    "noTerminalTabsOpen": "אין לשוניות טרמינל פתוחות",
-    "recordToTerminals": "הקלט לטרמינלים",
-    "selectAll": "הכל",
-    "selectNone": "ללא",
-    "selectTerminalsAbove": "בחר טרמינלים למעלה",
-    "settingsTitle": "הגדרות",
-    "startRecording": "התחל הקלטה",
-    "stopRecording": "עצור הקלטה"
   },
   "keybindings": {
     "openLocalTerminal": "פתח מסוף מקומי חדש",
@@ -634,7 +631,8 @@
       "ctrlT": "שלח Ctrl+T ל-shell (מונע פתיחת לשונית בדפדפן)",
       "ctrlN": "שלח Ctrl+N ל-shell (מונע פתיחת חלון בדפדפן)",
       "ctrlQ": "שלח Ctrl+Q ל-shell (מונע יציאה מהדפדפן)"
-    }
+    },
+    "toggleBroadcast": "הפעל או כבה שידור"
   },
   "macros": {
     "title": "מאקרו",
@@ -743,5 +741,107 @@
     "sending": "מעלה את {{name}}",
     "receiving": "מוריד את {{name}}",
     "cancel": "ביטול העברה"
+  },
+  "terminalTools": {
+    "broadcast": {
+      "start": "התחל שידור קלט",
+      "stop": "עצור שידור",
+      "stopShort": "עצור",
+      "on": "שידור פעיל",
+      "paused": "שידור מושהה",
+      "pausedForPassword": "מושהה בהמתנה להזנת סיסמה",
+      "pause": "השהה",
+      "resume": "המשך",
+      "members_one": "טרמינל {{count}}",
+      "members_two": "טרמינלים {{count}}",
+      "members_other": "טרמינלים {{count}}",
+      "allOpen": "הכל פתוח",
+      "thisSplit": "פיצול זה",
+      "sameFolder": "אותה תיקיה",
+      "offline": "לא מקוון",
+      "offlineCount_one": "לא מקוון {{count}}",
+      "offlineCount_two": "לא מקוונים {{count}}",
+      "offlineCount_other": "לא מקוונים {{count}}",
+      "openMore": "פתח טרמינל נוסף כדי לשדר אליו",
+      "compose": "הרכב",
+      "composeHint": "כתוב פקודה. Ctrl+Enter שולח אותה לקבוצה",
+      "send": "שלח",
+      "pressEnter": "לחץ Enter",
+      "skipped_one": "דלג על טרמינל {{count}} שאינו מקוון או מבקש סיסמה",
+      "skipped_two": "דלג על טרמינלים {{count}} שאינם מקוונים או מבקשים סיסמה",
+      "skipped_other": "דלג על טרמינלים {{count}} שאינם מקוונים או מבקשים סיסמה"
+    },
+    "fill": {
+      "label": "מלא סיסמה",
+      "done_one": "מילאתי את הסיסמה בטרמינל {{count}}",
+      "done_two": "מילאתי את הסיסמה בטרמינלים {{count}}",
+      "done_other": "מילאתי את הסיסמה בטרמינלים {{count}}",
+      "noPassword_one": "אין סיסמה שמורה לטרמינל {{count}}",
+      "noPassword_two": "אין סיסמה שמורה לטרמינלים {{count}}",
+      "noPassword_other": "אין סיסמה שמורה לטרמינלים {{count}}",
+      "notAsking_one": "טרמינל {{count}} אינו מבקש סיסמה",
+      "notAsking_two": "טרמינלים {{count}} אינם מבקשים סיסמה",
+      "notAsking_other": "טרמינלים {{count}} אינם מבקשים סיסמה"
+    },
+    "find": {
+      "all": "חפש בכל הטרמינלים",
+      "badRegex": "ביטוי רגולרי זה אינו תקין",
+      "capped": "מציג את התוצאות הראשונות {{count}}"
+    },
+    "watch": {
+      "title": "עקוב אחר פלט",
+      "note": "הכללים פועלים כאשר Termix פתוח. התראות מציינות את שם הכלל והמארח, לעולם לא את הפלט.",
+      "name": "שם הכלל",
+      "when": "התרע כאשר",
+      "kindMatch": "הפלט תואם",
+      "kindQuiet": "הפלט נהיה שקט",
+      "kindActivity": "פלט חדש ברקע",
+      "pattern": "טקסט לחיפוש",
+      "seconds": "שניות של שקט",
+      "add": "הוסף כלל",
+      "delete": "מחק כלל",
+      "describeMatch": "תואם את {{pattern}}",
+      "describeQuiet_one": "שקט למשך {{count}} שנייה",
+      "describeQuiet_two": "שקט למשך {{count}} שניות",
+      "describeQuiet_other": "שקט למשך {{count}} שניות",
+      "describeActivity": "פלט חדש ברקע",
+      "nameRequired": "תן שם לכלל",
+      "patternRequired": "הזן את הטקסט לחיפוש",
+      "badRegex": "ביטוי רגולרי זה אינו תקין",
+      "secondsRequired": "הזן שנייה אחת או יותר",
+      "fired": "{{rule}} על {{host}}",
+      "active_one": "כלל מעקב {{count}} פעיל",
+      "active_two": "כללי מעקב {{count}} פעילים",
+      "active_other": "כללי מעקב {{count}} פעילים"
+    },
+    "output": {
+      "save": "שמור פלט",
+      "copy": "העתק פלט",
+      "saveSelection": "שמור בחירה",
+      "empty": "אין מה לשמור",
+      "copied": "הפלט הועתק",
+      "copyFailed": "לא ניתן להעתיק את הפלט"
+    },
+    "fix": {
+      "resetDisplay": "אפס תצוגה",
+      "clearScrollback": "נקה היסטוריית גלילה",
+      "resetShell": "אפס מעטפת",
+      "resetShellTitle": "לאפס את המעטפת?",
+      "resetShellDescription": "פעולה זו מקלידה את הפקודות stty sane ו-reset בשורת הפקודה. כל טקסט בשורה ירוץ יחד איתן."
+    },
+    "keys": {
+      "title": "שלח מקש",
+      "custom": "Ctrl + אות",
+      "customTitle": "שלח Ctrl + אות",
+      "customDescription": "הקלד את האות לשליחה עם Ctrl"
+    },
+    "menu": {
+      "copy": "העתק",
+      "paste": "הדבק",
+      "selectAll": "בחר הכל",
+      "find": "חפש",
+      "clear": "נקה"
+    },
+    "openTerminalFirst": "פתח מסוף SSH כדי להשתמש בכליו"
   }
 }
