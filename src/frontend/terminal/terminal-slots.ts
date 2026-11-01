@@ -10,7 +10,9 @@ import type { Host } from "../types";
  *   `openSidePanel(id)`, rendered with TerminalSidePanelProps.
  * - "terminal.overlay" (components): always mounted over the terminal and
  *   given the session's server messages, for connection flows a plugin owns
- *   (a Tailscale check, an OPKSSH sign-in). It can answer on the socket.
+ *   (a Tailscale check, an OPKSSH sign-in). It can answer on the socket, and
+ *   read and type at the prompt through `input` (a command editor). The
+ *   desktop app's local terminal mounts it too, with no host.
  *
  * Every contribution's `when` sees `{ host }`.
  */
@@ -64,6 +66,24 @@ export interface TerminalSessionMessage {
   [key: string]: unknown;
 }
 
+/** What an overlay can read and type at the prompt. */
+export interface TerminalInputAccess {
+  /**
+   * The scrollback down to the cursor's line, wrapped lines joined: the
+   * command being typed is the last line.
+   */
+  getTextToCursor: () => string;
+  /**
+   * Types text the way Ctrl+V does: wrapped in bracketed paste when the
+   * shell asked for it, so a multi-line command waits for Enter.
+   */
+  paste: (text: string) => void;
+  /** True while a full-screen program (vim, less, tmux) has the screen. */
+  isAlternateScreen: () => boolean;
+  /** True while the shell has bracketed paste turned on. */
+  isBracketedPaste: () => boolean;
+}
+
 export interface TerminalOverlayProps {
   host: Host | undefined;
   backgroundColor?: string;
@@ -87,4 +107,6 @@ export interface TerminalOverlayProps {
    * as the data of "<interaction>_auth_completed".
    */
   connectPayload: () => Record<string, unknown>;
+  /** The prompt. Older versions of this plugin leave it out: check first. */
+  input?: TerminalInputAccess;
 }

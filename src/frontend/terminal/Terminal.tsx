@@ -44,6 +44,7 @@ import {
 } from "../look/terminal-font-zoom";
 import { TmuxSessionPicker } from "./TmuxSessionPicker";
 import { getTerminalBufferText } from "./terminal-buffer-text.ts";
+import { createTerminalInputAccess } from "./terminal-input-access.ts";
 import { isPaneNavHotkey } from "../lib/pane-nav-hotkey";
 import { getMacLineNavigationSequence } from "../lib/mac-line-navigation";
 import { useCommandTracker } from "./command-history/useCommandTracker";
@@ -893,6 +894,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           rows: terminal?.rows || 24,
           hostConfig: currentHostConfigRef.current,
         }),
+        input: createTerminalInputAccess(terminal),
       }),
       [host, backgroundColor, updateConnectionError, terminal],
     );
