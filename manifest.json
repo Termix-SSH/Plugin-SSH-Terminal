@@ -400,6 +400,14 @@
             "default": false
           },
           {
+            "key": "tcpNoDelay",
+            "type": "boolean",
+            "labelKey": "settings.host.tcpNoDelay.label",
+            "descriptionKey": "settings.host.tcpNoDelay.description",
+            "hidden": true,
+            "default": false
+          },
+          {
             "key": "cloudflareTunnelHostname",
             "type": "string",
             "labelKey": "settings.host.cloudflareTunnelHostname.label",

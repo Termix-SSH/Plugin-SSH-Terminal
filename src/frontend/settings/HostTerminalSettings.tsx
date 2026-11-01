@@ -71,6 +71,7 @@ export function HostTerminalSettings({
   const stored = ((editorForm?.pluginSettings as HostPluginSettings)?.[
     PLUGIN_ID
   ] ?? {}) as Record<string, unknown>;
+  const tcpNoDelay = stored.tcpNoDelay === true;
   // The form holds what the host follows, so this is what it will look like.
   const form = readHostTerminalSettings(stored) as HostTerminalValues;
 
@@ -696,6 +697,15 @@ export function HostTerminalSettings({
         icon={<Zap className="size-3.5" />}
       >
         <div className="flex flex-col gap-4 py-3">
+          <SettingRow
+            label="Disable Nagle's Algorithm (TCP_NODELAY)"
+            description="Disables TCP packet batching to reduce SSH input latency, especially on LAN connections. May increase network overhead."
+          >
+            <FakeSwitch
+              checked={tcpNoDelay}
+              onChange={(value) => writeValues({ tcpNoDelay: value })}
+            />
+          </SettingRow>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
