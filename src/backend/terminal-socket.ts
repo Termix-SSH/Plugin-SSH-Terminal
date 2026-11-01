@@ -91,6 +91,7 @@ interface ConnectToHostData {
     }>;
     /** Keepalive, legacy algorithms, agent and environment options. */
     sshOptions?: HostSshOptions | null;
+    pluginSettings?: Record<string, Record<string, unknown>>;
     /** When true, ignore key material and force password auth (fallback path). */
     passwordFallbackOnly?: boolean;
   };
@@ -1375,6 +1376,8 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     async function handleConnectToHost(data: ConnectToHostData) {
       const { hostConfig, initialPath, executeCommand, tmuxAttachSession } =
         data;
+      const tcpNoDelay =
+        hostConfig.pluginSettings?.["ssh-terminal"]?.tcpNoDelay === true;
       const {
         id,
         syncId: hostSyncId,
@@ -2166,6 +2169,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               }
 
               sshStream = stream;
+              sshConn?.setNoDelay(tcpNoDelay);
               sshLogger.success("Terminal shell channel opened", {
                 operation: "terminal_shell_opened",
                 sessionId,
