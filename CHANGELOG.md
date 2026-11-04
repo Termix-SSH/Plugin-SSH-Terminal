@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+- Check that SSH login works and see recent commands through Termix actions, with SSH login as a status tile on the host page
+
+### Changed
+
+- Needs Termix 26.11.1 or newer
+
 ## 1.3.0
 
 ### Added

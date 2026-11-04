@@ -831,5 +831,16 @@
       "clear": "Clear"
     },
     "openTerminalFirst": "Open an SSH terminal to use its tools"
+  },
+  "operations": {
+    "check": {
+      "title": "Check SSH login"
+    },
+    "history": {
+      "title": "Recent commands"
+    },
+    "login": {
+      "title": "SSH login"
+    }
   }
 }
