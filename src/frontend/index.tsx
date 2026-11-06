@@ -37,6 +37,7 @@ import {
   sendToSession,
 } from "./session-registry";
 import { TerminalView } from "./TerminalView";
+import { SessionsCard } from "./SessionsCard";
 import { HistoryPanel } from "./history/HistoryPanel";
 import { TouchInputSettings } from "./settings/TouchInputSettings";
 import { ImageStorageTest } from "./settings/ImageStorageTest";
@@ -200,6 +201,15 @@ export function activate(app: TermixApp): void {
               ?.run();
           },
         })),
+  });
+
+  app.registerDashboardCard({
+    id: "terminal-sessions",
+    titleKey: "card.title",
+    defaultPanel: "side",
+    defaultHeight: 220,
+    frame: "framed",
+    component: SessionsCard,
   });
 
   app.registerHostAction({

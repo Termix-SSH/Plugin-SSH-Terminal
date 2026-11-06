@@ -10,6 +10,7 @@ import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import { getErrorMessage, type TerminalLogger } from "./helpers.js";
 import type { HistoryRepository } from "./history-repository.js";
 import type { TerminalSessionManager } from "./session-manager.js";
+import { toLiveRow } from "./live-list.js";
 import {
   ADMIN_KEYS,
   HOST_KEYS,
@@ -559,6 +560,30 @@ export function registerTerminalRoutes(
       log.error("Failed to load the default terminal appearance", err);
       res.status(500).json({ error: "Failed to load settings" });
     }
+  });
+
+  /**
+   * @openapi
+   * /plugin-api/ssh-terminal/sessions:
+   *   get:
+   *     summary: List my open terminal sessions
+   *     description: The caller's live SSH sessions on the server, connected or detached.
+   *     tags:
+   *       - Terminal
+   *     responses:
+   *       200:
+   *         description: The open sessions, newest first.
+   *       401:
+   *         description: Not signed in.
+   */
+  router.get("/sessions", (_req, res) => {
+    const userId = ctx.currentActor();
+    if (!userId) return res.status(401).json({ error: "Sign in first" });
+    const rows = sessionManager
+      .getUserSessions(userId)
+      .map(toLiveRow)
+      .sort((a, b) => b.createdAt - a.createdAt);
+    res.json(rows);
   });
 
   router.get("/client-settings", async (_req, res) => {

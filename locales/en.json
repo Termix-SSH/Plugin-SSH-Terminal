@@ -841,6 +841,23 @@
     },
     "login": {
       "title": "SSH login"
+    },
+    "sessions": {
+      "title": "Open terminal sessions"
+    },
+    "session": {
+      "title": "Terminal sessions",
+      "state": "State",
+      "started": "Started"
     }
+  },
+  "card": {
+    "title": "Open terminals",
+    "loading": "Loading...",
+    "empty": "No open terminal sessions",
+    "connected": "Connected",
+    "detached": "Detached",
+    "tmux": "tmux {{name}}",
+    "refresh": "Refresh"
   }
 }

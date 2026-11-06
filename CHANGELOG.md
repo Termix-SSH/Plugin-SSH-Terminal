@@ -5,6 +5,7 @@
 ### Added
 
 - Check that SSH login works and see recent commands through Termix actions, with SSH login as a status tile on the host page
+- A dashboard card with your open terminal sessions, and the open sessions of a host on the host page
 
 ### Changed
 

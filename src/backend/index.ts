@@ -4,6 +4,7 @@ import { createTerminalLogger } from "./helpers.js";
 import { hostImportNormalizer, hostPayloadLegacy } from "./host-import.js";
 import { createHistoryRepository } from "./history-repository.js";
 import { registerOperations } from "./operations.js";
+import { toLiveRow } from "./live-list.js";
 import { registerTerminalRoutes } from "./routes.js";
 import { registerCloudflareTransport } from "./cloudflare-transport.js";
 import {
@@ -67,7 +68,9 @@ export async function activate(ctx: PluginContext) {
 
   const table = await ctx.db.define(commandHistory);
   const history = createHistoryRepository(ctx.db, table);
-  registerOperations(ctx, history);
+  registerOperations(ctx, history, (userId) =>
+    sessionManager.getUserSessions(userId).map(toLiveRow),
+  );
 
   // Read on every detach, so it is kept current rather than awaited there.
   let timeoutMinutes = DEFAULT_TIMEOUT_MINUTES;

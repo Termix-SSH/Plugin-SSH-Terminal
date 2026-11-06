@@ -921,6 +921,20 @@
           "surfaces": {
             "palette": false
           }
+        },
+        {
+          "id": "ssh-terminal.sessions",
+          "titleKey": "operations.sessions.title",
+          "icon": "SquareTerminal",
+          "scope": "host",
+          "risk": "read",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
         }
       ],
       "signals": [
@@ -932,8 +946,37 @@
           "kind": "status",
           "refreshSec": 600
         }
+      ],
+      "resources": [
+        {
+          "id": "ssh-terminal.session",
+          "titleKey": "operations.session.title",
+          "icon": "SquareTerminal",
+          "list": "ssh-terminal.sessions",
+          "key": "id",
+          "name": "name",
+          "status": "state",
+          "columns": [
+            {
+              "key": "state",
+              "titleKey": "operations.session.state",
+              "type": "status"
+            },
+            {
+              "key": "started",
+              "titleKey": "operations.session.started"
+            }
+          ]
+        }
       ]
-    }
+    },
+    "dashboardCards": [
+      {
+        "id": "terminal-sessions",
+        "titleKey": "card.title",
+        "icon": "SquareTerminal"
+      }
+    ]
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]
