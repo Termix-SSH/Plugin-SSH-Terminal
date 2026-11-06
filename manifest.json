@@ -80,7 +80,7 @@
   "provides": [
     {
       "service": "sessions.live",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "permission": "ssh-terminal.sessions",
       "names": ["ssh"]
     },
@@ -164,6 +164,12 @@
         "titleKey": "permissions.history.title",
         "descriptionKey": "permissions.history.description",
         "defaultRoles": ["admin", "user"]
+      },
+      {
+        "name": "monitor",
+        "titleKey": "permissions.monitor.title",
+        "descriptionKey": "permissions.monitor.description",
+        "defaultRoles": ["admin"]
       }
     ],
     "settings": {

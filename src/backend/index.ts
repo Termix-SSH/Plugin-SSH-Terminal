@@ -5,17 +5,15 @@ import { hostImportNormalizer, hostPayloadLegacy } from "./host-import.js";
 import { createHistoryRepository } from "./history-repository.js";
 import { registerOperations } from "./operations.js";
 import { toLiveRow } from "./live-list.js";
+import { createLiveSessions } from "./live-sessions.js";
 import { registerTerminalRoutes } from "./routes.js";
 import { registerCloudflareTransport } from "./cloudflare-transport.js";
 import {
   DEFAULT_TIMEOUT_MINUTES,
   TerminalSessionManager,
-  type TerminalSession,
 } from "./session-manager.js";
 import {
   SESSION_GUESTS_KEY,
-  type LiveSessionInfo,
-  type LiveSessionsV1,
   type RecordingsWriterV1,
   type SessionGuestsV1,
   type SessionSharingV1,
@@ -30,23 +28,6 @@ import {
   validateAdminSettings,
   validateUserSettings,
 } from "./settings-validation.js";
-
-function toInfo(session: TerminalSession): LiveSessionInfo {
-  return {
-    id: session.id,
-    userId: session.userId,
-    hostId: session.hostId,
-    hostName: session.hostName,
-    isConnected: session.isConnected,
-    createdAt: session.createdAt,
-    lastDetachedAt: session.lastDetachedAt,
-    tabInstanceId:
-      session.attachedTabInstanceId ?? session.tabInstanceId ?? null,
-    tmuxSessionName: session.tmuxSessionName,
-    cols: session.cols,
-    rows: session.rows,
-  };
-}
 
 /**
  * A service another plugin may or may not provide. The handle always exists;
@@ -142,41 +123,11 @@ export async function activate(ctx: PluginContext) {
     history,
   });
 
-  const liveSessions: LiveSessionsV1 = {
-    getSession: (sessionId) => {
-      const session = sessionManager.getSession(sessionId);
-      return session ? toInfo(session) : null;
-    },
-    listForUser: (userId) => {
-      // A plugin caller only ever sees its actor's sessions; core calls this
-      // outside any actor, for the user its own route authenticated.
-      const actor = ctx.currentActor();
-      if (actor && actor !== userId) return [];
-      return sessionManager.getUserSessions(userId).map(toInfo);
-    },
-    ownerEndSession: (sessionId, reason) =>
-      sessionManager.ownerEndSession(sessionId, reason),
-    disconnectParticipants: (sessionId, shareId, options) =>
-      sessionManager.disconnectShareParticipants(sessionId, shareId, options),
-    listGuests: (sessionId, shareId) =>
-      sessionManager.listShareGuests(sessionId, shareId),
-    setRoomShareControl: (sessionId, shareId, controllerUserId) =>
-      sessionManager.setRoomShareControl(sessionId, shareId, controllerUserId),
-    subscribe: (sessionId, onData) => {
-      const session = sessionManager.getSession(sessionId);
-      if (!session) return () => {};
-      session.dataListeners.add(onData);
-      return () => session.dataListeners.delete(onData);
-    },
-    write: (sessionId, data) => {
-      const session = sessionManager.getSession(sessionId);
-      if (!session?.sshStream || session.sshStream.destroyed) return false;
-      sessionManager.bufferInput(sessionId, data);
-      session.sshStream.write(data);
-      return true;
-    },
-    idleTimeoutMinutes: () => timeoutMinutes,
-  };
+  const liveSessions = createLiveSessions(
+    ctx,
+    sessionManager,
+    () => timeoutMinutes,
+  );
   // sessions.live is keyed by session type; remote desktop provides the others.
   ctx.services.provide("sessions.live", liveSessions, { name: "ssh" });
 

@@ -10,6 +10,8 @@ The first time you connect, Termix shows the host's key fingerprint and asks you
 
 Turn Enable Terminal off for a host that should never get a terminal.
 
+A host that [Privileged Access](/plugins/privileged-access) marks as privileged needs approved access. Without it the tab says so and offers Request access, which opens the request form for that host.
+
 The mobile app can open SSH from the phone itself or through this server. Connect from (mobile app) picks which for a host: Automatic uses the phone when it can reach the host and the server otherwise. Each user picks their own.
 
 ## Sessions that survive
@@ -98,7 +100,8 @@ Theme, font, cursor, scrollback, background image, syntax highlighting, local ec
 ## With other plugins
 
 - [Session Sharing](/plugins/session-sharing) shares a live terminal by link or in a meeting room.
-- [Session Recording](/plugins/session-recording) records terminal sessions.
+- [Session Recording](/plugins/session-recording) records terminal sessions. A Recording badge shows in the tab while one is recorded. With the `ssh-terminal.monitor` permission (admins at first) its auditors can watch and end everyone's sessions, read only.
+- [Privileged Access](/plugins/privileged-access) asks for approval before a session to a privileged host opens.
 - [Tmux Monitor](/plugins/tmux-monitor) watches tmux sessions across hosts.
 - [Snippets](/plugins/snippets) runs saved commands in the terminal.
 - [AI Assistant](/plugins/ai) can sit next to the terminal and read your history.

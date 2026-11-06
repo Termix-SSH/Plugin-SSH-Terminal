@@ -2957,6 +2957,25 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           );
           return;
         }
+        // Termix 26.11.1+ connect policy. Cast since older SDK types lack it.
+        const access = outcome as { code?: string; requestTab?: string };
+        if (
+          outcome.status === "error" &&
+          (access.code === "access-required" || access.code === "access-denied")
+        ) {
+          sendLog("auth", "error", outcome.message);
+          cleanupAuthState(connectionTimeout);
+          ws.send(
+            JSON.stringify({
+              type: "access_required",
+              code: access.code,
+              message: outcome.message,
+              requestTab: access.requestTab ?? null,
+              hostId: id,
+            }),
+          );
+          return;
+        }
         sshLogger.error("SSH auth could not be prepared", {
           operation: "terminal_auth_prepare",
           hostId: id,

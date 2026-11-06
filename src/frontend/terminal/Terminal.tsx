@@ -171,6 +171,7 @@ import {
   patchOpenTab,
   useHost,
   useHosts,
+  useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
 
 type HostKeyVerificationData = Omit<
@@ -349,6 +350,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const pongReceivedRef = useRef(true);
     const pongTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [accessRequestTab, setAccessRequestTab] = useState<string | null>(
+      null,
+    );
+    const tabsApi = useTabs();
 
     const [isSavingQuickConnect, setIsSavingQuickConnect] = useState(false);
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
@@ -2207,6 +2213,21 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               terminal.write(formatTerminalOutput(output));
               scheduleAutosuggestionUpdate();
             }
+          } else if (msg.type === "recording") {
+            setIsRecording(msg.active !== false);
+          } else if (msg.type === "access_required") {
+            const errorMessage = msg.message || t("terminal.unknownError");
+            dismissMfaPrompt();
+            addLog({ type: "error", stage: "auth", message: errorMessage });
+            keepScrollbackRef.current = false;
+            setAccessRequestTab(
+              typeof msg.requestTab === "string" ? msg.requestTab : null,
+            );
+            updateConnectionError(errorMessage);
+            setIsConnecting(false);
+            shouldNotReconnectRef.current = true;
+            webSocketRef.current?.close();
+            return;
           } else if (msg.type === "error") {
             const errorMessage = msg.message || t("terminal.unknownError");
             dismissMfaPrompt();
@@ -4080,6 +4101,16 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               );
             })()}
 
+          {isRecording && isConnected && (
+            <div
+              className="pointer-events-none absolute top-2 right-3 z-[110] flex items-center gap-1.5 bg-black/60 px-2 py-0.5 text-xs text-white/80"
+              aria-live="polite"
+            >
+              <span className="size-2 rounded-full bg-red-500" />
+              {t("terminal.recording")}
+            </div>
+          )}
+
           {isQuickConnect &&
             isConnected &&
             !isQuickConnectSaved &&
@@ -4144,7 +4175,19 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             }}
             onClose={onClose}
             extraActions={
-              onEditHost ? (
+              accessRequestTab ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    tabsApi.openSingletonTab(accessRequestTab, {
+                      data: { hostId: hostConfig.id },
+                    })
+                  }
+                >
+                  {t("terminal.requestAccess")}
+                </Button>
+              ) : onEditHost ? (
                 <Button size="sm" variant="outline" onClick={onEditHost}>
                   {t("terminal.editHost")}
                 </Button>

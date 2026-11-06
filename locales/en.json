@@ -40,6 +40,8 @@
     "clipboardHttpWarning": "Couldn't read the clipboard. Some browsers restrict clipboard access outside HTTPS - try Ctrl+V instead, or serve Termix over HTTPS.",
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
+    "requestAccess": "Request access",
+    "recording": "Recording",
     "editHost": "Edit host",
     "connectionRejected": "Connection rejected by server. Please check your authentication and network configuration.",
     "connectionTimeout": "Connection timeout",
@@ -453,6 +455,10 @@
     "history": {
       "title": "Read command history",
       "description": "Lets other features, such as the AI assistant, read your command history."
+    },
+    "monitor": {
+      "title": "Watch everyone's sessions",
+      "description": "Lets other features, such as Session Recording, list, watch and end the live terminal sessions of every user."
     }
   },
   "hosts": {

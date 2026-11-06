@@ -6,12 +6,19 @@
 
 - Check that SSH login works and see recent commands through Termix actions, with SSH login as a status tile on the host page
 - A dashboard card with your open terminal sessions, and the open sessions of a host on the host page
+- A Recording badge in the terminal while the session is recorded
+- When a host needs approved access, the terminal says so and offers a Request access button
+- Admins can let Session Recording list, watch and end everyone's live sessions with the new Watch everyone's sessions permission
 
 ### Changed
 
 - Needs Termix 26.11.1 or newer
 - Settings use the Termix tile look
 - The terminal toolbar uses the darker page color
+
+### Fixed
+
+- Other features could watch or type into a live session they did not own if they knew its id
 
 ## 1.3.0
 

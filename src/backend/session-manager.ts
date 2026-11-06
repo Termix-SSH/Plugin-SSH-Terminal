@@ -58,6 +58,8 @@ export interface TerminalSession {
   dataListeners: Set<(data: string) => void>;
   /** Resolves once the recordings service answered; null when off. */
   recordingSink: Promise<RecordingSink | null> | null;
+  /** True once the recordings service started a recording. */
+  recording: boolean;
   recordingHeader: string | null;
   recordingBytes: number;
   recordingWriteChain: Promise<void>;
@@ -229,6 +231,7 @@ export class TerminalSessionManager {
       outputBufferBytes: 0,
       dataListeners: new Set(),
       recordingSink,
+      recording: false,
       recordingHeader,
       recordingBytes: 0,
       recordingWriteChain: Promise.resolve(),
@@ -244,6 +247,14 @@ export class TerminalSessionManager {
       terminationReason: null,
     };
     this.sessions.set(id, session);
+    if (recordingSink) {
+      void recordingSink.then((sink) => {
+        const live = this.sessions.get(id);
+        if (!sink || !live) return;
+        live.recording = true;
+        this.sendRecordingNotice(live);
+      });
+    }
 
     this.log.info("Terminal session created", {
       operation: "session_created",
@@ -410,6 +421,7 @@ export class TerminalSessionManager {
     session.attachedTabInstanceId = tabInstanceId;
     session.lastDetachedAt = null;
     this.broadcastParticipants(sessionId);
+    if (session.recording) this.sendRecordingNotice(session, ws);
 
     this.log.info("WebSocket attached to session", {
       operation: "session_attach",
@@ -460,6 +472,7 @@ export class TerminalSessionManager {
         }),
       );
     }
+    if (session.recording) this.sendRecordingNotice(session, ws);
     this.broadcastParticipants(sessionId);
 
     this.log.info("Participant joined shared session", {
@@ -850,6 +863,25 @@ export class TerminalSessionManager {
       duration,
       bytes: session.recordingBytes,
     });
+  }
+
+  /** Tells participants the session is recorded, so the terminal shows it. */
+  sendRecordingNotice(session: TerminalSession, only?: WebSocket): void {
+    const message = JSON.stringify({ type: "recording", active: true });
+    for (const participant of session.participants.values()) {
+      if (only && participant.ws !== only) continue;
+      if (participant.ws.readyState !== WebSocket.OPEN) continue;
+      try {
+        participant.ws.send(message);
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+
+  /** Every session on this server, for monitoring. */
+  getAllSessions(): TerminalSession[] {
+    return [...this.sessions.values()];
   }
 
   getUserSessions(userId: string): TerminalSession[] {
