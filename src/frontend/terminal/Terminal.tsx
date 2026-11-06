@@ -3095,7 +3095,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           }
           return false;
         }
-        if (wheelHasNothingToScroll(terminal.buffer.active)) {
+        if (
+          wheelHasNothingToScroll(
+            terminal.buffer.active,
+            terminal.modes.mouseTrackingMode,
+          )
+        ) {
           ev.preventDefault();
           return false;
         }
