@@ -49,6 +49,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  ToolbarBand,
+  TOOLBAR_FIT,
 } from "@termix-ssh/plugin-sdk/ui";
 import {
   mergeLocalMacros,
@@ -273,7 +275,7 @@ function StepList({
         const Icon = STEP_ICONS[step.type];
         return (
           <div key={step.id} className="border border-border bg-muted/20">
-            <div className="flex items-center gap-2 border-b border-border/60 px-2 py-1.5">
+            <ToolbarBand className="border-border/60">
               <Icon className="size-3.5 shrink-0 text-muted-foreground" />
               <span className="text-xs font-medium">
                 {t(`macros.stepTypes.${step.type}.label`)}
@@ -287,7 +289,7 @@ function StepList({
               >
                 <Trash2 className="size-3" />
               </Button>
-            </div>
+            </ToolbarBand>
 
             <div className="space-y-2 p-2">
               {step.type === "send" && (
@@ -659,7 +661,9 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 flex-col gap-1.5 border-b border-border px-3 py-2">
+      <div
+        className={`flex shrink-0 flex-col gap-1.5 border-b border-border px-3 py-2 ${TOOLBAR_FIT}`}
+      >
         <PanelSearch
           value={search}
           onChange={setSearch}

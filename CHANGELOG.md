@@ -15,6 +15,7 @@
 - Needs Termix 26.11.1 or newer
 - Settings use the Termix tile look
 - The terminal toolbar uses the darker page color
+- Toolbars, loading screens, back buttons and Save bars match the rest of Termix
 
 ### Fixed
 
