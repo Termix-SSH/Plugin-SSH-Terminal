@@ -2061,6 +2061,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           );
         } else {
           isAttachingSessionRef.current = false;
+          // clear() preserves mouse modes from a dead tmux client. A fresh
+          // shell must opt in again; keep scrollback and live attaches intact.
+          terminal.write("\x1b[?9;1000;1002;1003;1006;1016l");
           ws.send(
             JSON.stringify({
               type: "connectToHost",
