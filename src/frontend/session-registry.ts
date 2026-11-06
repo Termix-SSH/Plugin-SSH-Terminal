@@ -3,6 +3,7 @@ import type { TerminalHandle } from "./terminal/terminal-types";
 export interface TerminalSessionInfo {
   id: string;
   hostId: number | null;
+  kind?: "local";
   hostName?: string;
   /** The tab's title. */
   label?: string;
@@ -21,7 +22,13 @@ interface Session extends TerminalSessionInfo {
   ref: TerminalHandle;
 }
 
+type InputHandle = Pick<TerminalHandle, "sendInput" | "paste" | "isConnected">;
+interface InputSession extends TerminalSessionInfo {
+  ref: InputHandle;
+}
+
 const sessions = new Map<string, Session>();
+const localSessions = new Map<string, InputSession>();
 let activeId: string | null = null;
 const listeners = new Set<() => void>();
 let snapshot: TerminalSessionInfo[] = [];
@@ -47,6 +54,20 @@ export function registerSession(
     sessions.delete(info.id);
     if (activeId === info.id) activeId = [...sessions.keys()].pop() ?? null;
     notify();
+  };
+}
+
+/** Local shells expose input only, not SSH tools, sharing or saved credentials. */
+export function registerLocalSession(
+  info: Omit<TerminalSessionInfo, "hostId" | "kind">,
+  ref: InputHandle,
+): () => void {
+  const session = { ...info, hostId: null, kind: "local" as const, ref };
+  localSessions.set(info.id, session);
+  return () => {
+    if (localSessions.get(info.id) !== session) return;
+    localSessions.delete(info.id);
+    // Keep a missing active target missing until focus explicitly selects another.
   };
 }
 
@@ -95,12 +116,18 @@ export function listSessions(): TerminalSessionInfo[] {
   return [...sessions.values()].map(({ ref: _ref, ...info }) => info);
 }
 
+export function listInputSessions(): TerminalSessionInfo[] {
+  return [...sessions.values(), ...localSessions.values()].map(
+    ({ ref: _ref, ...info }) => info,
+  );
+}
+
 // Older test fakes and embedders may not report a connection state.
-function isOpen(session: Session): boolean {
+function isOpen(session: InputSession): boolean {
   return session.ref.isConnected?.() ?? true;
 }
 
-function send(session: Session, text: string, run?: boolean): boolean {
+function send(session: InputSession, text: string, run?: boolean): boolean {
   if (!isOpen(session)) return false;
   if (run) session.ref.sendInput(text + "\r");
   else session.ref.paste(text);
@@ -109,9 +136,9 @@ function send(session: Session, text: string, run?: boolean): boolean {
 
 export function sendToActive(text: string, opts?: { run?: boolean }): boolean {
   // Falls back to the newest session when none was focused yet.
-  const session =
-    (activeId ? sessions.get(activeId) : undefined) ??
-    [...sessions.values()].pop();
+  const session = activeId
+    ? (sessions.get(activeId) ?? localSessions.get(activeId))
+    : [...sessions.values()].pop();
   if (!session) return false;
   return send(session, text, opts?.run);
 }
@@ -121,7 +148,7 @@ export function sendToSession(
   text: string,
   opts?: { run?: boolean },
 ): boolean {
-  const session = sessions.get(sessionId);
+  const session = sessions.get(sessionId) ?? localSessions.get(sessionId);
   if (!session) return false;
   return send(session, text, opts?.run);
 }
