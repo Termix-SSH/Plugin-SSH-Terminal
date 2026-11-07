@@ -3948,6 +3948,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         host={host}
         isConnected={isConnected}
         isTmuxAttached={isTmuxAttached}
+        isRecording={isRecording && isConnected}
         onTmuxDetach={() => {
           if (webSocketRef.current?.readyState === WebSocket.OPEN) {
             webSocketRef.current.send(JSON.stringify({ type: "tmux_detach" }));
@@ -4100,16 +4101,6 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 />
               );
             })()}
-
-          {isRecording && isConnected && (
-            <div
-              className="pointer-events-none absolute top-2 right-3 z-[110] flex items-center gap-1.5 bg-black/60 px-2 py-0.5 text-xs text-white/80"
-              aria-live="polite"
-            >
-              <span className="size-2 rounded-full bg-red-500" />
-              {t("terminal.recording")}
-            </div>
-          )}
 
           {isQuickConnect &&
             isConnected &&
