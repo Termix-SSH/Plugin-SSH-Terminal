@@ -32,7 +32,7 @@ import {
   getActiveSessionId,
   getSessionHandle,
   getSessionInfo,
-  listSessions,
+  listInputSessions,
   sendToActive,
   sendToSession,
 } from "./session-registry";
@@ -109,12 +109,15 @@ function TerminalStandalone({ hostId, params }: StandaloneViewProps) {
 }
 
 /** The desktop app's own shell, one tab per open. */
-function LocalTerminalTab({ tab, isVisible }: TabProps) {
+function LocalTerminalTab({ tab, isVisible, isFocusedPane, label }: TabProps) {
   return (
     <Suspense fallback={null}>
       <LocalTerminal
         instanceId={(tab.instanceId as string | undefined) ?? tab.id}
         isVisible={isVisible}
+        sessionId={tab.id}
+        isFocusedPane={isFocusedPane}
+        label={label}
       />
     </Suspense>
   );
@@ -367,7 +370,7 @@ export function activate(app: TermixApp): void {
 
   // Lets another plugin (snippets) push text into a live terminal session
   // without reaching into the shell's tab state itself.
-  app.registerAction("terminal.listSessions", () => listSessions());
+  app.registerAction("terminal.listSessions", () => listInputSessions());
   app.registerAction("terminal.sendToActive", ((
     text: string,
     opts?: { run?: boolean },
