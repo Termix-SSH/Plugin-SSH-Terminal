@@ -199,7 +199,7 @@ function QuickKeysSheet({
           />
           <Button
             variant="outline"
-            size="sm"
+            size="lg"
             className="h-9 shrink-0"
             onClick={addKey}
             disabled={!newSymbol.trim() || quickKeys.includes(newSymbol.trim())}
