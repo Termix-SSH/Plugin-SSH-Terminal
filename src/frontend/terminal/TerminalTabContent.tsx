@@ -66,6 +66,10 @@ export function TerminalTabContent({
 }: TabProps) {
   const tab = tabRecord as unknown as TerminalTabRecord;
   const host = hostRecord as unknown as Host | undefined;
+  // Saved shell hosts use string IDs; quick-connect hosts are not editable.
+  const savedHostId = /^[1-9]\d*$/.test(String(host?.id))
+    ? Number(host?.id)
+    : NaN;
   // editHost is on the shell from Termix 26.10.6.
   const editHost = (shell as { editHost?: (hostId: number) => void }).editHost;
   const { t } = useTranslation();
@@ -151,8 +155,8 @@ export function TerminalTabContent({
                   : undefined
               }
               onEditHost={
-                editHost && typeof host?.id === "number"
-                  ? () => editHost(host!.id as number)
+                editHost && Number.isSafeInteger(savedHostId)
+                  ? () => editHost(savedHostId)
                   : undefined
               }
               host={host}
