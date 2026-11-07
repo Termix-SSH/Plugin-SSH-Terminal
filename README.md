@@ -39,6 +39,9 @@ Read the [docs](https://docs.termix.site/plugins/ssh-terminal) to set it up and 
 - Search all open terminals, and save or copy their output
 - Fix a garbled terminal and send keys that are hard to type
 - A local terminal in the desktop app
+- A dashboard card with your open sessions, and SSH login as a status tile
+- A Recording badge while the session is recorded
+- A Request access button for hosts that need approved access
 
 <br />
 
