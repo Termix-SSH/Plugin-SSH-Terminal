@@ -41,6 +41,7 @@
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
     "requestAccess": "Request access",
+    "verifyAccess": "Verify",
     "recording": "Recording",
     "editHost": "Edit host",
     "connectionRejected": "Connection rejected by server. Please check your authentication and network configuration.",

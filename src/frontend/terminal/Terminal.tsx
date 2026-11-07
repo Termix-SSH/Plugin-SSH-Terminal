@@ -351,6 +351,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const pongTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
+    const [accessRequestVerify, setAccessRequestVerify] = useState(false);
     const [accessRequestTab, setAccessRequestTab] = useState<string | null>(
       null,
     );
@@ -2249,6 +2250,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             setAccessRequestTab(
               typeof msg.requestTab === "string" ? msg.requestTab : null,
             );
+            setAccessRequestVerify(msg.requestKind === "verify");
             updateConnectionError(errorMessage);
             setIsConnecting(false);
             shouldNotReconnectRef.current = true;
@@ -4207,7 +4209,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                     })
                   }
                 >
-                  {t("terminal.requestAccess")}
+                  {t(
+                    accessRequestVerify
+                      ? "terminal.verifyAccess"
+                      : "terminal.requestAccess",
+                  )}
                 </Button>
               ) : onEditHost ? (
                 <Button size="sm" variant="outline" onClick={onEditHost}>

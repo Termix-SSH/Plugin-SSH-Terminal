@@ -10,6 +10,7 @@
 - When a host needs approved access, the terminal says so and offers a Request access button
 - Admins can let Session Recording list, watch and end everyone's live sessions with the new Watch everyone's sessions permission
 - Snippets and other plugins can send text to local terminals
+- A Verify button when a host needs a second factor before connecting
 
 ### Changed
 

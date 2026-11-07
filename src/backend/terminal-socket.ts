@@ -2958,7 +2958,11 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           return;
         }
         // Termix 26.11.1+ connect policy. Cast since older SDK types lack it.
-        const access = outcome as { code?: string; requestTab?: string };
+        const access = outcome as {
+          code?: string;
+          requestTab?: string;
+          requestKind?: string;
+        };
         if (
           outcome.status === "error" &&
           (access.code === "access-required" || access.code === "access-denied")
@@ -2971,6 +2975,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               code: access.code,
               message: outcome.message,
               requestTab: access.requestTab ?? null,
+              requestKind: access.requestKind ?? null,
               hostId: id,
             }),
           );
