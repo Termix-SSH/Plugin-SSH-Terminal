@@ -25,9 +25,18 @@ type WheelBuffer = { type: "normal" | "alternate"; baseY: number };
  * A plain wheel on a normal buffer with nothing scrolled off yet. xterm turns
  * that into an arrow key, which walks shell history, so it is dropped. The
  * alternate screen keeps the arrow keys: that is how less and vim scroll.
+ * When the app has mouse reporting on, xterm sends the wheel to the app
+ * instead (tmux attached on the normal screen does this), so it is kept.
  */
-export function wheelHasNothingToScroll(buffer: WheelBuffer): boolean {
-  return buffer.type === "normal" && buffer.baseY === 0;
+export function wheelHasNothingToScroll(
+  buffer: WheelBuffer,
+  mouseTrackingMode: string,
+): boolean {
+  return (
+    mouseTrackingMode === "none" &&
+    buffer.type === "normal" &&
+    buffer.baseY === 0
+  );
 }
 
 /** Pixels per scrolled line, the same step xterm uses for one wheel line. */
