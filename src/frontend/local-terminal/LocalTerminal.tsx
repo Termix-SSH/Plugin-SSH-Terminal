@@ -341,8 +341,8 @@ export function LocalTerminal({
           </Select2>
         </div>
       )}
-      <div className="relative min-h-0 flex-1">
-        <div ref={xtermRef} className="h-full w-full p-2" />
+      <div className="relative min-h-0 flex-1 p-2">
+        <div ref={xtermRef} className="h-full w-full" />
         <ComponentSlot
           slotId={TERMINAL_OVERLAY_SLOT}
           when={{ host: undefined }}
