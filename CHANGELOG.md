@@ -25,6 +25,7 @@
 - The Edit host button on a failed connection shows for saved hosts again
 - The mouse wheel scrolls in tmux with mouse support on, even right after tmux starts
 - The last row of a local terminal is no longer cut off
+- The terminal offers to fill a saved sudo or SSH password at a password prompt again
 
 ## 1.3.0
 

@@ -1449,11 +1449,34 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         hostConfig.password ||
         hostConfig.hasSudoPassword ||
         hostConfig.hasPassword;
-      if (!hasStoredPassword || passwordPromptShownRef.current) return;
+      // Cores before 26.11.1 leave the has* flags off plugin hosts, so look
+      // the password up instead of assuming there is none.
+      const flagsMissing =
+        hostConfig.hasPassword === undefined &&
+        hostConfig.hasSudoPassword === undefined &&
+        !!hostConfig.id;
+      if (
+        (!hasStoredPassword && !flagsMissing) ||
+        passwordPromptShownRef.current
+      )
+        return;
 
       passwordPromptShownRef.current = true;
       passwordPromptBufferRef.current = "";
 
+      void (async () => {
+        if (
+          !hasStoredPassword &&
+          !(await resolvePasswordForPrompt(isSudoPrompt))
+        ) {
+          passwordPromptShownRef.current = false;
+          return;
+        }
+        offerPasswordFill(isSudoPrompt);
+      })();
+    }
+
+    function offerPasswordFill(isSudoPrompt: boolean) {
       void confirm({
         title: t("terminal.passwordPromptFillTitle"),
         confirmLabel: t("common.confirm"),
