@@ -9,6 +9,7 @@
 - A Recording badge in the terminal while the session is recorded
 - When a host needs approved access, the terminal says so and offers a Request access button
 - Admins can let Session Recording list, watch and end everyone's live sessions with the new Watch everyone's sessions permission
+- Snippets and other plugins can send text to local terminals
 
 ### Changed
 
@@ -20,6 +21,10 @@
 ### Fixed
 
 - Other features could watch or type into a live session they did not own if they knew its id
+- A new SSH session no longer gets mouse codes typed into the shell after a tmux session that used the mouse
+- The Edit host button on a failed connection shows for saved hosts again
+- The mouse wheel scrolls in tmux with mouse support on, even right after tmux starts
+- The last row of a local terminal is no longer cut off
 
 ## 1.3.0
 
