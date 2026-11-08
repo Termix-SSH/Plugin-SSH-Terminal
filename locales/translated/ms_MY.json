@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Tidak dapat membaca papan klip. Sesetengah pelayar mengehadkan akses papan klip di luar HTTPS - cuba Ctrl+V sebagai gantinya, atau perkhidmatkan Termix melalui HTTPS.",
     "connecting": "Menyambung...",
     "connectionLost": "Sambungan terputus",
+    "requestAccess": "Minta akses",
+    "verifyAccess": "Pengesahan",
+    "recording": "Rakaman",
     "editHost": "Sunting hos",
     "connectionRejected": "Sambungan ditolak oleh pelayan. Sila semak pengesahan dan konfigurasi rangkaian anda.",
     "connectionTimeout": "Had masa sambungan tercapai",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "Pelayar ini tidak boleh membaca imej dari papan klip",
     "imageClipboardEmpty": "Tiada imej ditemui dalam papan klip",
     "localShell": "Shell terminal tempatan",
+    "localBackendUnreachable": "Backend tempatan tidak boleh dicapai",
+    "processExited": "Proses telah tamat ({{code}})",
+    "sharedAuthLoadFailed": "Tidak dapat memuatkan log masuk SSH kongsi",
+    "sessionExpiredLogin": "Sesi Termix anda telah tamat. Sila log masuk semula.",
+    "imageUploadFailed": "Muat naik imej gagal",
+    "imageUploadedNotPasted": "Imej berjaya dimuat naik, tetapi terminal tidak dibuka untuk menampalnya: {{path}}",
+    "clipboardImageReadFailed": "Tidak dapat membaca papan klip",
     "autocompleteHintComplete": "Tab atau Enter untuk lengkapkan",
     "autocompleteHintNavigate": "↑↓ untuk navigasi",
     "autocompleteHintClose": "Esc untuk tutup",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "Hidupkan Sejarah Perintah pada tab Terminal SSH hos ini.",
     "commandCount_other": "{{count}} perintah",
     "deleteConfirm": "Buang perintah ini dari sejarah?",
+    "clearAllConfirm": "Padamkan keseluruhan sejarah arahan untuk hos ini?",
+    "clearFailed": "Tidak dapat memadam sejarah",
+    "deleteFailed": "Tidak dapat membuang arahan",
     "settingsTitle": "Tetapan sejarah"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "Baca sejarah arahan",
       "description": "Membolehkan ciri lain, seperti pembantu AI, membaca sejarah arahan anda."
+    },
+    "monitor": {
+      "title": "Pantau sesi semua orang",
+      "description": "Membolehkan ciri lain, seperti Rakaman Sesi, menyenaraikan, memantau dan menamatkan sesi terminal langsung setiap pengguna."
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "Sedang berjalan...",
     "completed": "Makro selesai",
     "failed": "Makro gagal",
+    "timedOut": "Had masa tamat semasa menunggu {{pattern}}",
     "needTerminal": "Buka dan sambungkan terminal terlebih dahulu",
     "noSteps": "Makro ini belum mempunyai langkah. Tambah satu di bawah.",
     "addStep": "Tambah langkah",
@@ -788,6 +806,7 @@
       "badRegex": "Regex ini tidak sah",
       "secondsRequired": "Masukkan 1 saat atau lebih",
       "fired": "{{rule}} pada {{host}}",
+      "saveFailed": "Tidak dapat menyimpan peraturan pantau",
       "active_other": "{{count}} peraturan pantau hidup"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "Kosongkan"
     },
     "openTerminalFirst": "Buka terminal SSH untuk menggunakan alatnya"
+  },
+  "operations": {
+    "check": {
+      "title": "Semak log masuk SSH"
+    },
+    "history": {
+      "title": "Arahan terkini"
+    },
+    "login": {
+      "title": "Log masuk SSH"
+    },
+    "sessions": {
+      "title": "Sesi terminal terbuka"
+    },
+    "session": {
+      "title": "Sesi terminal",
+      "state": "Status",
+      "started": "Dimulakan"
+    }
+  },
+  "card": {
+    "title": "Terminal terbuka",
+    "loading": "Memuatkan...",
+    "empty": "Tiada sesi terminal terbuka",
+    "connected": "Disambungkan",
+    "detached": "Dipisahkan",
+    "tmux": "tmux {{name}}",
+    "refresh": "Muat semula"
   }
 }

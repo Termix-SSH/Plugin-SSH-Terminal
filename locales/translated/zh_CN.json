@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "无法读取剪贴板。某些浏览器限制在非 HTTPS 环境下访问剪贴板——请尝试使用 Ctrl+V，或通过 HTTPS 提供 Termix 服务。",
     "connecting": "正在连接...",
     "connectionLost": "连接已断开",
+    "requestAccess": "请求访问",
+    "verifyAccess": "验证",
+    "recording": "正在录制",
     "editHost": "编辑主机",
     "connectionRejected": "连接被服务器拒绝。请检查您的身份验证和网络配置。",
     "connectionTimeout": "连接超时",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "此浏览器无法从剪贴板读取图像",
     "imageClipboardEmpty": "剪贴板中未找到图像",
     "localShell": "本地终端 shell",
+    "localBackendUnreachable": "无法连接到本地后端",
+    "processExited": "进程已退出（{{code}}）",
+    "sharedAuthLoadFailed": "无法加载共享 SSH 登录信息",
+    "sessionExpiredLogin": "您的 Termix 会话已结束。请重新登录。",
+    "imageUploadFailed": "图片上传失败",
+    "imageUploadedNotPasted": "图片已上传，但终端未打开，无法粘贴：{{path}}",
+    "clipboardImageReadFailed": "无法读取剪贴板",
     "autocompleteHintComplete": "按 Tab 或 Enter 完成",
     "autocompleteHintNavigate": "↑↓ 导航",
     "autocompleteHintClose": "按 Esc 关闭",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "在此主机的 SSH 终端标签页中启用命令历史记录。",
     "commandCount_other": "{{count}} 条命令",
     "deleteConfirm": "要从历史记录中删除此命令吗？",
+    "clearAllConfirm": "要清除此主机的所有命令历史记录吗？",
+    "clearFailed": "无法清除历史记录",
+    "deleteFailed": "无法删除该命令",
     "settingsTitle": "历史记录设置"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "读取命令历史",
       "description": "允许其他功能（如 AI 助手）读取您的命令历史。"
+    },
+    "monitor": {
+      "title": "监视所有用户的会话",
+      "description": "允许其他功能（如会话录制）列出、查看和结束所有用户的实时终端会话。"
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "运行中...",
     "completed": "宏已完成",
     "failed": "宏运行失败",
+    "timedOut": "等待 {{pattern}} 超时",
     "needTerminal": "请先打开并连接终端",
     "noSteps": "此宏暂无步骤。请在下方添加。",
     "addStep": "添加步骤",
@@ -788,6 +806,7 @@
       "badRegex": "此正则表达式无效",
       "secondsRequired": "输入 1 秒或更多",
       "fired": "{{rule}} 在 {{host}} 上触发",
+      "saveFailed": "无法保存监视规则",
       "active_other": "{{count}} 个监视规则已开启"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "清除"
     },
     "openTerminalFirst": "打开 SSH 终端以使用其工具"
+  },
+  "operations": {
+    "check": {
+      "title": "检查 SSH 登录"
+    },
+    "history": {
+      "title": "最近命令"
+    },
+    "login": {
+      "title": "SSH 登录"
+    },
+    "sessions": {
+      "title": "打开的终端会话"
+    },
+    "session": {
+      "title": "终端会话",
+      "state": "状态",
+      "started": "开始时间"
+    }
+  },
+  "card": {
+    "title": "打开的终端",
+    "loading": "加载中...",
+    "empty": "没有打开的终端会话",
+    "connected": "已连接",
+    "detached": "已分离",
+    "tmux": "tmux {{name}}",
+    "refresh": "刷新"
   }
 }

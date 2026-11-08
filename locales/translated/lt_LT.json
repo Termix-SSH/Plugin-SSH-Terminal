@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Nepavyko perskaityti iškarpinės. Kai kurie naršyklės riboja iškarpinės prieigą ne HTTPS režimu – bandykite naudoti Ctrl+V arba paleiskite Termix per HTTPS.",
     "connecting": "Jungiamasi...",
     "connectionLost": "Ryšys prarastas",
+    "requestAccess": "Prašyti prieigos",
+    "verifyAccess": "Patvirtinti",
+    "recording": "Įrašoma",
     "editHost": "Redaguoti serverį",
     "connectionRejected": "Serveris atmetė ryšį. Patikrinkite autentifikaciją ir tinklo konfigūraciją.",
     "connectionTimeout": "Ryšio laikas baigėsi",
@@ -101,6 +104,13 @@
     "imageClipboardUnavailable": "Šis naršyklė negali skaityti paveikslėlių iš iškarpinės",
     "imageClipboardEmpty": "Iškarpinėje nerastas joks paveikslėlis",
     "localShell": "Vietinis terminalo shell",
+    "localBackendUnreachable": "Vietinis galinis serveris nepasiekiamas",
+    "processExited": "Procesas baigtas ({{code}})",
+    "sharedAuthLoadFailed": "Nepavyko įkelti bendrinamos SSH prisijungimo informacijos",
+    "sessionExpiredLogin": "Jūsų Termix sesija baigėsi. Prisijunkite iš naujo.",
+    "imageUploadFailed": "Nepavyko įkelti paveikslėlio",
+    "imageUploadedNotPasted": "Paveikslėlis įkeltas, bet terminalas nebuvo atidarytas, kad jį įklijuotumėte: {{path}}",
+    "clipboardImageReadFailed": "Nepavyko perskaityti iškarpinės",
     "autocompleteHintComplete": "Tab arba Enter, kad užbaigtumėte",
     "autocompleteHintNavigate": "↑↓ naršymui",
     "autocompleteHintClose": "Esc, kad uždarytumėte",
@@ -139,6 +149,9 @@
     "commandCount_many": "{{count}} komandų",
     "commandCount_other": "{{count}} komandos",
     "deleteConfirm": "Pašalinti šią komandą iš istorijos?",
+    "clearAllConfirm": "Išvalyti visą komandų istoriją šiam hostui?",
+    "clearFailed": "Nepavyko išvalyti istorijos",
+    "deleteFailed": "Nepavyko pašalinti komandos",
     "settingsTitle": "Istorijos nustatymai"
   },
   "terminalPanels": {
@@ -459,6 +472,10 @@
     "history": {
       "title": "Skaityti komandų istoriją",
       "description": "Leisti kitoms funkcijoms, pvz., AI asistentui, skaityti jūsų komandų istoriją."
+    },
+    "monitor": {
+      "title": "Stebėti visų sesijas",
+      "description": "Leidžia kitoms funkcijoms, pvz., sesijų įrašymui, rodyti, stebėti ir baigti visų vartotojų aktyvias terminalo sesijas."
     }
   },
   "hosts": {
@@ -669,6 +686,7 @@
     "running": "Vykdoma...",
     "completed": "Makrokomanda baigta",
     "failed": "Makrokomanda nepavyko",
+    "timedOut": "Laiko limitas pasibaigė laukiant {{pattern}}",
     "needTerminal": "Pirmiausia atidarykite ir prisijunkite prie terminalo",
     "noSteps": "Ši makrokomanda dar neturi žingsnių. Pridėkite vieną žemiau.",
     "addStep": "Pridėti žingsnį",
@@ -821,6 +839,7 @@
       "badRegex": "Ši reguliarioji išraiška neteisinga",
       "secondsRequired": "Įveskite 1 sekundę arba daugiau",
       "fired": "{{rule}} serveryje {{host}}",
+      "saveFailed": "Nepavyko išsaugoti stebėjimo taisyklių",
       "active_one": "{{count}} stebėjimo taisyklė įjungta",
       "active_few": "{{count}} stebėjimo taisyklės įjungtos",
       "active_many": "{{count}} stebėjimo taisyklių įjungta",
@@ -855,5 +874,33 @@
       "clear": "Išvalyti"
     },
     "openTerminalFirst": "Atidarykite SSH terminalą, kad galėtumėte naudoti jo įrankius"
+  },
+  "operations": {
+    "check": {
+      "title": "Patikrinti SSH prisijungimą"
+    },
+    "history": {
+      "title": "Naujausios komandos"
+    },
+    "login": {
+      "title": "SSH prisijungimas"
+    },
+    "sessions": {
+      "title": "Atidarytos terminalo sesijos"
+    },
+    "session": {
+      "title": "Terminalo sesijos",
+      "state": "Būsena",
+      "started": "Pradėta"
+    }
+  },
+  "card": {
+    "title": "Atidaryti terminalai",
+    "loading": "Įkeliamas...",
+    "empty": "Nėra atidarytų terminalo sesijų",
+    "connected": "Prijungta",
+    "detached": "Atsijungta",
+    "tmux": "tmux {{name}}",
+    "refresh": "Atnaujinti"
   }
 }

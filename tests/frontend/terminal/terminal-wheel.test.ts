@@ -42,14 +42,26 @@ describe("terminalWheelAction", () => {
 
 describe("wheelHasNothingToScroll", () => {
   it("drops the wheel on a normal buffer with no scrollback yet", () => {
-    expect(wheelHasNothingToScroll({ type: "normal", baseY: 0 })).toBe(true);
-    expect(wheelHasNothingToScroll({ type: "normal", baseY: 12 })).toBe(false);
+    expect(wheelHasNothingToScroll({ type: "normal", baseY: 0 }, "none")).toBe(
+      true,
+    );
+    expect(wheelHasNothingToScroll({ type: "normal", baseY: 12 }, "none")).toBe(
+      false,
+    );
   });
 
   it("leaves the alternate screen alone so less and vim still scroll", () => {
-    expect(wheelHasNothingToScroll({ type: "alternate", baseY: 0 })).toBe(
-      false,
-    );
+    expect(
+      wheelHasNothingToScroll({ type: "alternate", baseY: 0 }, "none"),
+    ).toBe(false);
+  });
+
+  it("keeps the wheel when the app reports the mouse (tmux on the normal screen)", () => {
+    for (const mode of ["x10", "vt200", "drag", "any"]) {
+      expect(wheelHasNothingToScroll({ type: "normal", baseY: 0 }, mode)).toBe(
+        false,
+      );
+    }
   });
 });
 

@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "ক্লিপবোর্ড পড়া যায়নি। কিছু ব্রাউজার HTTPS-এর বাইরে ক্লিপবোর্ড অ্যাক্সেস সীমিত করে - এর পরিবর্তে Ctrl+V চেষ্টা করুন, অথবা HTTPS-এর মাধ্যমে Termix চালান।",
     "connecting": "সংযোগ হচ্ছে...",
     "connectionLost": "সংযোগ বিচ্ছিন্ন হয়েছে",
+    "requestAccess": "অ্যাক্সেসের অনুরোধ করুন",
+    "verifyAccess": "যাচাই করুন",
+    "recording": "রেকর্ডিং",
     "editHost": "হোস্ট সম্পাদনা করুন",
     "connectionRejected": "সার্ভার দ্বারা সংযোগ প্রত্যাখ্যান করা হয়েছে। অনুগ্রহ করে আপনার প্রমাণীকরণ এবং নেটওয়ার্ক কনফিগারেশন পরীক্ষা করুন।",
     "connectionTimeout": "সংযোগের সময় শেষ হয়েছে",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "এই ব্রাউজারটি ক্লিপবোর্ড থেকে ইমেজ পড়তে পারে না",
     "imageClipboardEmpty": "ক্লিপবোর্ডে কোনো ইমেজ পাওয়া যায়নি",
     "localShell": "লোকাল টার্মিনাল শেল",
+    "localBackendUnreachable": "লোকাল ব্যাকএন্ডে সংযোগ করা যাচ্ছে না",
+    "processExited": "প্রসেস বের হয়ে গেছে ({{code}})",
+    "sharedAuthLoadFailed": "শেয়ার করা SSH লগইন লোড করা যায়নি",
+    "sessionExpiredLogin": "আপনার Termix সেশন শেষ হয়েছে। আবার সাইন ইন করুন।",
+    "imageUploadFailed": "ইমেজ আপলোড ব্যর্থ হয়েছে",
+    "imageUploadedNotPasted": "ইমেজ আপলোড হয়েছে, কিন্তু পেস্ট করার জন্য টার্মিনাল খোলা ছিল না: {{path}}",
+    "clipboardImageReadFailed": "ক্লিপবোর্ড পড়া যায়নি",
     "autocompleteHintComplete": "সম্পূর্ণ করতে Tab বা Enter চাপুন",
     "autocompleteHintNavigate": "নেভিগেট করতে ↑↓",
     "autocompleteHintClose": "বন্ধ করতে Esc",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} কমান্ড",
     "commandCount_other": "{{count}} কমান্ড",
     "deleteConfirm": "ইতিহাস থেকে এই কমান্ডটি মুছে ফেলবেন?",
+    "clearAllConfirm": "এই হোস্টের জন্য সম্পূর্ণ কমান্ড হিস্ট্রি মুছে ফেলবেন?",
+    "clearFailed": "হিস্ট্রি মুছে ফেলা যায়নি",
+    "deleteFailed": "কমান্ডটি মুছে ফেলা যায়নি",
     "settingsTitle": "ইতিহাস সেটিংস"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "কমান্ড ইতিহাস পড়ুন",
       "description": "AI সহকারীর মতো অন্যান্য ফিচারকে আপনার কমান্ড ইতিহাস পড়ার অনুমতি দেয়।"
+    },
+    "monitor": {
+      "title": "সবাইয়ের সেশন দেখুন",
+      "description": "সেশন রেকর্ডিংয়ের মতো অন্যান্য ফিচারকে প্রতিটি ব্যবহারকারীর লাইভ টার্মিনাল সেশন তালিকাভুক্ত, পর্যবেক্ষণ এবং শেষ করার অনুমতি দেয়।"
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "চলছে...",
     "completed": "ম্যাক্রো সম্পন্ন হয়েছে",
     "failed": "ম্যাক্রো ব্যর্থ হয়েছে",
+    "timedOut": "{{pattern}} এর জন্য অপেক্ষা করার সময় সময়সীমা শেষ হয়েছে",
     "needTerminal": "প্রথমে একটি টার্মিনাল খুলুন এবং সংযোগ করুন",
     "noSteps": "এই ম্যাক্রোতে এখনো কোনো ধাপ নেই। নিচে একটি যোগ করুন।",
     "addStep": "ধাপ যোগ করুন",
@@ -799,6 +817,7 @@
       "badRegex": "এই রেগুলার এক্সপ্রেশন বৈধ নয়",
       "secondsRequired": "১ সেকেন্ড বা তার বেশি লিখুন",
       "fired": "{{host}} এ {{rule}}",
+      "saveFailed": "ওয়াচ রুলস সেভ করা যায়নি",
       "active_one": "{{count}} ওয়াচ নিয়ম চালু",
       "active_other": "{{count}} ওয়াচ নিয়ম চালু"
     },
@@ -831,5 +850,33 @@
       "clear": "পরিষ্কার করুন"
     },
     "openTerminalFirst": "এর টুলস ব্যবহার করতে একটি SSH টার্মিনাল খুলুন"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH লগইন যাচাই করুন"
+    },
+    "history": {
+      "title": "সাম্প্রতিক কমান্ড"
+    },
+    "login": {
+      "title": "SSH লগইন"
+    },
+    "sessions": {
+      "title": "খোলা টার্মিনাল সেশন"
+    },
+    "session": {
+      "title": "টার্মিনাল সেশন",
+      "state": "অবস্থা",
+      "started": "শুরু হয়েছে"
+    }
+  },
+  "card": {
+    "title": "খোলা টার্মিনাল",
+    "loading": "লোড হচ্ছে...",
+    "empty": "কোনো খোলা টার্মিনাল সেশন নেই",
+    "connected": "সংযুক্ত",
+    "detached": "বিচ্ছিন্ন",
+    "tmux": "tmux {{name}}",
+    "refresh": "রিফ্রেশ করুন"
   }
 }

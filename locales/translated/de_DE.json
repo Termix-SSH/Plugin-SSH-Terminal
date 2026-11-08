@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Zwischenablage konnte nicht gelesen werden. Einige Browser schränken den Zugriff auf die Zwischenablage außerhalb von HTTPS ein – versuche es stattdessen mit Strg+V oder richte Termix über HTTPS ein.",
     "connecting": "Verbindung wird hergestellt...",
     "connectionLost": "Verbindung unterbrochen",
+    "requestAccess": "Zugriff anfordern",
+    "verifyAccess": "Überprüfen",
+    "recording": "Aufnahme",
     "editHost": "Host bearbeiten",
     "connectionRejected": "Verbindung vom Server abgelehnt. Bitte überprüfe deine Authentifizierungsdaten und Netzwerk-Konfiguration.",
     "connectionTimeout": "Verbindungszeitüberschreitung",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Dieser Browser kann keine Bilder aus der Zwischenablage lesen",
     "imageClipboardEmpty": "Kein Bild in der Zwischenablage gefunden",
     "localShell": "Lokale Terminal-Shell",
+    "localBackendUnreachable": "Der lokale Backend-Server ist nicht erreichbar",
+    "processExited": "Prozess beendet ({{code}})",
+    "sharedAuthLoadFailed": "Die gemeinsame SSH-Anmeldung konnte nicht geladen werden",
+    "sessionExpiredLogin": "Ihre Termix-Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "imageUploadFailed": "Bild-Upload fehlgeschlagen",
+    "imageUploadedNotPasted": "Bild wurde hochgeladen, aber das Terminal war nicht geöffnet, um es einzufügen: {{path}}",
+    "clipboardImageReadFailed": "Die Zwischenablage konnte nicht gelesen werden",
     "autocompleteHintComplete": "Tab oder Enter zum Vervollständigen",
     "autocompleteHintNavigate": "↑↓ zum Navigieren",
     "autocompleteHintClose": "Esc zum Schließen",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} Befehl",
     "commandCount_other": "{{count}} Befehle",
     "deleteConfirm": "Diesen Befehl aus dem Verlauf entfernen?",
+    "clearAllConfirm": "Gesamten Befehlshistorie für diesen Host löschen?",
+    "clearFailed": "Historie konnte nicht gelöscht werden",
+    "deleteFailed": "Befehl konnte nicht entfernt werden",
     "settingsTitle": "Verlaufseinstellungen"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Befehlsverlauf lesen",
       "description": "Ermöglicht anderen Funktionen wie dem KI-Assistenten das Lesen Ihres Befehlsverlaufs."
+    },
+    "monitor": {
+      "title": "Alle Sitzungen beobachten",
+      "description": "Ermöglicht anderen Funktionen wie der Sitzungsaufnahme, die aktiven Terminalsitzungen aller Benutzer aufzulisten, zu beobachten und zu beenden."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Wird ausgeführt...",
     "completed": "Makro beendet",
     "failed": "Makro fehlgeschlagen",
+    "timedOut": "Zeitüberschreitung beim Warten auf {{pattern}}",
     "needTerminal": "Öffnen und verbinden Sie zuerst ein Terminal",
     "noSteps": "Dieses Makro hat noch keine Schritte. Fügen Sie unten einen hinzu.",
     "addStep": "Schritt hinzufügen",
@@ -799,6 +817,7 @@
       "badRegex": "Dieser reguläre Ausdruck ist ungültig",
       "secondsRequired": "Geben Sie 1 Sekunde oder mehr ein",
       "fired": "{{rule}} auf {{host}}",
+      "saveFailed": "Beobachtungsregeln konnten nicht gespeichert werden",
       "active_one": "{{count}} Beobachtungsregel aktiv",
       "active_other": "{{count}} Beobachtungsregeln aktiv"
     },
@@ -831,5 +850,33 @@
       "clear": "Leeren"
     },
     "openTerminalFirst": "Öffnen Sie ein SSH-Terminal, um dessen Werkzeuge zu nutzen"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH-Anmeldung prüfen"
+    },
+    "history": {
+      "title": "Letzte Befehle"
+    },
+    "login": {
+      "title": "SSH-Anmeldung"
+    },
+    "sessions": {
+      "title": "Offene Terminalsitzungen"
+    },
+    "session": {
+      "title": "Terminalsitzungen",
+      "state": "Status",
+      "started": "Gestartet"
+    }
+  },
+  "card": {
+    "title": "Offene Terminals",
+    "loading": "Wird geladen...",
+    "empty": "Keine offenen Terminalsitzungen",
+    "connected": "Verbunden",
+    "detached": "Getrennt",
+    "tmux": "tmux {{name}}",
+    "refresh": "Aktualisieren"
   }
 }

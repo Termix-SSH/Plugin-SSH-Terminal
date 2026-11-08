@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Nie udało się odczytać schowka. Niektóre przeglądarki ograniczają dostęp do schowka poza HTTPS — spróbuj użyć Ctrl+V lub uruchom Termix przez HTTPS.",
     "connecting": "Łączenie...",
     "connectionLost": "Utracono połączenie",
+    "requestAccess": "Zażądaj dostępu",
+    "verifyAccess": "Zweryfikuj",
+    "recording": "Nagrywanie",
     "editHost": "Edytuj hosta",
     "connectionRejected": "Połączenie odrzucone przez serwer. Sprawdź dane uwierzytelniające i konfigurację sieci.",
     "connectionTimeout": "Przekroczono limit czasu połączenia",
@@ -101,6 +104,13 @@
     "imageClipboardUnavailable": "Ta przeglądarka nie może odczytywać obrazów ze schowka",
     "imageClipboardEmpty": "Nie znaleziono obrazu w schowku",
     "localShell": "Lokalna powłoka terminala",
+    "localBackendUnreachable": "Lokalny backend jest nieosiągalny",
+    "processExited": "Proces zakończony ({{code}})",
+    "sharedAuthLoadFailed": "Nie udało się załadować udostępnionego logowania SSH",
+    "sessionExpiredLogin": "Twoja sesja Termix wygasła. Zaloguj się ponownie.",
+    "imageUploadFailed": "Przesyłanie obrazu nie powiodło się",
+    "imageUploadedNotPasted": "Obraz przesłany, ale terminal nie był otwarty, aby go wkleić: {{path}}",
+    "clipboardImageReadFailed": "Nie udało się odczytać schowka",
     "autocompleteHintComplete": "Tab lub Enter, aby ukończyć",
     "autocompleteHintNavigate": "↑↓ aby nawigować",
     "autocompleteHintClose": "Esc, aby zamknąć",
@@ -139,6 +149,9 @@
     "commandCount_many": "{{count}} poleceń",
     "commandCount_other": "{{count}} poleceń",
     "deleteConfirm": "Usunąć to polecenie z historii?",
+    "clearAllConfirm": "Wyczyścić całą historię poleceń dla tego hosta?",
+    "clearFailed": "Nie udało się wyczyścić historii",
+    "deleteFailed": "Nie udało się usunąć polecenia",
     "settingsTitle": "Ustawienia historii"
   },
   "terminalPanels": {
@@ -459,6 +472,10 @@
     "history": {
       "title": "Czytanie historii poleceń",
       "description": "Pozwala innym funkcjom, takim jak asystent AI, odczytywać Twoją historię poleceń."
+    },
+    "monitor": {
+      "title": "Obserwuj sesje wszystkich użytkowników",
+      "description": "Pozwala innym funkcjom, takim jak Nagrywanie sesji, wyświetlać listę, obserwować i kończyć aktywne sesje terminala wszystkich użytkowników."
     }
   },
   "hosts": {
@@ -669,6 +686,7 @@
     "running": "Uruchamianie...",
     "completed": "Makro zakończone",
     "failed": "Makro nie powiodło się",
+    "timedOut": "Przekroczono limit czasu oczekiwania na {{pattern}}",
     "needTerminal": "Najpierw otwórz i połącz terminal",
     "noSteps": "To makro nie ma jeszcze żadnych kroków. Dodaj jeden poniżej.",
     "addStep": "Dodaj krok",
@@ -821,6 +839,7 @@
       "badRegex": "To wyrażenie regularne jest nieprawidłowe",
       "secondsRequired": "Wpisz 1 sekundę lub więcej",
       "fired": "{{rule}} na {{host}}",
+      "saveFailed": "Nie udało się zapisać zasad obserwacji",
       "active_one": "{{count}} aktywna zasada obserwacji",
       "active_few": "{{count}} aktywne zasady obserwacji",
       "active_many": "{{count}} aktywnych zasad obserwacji",
@@ -855,5 +874,33 @@
       "clear": "Wyczyść"
     },
     "openTerminalFirst": "Otwórz terminal SSH, aby korzystać z jego narzędzi"
+  },
+  "operations": {
+    "check": {
+      "title": "Sprawdź logowanie SSH"
+    },
+    "history": {
+      "title": "Ostatnie polecenia"
+    },
+    "login": {
+      "title": "Logowanie SSH"
+    },
+    "sessions": {
+      "title": "Otwarte sesje terminala"
+    },
+    "session": {
+      "title": "Sesje terminala",
+      "state": "Stan",
+      "started": "Rozpoczęto"
+    }
+  },
+  "card": {
+    "title": "Otwarte terminale",
+    "loading": "Ładowanie...",
+    "empty": "Brak otwartych sesji terminala",
+    "connected": "Połączony",
+    "detached": "Odłączony",
+    "tmux": "tmux {{name}}",
+    "refresh": "Odśwież"
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { Copy, SlidersHorizontal, Terminal, Trash2 } from "lucide-react";
 import {
   copyToClipboard,
@@ -50,9 +51,18 @@ export function HistoryPanel({ targetTab }: PanelProps) {
       setCommands([]);
       return;
     }
+    // A slow answer for the last host must not replace this one's list.
+    let cancelled = false;
     getCommandHistory(api, hostId)
-      .then(setCommands)
-      .catch(() => setCommands([]));
+      .then((list) => {
+        if (!cancelled) setCommands(list);
+      })
+      .catch(() => {
+        if (!cancelled) setCommands([]);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [api, hostId, trackingEnabled]);
 
   if (settingsOpen) {
@@ -103,7 +113,19 @@ export function HistoryPanel({ targetTab }: PanelProps) {
       await deleteCommandFromHistory(api, hostId, cmd);
       setCommands((prev) => prev.filter((c) => c !== cmd));
     } catch {
-      /* ignore */
+      toast.error(t("history.deleteFailed"));
+    }
+  }
+
+  async function handleClearAll() {
+    if (!hostId) return;
+    const ok = await confirm({ title: t("history.clearAllConfirm") });
+    if (!ok) return;
+    try {
+      await clearCommandHistory(api, hostId);
+      setCommands([]);
+    } catch {
+      toast.error(t("history.clearFailed"));
     }
   }
 
@@ -124,15 +146,7 @@ export function HistoryPanel({ targetTab }: PanelProps) {
             aria-label={t("history.clearAll")}
             disabled={commands.length === 0}
             className="hover:text-destructive"
-            onClick={async () => {
-              if (!hostId) return;
-              try {
-                await clearCommandHistory(api, hostId);
-              } catch {
-                /* ignore */
-              }
-              setCommands([]);
-            }}
+            onClick={() => void handleClearAll()}
           >
             <Trash2 className="size-3.5" />
           </Button>

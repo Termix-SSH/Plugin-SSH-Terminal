@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Impossibile leggere gli appunti. Alcuni browser limitano l'accesso agli appunti al di fuori di HTTPS: prova a usare Ctrl+V oppure esegui Termix tramite HTTPS.",
     "connecting": "Connessione in corso...",
     "connectionLost": "Connessione persa",
+    "requestAccess": "Richiedi accesso",
+    "verifyAccess": "Verifica",
+    "recording": "Registrazione",
     "editHost": "Modifica host",
     "connectionRejected": "Connessione rifiutata dal server. Verifica le tue credenziali di autenticazione e la configurazione di rete.",
     "connectionTimeout": "Timeout della connessione",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Questo browser non può leggere immagini dagli appunti",
     "imageClipboardEmpty": "Nessuna immagine trovata negli appunti",
     "localShell": "Shell del terminale locale",
+    "localBackendUnreachable": "Il backend locale non è raggiungibile",
+    "processExited": "Processo terminato ({{code}})",
+    "sharedAuthLoadFailed": "Impossibile caricare l'accesso SSH condiviso",
+    "sessionExpiredLogin": "La sessione Termix è scaduta. Effettua nuovamente l'accesso.",
+    "imageUploadFailed": "Caricamento immagine non riuscito",
+    "imageUploadedNotPasted": "Immagine caricata, ma il terminale non era aperto per incollarla: {{path}}",
+    "clipboardImageReadFailed": "Impossibile leggere gli appunti",
     "autocompleteHintComplete": "Tab o Invio per completare",
     "autocompleteHintNavigate": "↑↓ per navigare",
     "autocompleteHintClose": "Esc per chiudere",
@@ -136,6 +146,9 @@
     "commandCount_many": "{{count}} comandi",
     "commandCount_other": "{{count}} comandi",
     "deleteConfirm": "Rimuovere questo comando dalla cronologia?",
+    "clearAllConfirm": "Cancellare l'intero storico dei comandi per questo host?",
+    "clearFailed": "Impossibile cancellare lo storico",
+    "deleteFailed": "Impossibile rimuovere il comando",
     "settingsTitle": "Impostazioni cronologia"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Leggi la cronologia dei comandi",
       "description": "Consente ad altre funzionalità, come l'assistente AI, di leggere la tua cronologia dei comandi."
+    },
+    "monitor": {
+      "title": "Monitora le sessioni di tutti",
+      "description": "Consente ad altre funzionalità, come la Registrazione Sessioni, di elencare, monitorare e terminare le sessioni terminali attive di ogni utente."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "In esecuzione...",
     "completed": "Macro completata",
     "failed": "Macro fallita",
+    "timedOut": "Timeout in attesa di {{pattern}}",
     "needTerminal": "Apri e connetti prima un terminale",
     "noSteps": "Questa macro non ha ancora passaggi. Aggiungine uno qui sotto.",
     "addStep": "Aggiungi passaggio",
@@ -810,6 +828,7 @@
       "badRegex": "Questa espressione regolare non è valida",
       "secondsRequired": "Inserisci 1 secondo o più",
       "fired": "{{rule}} su {{host}}",
+      "saveFailed": "Impossibile salvare le regole di monitoraggio",
       "active_one": "{{count}} regola di monitoraggio attiva",
       "active_many": "{{count}} regole di monitoraggio attive",
       "active_other": "{{count}} regole di monitoraggio attive"
@@ -843,5 +862,33 @@
       "clear": "Cancella"
     },
     "openTerminalFirst": "Apri un terminale SSH per utilizzare i suoi strumenti"
+  },
+  "operations": {
+    "check": {
+      "title": "Verifica accesso SSH"
+    },
+    "history": {
+      "title": "Comandi recenti"
+    },
+    "login": {
+      "title": "Accesso SSH"
+    },
+    "sessions": {
+      "title": "Sessioni terminali aperte"
+    },
+    "session": {
+      "title": "Sessioni terminali",
+      "state": "Stato",
+      "started": "Avviata"
+    }
+  },
+  "card": {
+    "title": "Terminali aperti",
+    "loading": "Caricamento...",
+    "empty": "Nessuna sessione terminale aperta",
+    "connected": "Connesso",
+    "detached": "Distaccato",
+    "tmux": "tmux {{name}}",
+    "refresh": "Aggiorna"
   }
 }

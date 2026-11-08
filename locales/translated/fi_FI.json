@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Leikepöydän lukeminen epäonnistui. Jotkin selaimet rajoittavat leikepöydän käyttöä HTTPS:n ulkopuolella – kokeile Ctrl+V tai käytä Termixiä HTTPS:n kautta.",
     "connecting": "Yhdistetään...",
     "connectionLost": "Yhteys katkesi",
+    "requestAccess": "Pyydä pääsyä",
+    "verifyAccess": "Vahvista",
+    "recording": "Nauhoitus",
     "editHost": "Muokkaa isäntää",
     "connectionRejected": "Palvelin hylkäsi yhteyden. Tarkista tunnistautumistiedot ja verkkokokoonpano.",
     "connectionTimeout": "Yhteyden aikakatkaisu",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Tämä selain ei voi lukea kuvia leikepöydältä",
     "imageClipboardEmpty": "Leikepöydältä ei löytynyt kuvaa",
     "localShell": "Paikallinen komentotulkki",
+    "localBackendUnreachable": "Paikallinen backend ei ole tavoitettavissa",
+    "processExited": "Prosessi päättyi ({{code}})",
+    "sharedAuthLoadFailed": "Jakautunutta SSH-tiliä ei voitu ladata",
+    "sessionExpiredLogin": "Termix-istuntosi on päättynyt. Kirjaudu sisään uudelleen.",
+    "imageUploadFailed": "Kuvan lataus epäonnistui",
+    "imageUploadedNotPasted": "Kuva ladattiin, mutta terminaali ei ollut auki liimataksesi sen: {{path}}",
+    "clipboardImageReadFailed": "Leikepöytää ei voitu lukea",
     "autocompleteHintComplete": "Tab tai Enter täydentää",
     "autocompleteHintNavigate": "↑↓ siirtyäksesi",
     "autocompleteHintClose": "Esc sulkeaksesi",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} komento",
     "commandCount_other": "{{count}} komentoa",
     "deleteConfirm": "Poistetaanko tämä komento historiasta?",
+    "clearAllConfirm": "Tyhjennetäänkö koko komentohistoria tälle isäntäpalvelimelle?",
+    "clearFailed": "Historiaa ei voitu tyhjentää",
+    "deleteFailed": "Komentoa ei voitu poistaa",
     "settingsTitle": "Historian asetukset"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Lue komentojen historia",
       "description": "Mahdollistaa muiden ominaisuuksien, kuten tekoälyavustajan, lukea komentojesi historian."
+    },
+    "monitor": {
+      "title": "Seuraa kaikkien istuntoja",
+      "description": "Mahdollistaa muiden ominaisuuksien, kuten istunnon nauhoituksen, listata, seurata ja lopettaa kaikkien käyttäjien reaaliaikaiset terminaali-istunnot."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Suoritetaan...",
     "completed": "Makro suoritettu",
     "failed": "Makro epäonnistui",
+    "timedOut": "Aikakatkaisu odotettaessa kuvioita {{pattern}}",
     "needTerminal": "Avaa ja yhdistä terminaali ensin",
     "noSteps": "Tässä makrossa ei ole vielä vaiheita. Lisää yksi alla.",
     "addStep": "Lisää vaihe",
@@ -799,6 +817,7 @@
       "badRegex": "Tämä säännöllinen lauseke ei ole kelvollinen",
       "secondsRequired": "Syötä 1 sekunti tai enemmän",
       "fired": "{{rule}} isäntäkonessa {{host}}",
+      "saveFailed": "Seurantasääntöjä ei voitu tallentaa",
       "active_one": "{{count}} seurantasääntö päällä",
       "active_other": "{{count}} seurantasääntöä päällä"
     },
@@ -831,5 +850,33 @@
       "clear": "Tyhjennä"
     },
     "openTerminalFirst": "Avaa SSH-pääte käyttääksesi sen työkaluja"
+  },
+  "operations": {
+    "check": {
+      "title": "Tarkista SSH-tili"
+    },
+    "history": {
+      "title": "Viimeisimmät komennot"
+    },
+    "login": {
+      "title": "SSH-tili"
+    },
+    "sessions": {
+      "title": "Avoinna olevat terminaali-istunnot"
+    },
+    "session": {
+      "title": "Terminaali-istunnot",
+      "state": "Tila",
+      "started": "Aloitettu"
+    }
+  },
+  "card": {
+    "title": "Avoinna olevat terminaali-istunnot",
+    "loading": "Ladataan...",
+    "empty": "Ei avoinna olevia terminaali-istuntoja",
+    "connected": "Yhdistetty",
+    "detached": "Irrotettu",
+    "tmux": "tmux {{name}}",
+    "refresh": "Päivitä"
   }
 }

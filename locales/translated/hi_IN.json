@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "क्लिपबोर्ड पढ़ने में असमर्थ। कुछ ब्राउज़र HTTPS के बाहर क्लिपबोर्ड एक्सेस को सीमित करते हैं - कृपया Ctrl+V का उपयोग करें, या Termix को HTTPS पर सर्व करें।",
     "connecting": "कनेक्ट हो रहा है...",
     "connectionLost": "कनेक्शन खो गया",
+    "requestAccess": "पहुंच का अनुरोध करें",
+    "verifyAccess": "सत्यापित करें",
+    "recording": "रिकॉर्डिंग",
     "editHost": "होस्ट संपादित करें",
     "connectionRejected": "सर्वर द्वारा कनेक्शन अस्वीकार किया गया। कृपया अपनी प्रमाणीकरण और नेटवर्क कॉन्फ़िगरेशन की जांच करें।",
     "connectionTimeout": "कनेक्शन टाइमआउट",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "यह ब्राउज़र क्लिपबोर्ड से इमेज नहीं पढ़ सकता",
     "imageClipboardEmpty": "क्लिपबोर्ड में कोई इमेज नहीं मिली",
     "localShell": "लोकल टर्मिनल शेल",
+    "localBackendUnreachable": "स्थानीय बैकएंड तक पहुंच नहीं है",
+    "processExited": "प्रक्रिया समाप्त हो गई ({{code}})",
+    "sharedAuthLoadFailed": "साझा SSH लॉगिन लोड नहीं किया जा सका",
+    "sessionExpiredLogin": "आपकी Termix सत्र समाप्त हो गया है। फिर से साइन इन करें।",
+    "imageUploadFailed": "छवि अपलोड विफल",
+    "imageUploadedNotPasted": "छवि अपलोड हो गई, लेकिन टर्मिनल पेस्ट करने के लिए खुला नहीं था: {{path}}",
+    "clipboardImageReadFailed": "क्लिपबोर्ड पढ़ा नहीं जा सका",
     "autocompleteHintComplete": "पूर्ण करने के लिए Tab या Enter दबाएं",
     "autocompleteHintNavigate": "नेविगेट करने के लिए ↑↓",
     "autocompleteHintClose": "बंद करने के लिए Esc",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} कमांड",
     "commandCount_other": "{{count}} कमांड",
     "deleteConfirm": "इस कमांड को हिस्ट्री से हटाएं?",
+    "clearAllConfirm": "क्या इस होस्ट के लिए पूरा कमांड इतिहास साफ़ करना है?",
+    "clearFailed": "इतिहास साफ़ नहीं किया जा सका",
+    "deleteFailed": "कमांड हटाया नहीं जा सका",
     "settingsTitle": "हिस्ट्री सेटिंग्स"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "कमांड इतिहास पढ़ें",
       "description": "AI सहायक जैसे अन्य फीचर्स को आपके कमांड इतिहास को पढ़ने देता है।"
+    },
+    "monitor": {
+      "title": "सभी का सत्र देखें",
+      "description": "सत्र रिकॉर्डिंग जैसे अन्य फीचर्स को हर उपयोगकर्ता के लाइव टर्मिनल सत्रों की सूची बनाने, देखने और समाप्त करने की अनुमति देता है।"
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "चल रहा है...",
     "completed": "मैक्रो समाप्त हुआ",
     "failed": "मैक्रो विफल रहा",
+    "timedOut": "{{pattern}} के लिए प्रतीक्षा करते समय समय समाप्त हो गया",
     "needTerminal": "पहले एक टर्मिनल खोलें और कनेक्ट करें",
     "noSteps": "इस मैक्रो में अभी तक कोई चरण नहीं है। नीचे एक जोड़ें।",
     "addStep": "चरण जोड़ें",
@@ -799,6 +817,7 @@
       "badRegex": "यह रेगुलर एक्सप्रेशन वैध नहीं है",
       "secondsRequired": "1 सेकंड या अधिक दर्ज करें",
       "fired": "{{host}} पर {{rule}}",
+      "saveFailed": "वॉच नियम सहेजे नहीं जा सके",
       "active_one": "{{count}} वॉच नियम चालू",
       "active_other": "{{count}} वॉच नियम चालू"
     },
@@ -831,5 +850,33 @@
       "clear": "साफ़ करें"
     },
     "openTerminalFirst": "उसके टूल्स का उपयोग करने के लिए एक SSH टर्मिनल खोलें"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH लॉगिन जांचें"
+    },
+    "history": {
+      "title": "हाल के कमांड"
+    },
+    "login": {
+      "title": "SSH लॉगिन"
+    },
+    "sessions": {
+      "title": "खुले टर्मिनल सत्र"
+    },
+    "session": {
+      "title": "टर्मिनल सत्र",
+      "state": "स्थिति",
+      "started": "शुरू हुआ"
+    }
+  },
+  "card": {
+    "title": "खुले टर्मिनल",
+    "loading": "लोड हो रहा है...",
+    "empty": "कोई खुला टर्मिनल सत्र नहीं",
+    "connected": "कनेक्टेड",
+    "detached": "डिटेच किया गया",
+    "tmux": "tmux {{name}}",
+    "refresh": "रिफ़्रेश करें"
   }
 }

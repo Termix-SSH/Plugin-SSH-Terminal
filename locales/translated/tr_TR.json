@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Pano okunamadı. Bazı tarayıcılar HTTPS dışındaki bağlantılarda pano erişimini kısıtlar - bunun yerine Ctrl+V deneyin veya Termix'i HTTPS üzerinden çalıştırın.",
     "connecting": "Bağlanılıyor...",
     "connectionLost": "Bağlantı kesildi",
+    "requestAccess": "Erişim iste",
+    "verifyAccess": "Doğrula",
+    "recording": "Kaydediliyor",
     "editHost": "Ana makineyi düzenle",
     "connectionRejected": "Bağlantı sunucu tarafından reddedildi. Lütfen kimlik doğrulama ve ağ yapılandırmanızı kontrol edin.",
     "connectionTimeout": "Bağlantı zaman aşımı",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Bu tarayıcı panodan görüntüleri okuyamaz",
     "imageClipboardEmpty": "Panoda görüntü bulunamadı",
     "localShell": "Yerel terminal kabuğu",
+    "localBackendUnreachable": "Yerel arka uç erişilemiyor",
+    "processExited": "İşlem sonlandırıldı ({{code}})",
+    "sharedAuthLoadFailed": "Paylaşılan SSH oturumu yüklenemedi",
+    "sessionExpiredLogin": "Termix oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
+    "imageUploadFailed": "Görsel yüklenemedi",
+    "imageUploadedNotPasted": "Görsel yüklendi, ancak yapıştırılacak açık bir terminal yok: {{path}}",
+    "clipboardImageReadFailed": "Pano okunamadı",
     "autocompleteHintComplete": "Tamamlamak için Tab veya Enter'a basın",
     "autocompleteHintNavigate": "Gezinmek için ↑↓",
     "autocompleteHintClose": "Kapatmak için Esc",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} komut",
     "commandCount_other": "{{count}} komut",
     "deleteConfirm": "Bu komut geçmişten silinsin mi?",
+    "clearAllConfirm": "Bu sunucu için tüm komut geçmişi silinsin mi?",
+    "clearFailed": "Geçmiş temizlenemedi",
+    "deleteFailed": "Komut silinemedi",
     "settingsTitle": "Geçmiş ayarları"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Komut geçmişini oku",
       "description": "Yapay zeka asistanı gibi diğer özelliklerin komut geçmişinizi okumasına olanak tanır."
+    },
+    "monitor": {
+      "title": "Tüm kullanıcı oturumlarını izle",
+      "description": "Oturum Kaydı gibi diğer özelliklerin, tüm kullanıcıların canlı terminal oturumlarını listelemesine, izlemesine ve sonlandırmasına olanak tanır."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Çalışıyor...",
     "completed": "Makro tamamlandı",
     "failed": "Makro başarısız oldu",
+    "timedOut": "{{pattern}} beklenirken zaman aşımı oluştu",
     "needTerminal": "Önce bir terminal açın ve bağlanın",
     "noSteps": "Bu makronun henüz adımı yok. Aşağıdan bir tane ekleyin.",
     "addStep": "Adım ekle",
@@ -799,6 +817,7 @@
       "badRegex": "Bu regex geçerli değil",
       "secondsRequired": "1 saniye veya daha fazla girin",
       "fired": "{{rule}} üzerinde {{host}}",
+      "saveFailed": "İzleme kuralları kaydedilemedi",
       "active_one": "{{count}} izleme kuralı açık",
       "active_other": "{{count}} izleme kuralı açık"
     },
@@ -831,5 +850,33 @@
       "clear": "Temizle"
     },
     "openTerminalFirst": "Araçları kullanmak için bir SSH terminali açın"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH girişini kontrol et"
+    },
+    "history": {
+      "title": "Son komutlar"
+    },
+    "login": {
+      "title": "SSH girişi"
+    },
+    "sessions": {
+      "title": "Açık terminal oturumları"
+    },
+    "session": {
+      "title": "Terminal oturumları",
+      "state": "Durum",
+      "started": "Başlangıç"
+    }
+  },
+  "card": {
+    "title": "Açık terminaller",
+    "loading": "Yükleniyor...",
+    "empty": "Açık terminal oturumu yok",
+    "connected": "Bağlı",
+    "detached": "Bağlantı kesildi",
+    "tmux": "tmux {{name}}",
+    "refresh": "Yenile"
   }
 }

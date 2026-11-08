@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Kunde inte läsa urklipp. Vissa webbläsare begränsar åtkomst till urklipp utanför HTTPS – prova Ctrl+V istället, eller kör Termix över HTTPS.",
     "connecting": "Ansluter...",
     "connectionLost": "Anslutningen tappades",
+    "requestAccess": "Begär åtkomst",
+    "verifyAccess": "Verifiera",
+    "recording": "Spelar in",
     "editHost": "Redigera värd",
     "connectionRejected": "Anslutningen avvisades av servern. Kontrollera dina inloggningsuppgifter och nätverkskonfigurationen.",
     "connectionTimeout": "Anslutningstid överskriden",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Den här webbläsaren kan inte läsa bilder från urklipp",
     "imageClipboardEmpty": "Ingen bild hittades i urklipp",
     "localShell": "Lokal terminalshell",
+    "localBackendUnreachable": "Den lokala backenden är inte nåbar",
+    "processExited": "Processen avslutades ({{code}})",
+    "sharedAuthLoadFailed": "Kunde inte läsa in den delade SSH-inloggningen",
+    "sessionExpiredLogin": "Din Termix-session har löpt ut. Logga in igen.",
+    "imageUploadFailed": "Bilduppladdningen misslyckades",
+    "imageUploadedNotPasted": "Bilden laddades upp, men terminalen var inte öppen för att klistra in den: {{path}}",
+    "clipboardImageReadFailed": "Kunde inte läsa urklipp",
     "autocompleteHintComplete": "Tab eller Enter för att slutföra",
     "autocompleteHintNavigate": "↑↓ för att navigera",
     "autocompleteHintClose": "Esc för att stänga",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} kommando",
     "commandCount_other": "{{count}} kommandon",
     "deleteConfirm": "Ta bort detta kommando från historiken?",
+    "clearAllConfirm": "Rensa hela kommandohistoriken för denna värd?",
+    "clearFailed": "Kunde inte rensa historiken",
+    "deleteFailed": "Kunde inte ta bort kommandot",
     "settingsTitle": "Historikinställningar"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Läs kommandohistorik",
       "description": "Låter andra funktioner, såsom AI-assistenten, läsa din kommandohistorik."
+    },
+    "monitor": {
+      "title": "Övervaka alla sessioner",
+      "description": "Tillåter andra funktioner, som sessioninspelning, att lista, övervaka och avsluta live-terminalsessioner för alla användare."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Kör...",
     "completed": "Makro avslutat",
     "failed": "Makrot misslyckades",
+    "timedOut": "Tidsgränsen överskreds medan väntan på {{pattern}} pågick",
     "needTerminal": "Öppna och anslut en terminal först",
     "noSteps": "Detta makro har inga steg ännu. Lägg till ett nedan.",
     "addStep": "Lägg till steg",
@@ -799,6 +817,7 @@
       "badRegex": "Detta reguljära uttryck är inte giltigt",
       "secondsRequired": "Ange 1 sekund eller mer",
       "fired": "{{rule}} på {{host}}",
+      "saveFailed": "Kunde inte spara övervakningsreglerna",
       "active_one": "{{count}} övervakningsregel på",
       "active_other": "{{count}} övervakningsregler på"
     },
@@ -831,5 +850,33 @@
       "clear": "Rensa"
     },
     "openTerminalFirst": "Öppna en SSH-terminal för att använda dess verktyg"
+  },
+  "operations": {
+    "check": {
+      "title": "Kontrollera SSH-inloggning"
+    },
+    "history": {
+      "title": "Senaste kommandon"
+    },
+    "login": {
+      "title": "SSH-inloggning"
+    },
+    "sessions": {
+      "title": "Öppna terminalsessioner"
+    },
+    "session": {
+      "title": "Terminalsessioner",
+      "state": "Status",
+      "started": "Startad"
+    }
+  },
+  "card": {
+    "title": "Öppna terminaler",
+    "loading": "Laddar...",
+    "empty": "Inga öppna terminalsessioner",
+    "connected": "Ansluten",
+    "detached": "Frånkopplad",
+    "tmux": "tmux {{name}}",
+    "refresh": "Uppdatera"
   }
 }

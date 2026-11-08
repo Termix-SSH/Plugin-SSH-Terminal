@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  MacroTimeoutError,
   mergeLocalMacros,
   parseTerminalMacros,
   sanitizeTerminalMacros,
@@ -83,6 +84,69 @@ describe("terminal macro runner", () => {
     await vi.advanceTimersByTimeAsync(101);
     await rejection;
     vi.useRealTimers();
+  });
+
+  it("reports a timeout with the pattern it waited for", async () => {
+    vi.useFakeTimers();
+    const run = runTerminalMacro(
+      macro([
+        {
+          id: "wait",
+          type: "wait",
+          pattern: "done",
+          timeoutMs: 100,
+          onTimeout: "stop",
+        },
+      ]),
+      { send: () => {}, subscribe: () => () => {} },
+    );
+    const rejection = expect(run).rejects.toMatchObject({
+      name: "MacroTimeoutError",
+      pattern: "done",
+    });
+    await vi.advanceTimersByTimeAsync(101);
+    await rejection;
+    expect(MacroTimeoutError).toBeDefined();
+    vi.useRealTimers();
+  });
+
+  it("leaves no unhandled rejection when cancelled after output woke a wait", async () => {
+    vi.useFakeTimers();
+    const unhandled = vi.fn();
+    process.on("unhandledRejection", unhandled);
+    const controller = new AbortController();
+    let listener = (_data: string) => {};
+    const run = runTerminalMacro(
+      macro([
+        {
+          id: "wait",
+          type: "wait",
+          pattern: "never",
+          timeoutMs: 10_000,
+          onTimeout: "stop",
+        },
+      ]),
+      {
+        send: () => {},
+        subscribe: (next) => {
+          listener = next;
+          return () => {};
+        },
+      },
+      { signal: controller.signal },
+    );
+    const rejection = expect(run).rejects.toThrow("Macro cancelled");
+    await vi.advanceTimersByTimeAsync(1);
+    // Output wakes the wait, the 250 ms tick from that round is still pending.
+    listener("noise");
+    await vi.advanceTimersByTimeAsync(0);
+    controller.abort();
+    await rejection;
+    await vi.advanceTimersByTimeAsync(300);
+    vi.useRealTimers();
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    process.off("unhandledRejection", unhandled);
+    expect(unhandled).not.toHaveBeenCalled();
   });
 
   it("sanitizes persisted macro bounds and drops unknown steps", () => {

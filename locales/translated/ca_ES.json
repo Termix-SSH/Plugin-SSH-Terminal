@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "No s'ha pogut llegir el porta-retalls. Alguns navegadors restringeixen l'accés al porta-retalls fora d'HTTPS; proveu de fer servir Ctrl+V o bé executeu Termix amb HTTPS.",
     "connecting": "Connectant...",
     "connectionLost": "Connexió perduda",
+    "requestAccess": "Sol·licitar accés",
+    "verifyAccess": "Verificar",
+    "recording": "Enregistrament",
     "editHost": "Edita l'amfitrió",
     "connectionRejected": "Connexió rebutjada pel servidor. Comproveu l'autenticació i la configuració de la xarxa.",
     "connectionTimeout": "Temps d'espera de la connexió esgotat",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Aquest navegador no pot llegir imatges del porta-retalls",
     "imageClipboardEmpty": "No s'ha trobat cap imatge al porta-retalls",
     "localShell": "Shell del terminal local",
+    "localBackendUnreachable": "El backend local no és accessible",
+    "processExited": "El procés ha finalitzat ({{code}})",
+    "sharedAuthLoadFailed": "No s'ha pogut carregar l'inici de sessió SSH compartit",
+    "sessionExpiredLogin": "La sessió de Termix ha finalitzat. Inicieu sessió de nou.",
+    "imageUploadFailed": "Ha fallat la pujada de la imatge",
+    "imageUploadedNotPasted": "La imatge s'ha pujat, però el terminal no estava obert per enganxar-la: {{path}}",
+    "clipboardImageReadFailed": "No s'ha pogut llegir el portapapers",
     "autocompleteHintComplete": "Tab o Retorn per completar",
     "autocompleteHintNavigate": "↑↓ per navegar",
     "autocompleteHintClose": "Esc per tancar",
@@ -136,6 +146,9 @@
     "commandCount_many": "{{count}} ordres",
     "commandCount_other": "{{count}} ordres",
     "deleteConfirm": "Voleu eliminar aquesta ordre de l'historial?",
+    "clearAllConfirm": "Voleu esborrar tot l'historial d'ordres d'aquest host?",
+    "clearFailed": "No s'ha pogut esborrar l'historial",
+    "deleteFailed": "No s'ha pogut eliminar l'ordre",
     "settingsTitle": "Configuració de l'historial"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Llegeix l'historial de comandaments",
       "description": "Permet que altres funcions, com l'assistent d'IA, llegeixin el teu historial de comandaments."
+    },
+    "monitor": {
+      "title": "Vigilar les sessions de tothom",
+      "description": "Permet a altres funcions, com ara l'Enregistrament de sessions, llistar, vigilar i finalitzar les sessions de terminal en directe de tots els usuaris."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "S'està executant...",
     "completed": "Macro finalitzada",
     "failed": "La macro ha fallat",
+    "timedOut": "S'ha esgotat el temps d'espera per a {{pattern}}",
     "needTerminal": "Obre i connecta una terminal primer",
     "noSteps": "Aquesta macro encara no té cap pas. Afegeix-ne un a continuació.",
     "addStep": "Afegir pas",
@@ -810,6 +828,7 @@
       "badRegex": "Aquesta expressió regular no és vàlida",
       "secondsRequired": "Introdueix 1 segon o més",
       "fired": "{{rule}} a {{host}}",
+      "saveFailed": "No s'han pogut desar les regles de vigilància",
       "active_one": "{{count}} regla de vigilància activada",
       "active_many": "{{count}} regles de vigilància activades",
       "active_other": "{{count}} regles de vigilància activades"
@@ -843,5 +862,33 @@
       "clear": "Esborra"
     },
     "openTerminalFirst": "Obre un terminal SSH per utilitzar-ne les eines"
+  },
+  "operations": {
+    "check": {
+      "title": "Comprovar l'inici de sessió SSH"
+    },
+    "history": {
+      "title": "Ordres recents"
+    },
+    "login": {
+      "title": "Inici de sessió SSH"
+    },
+    "sessions": {
+      "title": "Sessions de terminal obertes"
+    },
+    "session": {
+      "title": "Sessions de terminal",
+      "state": "Estat",
+      "started": "Iniciat"
+    }
+  },
+  "card": {
+    "title": "Terminals oberts",
+    "loading": "S'està carregant...",
+    "empty": "No hi ha sessions de terminal obertes",
+    "connected": "Connectat",
+    "detached": "Desconnectat",
+    "tmux": "tmux {{name}}",
+    "refresh": "Actualitzar"
   }
 }

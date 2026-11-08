@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Impossible de lire le presse-papiers. Certains navigateurs restreignent l'accès au presse-papiers en dehors de HTTPS - essayez Ctrl+V à la place, ou servez Termix via HTTPS.",
     "connecting": "Connexion en cours...",
     "connectionLost": "Connexion perdue",
+    "requestAccess": "Demander l'accès",
+    "verifyAccess": "Vérifier",
+    "recording": "Enregistrement",
     "editHost": "Modifier l'hôte",
     "connectionRejected": "Connexion rejetée par le serveur. Veuillez vérifier votre authentification et votre configuration réseau.",
     "connectionTimeout": "Délai de connexion dépassé",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Ce navigateur ne peut pas lire les images depuis le presse-papiers",
     "imageClipboardEmpty": "Aucune image trouvée dans le presse-papiers",
     "localShell": "Shell du terminal local",
+    "localBackendUnreachable": "Le backend local n'est pas accessible",
+    "processExited": "Le processus s'est terminé ({{code}})",
+    "sharedAuthLoadFailed": "Impossible de charger la connexion SSH partagée",
+    "sessionExpiredLogin": "Votre session Termix a expiré. Connectez-vous à nouveau.",
+    "imageUploadFailed": "Échec du téléchargement de l'image",
+    "imageUploadedNotPasted": "Image téléchargée, mais le terminal n'était pas ouvert pour la coller : {{path}}",
+    "clipboardImageReadFailed": "Impossible de lire le presse-papiers",
     "autocompleteHintComplete": "Tab ou Entrée pour compléter",
     "autocompleteHintNavigate": "↑↓ pour naviguer",
     "autocompleteHintClose": "Échap pour fermer",
@@ -136,6 +146,9 @@
     "commandCount_many": "{{count}} commandes",
     "commandCount_other": "{{count}} commandes",
     "deleteConfirm": "Supprimer cette commande de l'historique ?",
+    "clearAllConfirm": "Effacer tout l'historique des commandes pour cet hôte ?",
+    "clearFailed": "Impossible de vider l'historique",
+    "deleteFailed": "Impossible de supprimer la commande",
     "settingsTitle": "Paramètres de l'historique"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Lire l'historique des commandes",
       "description": "Permet à d'autres fonctionnalités, telles que l'assistant IA, de lire votre historique des commandes."
+    },
+    "monitor": {
+      "title": "Surveiller les sessions de tous les utilisateurs",
+      "description": "Permet à d'autres fonctionnalités, comme l'enregistrement de session, de lister, surveiller et terminer les sessions terminales en direct de chaque utilisateur."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "En cours d'exécution...",
     "completed": "Macro terminée",
     "failed": "Échec de la macro",
+    "timedOut": "Délai d'attente dépassé pour {{pattern}}",
     "needTerminal": "Ouvrez et connectez d'abord un terminal",
     "noSteps": "Cette macro ne contient aucune étape. Ajoutez-en une ci-dessous.",
     "addStep": "Ajouter une étape",
@@ -810,6 +828,7 @@
       "badRegex": "Cette expression régulière n'est pas valide",
       "secondsRequired": "Entrez 1 seconde ou plus",
       "fired": "{{rule}} sur {{host}}",
+      "saveFailed": "Impossible de sauvegarder les règles de surveillance",
       "active_one": "{{count}} règle de surveillance active",
       "active_many": "{{count}} règles de surveillance actives",
       "active_other": "{{count}} règles de surveillance actives"
@@ -843,5 +862,33 @@
       "clear": "Effacer"
     },
     "openTerminalFirst": "Ouvrez un terminal SSH pour utiliser ses outils"
+  },
+  "operations": {
+    "check": {
+      "title": "Vérifier la connexion SSH"
+    },
+    "history": {
+      "title": "Commandes récentes"
+    },
+    "login": {
+      "title": "Connexion SSH"
+    },
+    "sessions": {
+      "title": "Sessions terminales ouvertes"
+    },
+    "session": {
+      "title": "Sessions terminales",
+      "state": "État",
+      "started": "Démarré"
+    }
+  },
+  "card": {
+    "title": "Terminaux ouverts",
+    "loading": "Chargement...",
+    "empty": "Aucune session terminale ouverte",
+    "connected": "Connecté",
+    "detached": "Déconnecté",
+    "tmux": "tmux {{name}}",
+    "refresh": "Actualiser"
   }
 }

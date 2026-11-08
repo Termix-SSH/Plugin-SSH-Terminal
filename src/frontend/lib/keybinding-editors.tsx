@@ -60,7 +60,7 @@ export function SendTextEditor({
         onChange={(e) =>
           onChange({ type: action.type, text: e.target.value, appendEnter })
         }
-        className="w-full h-24 px-3 py-2 text-xs bg-background border border-border text-foreground placeholder:text-muted-foreground resize-none outline-none focus:ring-1 focus:ring-ring font-mono"
+        className="w-full h-24 px-3 py-2 text-xs bg-popover border border-border text-foreground placeholder:text-muted-foreground resize-none outline-none focus:ring-1 focus:ring-ring font-mono"
       />
       <label className="flex items-center gap-2 text-xs text-muted-foreground">
         <Checkbox

@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Nelze přečíst schránku. Některé prohlížeče omezují přístup ke schránce mimo HTTPS – zkuste místo toho Ctrl+V nebo spusťte Termix přes HTTPS.",
     "connecting": "Připojování...",
     "connectionLost": "Připojení ztraceno",
+    "requestAccess": "Požádat o přístup",
+    "verifyAccess": "Ověřit",
+    "recording": "Nahrávání",
     "editHost": "Upravit host",
     "connectionRejected": "Připojení bylo serverem zamítnuto. Zkontrolujte prosím své přihlašovací údaje a síťovou konfiguraci.",
     "connectionTimeout": "Časový limit připojení vypršel",
@@ -101,6 +104,13 @@
     "imageClipboardUnavailable": "Tento prohlížeč neumí číst obrázky ze schránky",
     "imageClipboardEmpty": "Ve schránce nebyl nalezen žádný obrázek",
     "localShell": "Místní terminálový shell",
+    "localBackendUnreachable": "Lokální backend není dostupný",
+    "processExited": "Proces ukončen ({{code}})",
+    "sharedAuthLoadFailed": "Nelze načíst sdílené SSH přihlášení",
+    "sessionExpiredLogin": "Vaše relace Termix skončila. Přihlaste se znovu.",
+    "imageUploadFailed": "Nahrání obrázku selhalo",
+    "imageUploadedNotPasted": "Obrázek byl nahrán, ale terminál nebyl otevřený pro vložení: {{path}}",
+    "clipboardImageReadFailed": "Nelze přečíst schránku",
     "autocompleteHintComplete": "Tab nebo Enter pro dokončení",
     "autocompleteHintNavigate": "↑↓ pro navigaci",
     "autocompleteHintClose": "Esc pro zavření",
@@ -139,6 +149,9 @@
     "commandCount_many": "{{count}} příkazů",
     "commandCount_other": "{{count}} příkazů",
     "deleteConfirm": "Odebrat tento příkaz z historie?",
+    "clearAllConfirm": "Vymazat celou historii příkazů pro tohoto hosta?",
+    "clearFailed": "Nelze vymazat historii",
+    "deleteFailed": "Nelze odstranit příkaz",
     "settingsTitle": "Nastavení historie"
   },
   "terminalPanels": {
@@ -459,6 +472,10 @@
     "history": {
       "title": "Číst historii příkazů",
       "description": "Umožňuje dalším funkcím, jako je AI asistent, číst vaši historii příkazů."
+    },
+    "monitor": {
+      "title": "Sledovat relace všech uživatelů",
+      "description": "Umožňuje dalším funkcím, jako je nahrávání relací, zobrazovat, sledovat a ukončovat živé relace terminálu všech uživatelů."
     }
   },
   "hosts": {
@@ -669,6 +686,7 @@
     "running": "Běží...",
     "completed": "Makro dokončeno",
     "failed": "Makro selhalo",
+    "timedOut": "Časový limit vypršel při čekání na {{pattern}}",
     "needTerminal": "Nejprve otevřete a připojte terminál",
     "noSteps": "Toto makro zatím nemá žádné kroky. Přidejte jeden níže.",
     "addStep": "Přidat krok",
@@ -821,6 +839,7 @@
       "badRegex": "Tento regulární výraz není platný",
       "secondsRequired": "Zadejte 1 sekundu nebo více",
       "fired": "{{rule}} na {{host}}",
+      "saveFailed": "Nelze uložit pravidla sledování",
       "active_one": "{{count}} pravidlo sledování zapnuto",
       "active_few": "{{count}} pravidla sledování zapnuta",
       "active_many": "{{count}} pravidel sledování zapnuto",
@@ -855,5 +874,33 @@
       "clear": "Vymazat"
     },
     "openTerminalFirst": "Otevřete SSH terminál pro použití jeho nástrojů"
+  },
+  "operations": {
+    "check": {
+      "title": "Zkontrolovat SSH přihlášení"
+    },
+    "history": {
+      "title": "Nedávné příkazy"
+    },
+    "login": {
+      "title": "SSH přihlášení"
+    },
+    "sessions": {
+      "title": "Otevřené relace terminálu"
+    },
+    "session": {
+      "title": "Relace terminálu",
+      "state": "Stav",
+      "started": "Začátek"
+    }
+  },
+  "card": {
+    "title": "Otevřené terminály",
+    "loading": "Načítání...",
+    "empty": "Žádné otevřené relace terminálu",
+    "connected": "Připojeno",
+    "detached": "Odpojeno",
+    "tmux": "tmux {{name}}",
+    "refresh": "Obnovit"
   }
 }

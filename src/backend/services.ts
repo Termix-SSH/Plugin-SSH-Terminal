@@ -22,14 +22,21 @@ export interface LiveSessionInfo {
   tmuxSessionName: string | null;
   cols: number;
   rows: number;
+  /** True while the session is being recorded. */
+  recording: boolean;
 }
 
 export interface LiveSessionsV1 {
   getSession: (sessionId: string) => LiveSessionInfo | null;
   /** The caller's own sessions. A plugin caller only ever gets its actor's. */
   listForUser: (userId: string) => LiveSessionInfo[];
-  /** Tells every guest the owner ended it, then closes the session. */
-  ownerEndSession: (sessionId: string, reason: string) => void;
+  /** Every live session on this server. Needs ssh-terminal.monitor. */
+  listAll: () => Promise<LiveSessionInfo[]>;
+  /**
+   * Tells every guest the owner ended it, then closes the session. The
+   * owner, or a caller with ssh-terminal.monitor.
+   */
+  ownerEndSession: (sessionId: string, reason: string) => Promise<void>;
   /** Removes the participants that joined through one share. */
   disconnectParticipants: (
     sessionId: string,
@@ -47,9 +54,17 @@ export interface LiveSessionsV1 {
     shareId: string,
     controllerUserId: string | null,
   ) => void;
-  /** Output as it arrives. Returns the unsubscribe. */
-  subscribe: (sessionId: string, onData: (data: string) => void) => () => void;
-  /** Types into the session. False when it is not live. */
+  /**
+   * Output as it arrives. Returns the unsubscribe. The owner, or a caller
+   * with ssh-terminal.monitor (read only). Rejects anyone else.
+   */
+  subscribe: (
+    sessionId: string,
+    onData: (data: string) => void,
+  ) => Promise<() => void>;
+  /** The screen so far, for a watcher that joins late. Same rule as subscribe. */
+  snapshot: (sessionId: string) => Promise<string | null>;
+  /** Types into the session as its owner. False when it is not live. */
   write: (sessionId: string, data: string) => boolean;
   /** How long a detached session is kept, in minutes. */
   idleTimeoutMinutes: () => number;

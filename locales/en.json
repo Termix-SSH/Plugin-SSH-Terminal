@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Couldn't read the clipboard. Some browsers restrict clipboard access outside HTTPS - try Ctrl+V instead, or serve Termix over HTTPS.",
     "connecting": "Connecting...",
     "connectionLost": "Connection lost",
+    "requestAccess": "Request access",
+    "verifyAccess": "Verify",
+    "recording": "Recording",
     "editHost": "Edit host",
     "connectionRejected": "Connection rejected by server. Please check your authentication and network configuration.",
     "connectionTimeout": "Connection timeout",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "This browser cannot read images from the clipboard",
     "imageClipboardEmpty": "No image found in the clipboard",
     "localShell": "Local terminal shell",
+    "localBackendUnreachable": "The local backend is not reachable",
+    "processExited": "Process exited ({{code}})",
+    "sharedAuthLoadFailed": "Could not load the shared SSH login",
+    "sessionExpiredLogin": "Your Termix session ended. Sign in again.",
+    "imageUploadFailed": "Image upload failed",
+    "imageUploadedNotPasted": "Image uploaded, but the terminal was not open to paste it: {{path}}",
+    "clipboardImageReadFailed": "Could not read the clipboard",
     "autocompleteHintComplete": "Tab or Enter to complete",
     "autocompleteHintNavigate": "↑↓ to navigate",
     "autocompleteHintClose": "Esc to close",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} command",
     "commandCount_other": "{{count}} commands",
     "deleteConfirm": "Remove this command from history?",
+    "clearAllConfirm": "Clear the whole command history for this host?",
+    "clearFailed": "Could not clear the history",
+    "deleteFailed": "Could not remove the command",
     "settingsTitle": "History settings"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Read command history",
       "description": "Lets other features, such as the AI assistant, read your command history."
+    },
+    "monitor": {
+      "title": "Watch everyone's sessions",
+      "description": "Lets other features, such as Session Recording, list, watch and end the live terminal sessions of every user."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Running...",
     "completed": "Macro finished",
     "failed": "Macro failed",
+    "timedOut": "Timed out waiting for {{pattern}}",
     "needTerminal": "Open and connect a terminal first",
     "noSteps": "This macro has no steps yet. Add one below.",
     "addStep": "Add step",
@@ -799,6 +817,7 @@
       "badRegex": "This regex is not valid",
       "secondsRequired": "Enter 1 second or more",
       "fired": "{{rule}} on {{host}}",
+      "saveFailed": "Could not save the watch rules",
       "active_one": "{{count}} watch rule on",
       "active_other": "{{count}} watch rules on"
     },
@@ -831,5 +850,33 @@
       "clear": "Clear"
     },
     "openTerminalFirst": "Open an SSH terminal to use its tools"
+  },
+  "operations": {
+    "check": {
+      "title": "Check SSH login"
+    },
+    "history": {
+      "title": "Recent commands"
+    },
+    "login": {
+      "title": "SSH login"
+    },
+    "sessions": {
+      "title": "Open terminal sessions"
+    },
+    "session": {
+      "title": "Terminal sessions",
+      "state": "State",
+      "started": "Started"
+    }
+  },
+  "card": {
+    "title": "Open terminals",
+    "loading": "Loading...",
+    "empty": "No open terminal sessions",
+    "connected": "Connected",
+    "detached": "Detached",
+    "tmux": "tmux {{name}}",
+    "refresh": "Refresh"
   }
 }

@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "클립보드를 읽을 수 없습니다. 일부 브라우저는 HTTPS 외부에서 클립보드 접근을 제한합니다. 대신 Ctrl+V를 사용하거나 Termix를 HTTPS로 제공하세요.",
     "connecting": "연결 중...",
     "connectionLost": "연결 끊김",
+    "requestAccess": "접근 요청",
+    "verifyAccess": "확인",
+    "recording": "녹화 중",
     "editHost": "호스트 편집",
     "connectionRejected": "서버에서 연결이 거부되었습니다. 인증 및 네트워크 구성을 확인하세요.",
     "connectionTimeout": "연결 시간 초과",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "이 브라우저는 클립보드에서 이미지를 읽을 수 없습니다",
     "imageClipboardEmpty": "클립보드에 이미지가 없습니다",
     "localShell": "로컬 터미널 셸",
+    "localBackendUnreachable": "로컬 백엔드에 연결할 수 없습니다",
+    "processExited": "프로세스가 종료되었습니다 ({{code}})",
+    "sharedAuthLoadFailed": "공유 SSH 로그인을 로드할 수 없습니다",
+    "sessionExpiredLogin": "Termix 세션이 만료되었습니다. 다시 로그인하세요.",
+    "imageUploadFailed": "이미지 업로드에 실패했습니다",
+    "imageUploadedNotPasted": "이미지가 업로드되었지만 붙여넣을 터미널이 열려 있지 않습니다: {{path}}",
+    "clipboardImageReadFailed": "클립보드를 읽을 수 없습니다",
     "autocompleteHintComplete": "Tab 또는 Enter로 완성",
     "autocompleteHintNavigate": "↑↓로 이동",
     "autocompleteHintClose": "Esc로 닫기",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "이 호스트의 SSH 터미널 탭에서 명령어 기록을 켜세요.",
     "commandCount_other": "{{count}}개 명령어",
     "deleteConfirm": "이 명령어를 기록에서 삭제하시겠습니까?",
+    "clearAllConfirm": "이 호스트의 전체 명령어 기록을 삭제하시겠습니까?",
+    "clearFailed": "기록을 삭제할 수 없습니다",
+    "deleteFailed": "명령어를 제거할 수 없습니다",
     "settingsTitle": "기록 설정"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "명령어 기록 읽기",
       "description": "AI 어시스턴트 등 다른 기능이 명령어 기록을 읽을 수 있도록 합니다."
+    },
+    "monitor": {
+      "title": "모든 사용자의 세션 보기",
+      "description": "세션 녹화 등 다른 기능이 모든 사용자의 활성 터미널 세션을 목록으로 표시하고, 모니터링하며 종료할 수 있도록 합니다."
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "실행 중...",
     "completed": "매크로 완료",
     "failed": "매크로 실패",
+    "timedOut": "{{pattern}}(을)를 기다리는 시간이 초과되었습니다",
     "needTerminal": "먼저 터미널을 열고 연결하세요",
     "noSteps": "이 매크로에는 아직 단계가 없습니다. 아래에서 추가하세요.",
     "addStep": "단계 추가",
@@ -788,6 +806,7 @@
       "badRegex": "이 정규식은 유효하지 않습니다",
       "secondsRequired": "1초 이상을 입력하세요",
       "fired": "{{host}}에서 {{rule}} 발생",
+      "saveFailed": "감시 규칙을 저장할 수 없습니다",
       "active_other": "{{count}}개 감시 규칙 활성화됨"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "지우기"
     },
     "openTerminalFirst": "도구를 사용하려면 SSH 터미널을 여세요"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH 로그인 확인"
+    },
+    "history": {
+      "title": "최근 명령어"
+    },
+    "login": {
+      "title": "SSH 로그인"
+    },
+    "sessions": {
+      "title": "열린 터미널 세션"
+    },
+    "session": {
+      "title": "터미널 세션",
+      "state": "상태",
+      "started": "시작 시간"
+    }
+  },
+  "card": {
+    "title": "열린 터미널",
+    "loading": "로딩 중...",
+    "empty": "열린 터미널 세션이 없습니다",
+    "connected": "연결됨",
+    "detached": "분리됨",
+    "tmux": "tmux {{name}}",
+    "refresh": "새로고침"
   }
 }

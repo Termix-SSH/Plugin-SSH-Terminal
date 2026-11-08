@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useRef } from "react";
 import { useThemePreview } from "../look/theme-preview";
 import { TerminalSquare } from "lucide-react";
 import type { TerminalHandle, TerminalHostConfig } from "./Terminal";
-import { useIsMobile } from "@termix-ssh/plugin-sdk/ui";
+import { LoadingState, useIsMobile } from "@termix-ssh/plugin-sdk/ui";
 import {
   useTranslation,
   invokeAction,
@@ -46,8 +46,8 @@ const MobileTerminalKeyboard = lazy(() =>
 
 function TabChunkFallback() {
   return (
-    <div className="flex h-full w-full items-center justify-center bg-background">
-      <div className="size-5 rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground/70 animate-spin" />
+    <div className="flex h-full w-full bg-background">
+      <LoadingState />
     </div>
   );
 }
@@ -66,6 +66,10 @@ export function TerminalTabContent({
 }: TabProps) {
   const tab = tabRecord as unknown as TerminalTabRecord;
   const host = hostRecord as unknown as Host | undefined;
+  // Saved shell hosts use string IDs; quick-connect hosts are not editable.
+  const savedHostId = /^[1-9]\d*$/.test(String(host?.id))
+    ? Number(host?.id)
+    : NaN;
   // editHost is on the shell from Termix 26.10.6.
   const editHost = (shell as { editHost?: (hostId: number) => void }).editHost;
   const { t } = useTranslation();
@@ -151,8 +155,8 @@ export function TerminalTabContent({
                   : undefined
               }
               onEditHost={
-                editHost && typeof host?.id === "number"
-                  ? () => editHost(host!.id as number)
+                editHost && Number.isSafeInteger(savedHostId)
+                  ? () => editHost(savedHostId)
                   : undefined
               }
               host={host}

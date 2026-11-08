@@ -45,6 +45,8 @@ interface TerminalToolbarProps {
   host: Host;
   isConnected: boolean;
   isTmuxAttached: boolean;
+  /** Shows a Recording mark while the session is recorded. */
+  isRecording?: boolean;
   onTmuxDetach: () => void;
   isImageUploading: boolean;
   onUploadImage: (file: File) => void;
@@ -70,6 +72,7 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
   host,
   isConnected,
   isTmuxAttached,
+  isRecording,
   onTmuxDetach,
   isImageUploading,
   onUploadImage,
@@ -299,7 +302,7 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
       role="toolbar"
       aria-label={t("terminalToolbar.label")}
       className={cn(
-        "relative z-[110] flex h-8 w-full shrink-0 items-center gap-1 border-border bg-sidebar px-1",
+        "relative z-[110] flex h-8 w-full shrink-0 items-center gap-1 border-border bg-background px-1",
         settings.position === "top" ? "border-b" : "border-t",
         !isFocused && "opacity-60 hover:opacity-100 focus-within:opacity-100",
       )}
@@ -361,6 +364,15 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
         )}
       </div>
 
+      {isRecording && (
+        <div
+          className="flex h-full shrink-0 items-center gap-1.5 border-l border-border px-2 text-xs text-muted-foreground"
+          aria-live="polite"
+        >
+          <span className="size-2 rounded-full bg-red-500" />
+          {t("terminal.recording")}
+        </div>
+      )}
       {hasStatus && wide && (
         <div
           data-toolbar-status

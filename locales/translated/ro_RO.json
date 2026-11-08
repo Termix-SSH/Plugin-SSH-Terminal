@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Nu s-a putut citi clipboard-ul. Unele browsere restricționează accesul la clipboard în afara HTTPS – încearcă Ctrl+V sau servește Termix prin HTTPS.",
     "connecting": "Se conectează...",
     "connectionLost": "Conexiunea a fost pierdută",
+    "requestAccess": "Solicită acces",
+    "verifyAccess": "Verifică",
+    "recording": "Înregistrare",
     "editHost": "Editează gazda",
     "connectionRejected": "Conexiunea a fost respinsă de server. Verifică autentificarea și configurația de rețea.",
     "connectionTimeout": "Timpul de așteptare al conexiunii a expirat",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Acest browser nu poate citi imagini din clipboard",
     "imageClipboardEmpty": "Nicio imagine găsită în clipboard",
     "localShell": "Shell terminal local",
+    "localBackendUnreachable": "Backend-ul local nu este accesibil",
+    "processExited": "Procesul s-a încheiat ({{code}})",
+    "sharedAuthLoadFailed": "Nu s-a putut încărca autentificarea SSH partajată",
+    "sessionExpiredLogin": "Sesiunea Termix a expirat. Conectează-te din nou.",
+    "imageUploadFailed": "Încărcarea imaginii a eșuat",
+    "imageUploadedNotPasted": "Imaginea a fost încărcată, dar terminalul nu era deschis pentru a o insera: {{path}}",
+    "clipboardImageReadFailed": "Nu s-a putut citi clipboard-ul",
     "autocompleteHintComplete": "Tab sau Enter pentru a completa",
     "autocompleteHintNavigate": "↑↓ pentru navigare",
     "autocompleteHintClose": "Esc pentru a închide",
@@ -136,6 +146,9 @@
     "commandCount_few": "{{count}} comenzi",
     "commandCount_other": "{{count}} comenzi",
     "deleteConfirm": "Ștergeți această comandă din istoric?",
+    "clearAllConfirm": "Șterge tot istoricul comenzilor pentru acest host?",
+    "clearFailed": "Nu s-a putut șterge istoricul",
+    "deleteFailed": "Nu s-a putut elimina comanda",
     "settingsTitle": "Setări istoric"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Citește istoricul comenzilor",
       "description": "Permite altor funcții, cum ar fi asistentul AI, să citească istoricul tău de comenzi."
+    },
+    "monitor": {
+      "title": "Monitorizează sesiunile tuturor utilizatorilor",
+      "description": "Permite altor funcții, cum ar fi Înregistrarea sesiunilor, să listeze, să monitorizeze și să încheie sesiunile active ale terminalului pentru fiecare utilizator."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "Se execută...",
     "completed": "Macro finalizată",
     "failed": "Macro eșuată",
+    "timedOut": "Timpul de așteptare a expirat pentru {{pattern}}",
     "needTerminal": "Deschide și conectează mai întâi un terminal",
     "noSteps": "Această macro nu are încă pași. Adaugă unul mai jos.",
     "addStep": "Adaugă pas",
@@ -810,6 +828,7 @@
       "badRegex": "Această expresie regulată nu este validă",
       "secondsRequired": "Introdu 1 secundă sau mai mult",
       "fired": "{{rule}} pe {{host}}",
+      "saveFailed": "Nu s-au putut salva regulile de monitorizare",
       "active_one": "{{count}} regulă de monitorizare activă",
       "active_few": "{{count}} reguli de monitorizare active",
       "active_other": "{{count}} reguli de monitorizare active"
@@ -843,5 +862,33 @@
       "clear": "Șterge"
     },
     "openTerminalFirst": "Deschide un terminal SSH pentru a utiliza instrumentele sale"
+  },
+  "operations": {
+    "check": {
+      "title": "Verifică autentificarea SSH"
+    },
+    "history": {
+      "title": "Comenzi recente"
+    },
+    "login": {
+      "title": "Autentificare SSH"
+    },
+    "sessions": {
+      "title": "Sesiuni active ale terminalului"
+    },
+    "session": {
+      "title": "Sesiuni terminal",
+      "state": "Stare",
+      "started": "Început"
+    }
+  },
+  "card": {
+    "title": "Terminale deschise",
+    "loading": "Se încarcă...",
+    "empty": "Nicio sesiune activă a terminalului",
+    "connected": "Conectat",
+    "detached": "Deconectat",
+    "tmux": "tmux {{name}}",
+    "refresh": "Reîmprospătează"
   }
 }

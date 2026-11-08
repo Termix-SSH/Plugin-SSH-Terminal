@@ -23,6 +23,7 @@ vi.mock(
 
 vi.mock("@termix-ssh/plugin-sdk/ui", () => ({
   useIsMobile: () => false,
+  LoadingState: () => null,
 }));
 
 import { TerminalTabContent } from "../../../src/frontend/terminal/TerminalTabContent";
@@ -32,7 +33,11 @@ afterEach(() => {
   captured.props = [];
 });
 
-function renderTab(inSplit?: boolean, data?: Record<string, unknown>) {
+function renderTab(
+  inSplit?: boolean,
+  data?: Record<string, unknown>,
+  options: { id?: number | string; editHost?: (id: number) => void } = {},
+) {
   const props = {
     tab: {
       id: "t1",
@@ -41,7 +46,7 @@ function renderTab(inSplit?: boolean, data?: Record<string, unknown>) {
       label: "web-01",
       data,
     },
-    host: { id: "1", name: "web-01", ip: "10.0.0.1", port: 22 },
+    host: { id: options.id ?? "1", name: "web-01", ip: "10.0.0.1", port: 22 },
     sshHost: { id: 1 },
     label: "web-01",
     isVisible: true,
@@ -52,6 +57,7 @@ function renderTab(inSplit?: boolean, data?: Record<string, unknown>) {
       closeTab: vi.fn(),
       renameTab: vi.fn(),
       openTab: vi.fn(),
+      editHost: options.editHost,
     },
   } as unknown as TabProps;
   render(<TerminalTabContent {...props} />);
@@ -80,5 +86,45 @@ describe("TerminalTabContent in a split", () => {
     renderTab(undefined, { tmuxSession: 42 });
     await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
     expect(captured.props.at(-1)?.executeCommand).toBeUndefined();
+  });
+});
+
+describe("TerminalTabContent host editing", () => {
+  it.each([7, "7"])(
+    "opens the existing host editor for saved ID %j",
+    async (id) => {
+      const editHost = vi.fn();
+      renderTab(undefined, undefined, { id, editHost });
+      await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+      const edit = captured.props.at(-1)?.onEditHost;
+      expect(edit).toBeTypeOf("function");
+      (edit as () => void)();
+      expect(editHost).toHaveBeenCalledWith(7);
+    },
+  );
+
+  it.each([
+    "quick-connect-7",
+    "7suffix",
+    "",
+    "1e2",
+    "0x7",
+    " 7",
+    0,
+    -7,
+    1.5,
+    Number.MAX_SAFE_INTEGER + 1,
+  ])("does not offer editing for unsaved or invalid ID %j", async (id) => {
+    const editHost = vi.fn();
+    renderTab(undefined, undefined, { id, editHost });
+    await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+    expect(captured.props.at(-1)?.onEditHost).toBeUndefined();
+    expect(editHost).not.toHaveBeenCalled();
+  });
+
+  it("does not offer editing when the shell does not support it", async () => {
+    renderTab(undefined, undefined, { id: 7 });
+    await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+    expect(captured.props.at(-1)?.onEditHost).toBeUndefined();
   });
 });

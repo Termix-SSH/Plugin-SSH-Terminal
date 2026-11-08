@@ -68,6 +68,14 @@ function safeRegex(pattern: string, flags = "", isRegex = true): RegExp {
   }
 }
 
+/** A wait step ran out of time with "stop" set. */
+export class MacroTimeoutError extends Error {
+  constructor(readonly pattern: string) {
+    super(`Timed out waiting for /${pattern}/`);
+    this.name = "MacroTimeoutError";
+  }
+}
+
 function abortError(): DOMException {
   return new DOMException("Macro cancelled", "AbortError");
 }
@@ -146,11 +154,17 @@ export async function runTerminalMacro(
       const deadline = Date.now() + bounded(step.timeoutMs, 100, 300_000);
       let match = matcher.exec(output.slice(scanFrom));
       while (!match && Date.now() < deadline) {
+        const tick = delay(
+          Math.min(250, deadline - Date.now()),
+          options.signal,
+        );
+        // Output can win the race; a later abort must not reject unhandled.
+        tick.catch(() => undefined);
         await Promise.race([
           new Promise<void>((resolve) => {
             wake = resolve;
           }),
-          delay(Math.min(250, deadline - Date.now()), options.signal),
+          tick,
         ]);
         wake = null;
         match = matcher.exec(output.slice(scanFrom));
@@ -165,7 +179,7 @@ export async function runTerminalMacro(
       } else {
         options.onEvent?.({ type: "timeout", stepId: step.id });
         if (step.onTimeout === "stop") {
-          throw new Error(`Timed out waiting for /${step.pattern}/`);
+          throw new MacroTimeoutError(step.pattern);
         }
       }
     }

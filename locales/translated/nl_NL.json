@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Kon het klembord niet lezen. Sommige browsers beperken toegang tot het klembord buiten HTTPS - probeer Ctrl+V, of serveer Termix via HTTPS.",
     "connecting": "Verbinden...",
     "connectionLost": "Verbinding verbroken",
+    "requestAccess": "Toegang aanvragen",
+    "verifyAccess": "Verifiëren",
+    "recording": "Opname",
     "editHost": "Host bewerken",
     "connectionRejected": "Verbinding geweigerd door de server. Controleer uw authenticatie en netwerkconfiguratie.",
     "connectionTimeout": "Verbindingstijd verstreken",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Deze browser kan geen afbeeldingen van het klembord lezen",
     "imageClipboardEmpty": "Geen afbeelding gevonden op het klembord",
     "localShell": "Lokale terminalshell",
+    "localBackendUnreachable": "De lokale backend is niet bereikbaar",
+    "processExited": "Proces is afgesloten ({{code}})",
+    "sharedAuthLoadFailed": "De gedeelde SSH-inloggegevens konden niet worden geladen",
+    "sessionExpiredLogin": "Je Termix-sessie is verlopen. Meld je opnieuw aan.",
+    "imageUploadFailed": "Uploaden van afbeelding mislukt",
+    "imageUploadedNotPasted": "Afbeelding geüpload, maar de terminal was niet geopend om deze te plakken: {{path}}",
+    "clipboardImageReadFailed": "Het klembord kon niet worden gelezen",
     "autocompleteHintComplete": "Tab of Enter om te voltooien",
     "autocompleteHintNavigate": "↑↓ om te navigeren",
     "autocompleteHintClose": "Esc om te sluiten",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} opdracht",
     "commandCount_other": "{{count}} opdrachten",
     "deleteConfirm": "Deze opdracht uit de geschiedenis verwijderen?",
+    "clearAllConfirm": "De volledige commandogeschiedenis voor deze host wissen?",
+    "clearFailed": "De geschiedenis kon niet worden gewist",
+    "deleteFailed": "Het commando kon niet worden verwijderd",
     "settingsTitle": "Geschiedenisinstellingen"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Opdrachtgeschiedenis lezen",
       "description": "Staat andere functies, zoals de AI-assistent, toe om je opdrachtgeschiedenis te lezen."
+    },
+    "monitor": {
+      "title": "Sessies van iedereen bekijken",
+      "description": "Staat andere functies, zoals Sessieopname, toe om de actieve terminalsessies van alle gebruikers te bekijken, te bekijken en te beëindigen."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Bezig...",
     "completed": "Macro voltooid",
     "failed": "Macro mislukt",
+    "timedOut": "Time-out bij het wachten op {{pattern}}",
     "needTerminal": "Open en verbinding eerst een terminal",
     "noSteps": "Deze macro heeft nog geen stappen. Voeg er hieronder een toe.",
     "addStep": "Stap toevoegen",
@@ -799,6 +817,7 @@
       "badRegex": "Deze regex is ongeldig",
       "secondsRequired": "Voer 1 seconde of meer in",
       "fired": "{{rule}} op {{host}}",
+      "saveFailed": "De bewakingsregels konden niet worden opgeslagen",
       "active_one": "{{count}} volgregel aan",
       "active_other": "{{count}} volgregels aan"
     },
@@ -831,5 +850,33 @@
       "clear": "Wissen"
     },
     "openTerminalFirst": "Open een SSH-terminal om de hulpprogramma's te gebruiken"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH-inloggegevens controleren"
+    },
+    "history": {
+      "title": "Recente commando's"
+    },
+    "login": {
+      "title": "SSH-inloggegevens"
+    },
+    "sessions": {
+      "title": "Open terminalsessies"
+    },
+    "session": {
+      "title": "Terminalsessies",
+      "state": "Status",
+      "started": "Gestart"
+    }
+  },
+  "card": {
+    "title": "Open terminals",
+    "loading": "Laden...",
+    "empty": "Geen open terminalsessies",
+    "connected": "Verbonden",
+    "detached": "Gekoppeld",
+    "tmux": "tmux {{name}}",
+    "refresh": "Vernieuwen"
   }
 }

@@ -54,7 +54,7 @@ export function TmuxSessionPicker({
   return (
     <div className="absolute inset-0 flex items-center justify-center z-500 animate-in fade-in duration-200">
       <div
-        className="absolute inset-0 bg-canvas rounded-md"
+        className="absolute inset-0 bg-canvas"
         style={{ backgroundColor: backgroundColor || undefined }}
       />
       <div className="bg-card border border-border w-full max-w-sm mx-4 relative z-10 animate-in fade-in zoom-in-95 duration-200">

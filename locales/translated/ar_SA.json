@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "تعذر قراءة الحافظة. بعض المتصفحات تقيد الوصول إلى الحافظة خارج HTTPS - جرّب Ctrl+V بدلاً من ذلك، أو قم بتشغيل Termix عبر HTTPS.",
     "connecting": "جارٍ الاتصال...",
     "connectionLost": "انقطع الاتصال",
+    "requestAccess": "طلب الوصول",
+    "verifyAccess": "التحقق",
+    "recording": "تسجيل",
     "editHost": "تعديل المضيف",
     "connectionRejected": "رفض الخادم الاتصال. يرجى التحقق من إعدادات المصادقة والشبكة.",
     "connectionTimeout": "انتهت مهلة الاتصال",
@@ -105,6 +108,13 @@
     "imageClipboardUnavailable": "لا يمكن لهذا المتصفح قراءة الصور من الحافظة",
     "imageClipboardEmpty": "لم يتم العثور على صورة في الحافظة",
     "localShell": "محطة shell المحلية",
+    "localBackendUnreachable": "الخادم المحلي غير متاح",
+    "processExited": "انتهت العملية ({{code}})",
+    "sharedAuthLoadFailed": "فشل تحميل بيانات تسجيل الدخول المشتركة لـ SSH",
+    "sessionExpiredLogin": "انتهت جلسة Termix الخاصة بك. سجّل الدخول مرة أخرى.",
+    "imageUploadFailed": "فشل رفع الصورة",
+    "imageUploadedNotPasted": "تم رفع الصورة، لكن الطرفية لم تكن مفتوحة للصقها: {{path}}",
+    "clipboardImageReadFailed": "تعذر قراءة الحافظة",
     "autocompleteHintComplete": "Tab أو Enter للإكمال",
     "autocompleteHintNavigate": "↑↓ للتنقل",
     "autocompleteHintClose": "Esc للإغلاق",
@@ -145,6 +155,9 @@
     "commandCount_many": "{{count}} أمرًا",
     "commandCount_other": "{{count}} أمر",
     "deleteConfirm": "هل تريد إزالة هذا الأمر من السجل؟",
+    "clearAllConfirm": "هل تريد مسح سجل الأوامر بالكامل لهذا المضيف؟",
+    "clearFailed": "تعذر مسح السجل",
+    "deleteFailed": "تعذر إزالة الأمر",
     "settingsTitle": "إعدادات السجل"
   },
   "terminalPanels": {
@@ -465,6 +478,10 @@
     "history": {
       "title": "قراءة سجل الأوامر",
       "description": "يسمح للميزات الأخرى، مثل مساعد الذكاء الاصطناعي، بقراءة سجل الأوامر الخاص بك."
+    },
+    "monitor": {
+      "title": "مراقبة جلسات الجميع",
+      "description": "يسمح للميزات الأخرى، مثل تسجيل الجلسة، بإدراج ومراقبة وإنهاء جلسات الطرفية المباشرة لجميع المستخدمين."
     }
   },
   "hosts": {
@@ -677,6 +694,7 @@
     "running": "جارٍ التشغيل...",
     "completed": "انتهى الماكرو",
     "failed": "فشل الماكرو",
+    "timedOut": "انتهت مهلة الانتظار عن {{pattern}}",
     "needTerminal": "افتح طرفية واتصل بها أولاً",
     "noSteps": "لا توجد خطوات لهذا الماكرو بعد. أضف واحدة أدناه.",
     "addStep": "إضافة خطوة",
@@ -843,6 +861,7 @@
       "badRegex": "هذا التعبير النمطي غير صالح",
       "secondsRequired": "أدخل ثانية واحدة أو أكثر",
       "fired": "{{rule}} على {{host}}",
+      "saveFailed": "تعذر حفظ قواعد المراقبة",
       "active_zero": "لا توجد قواعد مراقبة مفعّلة",
       "active_one": "قاعدة مراقبة واحدة مفعّلة",
       "active_two": "قاعدتا مراقبة مفعّلتان",
@@ -879,5 +898,33 @@
       "clear": "مسح"
     },
     "openTerminalFirst": "افتح طرفية SSH لاستخدام أدواتها"
+  },
+  "operations": {
+    "check": {
+      "title": "فحص تسجيل الدخول عبر SSH"
+    },
+    "history": {
+      "title": "الأوامر الأخيرة"
+    },
+    "login": {
+      "title": "تسجيل الدخول عبر SSH"
+    },
+    "sessions": {
+      "title": "جلسات الطرفية المفتوحة"
+    },
+    "session": {
+      "title": "جلسات الطرفية",
+      "state": "الحالة",
+      "started": "بدأت"
+    }
+  },
+  "card": {
+    "title": "الطرفيات المفتوحة",
+    "loading": "جارٍ التحميل...",
+    "empty": "لا توجد جلسات طرفية مفتوحة",
+    "connected": "متصل",
+    "detached": "منفصل",
+    "tmux": "tmux {{name}}",
+    "refresh": "تحديث"
   }
 }

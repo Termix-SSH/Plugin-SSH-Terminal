@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Ne mogu pročitati međuspremnik. Neki preglednici ograničavaju pristup međuspremniku izvan HTTPS-a – pokušajte s Ctrl+V ili pokrenite Termix preko HTTPS-a.",
     "connecting": "Povezivanje...",
     "connectionLost": "Veza prekinuta",
+    "requestAccess": "Zatraži pristup",
+    "verifyAccess": "Potvrdi",
+    "recording": "Snimanje",
     "editHost": "Uredi host",
     "connectionRejected": "Veza odbijena od strane poslužitelja. Provjerite autentifikaciju i mrežnu konfiguraciju.",
     "connectionTimeout": "Vrijeme veze je isteklo",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Ovaj preglednik ne može čitati slike iz međuspremnika",
     "imageClipboardEmpty": "Nema slike u međuspremniku",
     "localShell": "Lokalni terminalni shell",
+    "localBackendUnreachable": "Lokalni pozadinski servis nije dostupan",
+    "processExited": "Proces je završio ({{code}})",
+    "sharedAuthLoadFailed": "Nije moguće učitati zajedničku SSH prijavu",
+    "sessionExpiredLogin": "Vaša Termix sesija je istekla. Ponovno se prijavite.",
+    "imageUploadFailed": "Prijenos slike nije uspio",
+    "imageUploadedNotPasted": "Slika je prenesena, ali terminal nije bio otvoren za lijepljenje: {{path}}",
+    "clipboardImageReadFailed": "Nije moguće pročitati međuspremnik",
     "autocompleteHintComplete": "Tab ili Enter za dovršetak",
     "autocompleteHintNavigate": "↑↓ za navigaciju",
     "autocompleteHintClose": "Esc za zatvaranje",
@@ -136,6 +146,9 @@
     "commandCount_few": "{{count}} naredbe",
     "commandCount_other": "{{count}} naredbi",
     "deleteConfirm": "Izbrisati ovu naredbu iz povijesti?",
+    "clearAllConfirm": "Želite li obrisati cijelu povijest naredbi za ovog hosta?",
+    "clearFailed": "Nije moguće obrisati povijest",
+    "deleteFailed": "Nije moguće ukloniti naredbu",
     "settingsTitle": "Postavke povijesti"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Čitaj povijest naredbi",
       "description": "Omogućuje drugim značajkama, poput AI asistenta, čitanje vaše povijesti naredbi."
+    },
+    "monitor": {
+      "title": "Pregled svih sesija",
+      "description": "Omogućuje drugim značajkama, poput snimanja sesija, nabrajanje, praćenje i završavanje aktivnih terminalskih sesija svih korisnika."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "Pokreće se...",
     "completed": "Makro završen",
     "failed": "Makro nije uspio",
+    "timedOut": "Vrijeme je isteklo pri čekanju na {{pattern}}",
     "needTerminal": "Prvo otvorite i povežite terminal",
     "noSteps": "Ovaj makro još nema korake. Dodajte jedan u nastavku.",
     "addStep": "Dodaj korak",
@@ -810,6 +828,7 @@
       "badRegex": "Ovaj regex nije valjan",
       "secondsRequired": "Unesite 1 sekundu ili više",
       "fired": "{{rule}} na {{host}}",
+      "saveFailed": "Nije moguće spremiti pravila za praćenje",
       "active_one": "{{count}} pravilo praćenja uključeno",
       "active_few": "{{count}} pravila praćenja uključena",
       "active_other": "{{count}} pravila praćenja uključeno"
@@ -843,5 +862,33 @@
       "clear": "Očisti"
     },
     "openTerminalFirst": "Otvorite SSH terminal kako biste koristili njegove alate"
+  },
+  "operations": {
+    "check": {
+      "title": "Provjeri SSH prijavu"
+    },
+    "history": {
+      "title": "Nedavne naredbe"
+    },
+    "login": {
+      "title": "SSH prijava"
+    },
+    "sessions": {
+      "title": "Otvorene terminalske sesije"
+    },
+    "session": {
+      "title": "Terminalske sesije",
+      "state": "Stanje",
+      "started": "Pokrenuto"
+    }
+  },
+  "card": {
+    "title": "Otvoreni terminali",
+    "loading": "Učitavanje...",
+    "empty": "Nema otvorenih terminalskih sesija",
+    "connected": "Povezano",
+    "detached": "Odspojeno",
+    "tmux": "tmux {{name}}",
+    "refresh": "Osvježi"
   }
 }

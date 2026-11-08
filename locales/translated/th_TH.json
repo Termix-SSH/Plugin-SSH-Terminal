@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "ไม่สามารถอ่านคลิปบอร์ดได้ บางเบราว์เซอร์จำกัดการเข้าถึงคลิปบอร์ดนอก HTTPS - ลองใช้ Ctrl+V แทน หรือให้บริการ Termix ผ่าน HTTPS",
     "connecting": "กำลังเชื่อมต่อ...",
     "connectionLost": "การเชื่อมต่อขาด",
+    "requestAccess": "ร้องขอสิทธิ์เข้าถึง",
+    "verifyAccess": "ยืนยัน",
+    "recording": "กำลังบันทึก",
     "editHost": "แก้ไขโฮสต์",
     "connectionRejected": "เซิร์ฟเวอร์ปฏิเสธการเชื่อมต่อ โปรดตรวจสอบการยืนยันตัวตนและการตั้งค่าเครือข่ายของคุณ",
     "connectionTimeout": "การเชื่อมต่อหมดเวลา",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "เบราว์เซอร์นี้ไม่สามารถอ่านรูปภาพจากคลิปบอร์ดได้",
     "imageClipboardEmpty": "ไม่พบรูปภาพในคลิปบอร์ด",
     "localShell": "Shell ของเทอร์มินัลท้องถิ่น",
+    "localBackendUnreachable": "ไม่สามารถเข้าถึง backend ท้องถิ่นได้",
+    "processExited": "กระบวนการสิ้นสุดแล้ว ({{code}})",
+    "sharedAuthLoadFailed": "ไม่สามารถโหลดการเข้าสู่ระบบ SSH แบบแชร์ได้",
+    "sessionExpiredLogin": "เซสชัน Termix ของคุณหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง",
+    "imageUploadFailed": "การอัปโหลดรูปภาพล้มเหลว",
+    "imageUploadedNotPasted": "อัปโหลดรูปภาพสำเร็จ แต่เทอร์มินัลไม่ได้เปิดอยู่เพื่อวาง: {{path}}",
+    "clipboardImageReadFailed": "ไม่สามารถอ่านคลิปบอร์ดได้",
     "autocompleteHintComplete": "กด Tab หรือ Enter เพื่อดำเนินการต่อ",
     "autocompleteHintNavigate": "↑↓ เพื่อเลื่อนเลือก",
     "autocompleteHintClose": "Esc เพื่อปิด",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "เปิดใช้งานประวัติคำสั่งในแท็บเทอร์มินัล SSH ของโฮสต์นี้",
     "commandCount_other": "{{count}} คำสั่ง",
     "deleteConfirm": "ลบคำสั่งนี้จากประวัติหรือไม่?",
+    "clearAllConfirm": "ต้องการล้างประวัติคำสั่งทั้งหมดสำหรับโฮสต์นี้หรือไม่?",
+    "clearFailed": "ไม่สามารถล้างประวัติได้",
+    "deleteFailed": "ไม่สามารถลบคำสั่งได้",
     "settingsTitle": "การตั้งค่าประวัติ"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "อ่านประวัติคำสั่ง",
       "description": "อนุญาตให้ฟีเจอร์อื่นๆ เช่น ผู้ช่วย AI อ่านประวัติคำสั่งของคุณ"
+    },
+    "monitor": {
+      "title": "ดูเซสชันของทุกคน",
+      "description": "อนุญาตให้ฟีเจอร์อื่นๆ เช่น การบันทึกเซสชัน สามารถแสดงรายการ ดู และยุติเซสชันเทอร์มินัลแบบสดของผู้ใช้ทุกคนได้"
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "กำลังรัน...",
     "completed": "มาโครเสร็จสิ้น",
     "failed": "มาโครล้มเหลว",
+    "timedOut": "หมดเวลาขณะรอ {{pattern}}",
     "needTerminal": "เปิดและเชื่อมต่อเทอร์มินัลก่อน",
     "noSteps": "มาโครนี้ยังไม่มีขั้นตอน เพิ่มด้านล่าง",
     "addStep": "เพิ่มขั้นตอน",
@@ -788,6 +806,7 @@
       "badRegex": "Regex นี้ไม่ถูกต้อง",
       "secondsRequired": "ป้อน 1 วินาทีหรือมากกว่า",
       "fired": "{{rule}} บน {{host}}",
+      "saveFailed": "ไม่สามารถบันทึกกฎการเฝ้าดูได้",
       "active_other": "กฎการเฝ้าระวัง {{count}} ตัวเปิดอยู่"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "ล้าง"
     },
     "openTerminalFirst": "เปิดเทอร์มินัล SSH เพื่อใช้เครื่องมือ"
+  },
+  "operations": {
+    "check": {
+      "title": "ตรวจสอบการเข้าสู่ระบบ SSH"
+    },
+    "history": {
+      "title": "คำสั่งล่าสุด"
+    },
+    "login": {
+      "title": "การเข้าสู่ระบบ SSH"
+    },
+    "sessions": {
+      "title": "เซสชันเทอร์มินัลที่เปิดอยู่"
+    },
+    "session": {
+      "title": "เซสชันเทอร์มินัล",
+      "state": "สถานะ",
+      "started": "เริ่มต้นเมื่อ"
+    }
+  },
+  "card": {
+    "title": "เทอร์มินัลที่เปิดอยู่",
+    "loading": "กำลังโหลด...",
+    "empty": "ไม่มีเซสชันเทอร์มินัลที่เปิดอยู่",
+    "connected": "เชื่อมต่อแล้ว",
+    "detached": "ยกเลิกการเชื่อมต่อ",
+    "tmux": "tmux {{name}}",
+    "refresh": "รีเฟรช"
   }
 }

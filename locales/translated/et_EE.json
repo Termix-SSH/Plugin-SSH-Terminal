@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Lõikelaua lugemine ei õnnestunud. Mõned brauserid piiravad lõikelaua ligipääsu HTTPS-i väljaspool – proovi Ctrl+V või kasuta Termixit HTTPS-i kaudu.",
     "connecting": "Ühendamine...",
     "connectionLost": "Ühendus katkes",
+    "requestAccess": "Taotle ligipääsu",
+    "verifyAccess": "Kinnita",
+    "recording": "Salvestamine",
     "editHost": "Muuda hosti",
     "connectionRejected": "Server lükkas ühenduse tagasi. Palun kontrolli autentimist ja võrgu seadeid.",
     "connectionTimeout": "Ühenduse aegumine",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "See brauser ei saa lugeda pilte lõikelaualt",
     "imageClipboardEmpty": "Lõikelaualt ei leitud pilti",
     "localShell": "Lokaalne terminali käsurea",
+    "localBackendUnreachable": "Lokaalne taustaprogramm ei ole saadaval",
+    "processExited": "Protsess lõpetas töö ({{code}})",
+    "sharedAuthLoadFailed": "Jagatud SSH-sisselogimist ei õnnestunud laadida",
+    "sessionExpiredLogin": "Sinu Termixi sessioon on aegunud. Logi uuesti sisse.",
+    "imageUploadFailed": "Pildi üleslaadimine ebaõnnestus",
+    "imageUploadedNotPasted": "Pilt laaditi üles, kuid terminal ei olnud kleebimiseks avatud: {{path}}",
+    "clipboardImageReadFailed": "Lõikelaua sisu lugemine ebaõnnestus",
     "autocompleteHintComplete": "Tab või Enter täitmiseks",
     "autocompleteHintNavigate": "↑↓ navigeerimiseks",
     "autocompleteHintClose": "Esc sulgemiseks",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} käsk",
     "commandCount_other": "{{count}} käsku",
     "deleteConfirm": "Kas kustutada see käsk ajaloost?",
+    "clearAllConfirm": "Kas kustutada selle hosti kogu käsuajalugu?",
+    "clearFailed": "Ajaloogu ei õnnestunud kustutada",
+    "deleteFailed": "Käsu ei õnnestunud eemaldada",
     "settingsTitle": "Ajaloo seaded"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Loe käsuajalugu",
       "description": "Võimaldab muudel funktsioonidel, nagu AI assistent, lugeda sinu käsuajalugu."
+    },
+    "monitor": {
+      "title": "Jälgi kõigi sessioone",
+      "description": "Võimaldab muudel funktsioonidel, nagu sessioonide salvestamine, kuvada, jälgida ja lõpetada kõigi kasutajate aktiivseid terminalisessioone."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Käivitamine...",
     "completed": "Makro lõpetatud",
     "failed": "Makro ebaõnnestus",
+    "timedOut": "Mustrit {{pattern}} oodates aegumine",
     "needTerminal": "Ava ja ühenda terminal esmalt",
     "noSteps": "Sellel makrol pole veel samme. Lisa üks allpool.",
     "addStep": "Lisa samm",
@@ -799,6 +817,7 @@
       "badRegex": "See regulaaravaldis ei kehti",
       "secondsRequired": "Sisesta 1 sekund või rohkem",
       "fired": "{{rule}} hostil {{host}}",
+      "saveFailed": "Jälgimise reegleid ei õnnestunud salvestada",
       "active_one": "{{count}} jälgimisreegel sees",
       "active_other": "{{count}} jälgimisreeglit sees"
     },
@@ -831,5 +850,33 @@
       "clear": "Tühjenda"
     },
     "openTerminalFirst": "Ava SSH-terminaal, et kasutada selle tööriistu"
+  },
+  "operations": {
+    "check": {
+      "title": "Kontrolli SSH-sisselogimist"
+    },
+    "history": {
+      "title": "Viimased käsud"
+    },
+    "login": {
+      "title": "SSH-sisselogimine"
+    },
+    "sessions": {
+      "title": "Avatud terminalisessioonid"
+    },
+    "session": {
+      "title": "Terminalisessioonid",
+      "state": "Olek",
+      "started": "Käivitatud"
+    }
+  },
+  "card": {
+    "title": "Avatud terminalid",
+    "loading": "Laadimine...",
+    "empty": "Ühtegi avatud terminalisessiooni pole",
+    "connected": "Ühendatud",
+    "detached": "Ühendus katkenud",
+    "tmux": "tmux {{name}}",
+    "refresh": "Värskenda"
   }
 }

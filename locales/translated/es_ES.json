@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "No se ha podido leer el portapapeles. Algunos navegadores restringen el acceso al portapapeles fuera de HTTPS; prueba con Ctrl+V o ejecuta Termix a través de HTTPS.",
     "connecting": "Conectando...",
     "connectionLost": "Conexión perdida",
+    "requestAccess": "Solicitar acceso",
+    "verifyAccess": "Verificar",
+    "recording": "Grabando",
     "editHost": "Editar host",
     "connectionRejected": "Conexión rechazada por el servidor. Comprueba la configuración de autenticación y de red.",
     "connectionTimeout": "Tiempo de conexión agotado",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Este navegador no puede leer imágenes del portapapeles",
     "imageClipboardEmpty": "No se ha encontrado ninguna imagen en el portapapeles",
     "localShell": "Shell de terminal local",
+    "localBackendUnreachable": "El backend local no es accesible",
+    "processExited": "El proceso ha finalizado ({{code}})",
+    "sharedAuthLoadFailed": "No se ha podido cargar la sesión compartida de SSH",
+    "sessionExpiredLogin": "Tu sesión de Termix ha finalizado. Inicia sesión de nuevo.",
+    "imageUploadFailed": "Error al subir la imagen",
+    "imageUploadedNotPasted": "Imagen subida, pero el terminal no estaba abierto para pegarla: {{path}}",
+    "clipboardImageReadFailed": "No se ha podido leer el portapapeles",
     "autocompleteHintComplete": "Tabulador o Intro para completar",
     "autocompleteHintNavigate": "↑↓ para navegar",
     "autocompleteHintClose": "Esc para cerrar",
@@ -136,6 +146,9 @@
     "commandCount_many": "{{count}} comandos",
     "commandCount_other": "{{count}} comandos",
     "deleteConfirm": "¿Eliminar este comando del historial?",
+    "clearAllConfirm": "¿Borrar todo el historial de comandos de este host?",
+    "clearFailed": "No se ha podido borrar el historial",
+    "deleteFailed": "No se ha podido eliminar el comando",
     "settingsTitle": "Configuración del historial"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Leer historial de comandos",
       "description": "Permite que otras funciones, como el asistente de IA, lean tu historial de comandos."
+    },
+    "monitor": {
+      "title": "Supervisar las sesiones de todos los usuarios",
+      "description": "Permite que otras funciones, como la grabación de sesiones, listen, supervisen y finalicen las sesiones de terminal en vivo de todos los usuarios."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "Ejecutando...",
     "completed": "Macro finalizada",
     "failed": "La macro ha fallado",
+    "timedOut": "Se ha agotado el tiempo de espera para {{pattern}}",
     "needTerminal": "Abre y conecta un terminal primero",
     "noSteps": "Esta macro aún no tiene pasos. Añade uno abajo.",
     "addStep": "Añadir paso",
@@ -810,6 +828,7 @@
       "badRegex": "Esta expresión regular no es válida",
       "secondsRequired": "Introduce 1 segundo o más",
       "fired": "{{rule}} en {{host}}",
+      "saveFailed": "No se han podido guardar las reglas de supervisión",
       "active_one": "{{count}} regla de observación activa",
       "active_many": "{{count}} reglas de observación activas",
       "active_other": "{{count}} reglas de observación activas"
@@ -843,5 +862,33 @@
       "clear": "Borrar"
     },
     "openTerminalFirst": "Abre una terminal SSH para usar sus herramientas"
+  },
+  "operations": {
+    "check": {
+      "title": "Comprobar inicio de sesión de SSH"
+    },
+    "history": {
+      "title": "Comandos recientes"
+    },
+    "login": {
+      "title": "Inicio de sesión de SSH"
+    },
+    "sessions": {
+      "title": "Sesiones de terminal abiertas"
+    },
+    "session": {
+      "title": "Sesiones de terminal",
+      "state": "Estado",
+      "started": "Inicio"
+    }
+  },
+  "card": {
+    "title": "Terminales abiertos",
+    "loading": "Cargando...",
+    "empty": "No hay sesiones de terminal abiertas",
+    "connected": "Conectado",
+    "detached": "Desconectado",
+    "tmux": "tmux {{name}}",
+    "refresh": "Actualizar"
   }
 }

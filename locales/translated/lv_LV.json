@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Neizdevās izlasīt starpliktuvi. Daži pārlūkprogrammas ierobežo piekļuvi starpliktuvei ārpus HTTPS — mēģiniet izmantot Ctrl+V vai palaidiet Termix pār HTTPS.",
     "connecting": "Notiek savienojums...",
     "connectionLost": "Savienojums zaudēts",
+    "requestAccess": "Pieprasīt piekļuvi",
+    "verifyAccess": "Verificēt",
+    "recording": "Ieraksts",
     "editHost": "Rediģēt hostu",
     "connectionRejected": "Savienojums noraidīts no servera. Lūdzu, pārbaudiet autentifikācijas un tīkla konfigurāciju.",
     "connectionTimeout": "Savienojuma laika limits pārsniegts",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Šis pārlūks nevar lasīt attēlus no starpliktuves",
     "imageClipboardEmpty": "Starpliktuvē nav atrasts attēls",
     "localShell": "Vietējais termināļa čauls",
+    "localBackendUnreachable": "Vietējais backend nav sasniedzams",
+    "processExited": "Process izbeidzās ({{code}})",
+    "sharedAuthLoadFailed": "Neizdevās ielādēt kopīgo SSH pieteikšanos",
+    "sessionExpiredLogin": "Jūsu Termix sesija ir beigusies. Lūdzu, piesakieties vēlreiz.",
+    "imageUploadFailed": "Attēla augšupielāde neizdevās",
+    "imageUploadedNotPasted": "Attēls augšupielādēts, bet terminālis nebija atvērts, lai to ielīmētu: {{path}}",
+    "clipboardImageReadFailed": "Neizdevās izlasīt starpliktuvi",
     "autocompleteHintComplete": "Nospiediet Tab vai Enter, lai pabeigtu",
     "autocompleteHintNavigate": "↑↓, lai navigētu",
     "autocompleteHintClose": "Esc, lai aizvērtu",
@@ -136,6 +146,9 @@
     "commandCount_one": "{{count}} komanda",
     "commandCount_other": "{{count}} komandas",
     "deleteConfirm": "Vai noņemt šo komandu no vēstures?",
+    "clearAllConfirm": "Vai iztīrīt visu komandu vēsturi šim hostam?",
+    "clearFailed": "Neizdevās iztīrīt vēsturi",
+    "deleteFailed": "Neizdevās noņemt komandu",
     "settingsTitle": "Vēstures iestatījumi"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Lasīt komandu vēsturi",
       "description": "Ļauj citām funkcijām, piemēram, MI asistentam, lasīt jūsu komandu vēsturi."
+    },
+    "monitor": {
+      "title": "Apskatīt visu sesijas",
+      "description": "Ļauj citām funkcijām, piemēram, Sesiju ierakstam, uzskaitīt, skatīt un izbeigt visu lietotāju tiešraides termināļa sesijas."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "Izpildās...",
     "completed": "Makrokomanda pabeigta",
     "failed": "Makrokomanda neizdevās",
+    "timedOut": "Laika limits gaidot {{pattern}}",
     "needTerminal": "Vispirms atveriet un pieslēdzieties terminālim",
     "noSteps": "Šai makrokomandai vēl nav soļu. Pieskaitiet vienu zemāk.",
     "addStep": "Pievienot soli",
@@ -810,6 +828,7 @@
       "badRegex": "Šī regulārā izteiksme nav derīga",
       "secondsRequired": "Ievadiet 1 vai vairāk sekundes",
       "fired": "{{rule}} uz {{host}}",
+      "saveFailed": "Neizdevās saglabāt novērošanas noteikumus",
       "active_zero": "0 vērošanas noteikumi ieslēgti",
       "active_one": "{{count}} vērošanas noteikums ieslēgts",
       "active_other": "{{count}} vērošanas noteikumi ieslēgti"
@@ -843,5 +862,33 @@
       "clear": "Notīrīt"
     },
     "openTerminalFirst": "Atveriet SSH termināli, lai izmantotu tā rīkus"
+  },
+  "operations": {
+    "check": {
+      "title": "Pārbaudīt SSH pieteikšanos"
+    },
+    "history": {
+      "title": "Nesenās komandas"
+    },
+    "login": {
+      "title": "SSH pieteikšanās"
+    },
+    "sessions": {
+      "title": "Atvērtas termināļa sesijas"
+    },
+    "session": {
+      "title": "Termināļa sesijas",
+      "state": "Stāvoklis",
+      "started": "Sākts"
+    }
+  },
+  "card": {
+    "title": "Atvērtie termināļi",
+    "loading": "Ielādē...",
+    "empty": "Nav atvērtu termināļa sesiju",
+    "connected": "Savienots",
+    "detached": "Atvienots",
+    "tmux": "tmux {{name}}",
+    "refresh": "Atsvaidzināt"
   }
 }

@@ -45,7 +45,7 @@ export function TerminalPreview({
   const fontFallback = resolveTerminalFontFamily(fontFamily);
 
   return (
-    <div className="border border-input overflow-hidden">
+    <div className="border border-border overflow-hidden">
       <div
         className="p-3"
         style={{

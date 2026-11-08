@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Não foi possível ler a área de transferência. Alguns navegadores restringem o acesso à área de transferência fora de HTTPS — tente Ctrl+V ou hospede o Termix via HTTPS.",
     "connecting": "Conectando...",
     "connectionLost": "Conexão perdida",
+    "requestAccess": "Solicitar acesso",
+    "verifyAccess": "Verificar",
+    "recording": "Gravando",
     "editHost": "Editar host",
     "connectionRejected": "Conexão rejeitada pelo servidor. Verifique suas credenciais e configuração de rede.",
     "connectionTimeout": "Tempo limite de conexão",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "Este navegador não pode ler imagens da área de transferência",
     "imageClipboardEmpty": "Nenhuma imagem encontrada na área de transferência",
     "localShell": "Shell do terminal local",
+    "localBackendUnreachable": "O backend local não está acessível",
+    "processExited": "Processo encerrado ({{code}})",
+    "sharedAuthLoadFailed": "Não foi possível carregar o login SSH compartilhado",
+    "sessionExpiredLogin": "Sua sessão no Termix expirou. Faça login novamente.",
+    "imageUploadFailed": "Falha no upload da imagem",
+    "imageUploadedNotPasted": "Imagem enviada, mas o terminal não estava aberto para colá-la: {{path}}",
+    "clipboardImageReadFailed": "Não foi possível ler a área de transferência",
     "autocompleteHintComplete": "Tab ou Enter para completar",
     "autocompleteHintNavigate": "↑↓ para navegar",
     "autocompleteHintClose": "Esc para fechar",
@@ -136,6 +146,9 @@
     "commandCount_many": "{{count}} comandos",
     "commandCount_other": "{{count}} comandos",
     "deleteConfirm": "Remover este comando do histórico?",
+    "clearAllConfirm": "Limpar todo o histórico de comandos deste host?",
+    "clearFailed": "Não foi possível limpar o histórico",
+    "deleteFailed": "Não foi possível remover o comando",
     "settingsTitle": "Configurações de histórico"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "Ler histórico de comandos",
       "description": "Permite que outros recursos, como o assistente de IA, leiam seu histórico de comandos."
+    },
+    "monitor": {
+      "title": "Monitorar sessões de todos",
+      "description": "Permite que outros recursos, como Gravação de Sessão, listem, monitorem e encerram as sessões de terminal ativas de todos os usuários."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "Executando...",
     "completed": "Macro finalizada",
     "failed": "Macro falhou",
+    "timedOut": "Tempo esgotado aguardando {{pattern}}",
     "needTerminal": "Abra e conecte um terminal primeiro",
     "noSteps": "Esta macro ainda não tem etapas. Adicione uma abaixo.",
     "addStep": "Adicionar etapa",
@@ -810,6 +828,7 @@
       "badRegex": "Esta expressão regular não é válida",
       "secondsRequired": "Insira 1 segundo ou mais",
       "fired": "{{rule}} em {{host}}",
+      "saveFailed": "Não foi possível salvar as regras de monitoramento",
       "active_one": "{{count}} regra de monitoramento ativa",
       "active_many": "{{count}} regras de monitoramento ativas",
       "active_other": "{{count}} regras de monitoramento ativas"
@@ -843,5 +862,33 @@
       "clear": "Limpar"
     },
     "openTerminalFirst": "Abra um terminal SSH para usar suas ferramentas"
+  },
+  "operations": {
+    "check": {
+      "title": "Verificar login SSH"
+    },
+    "history": {
+      "title": "Comandos recentes"
+    },
+    "login": {
+      "title": "Login SSH"
+    },
+    "sessions": {
+      "title": "Sessões de terminal abertas"
+    },
+    "session": {
+      "title": "Sessões de terminal",
+      "state": "Estado",
+      "started": "Iniciado"
+    }
+  },
+  "card": {
+    "title": "Terminais abertos",
+    "loading": "Carregando...",
+    "empty": "Nenhuma sessão de terminal aberta",
+    "connected": "Conectado",
+    "detached": "Desconectado",
+    "tmux": "tmux {{name}}",
+    "refresh": "Atualizar"
   }
 }

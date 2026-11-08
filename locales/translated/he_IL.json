@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "לא ניתן לקרוא את הלוח. דפדפנים מסוימים מגבילים גישה ללוח מחוץ ל-HTTPS - נסה Ctrl+V במקום, או הפעל את Termix דרך HTTPS.",
     "connecting": "מתחבר...",
     "connectionLost": "החיבור אבד",
+    "requestAccess": "בקש גישה",
+    "verifyAccess": "אמת",
+    "recording": "הקלטה",
     "editHost": "עריכת מארח",
     "connectionRejected": "החיבור נדחה על ידי השרת. אנא בדוק את פרטי האימות והתצורה הרשתית שלך.",
     "connectionTimeout": "פג תוקף חיבור",
@@ -99,6 +102,13 @@
     "imageClipboardUnavailable": "דפדפן זה אינו יכול לקרוא תמונות מהלוח",
     "imageClipboardEmpty": "לא נמצאה תמונה בלוח",
     "localShell": "Shell של מסוף מקומי",
+    "localBackendUnreachable": "לא ניתן להגיע לשרת המקומי",
+    "processExited": "התהליך הסתיים ({{code}})",
+    "sharedAuthLoadFailed": "לא ניתן היה לטעון את התחברות ה-SSH המשותפת",
+    "sessionExpiredLogin": "הפעלה ב-Termix הסתיימה. אנא התחבר שוב.",
+    "imageUploadFailed": "העלאת התמונה נכשלה",
+    "imageUploadedNotPasted": "התמונה הועלתה, אך המסוף לא היה פתוח להדבקתה: {{path}}",
+    "clipboardImageReadFailed": "לא ניתן היה לקרוא מהלוח",
     "autocompleteHintComplete": "Tab או Enter להשלמה",
     "autocompleteHintNavigate": "↑↓ לנווט",
     "autocompleteHintClose": "Esc לסגירה",
@@ -136,6 +146,9 @@
     "commandCount_two": "{{count}} פקודות",
     "commandCount_other": "{{count}} פקודות",
     "deleteConfirm": "להסיר פקודה זו מההיסטוריה?",
+    "clearAllConfirm": "למחוק את כל היסטוריית הפקודות עבור מארח זה?",
+    "clearFailed": "לא ניתן היה למחוק את ההיסטוריה",
+    "deleteFailed": "לא ניתן היה להסיר את הפקודה",
     "settingsTitle": "הגדרות היסטוריה"
   },
   "terminalPanels": {
@@ -456,6 +469,10 @@
     "history": {
       "title": "קרא היסטוריית פקודות",
       "description": "מאפשר לתכונות אחרות, כמו עוזר ה-AI, לקרוא את היסטוריית הפקודות שלך."
+    },
+    "monitor": {
+      "title": "צפה בהפעלות של כולם",
+      "description": "מאפשר לתכונות אחרות, כמו הקלטת הפעלות, לרשום, לצפות ולסגור הפעלות מסוף פעילות של כל המשתמשים."
     }
   },
   "hosts": {
@@ -665,6 +682,7 @@
     "running": "מפעיל...",
     "completed": "המאקרו הסתיים",
     "failed": "המאקרו נכשל",
+    "timedOut": "התרחש תום זמן המתנה ל-{{pattern}}",
     "needTerminal": "פתח וחבר טרמינל קודם",
     "noSteps": "למאקרו הזה אין שלבים עדיין. הוסף אחד למטה.",
     "addStep": "הוסף שלב",
@@ -810,6 +828,7 @@
       "badRegex": "ביטוי רגולרי זה אינו תקין",
       "secondsRequired": "הזן שנייה אחת או יותר",
       "fired": "{{rule}} על {{host}}",
+      "saveFailed": "לא ניתן היה לשמור את כללי המעקב",
       "active_one": "כלל מעקב {{count}} פעיל",
       "active_two": "כללי מעקב {{count}} פעילים",
       "active_other": "כללי מעקב {{count}} פעילים"
@@ -843,5 +862,33 @@
       "clear": "נקה"
     },
     "openTerminalFirst": "פתח מסוף SSH כדי להשתמש בכליו"
+  },
+  "operations": {
+    "check": {
+      "title": "בדוק התחברות SSH"
+    },
+    "history": {
+      "title": "פקודות אחרונות"
+    },
+    "login": {
+      "title": "התחברות SSH"
+    },
+    "sessions": {
+      "title": "הפעלות מסוף פתוחות"
+    },
+    "session": {
+      "title": "הפעלות מסוף",
+      "state": "מצב",
+      "started": "התחיל"
+    }
+  },
+  "card": {
+    "title": "מסופים פתוחים",
+    "loading": "טוען...",
+    "empty": "אין הפעלות מסוף פתוחות",
+    "connected": "מחובר",
+    "detached": "מנותק",
+    "tmux": "tmux {{name}}",
+    "refresh": "רענן"
   }
 }

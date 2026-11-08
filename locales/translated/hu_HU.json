@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Nem sikerült olvasni a vágólapot. Egyes böngészők korlátozzák a vágólap hozzáférését HTTPS-en kívül – próbáld meg a Ctrl+V billentyűkombinációt, vagy futtasd a Termixet HTTPS-en keresztül.",
     "connecting": "Csatlakozás...",
     "connectionLost": "A kapcsolat megszakadt",
+    "requestAccess": "Hozzáférés kérése",
+    "verifyAccess": "Ellenőrzés",
+    "recording": "Rögzítés",
     "editHost": "Host szerkesztése",
     "connectionRejected": "A szerver elutasította a kapcsolatot. Kérlek, ellenőrizd a hitelesítési és hálózati beállításaidat.",
     "connectionTimeout": "Kapcsolat időtúllépés",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Ez a böngésző nem tudja olvasni a képeket a vágólapról",
     "imageClipboardEmpty": "Nem található kép a vágólapban",
     "localShell": "Helyi terminál shell",
+    "localBackendUnreachable": "A helyi backend nem érhető el",
+    "processExited": "A folyamat befejeződött ({{code}})",
+    "sharedAuthLoadFailed": "A megosztott SSH-bejelentkezés betöltése sikertelen",
+    "sessionExpiredLogin": "A Termix-munkamenet lejárt. Jelentkezzen be újra.",
+    "imageUploadFailed": "A kép feltöltése sikertelen",
+    "imageUploadedNotPasted": "A kép feltöltve, de a terminál nem volt nyitva a beillesztéshez: {{path}}",
+    "clipboardImageReadFailed": "A vágólap olvasása sikertelen",
     "autocompleteHintComplete": "Tab vagy Enter a befejezéshez",
     "autocompleteHintNavigate": "↑↓ a navigáláshoz",
     "autocompleteHintClose": "Esc a bezáráshoz",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} parancs",
     "commandCount_other": "{{count}} parancs",
     "deleteConfirm": "Eltávolítja ezt a parancsot a történetből?",
+    "clearAllConfirm": "Törli a teljes parancstörténetet ehhez a gazdagéphez?",
+    "clearFailed": "A történet törlése sikertelen",
+    "deleteFailed": "A parancs eltávolítása sikertelen",
     "settingsTitle": "Történet beállítások"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Parancselőzmények olvasása",
       "description": "Lehetővé teszi, hogy más funkciók, például az AI asszisztens, olvassa a parancselőzményeidet."
+    },
+    "monitor": {
+      "title": "Mindenki munkameneteinek megtekintése",
+      "description": "Lehetővé teszi más funkciók számára, például a Munkamenet-rögzítés számára, hogy felsorolják, megtekintsék és lezárják minden felhasználó élő terminálmunkameneteit."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Futás...",
     "completed": "Makró befejeződött",
     "failed": "Makró sikertelen",
+    "timedOut": "Időtúllépés a(z) {{pattern}} mintára várva",
     "needTerminal": "Először nyisson meg és csatlakoztasson egy terminált",
     "noSteps": "Ez a makró még nem tartalmaz lépéseket. Adjon hozzá egyet lent.",
     "addStep": "Lépés hozzáadása",
@@ -799,6 +817,7 @@
       "badRegex": "Ez a reguláris kifejezés érvénytelen",
       "secondsRequired": "Adjon meg 1 vagy több másodpercet",
       "fired": "{{rule}} a(z) {{host}} hoston",
+      "saveFailed": "A figyelési szabályok mentése sikertelen",
       "active_one": "{{count}} figyelő szabály bekapcsolva",
       "active_other": "{{count}} figyelő szabály bekapcsolva"
     },
@@ -831,5 +850,33 @@
       "clear": "Törlés"
     },
     "openTerminalFirst": "Nyisson meg egy SSH terminált az eszközei használatához"
+  },
+  "operations": {
+    "check": {
+      "title": "SSH-bejelentkezés ellenőrzése"
+    },
+    "history": {
+      "title": "Legutóbbi parancsok"
+    },
+    "login": {
+      "title": "SSH-bejelentkezés"
+    },
+    "sessions": {
+      "title": "Nyitott terminálmunkamenetek"
+    },
+    "session": {
+      "title": "Terminálmunkamenetek",
+      "state": "Állapot",
+      "started": "Indítás"
+    }
+  },
+  "card": {
+    "title": "Nyitott terminálok",
+    "loading": "Betöltés...",
+    "empty": "Nincsenek nyitott terminálmunkamenetek",
+    "connected": "Csatlakoztatva",
+    "detached": "Leválasztva",
+    "tmux": "tmux {{name}}",
+    "refresh": "Frissítés"
   }
 }

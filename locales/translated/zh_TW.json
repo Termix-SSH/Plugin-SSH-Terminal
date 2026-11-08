@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "無法讀取剪貼簿。部分瀏覽器限制在非 HTTPS 環境下存取剪貼簿，請嘗試改用 Ctrl+V，或透過 HTTPS 提供 Termix 服務。",
     "connecting": "連線中...",
     "connectionLost": "連線中斷",
+    "requestAccess": "請求存取權限",
+    "verifyAccess": "驗證",
+    "recording": "正在錄製",
     "editHost": "編輯主機",
     "connectionRejected": "連線遭伺服器拒絕。請檢查您的驗證資訊與網路設定。",
     "connectionTimeout": "連線逾時",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "此瀏覽器無法從剪貼簿讀取影像",
     "imageClipboardEmpty": "剪貼簿中未找到影像",
     "localShell": "本機終端機 shell",
+    "localBackendUnreachable": "無法連線至本機後端",
+    "processExited": "程序已結束（{{code}}）",
+    "sharedAuthLoadFailed": "無法載入共用 SSH 登入資訊",
+    "sessionExpiredLogin": "您的 Termix 工作階段已結束。請重新登入。",
+    "imageUploadFailed": "圖片上傳失敗",
+    "imageUploadedNotPasted": "圖片已上傳，但終端機未開啟，無法貼上：{{path}}",
+    "clipboardImageReadFailed": "無法讀取剪貼簿",
     "autocompleteHintComplete": "按 Tab 或 Enter 完成",
     "autocompleteHintNavigate": "↑↓ 瀏覽",
     "autocompleteHintClose": "按 Esc 關閉",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "在此主機的 SSH 終端機分頁中開啟命令歷史記錄。",
     "commandCount_other": "{{count}} 個命令",
     "deleteConfirm": "要從歷史記錄中移除此命令嗎？",
+    "clearAllConfirm": "要清除此主機的所有命令歷史記錄嗎？",
+    "clearFailed": "無法清除歷史記錄",
+    "deleteFailed": "無法移除該命令",
     "settingsTitle": "歷史記錄設定"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "讀取指令歷史記錄",
       "description": "讓其他功能（例如 AI 助手）讀取您的指令歷史記錄。"
+    },
+    "monitor": {
+      "title": "監控所有使用者的工作階段",
+      "description": "允許其他功能（例如工作階段錄製）列出、監控並結束所有使用者的即時終端機工作階段。"
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "執行中...",
     "completed": "巨集已完成",
     "failed": "巨集執行失敗",
+    "timedOut": "等待 {{pattern}} 時逾時",
     "needTerminal": "請先開啟並連線至終端機",
     "noSteps": "此巨集尚無步驟。請在下方新增一個。",
     "addStep": "新增步驟",
@@ -788,6 +806,7 @@
       "badRegex": "此正規表示法無效",
       "secondsRequired": "輸入 1 秒或更多",
       "fired": "{{rule}} 在 {{host}} 上觸發",
+      "saveFailed": "無法儲存監控規則",
       "active_other": "{{count}} 個監控規則已開啟"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "清除"
     },
     "openTerminalFirst": "開啟 SSH 終端機以使用其工具"
+  },
+  "operations": {
+    "check": {
+      "title": "檢查 SSH 登入"
+    },
+    "history": {
+      "title": "最近命令"
+    },
+    "login": {
+      "title": "SSH 登入"
+    },
+    "sessions": {
+      "title": "開啟的終端機工作階段"
+    },
+    "session": {
+      "title": "終端機工作階段",
+      "state": "狀態",
+      "started": "開始時間"
+    }
+  },
+  "card": {
+    "title": "開啟的終端機",
+    "loading": "載入中...",
+    "empty": "沒有開啟的終端機工作階段",
+    "connected": "已連線",
+    "detached": "已分離",
+    "tmux": "tmux {{name}}",
+    "refresh": "重新整理"
   }
 }

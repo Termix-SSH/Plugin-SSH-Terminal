@@ -171,6 +171,7 @@ import {
   patchOpenTab,
   useHost,
   useHosts,
+  useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
 
 type HostKeyVerificationData = Omit<
@@ -349,6 +350,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const pongReceivedRef = useRef(true);
     const pongTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [accessRequestVerify, setAccessRequestVerify] = useState(false);
+    const [accessRequestTab, setAccessRequestTab] = useState<string | null>(
+      null,
+    );
+    const tabsApi = useTabs();
 
     const [isSavingQuickConnect, setIsSavingQuickConnect] = useState(false);
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
@@ -1443,11 +1450,34 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         hostConfig.password ||
         hostConfig.hasSudoPassword ||
         hostConfig.hasPassword;
-      if (!hasStoredPassword || passwordPromptShownRef.current) return;
+      // Cores before 26.11.1 leave the has* flags off plugin hosts, so look
+      // the password up instead of assuming there is none.
+      const flagsMissing =
+        hostConfig.hasPassword === undefined &&
+        hostConfig.hasSudoPassword === undefined &&
+        !!hostConfig.id;
+      if (
+        (!hasStoredPassword && !flagsMissing) ||
+        passwordPromptShownRef.current
+      )
+        return;
 
       passwordPromptShownRef.current = true;
       passwordPromptBufferRef.current = "";
 
+      void (async () => {
+        if (
+          !hasStoredPassword &&
+          !(await resolvePasswordForPrompt(isSudoPrompt))
+        ) {
+          passwordPromptShownRef.current = false;
+          return;
+        }
+        offerPasswordFill(isSudoPrompt);
+      })();
+    }
+
+    function offerPasswordFill(isSudoPrompt: boolean) {
       void confirm({
         title: t("terminal.passwordPromptFillTitle"),
         confirmLabel: t("common.confirm"),
@@ -1924,7 +1954,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           } catch (error) {
             const message = getErrorMessage(
               error,
-              "Failed to load shared SSH authentication",
+              t("terminal.sharedAuthLoadFailed"),
             );
             setIsConnected(false);
             setIsConnecting(false);
@@ -2055,6 +2085,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           );
         } else {
           isAttachingSessionRef.current = false;
+          // clear() preserves mouse modes from a dead tmux client. A fresh
+          // shell must opt in again; keep scrollback and live attaches intact.
+          terminal.write("\x1b[?9;1000;1002;1003;1006;1016l");
           ws.send(
             JSON.stringify({
               type: "connectToHost",
@@ -2207,6 +2240,22 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               terminal.write(formatTerminalOutput(output));
               scheduleAutosuggestionUpdate();
             }
+          } else if (msg.type === "recording") {
+            setIsRecording(msg.active !== false);
+          } else if (msg.type === "access_required") {
+            const errorMessage = msg.message || t("terminal.unknownError");
+            dismissMfaPrompt();
+            addLog({ type: "error", stage: "auth", message: errorMessage });
+            keepScrollbackRef.current = false;
+            setAccessRequestTab(
+              typeof msg.requestTab === "string" ? msg.requestTab : null,
+            );
+            setAccessRequestVerify(msg.requestKind === "verify");
+            updateConnectionError(errorMessage);
+            setIsConnecting(false);
+            shouldNotReconnectRef.current = true;
+            webSocketRef.current?.close();
+            return;
           } else if (msg.type === "error") {
             const errorMessage = msg.message || t("terminal.unknownError");
             dismissMfaPrompt();
@@ -2698,12 +2747,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
         if (event.code === 1008) {
           console.error("WebSocket authentication failed:", event.reason);
-          addLog({
-            type: "error",
-            stage: "auth",
-            message: "Authentication failed - please re-login",
-          });
-          updateConnectionError("Authentication failed - please re-login");
+          const message = t("terminal.sessionExpiredLogin");
+          addLog({ type: "error", stage: "auth", message });
+          updateConnectionError(message);
           setIsConnecting(false);
           shouldNotReconnectRef.current = true;
 
@@ -3003,7 +3049,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         // A plain click is left alone so it can select text.
         if (behavior === "modifier" && !modifier) return;
         if (behavior === "direct" || modifier) {
-          window.open(url, "_blank");
+          window.open(url, "_blank", "noopener,noreferrer");
         } else {
           setLinkClickDialog({ url });
         }
@@ -3095,7 +3141,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           }
           return false;
         }
-        if (wheelHasNothingToScroll(terminal.buffer.active)) {
+        if (
+          wheelHasNothingToScroll(
+            terminal.buffer.active,
+            terminal.modes.mouseTrackingMode,
+          )
+        ) {
           ev.preventDefault();
           return false;
         }
@@ -3767,7 +3818,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       return (
         response?.data?.error ||
         response?.data?.message ||
-        "Image upload failed"
+        t("terminal.imageUploadFailed")
       );
     }
 
@@ -3804,7 +3855,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           toast.success(t("terminal.imageUploaded", { path: shellPath }));
         } else {
           toast.warning(
-            `Image uploaded, but the terminal was not available to paste it: ${shellPath}`,
+            t("terminal.imageUploadedNotPasted", { path: shellPath }),
           );
         }
       } catch (error) {
@@ -3879,7 +3930,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         }
         toast.error(t("terminal.imageClipboardEmpty"));
       } catch (error) {
-        toast.error(getErrorMessage(error, "Clipboard read failed"));
+        toast.error(
+          getErrorMessage(error, t("terminal.clipboardImageReadFailed")),
+        );
       } finally {
         setIsImageUploading(false);
       }
@@ -3927,6 +3980,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         host={host}
         isConnected={isConnected}
         isTmuxAttached={isTmuxAttached}
+        isRecording={isRecording && isConnected}
         onTmuxDetach={() => {
           if (webSocketRef.current?.readyState === WebSocket.OPEN) {
             webSocketRef.current.send(JSON.stringify({ type: "tmux_detach" }));
@@ -4144,7 +4198,23 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             }}
             onClose={onClose}
             extraActions={
-              onEditHost ? (
+              accessRequestTab ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    tabsApi.openSingletonTab(accessRequestTab, {
+                      data: { hostId: hostConfig.id },
+                    })
+                  }
+                >
+                  {t(
+                    accessRequestVerify
+                      ? "terminal.verifyAccess"
+                      : "terminal.requestAccess",
+                  )}
+                </Button>
+              ) : onEditHost ? (
                 <Button size="sm" variant="outline" onClick={onEditHost}>
                   {t("terminal.editHost")}
                 </Button>

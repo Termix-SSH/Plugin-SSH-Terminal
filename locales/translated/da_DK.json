@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Kunne ikke læse udklipsholderen. Nogle browsere begrænser adgang til udklipsholderen uden for HTTPS – prøv Ctrl+V i stedet, eller kør Termix over HTTPS.",
     "connecting": "Forbinder...",
     "connectionLost": "Forbindelse tabt",
+    "requestAccess": "Anmod om adgang",
+    "verifyAccess": "Bekræft",
+    "recording": "Optager",
     "editHost": "Rediger vært",
     "connectionRejected": "Forbindelse afvist af serveren. Tjek venligst din godkendelse og netværkskonfiguration.",
     "connectionTimeout": "Forbindelsestid udløbet",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Denne browser kan ikke læse billeder fra udklipsholderen",
     "imageClipboardEmpty": "Intet billede fundet i udklipsholderen",
     "localShell": "Lokal terminal shell",
+    "localBackendUnreachable": "Den lokale backend er ikke tilgængelig",
+    "processExited": "Processen afsluttede ({{code}})",
+    "sharedAuthLoadFailed": "Kunne ikke indlæse den delte SSH-login",
+    "sessionExpiredLogin": "Din Termix-session er udløbet. Log ind igen.",
+    "imageUploadFailed": "Billedupload mislykkedes",
+    "imageUploadedNotPasted": "Billedet blev uploadet, men terminalen var ikke åben til at indsætte det: {{path}}",
+    "clipboardImageReadFailed": "Kunne ikke læse udklipsholderen",
     "autocompleteHintComplete": "Tryk på Tab eller Enter for at fuldføre",
     "autocompleteHintNavigate": "↑↓ til navigation",
     "autocompleteHintClose": "Esc for at lukke",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} kommando",
     "commandCount_other": "{{count}} kommandoer",
     "deleteConfirm": "Fjern denne kommando fra historikken?",
+    "clearAllConfirm": "Vil du slette hele kommandohistorikken for denne vært?",
+    "clearFailed": "Kunne ikke slette historikken",
+    "deleteFailed": "Kunne ikke fjerne kommandoen",
     "settingsTitle": "Historikindstillinger"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Læs kommandohistorik",
       "description": "Gør det muligt for andre funktioner, såsom AI-assistenten, at læse din kommandohistorik."
+    },
+    "monitor": {
+      "title": "Overvåg alle brugeres sessioner",
+      "description": "Gør det muligt for andre funktioner, såsom Sessionsoptagelse, at liste, overvåge og afslutte de aktive terminalsessioner for alle brugere."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Kører...",
     "completed": "Makro færdig",
     "failed": "Makro mislykkedes",
+    "timedOut": "Timeout ved venten på {{pattern}}",
     "needTerminal": "Åbn og tilslut en terminal først",
     "noSteps": "Denne makro har ingen trin endnu. Tilføj et nedenfor.",
     "addStep": "Tilføj trin",
@@ -799,6 +817,7 @@
       "badRegex": "Dette regex er ikke gyldigt",
       "secondsRequired": "Indtast 1 sekund eller mere",
       "fired": "{{rule}} på {{host}}",
+      "saveFailed": "Kunne ikke gemme overvågningsreglerne",
       "active_one": "{{count}} overvågningsregel til",
       "active_other": "{{count}} overvågningsregler til"
     },
@@ -831,5 +850,33 @@
       "clear": "Ryd"
     },
     "openTerminalFirst": "Åbn et SSH-terminalvindue for at bruge dets værktøjer"
+  },
+  "operations": {
+    "check": {
+      "title": "Tjek SSH-login"
+    },
+    "history": {
+      "title": "Seneste kommandoer"
+    },
+    "login": {
+      "title": "SSH-login"
+    },
+    "sessions": {
+      "title": "Åbne terminalsessioner"
+    },
+    "session": {
+      "title": "Terminalsessioner",
+      "state": "Status",
+      "started": "Startet"
+    }
+  },
+  "card": {
+    "title": "Åbne terminaler",
+    "loading": "Indlæser...",
+    "empty": "Ingen åbne terminalsessioner",
+    "connected": "Forbundet",
+    "detached": "Afkoblet",
+    "tmux": "tmux {{name}}",
+    "refresh": "Opdater"
   }
 }

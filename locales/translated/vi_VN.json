@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Không thể đọc clipboard. Một số trình duyệt hạn chế truy cập clipboard ngoài HTTPS - hãy thử Ctrl+V, hoặc chạy Termix qua HTTPS.",
     "connecting": "Đang kết nối...",
     "connectionLost": "Mất kết nối",
+    "requestAccess": "Yêu cầu quyền truy cập",
+    "verifyAccess": "Xác minh",
+    "recording": "Đang ghi",
     "editHost": "Chỉnh sửa host",
     "connectionRejected": "Kết nối bị máy chủ từ chối. Vui lòng kiểm tra thông tin xác thực và cấu hình mạng của bạn.",
     "connectionTimeout": "Hết thời gian kết nối",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "Trình duyệt này không thể đọc hình ảnh từ clipboard",
     "imageClipboardEmpty": "Không tìm thấy hình ảnh trong clipboard",
     "localShell": "Shell terminal cục bộ",
+    "localBackendUnreachable": "Không thể kết nối đến backend cục bộ",
+    "processExited": "Quá trình đã thoát ({{code}})",
+    "sharedAuthLoadFailed": "Không thể tải đăng nhập SSH chia sẻ",
+    "sessionExpiredLogin": "Phiên Termix của bạn đã kết thúc. Vui lòng đăng nhập lại.",
+    "imageUploadFailed": "Tải ảnh lên thất bại",
+    "imageUploadedNotPasted": "Đã tải ảnh lên, nhưng terminal không mở để dán: {{path}}",
+    "clipboardImageReadFailed": "Không thể đọc clipboard",
     "autocompleteHintComplete": "Nhấn Tab hoặc Enter để hoàn thành",
     "autocompleteHintNavigate": "↑↓ để di chuyển",
     "autocompleteHintClose": "Nhấn Esc để đóng",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "Bật Lịch sử lệnh trong tab Terminal SSH của máy chủ này.",
     "commandCount_other": "{{count}} lệnh",
     "deleteConfirm": "Xóa lệnh này khỏi lịch sử?",
+    "clearAllConfirm": "Xóa toàn bộ lịch sử lệnh cho host này?",
+    "clearFailed": "Không thể xóa lịch sử",
+    "deleteFailed": "Không thể xóa lệnh",
     "settingsTitle": "Cài đặt lịch sử"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "Đọc lịch sử lệnh",
       "description": "Cho phép các tính năng khác, như trợ lý AI, đọc lịch sử lệnh của bạn."
+    },
+    "monitor": {
+      "title": "Theo dõi phiên của mọi người",
+      "description": "Cho phép các tính năng khác, như Ghi phiên, liệt kê, xem và kết thúc các phiên terminal đang hoạt động của tất cả người dùng."
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "Đang chạy...",
     "completed": "Macro đã hoàn thành",
     "failed": "Macro thất bại",
+    "timedOut": "Hết thời gian chờ đợi {{pattern}}",
     "needTerminal": "Mở và kết nối terminal trước",
     "noSteps": "Macro này chưa có bước nào. Thêm một bước bên dưới.",
     "addStep": "Thêm bước",
@@ -788,6 +806,7 @@
       "badRegex": "Biểu thức chính quy này không hợp lệ",
       "secondsRequired": "Nhập 1 giây trở lên",
       "fired": "{{rule}} trên {{host}}",
+      "saveFailed": "Không thể lưu quy tắc theo dõi",
       "active_other": "{{count}} quy tắc theo dõi đang bật"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "Xóa"
     },
     "openTerminalFirst": "Mở một terminal SSH để sử dụng các công cụ của nó"
+  },
+  "operations": {
+    "check": {
+      "title": "Kiểm tra đăng nhập SSH"
+    },
+    "history": {
+      "title": "Lệnh gần đây"
+    },
+    "login": {
+      "title": "Đăng nhập SSH"
+    },
+    "sessions": {
+      "title": "Phiên terminal đang mở"
+    },
+    "session": {
+      "title": "Phiên terminal",
+      "state": "Trạng thái",
+      "started": "Bắt đầu"
+    }
+  },
+  "card": {
+    "title": "Terminal đang mở",
+    "loading": "Đang tải...",
+    "empty": "Không có phiên terminal đang mở",
+    "connected": "Đã kết nối",
+    "detached": "Đã ngắt kết nối",
+    "tmux": "tmux {{name}}",
+    "refresh": "Làm mới"
   }
 }

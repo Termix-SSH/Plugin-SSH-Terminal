@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { Trash2, X } from "lucide-react";
 import {
   Button,
@@ -65,7 +66,13 @@ export function WatchEditor({
   const [error, setError] = useState<string | null>(null);
 
   function saveRules(next: WatchRule[]) {
-    return settings.save({ ...settings.values, watchRules: next });
+    return settings
+      .save({ ...settings.values, watchRules: next })
+      .then(() => true)
+      .catch(() => {
+        toast.error(t("terminalTools.watch.saveFailed"));
+        return false;
+      });
   }
 
   function addRule() {
@@ -79,7 +86,8 @@ export function WatchEditor({
     const problem = validateWatchRule(rule);
     setError(problem);
     if (problem) return;
-    void saveRules([...rules, rule]).then(() => {
+    void saveRules([...rules, rule]).then((saved) => {
+      if (!saved) return;
       setWatchRule(tabId, rule, true);
       setName("");
       setPattern("");

@@ -51,7 +51,11 @@ function pruneClosedSessions(): void {
   const open = new Set(listSessions().map((session) => session.id));
   const members = state.members.filter((id) => open.has(id));
   if (members.length === state.members.length) return;
-  if (state.members.length >= 2 && members.length <= 1) stopBroadcast();
+  if (
+    members.length === 0 ||
+    (state.members.length >= 2 && members.length <= 1)
+  )
+    stopBroadcast();
   else publish({ ...state, members });
 }
 

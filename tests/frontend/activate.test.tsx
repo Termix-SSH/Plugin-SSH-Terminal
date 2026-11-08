@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   renderWithApp,
   type RenderedPluginApp,
@@ -36,6 +37,33 @@ describe(`${manifest.id} activate`, () => {
     for (const id of rendered.registered.dashboardCards()) {
       expect(cards).toContain(id);
     }
+  });
+
+  it("shows the open terminal sessions on its dashboard card", async () => {
+    rendered = await renderWithApp(plugin, {
+      manifest,
+      locales,
+      permissions: ["ssh-terminal.sessions"],
+      hosts: [{ id: "1", name: "web", ip: "10.0.0.1", port: 22 }],
+      api: {
+        get: vi.fn(async () => ({
+          data: [
+            {
+              id: "s1",
+              hostId: 1,
+              hostName: "web",
+              connected: false,
+              createdAt: 0,
+              tmuxSessionName: null,
+            },
+          ],
+        })),
+      } as never,
+    });
+    expect(rendered.registered.dashboardCards()).toEqual(["terminal-sessions"]);
+    rendered.renderDashboardCard("terminal-sessions");
+    expect(await screen.findByText("web")).toBeTruthy();
+    expect(screen.getByText(locales.card.detached)).toBeTruthy();
   });
 
   it("removes everything it registered on deactivate", async () => {

@@ -33,14 +33,21 @@ import {
   type TerminalOverlayProps,
   type TerminalSessionMessage,
 } from "../terminal/terminal-slots";
+import { registerLocalSession, setActiveSession } from "../session-registry";
 import { createTerminalInputAccess } from "../terminal/terminal-input-access";
 
 export function LocalTerminal({
   instanceId,
   isVisible,
+  sessionId = instanceId,
+  isFocusedPane = false,
+  label,
 }: {
   instanceId: string;
   isVisible: boolean;
+  sessionId?: string;
+  isFocusedPane?: boolean;
+  label?: string;
 }) {
   const { t } = useTranslation();
   // Read via a ref inside the session-lifecycle effect below so a language
@@ -93,6 +100,22 @@ export function LocalTerminal({
   const focusFrameRef = useRef<number | null>(null);
   const [isWindows, setIsWindows] = useState(false);
   const [shell, setShell] = useState<"default" | "wsl">("default");
+
+  useEffect(() => {
+    if (!terminal) return;
+    const unregister = registerLocalSession(
+      { id: sessionId, label: label || tRef.current("palette.localTerminal") },
+      {
+        isConnected: () =>
+          sessionReadyRef.current &&
+          socketRef.current?.readyState === WebSocket.OPEN,
+        sendInput: (data) => sendFrame({ type: "input", data }),
+        paste: (text) => terminal.paste(text),
+      },
+    );
+    if (isFocusedPane) setActiveSession(sessionId);
+    return unregister;
+  }, [sessionId, label, terminal, sendFrame, isFocusedPane]);
 
   useEffect(() => {
     window.electronAPI?.getPlatform().then((platform) => {
@@ -244,10 +267,16 @@ export function LocalTerminal({
     })
       .then((target) => {
         if (disposed) return;
-        if (!target) throw new Error("The local backend is not reachable");
+        if (!target)
+          throw new Error(tRef.current("terminal.localBackendUnreachable"));
         const socket = new WebSocket(target.url, target.protocols);
         socketRef.current = socket;
+        socket.onclose = socket.onerror = () => {
+          if (!disposed && socketRef.current === socket)
+            sessionReadyRef.current = false;
+        };
         socket.onmessage = (event) => {
+          if (disposed || socketRef.current !== socket) return;
           let frame: Record<string, unknown>;
           try {
             frame = JSON.parse(String(event.data));
@@ -257,11 +286,12 @@ export function LocalTerminal({
           if (frame.type === "data" && typeof frame.data === "string") {
             terminal.write(frame.data);
           } else if (frame.type === "exit") {
+            sessionReadyRef.current = false;
             emitSessionMessage({ type: "session_closed" });
             terminal.write(
               `
 
-[33mProcess exited (${String(frame.exitCode)})[0m
+[33m${tRef.current("terminal.processExited", { code: String(frame.exitCode) })}[0m
 
 `,
             );
@@ -341,8 +371,8 @@ export function LocalTerminal({
           </Select2>
         </div>
       )}
-      <div className="relative min-h-0 flex-1">
-        <div ref={xtermRef} className="h-full w-full p-2" />
+      <div className="relative min-h-0 flex-1 p-2">
+        <div ref={xtermRef} className="h-full w-full" />
         <ComponentSlot
           slotId={TERMINAL_OVERLAY_SLOT}
           when={{ host: undefined }}

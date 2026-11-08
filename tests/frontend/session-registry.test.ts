@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   getSessionHandle,
+  registerLocalSession,
+  listInputSessions,
   listSessions,
   registerSession,
   sendToActive,
@@ -109,5 +111,50 @@ describe("sendToActive", () => {
     b.dispose();
     expect(sendToActive("ls", { run: true })).toBe(true);
     expect(a.ref.sendInput).toHaveBeenCalledWith("ls\r");
+  });
+});
+
+describe("local input sessions", () => {
+  it("keeps local and SSH targets separate and never exposes an SSH tool handle", () => {
+    const ssh = open("ssh");
+    const local = {
+      sendInput: vi.fn(),
+      paste: vi.fn(),
+      isConnected: () => true,
+    };
+    const other = {
+      sendInput: vi.fn(),
+      paste: vi.fn(),
+      isConnected: () => true,
+    };
+    const remove = registerLocalSession({ id: "local", label: "Local" }, local);
+    disposers.push(remove, registerLocalSession({ id: "other" }, other));
+    expect(listInputSessions().map((s) => s.id)).toEqual([
+      "ssh",
+      "local",
+      "other",
+    ]);
+    expect(listSessions().map((s) => s.id)).toEqual(["ssh"]);
+    expect(getSessionHandle("local")).toBeNull();
+    setActiveSession("local");
+    expect(sendToActive("local command", { run: true })).toBe(true);
+    expect(local.sendInput).toHaveBeenCalledWith("local command\r");
+    expect(ssh.ref.sendInput).not.toHaveBeenCalled();
+    expect(other.sendInput).not.toHaveBeenCalled();
+    remove();
+    expect(sendToActive("closed active", { run: true })).toBe(false);
+    expect(sendToSession("local", "closed", { run: true })).toBe(false);
+    expect(ssh.ref.sendInput).not.toHaveBeenCalled();
+    setActiveSession("ssh");
+    expect(sendToActive("ssh command", { run: true })).toBe(true);
+    expect(ssh.ref.sendInput).toHaveBeenCalledWith("ssh command\r");
+  });
+
+  it("does not unregister a replacement with a reused tab ID", () => {
+    const ref = { sendInput: vi.fn(), paste: vi.fn(), isConnected: () => true };
+    const old = registerLocalSession({ id: "reused" }, ref);
+    disposers.push(registerLocalSession({ id: "reused" }, ref));
+    old();
+    expect(sendToSession("reused", "ok")).toBe(true);
   });
 });

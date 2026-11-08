@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "クリップボードを読み取れませんでした。一部のブラウザでは HTTPS 以外でのクリップボードアクセスが制限されています。Ctrl+V を試すか、Termix を HTTPS で提供してください。",
     "connecting": "接続中...",
     "connectionLost": "接続が切断されました",
+    "requestAccess": "アクセスをリクエスト",
+    "verifyAccess": "確認",
+    "recording": "録画中",
     "editHost": "ホストを編集",
     "connectionRejected": "サーバーによって接続が拒否されました。認証とネットワーク設定を確認してください。",
     "connectionTimeout": "接続タイムアウト",
@@ -95,6 +98,13 @@
     "imageClipboardUnavailable": "このブラウザはクリップボードから画像を読み取ることができません",
     "imageClipboardEmpty": "クリップボードに画像が見つかりません",
     "localShell": "ローカルターミナルシェル",
+    "localBackendUnreachable": "ローカルバックエンドに接続できません",
+    "processExited": "プロセスが終了しました ({{code}})",
+    "sharedAuthLoadFailed": "共有SSHログインを読み込めませんでした",
+    "sessionExpiredLogin": "Termixのセッションが終了しました。再度サインインしてください。",
+    "imageUploadFailed": "画像のアップロードに失敗しました",
+    "imageUploadedNotPasted": "画像はアップロードされましたが、貼り付けるためのターミナルが開いていませんでした: {{path}}",
+    "clipboardImageReadFailed": "クリップボードを読み取れませんでした",
     "autocompleteHintComplete": "TabまたはEnterで補完",
     "autocompleteHintNavigate": "↑↓で移動",
     "autocompleteHintClose": "Escで閉じる",
@@ -130,6 +140,9 @@
     "trackingDisabledHint": "このホストのSSHターミナルタブで「コマンド履歴」を有効にしてください。",
     "commandCount_other": "{{count}}コマンド",
     "deleteConfirm": "このコマンドを履歴から削除しますか？",
+    "clearAllConfirm": "このホストのすべてのコマンド履歴を消去しますか？",
+    "clearFailed": "履歴を消去できませんでした",
+    "deleteFailed": "コマンドを削除できませんでした",
     "settingsTitle": "履歴設定"
   },
   "terminalPanels": {
@@ -450,6 +463,10 @@
     "history": {
       "title": "コマンド履歴の読み取り",
       "description": "AI アシスタントなどの他の機能から、コマンド履歴を読み取れるようにします。"
+    },
+    "monitor": {
+      "title": "すべてのユーザーのセッションを監視",
+      "description": "セッション録画などの他の機能に、すべてのユーザーのライブターミナルセッションの一覧表示、監視、終了を許可します。"
     }
   },
   "hosts": {
@@ -657,6 +674,7 @@
     "running": "実行中...",
     "completed": "マクロが完了しました",
     "failed": "マクロが失敗しました",
+    "timedOut": "{{pattern}} の待機がタイムアウトしました",
     "needTerminal": "まずターミナルを開いて接続してください",
     "noSteps": "このマクロにはまだステップがありません。以下に追加してください。",
     "addStep": "ステップを追加",
@@ -788,6 +806,7 @@
       "badRegex": "この正規表現は無効です",
       "secondsRequired": "1 秒以上を入力してください",
       "fired": "{{host}} 上の {{rule}}",
+      "saveFailed": "ウォッチルールを保存できませんでした",
       "active_other": "{{count}} 個の監視ルールが有効"
     },
     "output": {
@@ -819,5 +838,33 @@
       "clear": "クリア"
     },
     "openTerminalFirst": "ツールを使用するには SSH ターミナルを開いてください"
+  },
+  "operations": {
+    "check": {
+      "title": "SSHログインの確認"
+    },
+    "history": {
+      "title": "最近のコマンド"
+    },
+    "login": {
+      "title": "SSHログイン"
+    },
+    "sessions": {
+      "title": "開いているターミナルセッション"
+    },
+    "session": {
+      "title": "ターミナルセッション",
+      "state": "状態",
+      "started": "開始時刻"
+    }
+  },
+  "card": {
+    "title": "開いているターミナル",
+    "loading": "読み込み中...",
+    "empty": "開いているターミナルセッションはありません",
+    "connected": "接続済み",
+    "detached": "切断済み",
+    "tmux": "tmux {{name}}",
+    "refresh": "更新"
   }
 }

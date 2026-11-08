@@ -40,6 +40,9 @@
     "clipboardHttpWarning": "Kon nie die knipbord lees nie. Sommige blaaiers beperk toegang tot die knipbord buite HTTPS - probeer Ctrl+V in plaas daarvan, of bedien Termix oor HTTPS.",
     "connecting": "Maak verbinding...",
     "connectionLost": "Verbinding verlore",
+    "requestAccess": "Vra toegang aan",
+    "verifyAccess": "Verifieer",
+    "recording": "Opname",
     "editHost": "Redige gasheer",
     "connectionRejected": "Verbinding deur bediener verwerp. Kontroleer asseblief jou outentikasie en netwerkkonfigurasie.",
     "connectionTimeout": "Verbindingstyd verstryk",
@@ -97,6 +100,13 @@
     "imageClipboardUnavailable": "Hierdie blaaier kan nie beelde van die knipbord lees nie",
     "imageClipboardEmpty": "Geen beeld in die knipbord gevind nie",
     "localShell": "Plaaslike terminaal-shell",
+    "localBackendUnreachable": "Die plaaslike backend is nie bereikbaar nie",
+    "processExited": "Proses het geëindig ({{code}})",
+    "sharedAuthLoadFailed": "Kon nie die gedeelde SSH-aanmelding laai nie",
+    "sessionExpiredLogin": "Jou Termix-sessie het geëindig. Meld weer aan.",
+    "imageUploadFailed": "Prent-oplaai het misluk",
+    "imageUploadedNotPasted": "Prent is opgelaai, maar die terminaal was nie oop om dit te plak nie: {{path}}",
+    "clipboardImageReadFailed": "Kon nie die knipbord lees nie",
     "autocompleteHintComplete": "Tab of Enter om te voltooi",
     "autocompleteHintNavigate": "↑↓ om te navigeer",
     "autocompleteHintClose": "Esc om te sluit",
@@ -133,6 +143,9 @@
     "commandCount_one": "{{count}} opdrag",
     "commandCount_other": "{{count}} opdragte",
     "deleteConfirm": "Verwyder hierdie opdrag uit die geskiedenis?",
+    "clearAllConfirm": "Vee die hele opdraggeskiedenis vir hierdie gasheer uit?",
+    "clearFailed": "Kon nie die geskiedenis vee nie",
+    "deleteFailed": "Kon nie die opdrag verwyder nie",
     "settingsTitle": "Geskiedenisinstellings"
   },
   "terminalPanels": {
@@ -453,6 +466,10 @@
     "history": {
       "title": "Lees opdraggeskiedenis",
       "description": "Laat ander funksies, soos die AI-assistent, jou opdraggeskiedenis lees."
+    },
+    "monitor": {
+      "title": "Beskou almal se sessies",
+      "description": "Laat ander funksies, soos Sessie-opname, die lewende terminaal-sessies van elke gebruiker lys, beskou en beëindig."
     }
   },
   "hosts": {
@@ -661,6 +678,7 @@
     "running": "Besig om uit te voer...",
     "completed": "Makro voltooi",
     "failed": "Makro misluk",
+    "timedOut": "Het oortyd wag vir {{pattern}}",
     "needTerminal": "Maak eers 'n terminaal oop en maak 'n verbinding",
     "noSteps": "Hierdie makro het nog geen stappe nie. Voeg een hieronder by.",
     "addStep": "Stap byvoeg",
@@ -799,6 +817,7 @@
       "badRegex": "Hierdie regex is nie geldig nie",
       "secondsRequired": "Voer 1 sekonde of meer in",
       "fired": "{{rule}} op {{host}}",
+      "saveFailed": "Kon nie die waaksaamheidsreëls stoor nie",
       "active_one": "{{count}} monitorreël aan",
       "active_other": "{{count}} monitorreëls aan"
     },
@@ -831,5 +850,33 @@
       "clear": "Vee uit"
     },
     "openTerminalFirst": "Maak 'n SSH-terminal oop om sy gereedskap te gebruik"
+  },
+  "operations": {
+    "check": {
+      "title": "Kontroleer SSH-aanmelding"
+    },
+    "history": {
+      "title": "Onlangse opdragte"
+    },
+    "login": {
+      "title": "SSH-aanmelding"
+    },
+    "sessions": {
+      "title": "Oop terminaal-sessies"
+    },
+    "session": {
+      "title": "Terminaal-sessies",
+      "state": "Toestand",
+      "started": "Begin"
+    }
+  },
+  "card": {
+    "title": "Oop terminale",
+    "loading": "Laai tans...",
+    "empty": "Geen oop terminaal-sessies nie",
+    "connected": "Verbind",
+    "detached": "Ontkoppel",
+    "tmux": "tmux {{name}}",
+    "refresh": "Verfris"
   }
 }
