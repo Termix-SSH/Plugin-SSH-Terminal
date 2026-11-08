@@ -1954,7 +1954,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           } catch (error) {
             const message = getErrorMessage(
               error,
-              "Failed to load shared SSH authentication",
+              t("terminal.sharedAuthLoadFailed"),
             );
             setIsConnected(false);
             setIsConnecting(false);
@@ -2747,12 +2747,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
         if (event.code === 1008) {
           console.error("WebSocket authentication failed:", event.reason);
-          addLog({
-            type: "error",
-            stage: "auth",
-            message: "Authentication failed - please re-login",
-          });
-          updateConnectionError("Authentication failed - please re-login");
+          const message = t("terminal.sessionExpiredLogin");
+          addLog({ type: "error", stage: "auth", message });
+          updateConnectionError(message);
           setIsConnecting(false);
           shouldNotReconnectRef.current = true;
 
@@ -3052,7 +3049,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         // A plain click is left alone so it can select text.
         if (behavior === "modifier" && !modifier) return;
         if (behavior === "direct" || modifier) {
-          window.open(url, "_blank");
+          window.open(url, "_blank", "noopener,noreferrer");
         } else {
           setLinkClickDialog({ url });
         }
@@ -3821,7 +3818,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       return (
         response?.data?.error ||
         response?.data?.message ||
-        "Image upload failed"
+        t("terminal.imageUploadFailed")
       );
     }
 
@@ -3858,7 +3855,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           toast.success(t("terminal.imageUploaded", { path: shellPath }));
         } else {
           toast.warning(
-            `Image uploaded, but the terminal was not available to paste it: ${shellPath}`,
+            t("terminal.imageUploadedNotPasted", { path: shellPath }),
           );
         }
       } catch (error) {
@@ -3933,7 +3930,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         }
         toast.error(t("terminal.imageClipboardEmpty"));
       } catch (error) {
-        toast.error(getErrorMessage(error, "Clipboard read failed"));
+        toast.error(
+          getErrorMessage(error, t("terminal.clipboardImageReadFailed")),
+        );
       } finally {
         setIsImageUploading(false);
       }

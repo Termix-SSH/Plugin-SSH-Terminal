@@ -267,7 +267,8 @@ export function LocalTerminal({
     })
       .then((target) => {
         if (disposed) return;
-        if (!target) throw new Error("The local backend is not reachable");
+        if (!target)
+          throw new Error(tRef.current("terminal.localBackendUnreachable"));
         const socket = new WebSocket(target.url, target.protocols);
         socketRef.current = socket;
         socket.onclose = socket.onerror = () => {
@@ -290,7 +291,7 @@ export function LocalTerminal({
             terminal.write(
               `
 
-[33mProcess exited (${String(frame.exitCode)})[0m
+[33m${tRef.current("terminal.processExited", { code: String(frame.exitCode) })}[0m
 
 `,
             );

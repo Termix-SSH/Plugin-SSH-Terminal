@@ -29,7 +29,9 @@ export function registerOperations(
           timeoutMs: 20000,
         });
         const ms = Date.now() - started;
-        const ok = result.code === 0;
+        // Some servers close the channel without an exit status. Getting this
+        // far still means the login worked.
+        const ok = result.code === 0 || result.code === null;
         const label = ok ? `Works (${ms} ms)` : `Exit ${result.code}`;
         return {
           summary: label,

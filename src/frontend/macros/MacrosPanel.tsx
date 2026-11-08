@@ -53,6 +53,7 @@ import {
   TOOLBAR_FIT,
 } from "@termix-ssh/plugin-sdk/ui";
 import {
+  MacroTimeoutError,
   mergeLocalMacros,
   sanitizeTerminalMacros,
   runTerminalMacro,
@@ -611,6 +612,8 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
         toast.error(t("macros.needTerminal"));
         return;
       }
+      // One run at a time, so Stop always reaches the one running.
+      abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
       setRunningId(macro.id);
@@ -622,12 +625,18 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
         );
         toast.success(t("macros.completed"));
       } catch (error) {
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
+        if (error instanceof MacroTimeoutError) {
+          toast.error(t("macros.timedOut", { pattern: error.pattern }));
+        } else if (!(
+          error instanceof DOMException && error.name === "AbortError"
+        )) {
           toast.error(getErrorMessage(error) || t("macros.failed"));
         }
       } finally {
-        abortRef.current = null;
-        setRunningId(null);
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+          setRunningId(null);
+        }
       }
     },
     [target, t],

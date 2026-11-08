@@ -23,6 +23,7 @@ vi.mock(
 
 vi.mock("@termix-ssh/plugin-sdk/ui", () => ({
   useIsMobile: () => false,
+  LoadingState: () => null,
 }));
 
 import { TerminalTabContent } from "../../../src/frontend/terminal/TerminalTabContent";

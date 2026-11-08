@@ -27,6 +27,13 @@
 - The mouse wheel scrolls in tmux with mouse support on, even right after tmux starts
 - The last row of a local terminal is no longer cut off
 - The terminal offers to fill a saved sudo or SSH password at a password prompt again
+- Clear All in command history asks first and says when it fails, and switching terminals no longer shows the last host's history
+- Running a second macro no longer leaves the first one running with no way to stop it
+- A macro that times out says so in your language, and stopping a macro no longer logs an error
+- Watch rules say when they could not be saved
+- A broadcast that only had one terminal ends when that terminal closes
+- Links opened straight from the terminal can no longer reach back into Termix
+- Some terminal errors and notices were always in English
 
 ## 1.3.0
 

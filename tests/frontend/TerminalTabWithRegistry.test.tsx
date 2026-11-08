@@ -26,6 +26,7 @@ vi.mock(
 
 vi.mock("@termix-ssh/plugin-sdk/ui", () => ({
   useIsMobile: () => false,
+  LoadingState: () => null,
 }));
 
 import { TerminalTabWithRegistry } from "../../src/frontend/TerminalTabWithRegistry";

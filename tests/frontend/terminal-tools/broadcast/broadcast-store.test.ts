@@ -74,6 +74,17 @@ describe("broadcast group", () => {
     expect(getBroadcastState().members).toEqual([]);
   });
 
+  it("ends when the only member of a group of one closes", () => {
+    const a = open("a");
+    open("b");
+    toggleBroadcast("a");
+    a.dispose();
+    expect(getBroadcastState().members).toEqual([]);
+    // Nothing is left watching the sessions, so a later close is a no op.
+    open("c").dispose();
+    expect(getBroadcastState().members).toEqual([]);
+  });
+
   it("keeps a group of one that is still choosing its targets", () => {
     open("a");
     open("b");
