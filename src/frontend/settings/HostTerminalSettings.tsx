@@ -666,7 +666,7 @@ export function HostTerminalSettings({
               value={form.backgroundImage}
               onChange={(e) => setField("backgroundImage", e.target.value)}
               placeholder="https://example.com/image.jpg"
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring font-mono"
+              className="flex h-9 w-full border border-border bg-popover px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring font-mono"
             />
           </div>
           {form.backgroundImage && (
