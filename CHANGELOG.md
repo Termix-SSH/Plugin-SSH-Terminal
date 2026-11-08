@@ -34,6 +34,7 @@
 - A broadcast that only had one terminal ends when that terminal closes
 - Links opened straight from the terminal can no longer reach back into Termix
 - Some terminal errors and notices were always in English
+- Auto-Tmux from a desktop app linked to a sync server uses the host's Tmux Monitor settings, such as mouse support, instead of the defaults
 
 ## 1.3.0
 

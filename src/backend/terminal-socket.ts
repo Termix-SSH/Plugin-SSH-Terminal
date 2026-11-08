@@ -2335,7 +2335,12 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 // skip detection and reuse the same path as the manual
                 // "tmux_attach" websocket message.
                 void tmux
-                  .attachOrCreate(stream, tmuxAttachSession, undefined, id)
+                  .attachOrCreate(
+                    stream,
+                    tmuxAttachSession,
+                    undefined,
+                    serverHostId ?? id,
+                  )
                   .catch(() => {});
                 {
                   const session = sessionManager.getSession(boundSessionId);
@@ -2376,7 +2381,12 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                     } else if (plan === "create") {
                       const newName = `termix-${id}-${Date.now().toString(36).slice(-4)}`;
                       void tmux
-                        .attachOrCreate(stream, undefined, newName, id)
+                        .attachOrCreate(
+                          stream,
+                          undefined,
+                          newName,
+                          serverHostId ?? id,
+                        )
                         .catch(() => {});
                       const confirmed = await tmux.waitForSession(
                         conn,
@@ -2401,7 +2411,12 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                     } else if (plan === "attach") {
                       const sessionName = detection.sessions[0].name;
                       void tmux
-                        .attachOrCreate(stream, sessionName, undefined, id)
+                        .attachOrCreate(
+                          stream,
+                          sessionName,
+                          undefined,
+                          serverHostId ?? id,
+                        )
                         .catch(() => {});
                       const session = sessionManager.getSession(boundSessionId);
                       if (session) {
