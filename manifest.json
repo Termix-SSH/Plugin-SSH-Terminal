@@ -911,6 +911,11 @@
           "risk": "read",
           "permission": "sessions",
           "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
           "surfaces": {
             "assistant": true,
             "mcp": true
@@ -924,6 +929,11 @@
           "risk": "read",
           "permission": "history",
           "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
           "surfaces": {
             "palette": false
           }
@@ -936,6 +946,11 @@
           "risk": "read",
           "permission": "sessions",
           "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
           "surfaces": {
             "assistant": true,
             "mcp": true,
