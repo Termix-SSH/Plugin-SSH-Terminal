@@ -5,6 +5,7 @@
 ### Fixed
 
 - Macro editor Run button now matches the Save button size
+- Quick Connect with a saved credential logs in on the server, so a credential shared with you for use only works there too (needs Termix 26.11.2)
 
 ## 1.4.0
 
