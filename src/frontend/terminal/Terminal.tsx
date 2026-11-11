@@ -123,6 +123,7 @@ import {
   handleTerminalClipboardKeyEvent,
 } from "./terminal-clipboard.ts";
 import { quoteTerminalImagePath } from "./terminal-image-path.ts";
+import { shouldRunPostConnect } from "./post-connect.ts";
 import {
   dispatchKeybindingAction,
   isTerminalKeybindingAction,
@@ -2341,6 +2342,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             isReconnectingRef.current = false;
 
             logTerminalActivity();
+
+            if (!shouldRunPostConnect(msg)) return;
 
             setTimeout(async () => {
               const settings = termSettingsRef.current;

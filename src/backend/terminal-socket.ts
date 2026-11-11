@@ -2466,8 +2466,14 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 runPostShellCommands(0);
               }
 
+              // Only a brand new shell runs the post connect setup. A
+              // reattach or a joined share must not type it again.
               ws.send(
-                JSON.stringify({ type: "connected", message: "SSH connected" }),
+                JSON.stringify({
+                  type: "connected",
+                  message: "SSH connected",
+                  newSession: true,
+                }),
               );
 
               if (id && hostConfig.userId) {
