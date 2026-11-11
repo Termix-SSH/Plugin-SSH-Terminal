@@ -802,7 +802,6 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
               extra={
                 <Button
                   variant="outline"
-                  size="sm"
                   onClick={() =>
                     runningId === draft.id
                       ? abortRef.current?.abort()

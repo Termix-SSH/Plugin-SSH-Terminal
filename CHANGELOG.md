@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1
+
+### Fixed
+
+- Macro editor Run button now matches the Save button size
+
 ## 1.4.0
 
 ### Added
