@@ -140,6 +140,26 @@ export function sftpPathToLocalPath(sftpPath: string): string {
   return sftpPath;
 }
 
+/**
+ * The line typed into a new shell to start in a folder, or null when the path
+ * cannot be typed safely. The path may come from a remote file listing, so it
+ * must never be expanded by the shell.
+ */
+export function cdCommandFor(initialPath: string): string | null {
+  // A control character would end the typed line early.
+  if (!initialPath.trim() || /[\u0000-\u001f\u007f]/.test(initialPath)) {
+    return null;
+  }
+  if (isWindowsSftpPath(initialPath)) {
+    const winPath = sftpPathToLocalPath(initialPath);
+    // cmd.exe and PowerShell share no way to quote $, backticks or %, so
+    // such a path is not typed at all.
+    if (/["$`%\u2018-\u201f]/.test(winPath)) return null;
+    return `cd "${winPath}"\r`;
+  }
+  return `cd '${initialPath.replace(/'/g, "'\\''")}'\r`;
+}
+
 const SSH_DNS_RETRY_DELAYS_MS = [250, 750, 1500];
 
 type Lookup = typeof dns.lookup;

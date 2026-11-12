@@ -24,13 +24,12 @@ import {
   HOST_ADDRESS_MISMATCH_MESSAGE,
   HOST_NOT_ON_THIS_SERVER_MESSAGE,
   isRetriableDnsError,
-  isWindowsSftpPath,
+  cdCommandFor,
   MemoryAgent,
   parseWsMessage,
   resolveHostForSshConnect,
   resolveServerHostId,
   resolveServerJumpHosts,
-  sftpPathToLocalPath,
   toTerminalDimension,
   type TerminalLogger,
 } from "./helpers.js";
@@ -2311,15 +2310,8 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               const runPostShellCommands = (delay: number) => {
                 setTimeout(() => {
                   if (initialPath && initialPath.trim() !== "") {
-                    let cdCommand: string;
-                    if (isWindowsSftpPath(initialPath)) {
-                      const winPath = sftpPathToLocalPath(initialPath);
-                      const escaped = winPath.replace(/"/g, '""');
-                      cdCommand = `cd "${escaped}"\r`;
-                    } else {
-                      cdCommand = `cd "${initialPath.replace(/"/g, '\\"')}"\r`;
-                    }
-                    stream.write(cdCommand);
+                    const cdCommand = cdCommandFor(initialPath);
+                    if (cdCommand) stream.write(cdCommand);
                   }
                   if (executeCommand && executeCommand.trim() !== "") {
                     setTimeout(() => {

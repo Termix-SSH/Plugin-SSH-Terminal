@@ -7,6 +7,7 @@
 - Macro editor Run button now matches the Save button size
 - Quick Connect with a saved credential logs in on the server, so a credential shared with you for use only works there too (needs Termix 26.11.2)
 - Reconnecting a terminal tab no longer runs the startup snippet, environment exports and auto mosh again, and joining a shared session never runs them
+- Opening a terminal in a folder always treats the folder name as plain text
 
 ## 1.4.0
 
