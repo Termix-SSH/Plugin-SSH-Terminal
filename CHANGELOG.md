@@ -9,6 +9,7 @@
 - Reconnecting a terminal tab no longer runs the startup snippet, environment exports and auto mosh again, and joining a shared session never runs them
 - Opening a terminal in a folder always treats the folder name as plain text
 - Command history is only saved for hosts you can reach, and a failed save no longer shows database errors
+- Connecting to a shared host you have no login for says so, instead of saying the host is not on the sync server (needs Termix 26.11.2)
 
 ## 1.4.0
 

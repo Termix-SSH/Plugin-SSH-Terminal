@@ -23,6 +23,7 @@ import {
   hostAddressMismatch,
   HOST_ADDRESS_MISMATCH_MESSAGE,
   HOST_NOT_ON_THIS_SERVER_MESSAGE,
+  HOST_LOGIN_REQUIRED_MESSAGE,
   isRetriableDnsError,
   cdCommandFor,
   MemoryAgent,
@@ -1543,9 +1544,26 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           // Prefer the sync identity. A numeric id belongs to whichever database
           // produced it, so on a sync server it names a different host than the
           // desktop app meant; syncId is the same string on both sides.
+          // allowMissingLogin is newer than the SDK types; older cores ignore it.
           resolvedHostData = (await ctx.ssh.resolveHost(id, {
             syncId: hostSyncId,
-          })) as unknown as typeof resolvedHostData | null;
+            allowMissingLogin: true,
+          } as { syncId?: string | null })) as unknown as
+            typeof resolvedHostData | null;
+
+          if (
+            (resolvedHostData as { loginRequired?: boolean } | null)
+              ?.loginRequired === true
+          ) {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: HOST_LOGIN_REQUIRED_MESSAGE,
+              }),
+            );
+            cleanupAuthState(connectionTimeout);
+            return;
+          }
 
           if (hostSyncId && !resolvedHostData) {
             sshLogger.error(
