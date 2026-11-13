@@ -64,6 +64,11 @@ function classify(
 
 const log = { info: vi.fn(), success: vi.fn(), warn: vi.fn(), error: vi.fn() };
 
+/** The manager answers once the classifier's Promise settles. */
+const flush = async () => {
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+};
+
 function createManager() {
   const sent: Record<string, unknown>[] = [];
   const ws = { send: (data: string) => sent.push(JSON.parse(data)) } as any;
@@ -89,7 +94,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     vi.useRealTimers();
   });
 
-  it("routes a TOTP verification prompt to the totp flow", () => {
+  it("routes a TOTP verification prompt to the totp flow", async () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -101,6 +106,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       finish,
       { username: "root", authType: "none" },
     );
+    await flush();
 
     expect(sent).toEqual([
       {
@@ -116,7 +122,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     expect(finish).not.toHaveBeenCalled();
   });
 
-  it("sends a JumpCloud-style push/TOTP menu as a text prompt, not a push confirm", () => {
+  it("sends a JumpCloud-style push/TOTP menu as a text prompt, not a push confirm", async () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -128,6 +134,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       finish,
       { username: "root", authType: "none" },
     );
+    await flush();
 
     expect(sent).toEqual([
       {
@@ -151,7 +158,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     expect(finish).toHaveBeenCalledWith(["1"]);
   });
 
-  it("asks again when a menu choice is followed by a push confirm round", () => {
+  it("asks again when a menu choice is followed by a push confirm round", async () => {
     const { manager, sent } = createManager();
     const menuFinish = vi.fn();
     const confirmFinish = vi.fn();
@@ -165,6 +172,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       menuFinish,
       host,
     );
+    await flush();
     manager.context.keyboardInteractiveFinish?.(["1"]);
     expect(menuFinish).toHaveBeenCalledWith(["1"]);
 
@@ -176,6 +184,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       confirmFinish,
       host,
     );
+    await flush();
 
     expect(sent.filter((m) => m.type === "password_required")).toEqual([
       {
@@ -196,7 +205,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     expect(confirmFinish).toHaveBeenCalledWith([""]);
   });
 
-  it("silently auto-answers a plain password prompt when a stored password exists", () => {
+  it("silently auto-answers a plain password prompt when a stored password exists", async () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -208,12 +217,13 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       finish,
       { username: "root", password: "hunter2", authType: "password" },
     );
+    await flush();
 
     expect(finish).toHaveBeenCalledWith(["hunter2"]);
     expect(sent).toEqual([]);
   });
 
-  it("prompts the user for a push-confirm prompt and accepts an empty response", () => {
+  it("prompts the user for a push-confirm prompt and accepts an empty response", async () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -225,6 +235,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       finish,
       { username: "root", authType: "none" },
     );
+    await flush();
 
     expect(sent).toEqual([
       {
@@ -248,7 +259,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     expect(finish).toHaveBeenCalledWith([""]);
   });
 
-  it("uses a longer timeout for push-style prompts than generic prompts", () => {
+  it("uses a longer timeout for push-style prompts than generic prompts", async () => {
     vi.useFakeTimers();
     try {
       const { manager, sent } = createManager();
@@ -262,6 +273,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
         finish,
         { username: "root", authType: "none" },
       );
+      await flush();
 
       vi.advanceTimersByTime(180001);
       expect(sent.some((m) => m.type === "error")).toBe(false);
@@ -273,7 +285,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     }
   });
 
-  it("routes a FortiToken prompt to the totp flow instead of the push-confirm flow", () => {
+  it("routes a FortiToken prompt to the totp flow instead of the push-confirm flow", async () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -291,6 +303,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       finish,
       { username: "root", authType: "none" },
     );
+    await flush();
 
     expect(sent).toEqual([
       {
@@ -313,7 +326,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
     expect(finish).toHaveBeenCalledWith(["push"]);
   });
 
-  it("sends a claimed browser round under its handler's name", () => {
+  it("sends a claimed browser round under its handler's name", async () => {
     const { manager, sent } = createManager();
     const finish = vi.fn();
 
@@ -325,6 +338,7 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       finish,
       { username: "root", authType: "none" },
     );
+    await flush();
 
     expect(sent).toEqual([
       {
@@ -346,5 +360,30 @@ describe("SSHAuthManager.handleKeyboardInteractive", () => {
       },
     ]);
     expect(manager.context.browserSignInId).toBe("gateway");
+  });
+
+  it("waits for a classifier in a plugin process", async () => {
+    const { manager, sent } = createManager();
+    manager.context.ssh = {
+      classifyKeyboardInteractive: ((
+        round: Parameters<typeof classify>[0],
+        host: PluginSshHost,
+      ) => Promise.resolve(classify(round, host))) as never,
+    };
+    const finish = vi.fn();
+
+    manager.handleKeyboardInteractive(
+      "",
+      "",
+      "",
+      [{ prompt: "Password: ", echo: false }],
+      finish,
+      { username: "root", password: "secret", authType: "password" },
+    );
+    expect(finish).not.toHaveBeenCalled();
+    await flush();
+
+    expect(finish).toHaveBeenCalledWith(["secret"]);
+    expect(sent).toEqual([]);
   });
 });

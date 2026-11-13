@@ -1860,9 +1860,12 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       // then blocks while the user logs in via the browser).
       sshConn.on(
         "banner",
-        bind((banner: string) => {
+        bind(async (banner: string) => {
           if (!prepared?.onBanner) return;
-          const decision = prepared.onBanner(banner);
+          // A provider in a plugin process answers with a Promise.
+          const decision = await Promise.resolve(
+            prepared.onBanner(banner),
+          ).catch(() => undefined);
           if (!decision) return;
 
           const authType = prepared.authType;
@@ -2863,7 +2866,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       sshConn.on(
         "keyboard-interactive",
         bind(
-          (
+          async (
             name: string,
             instructions: string,
             instructionsLang: string,
@@ -2874,7 +2877,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               clearTimeout(connectionTimeout);
             }
 
-            sshAuthManager.handleKeyboardInteractive(
+            await sshAuthManager.handleKeyboardInteractive(
               name,
               instructions,
               instructionsLang,

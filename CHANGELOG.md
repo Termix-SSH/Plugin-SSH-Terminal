@@ -5,6 +5,7 @@
 ### Changed
 
 - When a signed certificate from SSH Certificate Signer, Step CA or OPKSSH stops working, the terminal asks you to sign in again even when that plugin runs in its own process (needs Termix 26.11.2)
+- Warpgate sign-in prompts and Tailscale SSH checks still show when those plugins run in their own process (needs Termix 26.11.2)
 
 ### Fixed
 
