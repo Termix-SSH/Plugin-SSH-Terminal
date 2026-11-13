@@ -127,6 +127,15 @@ export function TerminalTabContent({
                   ? tmuxAttachCommand(tab.data.tmuxSession)
                   : undefined
               }
+              // Ask the backend for a direct attach as well. With Auto tmux on
+              // and several sessions on the host it would otherwise show the
+              // session picker and never run executeCommand, which stays as
+              // the fallback for a backend without the tmux service.
+              tmuxAttachSession={
+                typeof tab.data?.tmuxSession === "string"
+                  ? tab.data.tmuxSession || undefined
+                  : undefined
+              }
               tmuxSession={
                 typeof tab.data?.tmuxSession === "string"
                   ? tab.data.tmuxSession || undefined
