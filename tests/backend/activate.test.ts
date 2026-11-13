@@ -34,7 +34,21 @@ describe("ssh-terminal activate", () => {
   });
 
   it("provides sessions.live as ssh and terminal.history", async () => {
-    server = await startServer();
+    server = await startServer({
+      hosts: [
+        {
+          id: 1,
+          userId: "user-1",
+          name: "h1",
+          ip: "10.0.0.1",
+          port: 22,
+          username: "root",
+          tags: null,
+          folder: null,
+          authType: "password",
+        },
+      ],
+    });
     const live = server.mock.services.get(
       "sessions.live#ssh",
     ) as LiveSessionsV1;
