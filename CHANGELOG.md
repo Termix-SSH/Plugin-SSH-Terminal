@@ -2,6 +2,10 @@
 
 ## 1.4.1
 
+### Changed
+
+- When a signed certificate from SSH Certificate Signer, Step CA or OPKSSH stops working, the terminal asks you to sign in again even when that plugin runs in its own process (needs Termix 26.11.2)
+
 ### Fixed
 
 - Macro editor Run button now matches the Save button size

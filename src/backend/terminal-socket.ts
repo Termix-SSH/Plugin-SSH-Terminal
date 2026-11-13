@@ -32,6 +32,7 @@ import {
   resolveServerHostId,
   resolveServerJumpHosts,
   toTerminalDimension,
+  authFollowUp,
   type TerminalLogger,
 } from "./helpers.js";
 import { SSHAuthManager } from "./keyboard-prompt.js";
@@ -2526,7 +2527,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
 
       sshConn.on(
         "error",
-        bind((err: Error) => {
+        bind(async (err: Error) => {
           clearTimeout(connectionTimeout);
 
           sendLog("error", "error", `Connection error: ${err.message}`);
@@ -2546,27 +2547,25 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           // The provider decides what an auth failure means: clear a cached
           // certificate and ask for a new sign-in, retry once, or give up with
           // its own message.
-          const authFollowUp = prepared?.onAuthFailed
-            ? prepared.onAuthFailed({
-                error: err,
-                retries: authRetries,
-                canRetry: !connectConfig.sock && !bannerHoldPending,
-                methodNotAvailable: authMethodNotAvailable,
-              })
-            : undefined;
+          const followUp = await authFollowUp(prepared?.onAuthFailed, {
+            error: err,
+            retries: authRetries,
+            canRetry: !connectConfig.sock && !bannerHoldPending,
+            methodNotAvailable: authMethodNotAvailable,
+          });
 
-          if (authFollowUp?.status === "interaction-required") {
+          if (followUp?.status === "interaction-required") {
             if (currentSessionId) {
               sessionManager.destroySession(currentSessionId);
               currentSessionId = null;
             }
             cleanupAuthState(connectionTimeout);
-            sendLog("auth", "error", authFollowUp.message);
+            sendLog("auth", "error", followUp.message);
             ws.send(
               JSON.stringify({
-                type: `${authFollowUp.interaction}_auth_required`,
+                type: `${followUp.interaction}_auth_required`,
                 hostId: id,
-                message: authFollowUp.message,
+                message: followUp.message,
               }),
             );
             return;
@@ -2597,9 +2596,9 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             return;
           }
 
-          if (authFollowUp?.status === "retry") {
+          if (followUp?.status === "retry") {
             authRetries++;
-            sendLog("auth", "info", authFollowUp.message);
+            sendLog("auth", "info", followUp.message);
             sshLogger.info("Retrying SSH auth with provider changes", {
               operation: "ssh_auth_retry",
               hostId: id,
@@ -2612,7 +2611,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               (connectConfig.readyTimeout as number | undefined) ?? 120000,
             );
 
-            Object.assign(connectConfig, authFollowUp.patch);
+            Object.assign(connectConfig, followUp.patch);
 
             // ssh2's connect() ends an open socket and reconnects on close, keeping
             // every listener attached, so the same client can be reused here.
@@ -2621,15 +2620,15 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             return;
           }
 
-          if (authFollowUp?.status === "error") {
-            sendLog("auth", "error", authFollowUp.message);
+          if (followUp?.status === "error") {
+            sendLog("auth", "error", followUp.message);
             if (currentSessionId) {
               sessionManager.destroySession(currentSessionId);
               currentSessionId = null;
             }
             cleanupAuthState(connectionTimeout);
             ws.send(
-              JSON.stringify({ type: "error", message: authFollowUp.message }),
+              JSON.stringify({ type: "error", message: followUp.message }),
             );
             return;
           }

@@ -317,3 +317,19 @@ export class MemoryAgent extends BaseAgent {
     }
   }
 }
+
+/**
+ * What the auth provider wants after the server refused auth. A provider in
+ * a plugin process answers with a Promise; a throwing one means nothing.
+ */
+export async function authFollowUp<T>(
+  onAuthFailed: ((context: never) => T | Promise<T>) | undefined,
+  context: unknown,
+): Promise<T | undefined> {
+  if (!onAuthFailed) return undefined;
+  try {
+    return await onAuthFailed(context as never);
+  } catch {
+    return undefined;
+  }
+}
