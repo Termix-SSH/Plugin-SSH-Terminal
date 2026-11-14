@@ -4126,15 +4126,19 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               );
               const Panel = contribution?.component;
               if (!Panel) return null;
+              // The panel's box: it fills it, here or drawn over a frame.
               return (
-                <Panel
-                  host={host}
-                  hostId={hostConfig.id}
-                  hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
-                  panelProps={dock.props}
-                  onClose={closeDock}
-                  onRunInTerminal={handleRunCommandInTerminal}
-                />
+                <div className="absolute top-12 right-2 z-[120] flex h-[calc(100%-4rem)] w-[min(420px,calc(100%-1rem))] flex-col border border-border bg-background shadow-xl">
+                  <Panel
+                    host={host}
+                    hostId={hostConfig.id}
+                    hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
+                    panelProps={dock.props}
+                    placed
+                    onClose={closeDock}
+                    onRunInTerminal={handleRunCommandInTerminal}
+                  />
+                </div>
               );
             })()}
 

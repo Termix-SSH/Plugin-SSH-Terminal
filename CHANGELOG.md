@@ -8,6 +8,7 @@
 - When a signed certificate from SSH Certificate Signer, Step CA or OPKSSH stops working, the terminal asks you to sign in again even when that plugin runs in its own process (needs Termix 26.11.2)
 - Warpgate sign-in prompts and Tailscale SSH checks still show when those plugins run in their own process (needs Termix 26.11.2)
 - Live readouts at the end of the toolbar come in as plain values, with no extra frame per tab (needs Termix 26.11.2)
+- Side panels, toolbar buttons and sign-in prompts from other plugins draw in their own frames over the terminal. Prompts only take clicks while they show, and broadcast and Find in all terminals still see your splits (needs Termix 26.11.2)
 
 ### Fixed
 

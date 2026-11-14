@@ -59,6 +59,8 @@ interface TerminalSidePanelProps {
   hostLabel: string;
   /** Whatever the opening action passed to openSidePanel. */
   panelProps: Record<string, unknown>;
+  /** The terminal gives the panel its box, so the panel fills it. */
+  placed?: boolean;
   onClose: () => void;
   onRunInTerminal: (command: string) => void;
 }
