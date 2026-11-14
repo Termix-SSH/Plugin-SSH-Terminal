@@ -47,7 +47,7 @@ export function createLocalTerminalSocket(ctx: PluginContext) {
       ws.close(1008, "Authentication required");
       return;
     }
-    if (!ctx.desktop.local.available()) {
+    if (!(await ctx.desktop.local.available())) {
       send({
         type: "error",
         message: "The local terminal only works in the desktop app",
