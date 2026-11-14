@@ -32,7 +32,7 @@ export function registerCloudflareTransport(ctx: PluginContext) {
   ctx.settings.onChange(HOST_KEYS.cloudflareTunnelEnabled, () => {
     void refresh();
   });
-  ctx.schedule.every(REFRESH_MS, refresh);
+  ctx.schedule.every(REFRESH_MS, refresh, { id: "cloudflare-refresh" });
 
   const claims = (hostId: number) => enabled.has(hostId);
 

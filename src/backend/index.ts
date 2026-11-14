@@ -30,16 +30,16 @@ import {
 } from "./settings-validation.js";
 
 /**
- * A service another plugin may or may not provide. The handle always exists;
- * whether its provider is up is asked through the proxy's `in` check.
+ * A service another plugin may or may not provide, or null when nobody
+ * provides it right now. Asked each time, since providers come and go.
  */
-function optionalService<T extends object>(
+async function optionalService<T extends object>(
   ctx: PluginContext,
   service: string,
-  probe: keyof T & string,
-): T | null {
-  const handle = ctx.services.get<T>(service);
-  return probe in handle ? handle : null;
+): Promise<T | null> {
+  const providers = await ctx.services.providers(service);
+  if (!providers || providers.length === 0) return null;
+  return (await ctx.services.get<T>(service)) as T;
 }
 
 export async function activate(ctx: PluginContext) {
@@ -71,7 +71,7 @@ export async function activate(ctx: PluginContext) {
     log,
     getTimeoutMinutes: () => timeoutMinutes,
     getRecordings: () =>
-      optionalService<RecordingsWriterV1>(ctx, "recordings.writer", "open"),
+      optionalService<RecordingsWriterV1>(ctx, "recordings.writer"),
   });
   ctx.disposables.add(() => sessionManager.destroyAll());
 
@@ -81,16 +81,13 @@ export async function activate(ctx: PluginContext) {
     cloudflareClaims: cloudflare.claims,
     log,
     sessionManager,
-    getTmux: () =>
-      optionalService<TmuxSessionsV1>(ctx, "tmux.sessions", "detect"),
+    getTmux: () => optionalService<TmuxSessionsV1>(ctx, "tmux.sessions"),
     getSharing: () =>
-      optionalService<SessionSharingV1>(
-        ctx,
-        "sessions.sharing",
-        "authorizeJoin",
-      ),
+      optionalService<SessionSharingV1>(ctx, "sessions.sharing"),
     getGuests: () =>
-      ctx.registry.consume<SessionGuestsV1>(SESSION_GUESTS_KEY) ?? null,
+      ctx.registry
+        .consume<SessionGuestsV1>(SESSION_GUESTS_KEY)
+        .then((guests) => guests ?? null),
   });
 
   // Public with optional auth: a share-link guest arrives with a share token

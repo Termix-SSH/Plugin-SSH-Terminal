@@ -75,9 +75,9 @@ async function connect(options: {
       bufferOutput: vi.fn(),
       broadcast: vi.fn(),
     } as never,
-    getTmux: () => tmux,
-    getSharing: () => null,
-    getGuests: () => null,
+    getTmux: async () => tmux,
+    getSharing: async () => null,
+    getGuests: async () => null,
   });
 
   const ws = new FakeSocket();

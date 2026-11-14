@@ -73,7 +73,7 @@ function createManager() {
   const sent: Record<string, unknown>[] = [];
   const ws = { send: (data: string) => sent.push(JSON.parse(data)) } as any;
   const manager = new SSHAuthManager({
-    ssh: { classifyKeyboardInteractive: classify },
+    ssh: { classifyKeyboardInteractive: async (...args) => classify(...args) },
     log,
     userId: "user-1",
     ws,

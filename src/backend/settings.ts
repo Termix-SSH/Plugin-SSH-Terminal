@@ -70,16 +70,32 @@ const IMAGE_FIELD_BY_LEGACY_KEY: Record<string, string> = {
 export async function readImageStorageSettings(
   ctx: PluginContext,
 ): Promise<TerminalImageStorageSettings> {
-  return resolveTerminalImageStorageSettings({
-    get: async (legacyKey) => {
-      const field = IMAGE_FIELD_BY_LEGACY_KEY[legacyKey];
-      if (!field) return null;
-      const value = await ctx.settings.get(field);
-      if (value === undefined || value === null || value === "") return null;
-      return String(value);
+  return resolveTerminalImageStorageSettings(
+    {
+      get: async (legacyKey) => {
+        const field = IMAGE_FIELD_BY_LEGACY_KEY[legacyKey];
+        if (!field) return null;
+        const value = await ctx.settings.get(field);
+        if (value === undefined || value === null || value === "") return null;
+        return String(value);
+      },
+      warn: (message) => ctx.log.warn(message),
     },
-    warn: (message) => ctx.log.warn(message),
-  });
+    await imageEnv(ctx),
+  );
+}
+
+/**
+ * A plugin process has no DATA_DIR of core's, so the default image folder
+ * goes in the plugin's own data folder there.
+ */
+async function imageEnv(ctx: PluginContext): Promise<NodeJS.ProcessEnv> {
+  if (process.env.DATA_DIR) return process.env;
+  try {
+    return { ...process.env, DATA_DIR: await ctx.files.dataDir() };
+  } catch {
+    return process.env;
+  }
 }
 
 export interface ClientSettings {

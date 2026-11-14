@@ -60,8 +60,8 @@
     }
   ],
   "engine": {
-    "termix": ">=26.11.1-0",
-    "api": "^1.15"
+    "termix": ">=26.11.2-0",
+    "api": "^2.0.0"
   },
   "capabilities": [
     "hosts:read",
@@ -75,8 +75,22 @@
     "ui:surface",
     "desktop:local",
     "notify:send",
-    "operations:provide"
+    "operations:provide",
+    "network:sockets",
+    "files:own"
   ],
+  "sandbox": {
+    "schedules": [
+      {
+        "id": "cloudflare-refresh",
+        "every": 60000
+      }
+    ],
+    "registry": [
+      "ssh-terminal.hostImportNormalizer",
+      "ssh-terminal.hostPayloadLegacy"
+    ]
+  },
   "provides": [
     {
       "service": "sessions.live",

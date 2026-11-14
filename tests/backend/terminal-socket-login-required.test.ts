@@ -66,9 +66,9 @@ describe("terminal socket with a shared host that has no login", () => {
         bufferOutput: vi.fn(),
         broadcast: vi.fn(),
       } as never,
-      getTmux: () => null,
-      getSharing: () => null,
-      getGuests: () => null,
+      getTmux: async () => null,
+      getSharing: async () => null,
+      getGuests: async () => null,
     } as never);
 
     const ws = new FakeSocket();

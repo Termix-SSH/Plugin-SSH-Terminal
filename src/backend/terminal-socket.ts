@@ -56,6 +56,8 @@ import type {
   SharedSessionRef,
   TmuxSessionsV1,
 } from "./services.js";
+import { tmuxHandle } from "./tmux-handle.js";
+import { randomUUID } from "node:crypto";
 
 const { Client, utils: ssh2Utils } = ssh2Pkg;
 
@@ -119,11 +121,11 @@ export interface TerminalSocketDeps {
   log: TerminalLogger;
   sessionManager: TerminalSessionManager;
   /** The optional tmux.sessions service, as the acting user. */
-  getTmux: () => TmuxSessionsV1 | null;
+  getTmux: () => Promise<TmuxSessionsV1 | null>;
   /** The optional sessions.sharing service, as the acting user. */
-  getSharing: () => SessionSharingV1 | null;
+  getSharing: () => Promise<SessionSharingV1 | null>;
   /** Guest link resolution, published on ctx.registry by session sharing. */
-  getGuests: () => SessionGuestsV1 | null;
+  getGuests: () => Promise<SessionGuestsV1 | null>;
   /** Hosts whose tunnel the registered transport opens, so it is not opened twice. */
   cloudflareClaims?: (hostId: number) => boolean;
 }
@@ -277,7 +279,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     connection: PluginWebSocketConnection,
     tokens: { shareToken?: string; roomGuestToken?: string },
   ): Promise<void> {
-    const guests = deps.getGuests();
+    const guests = await deps.getGuests();
     if (!guests) {
       ws.close(1008, "Session sharing is not available");
       return;
@@ -397,13 +399,22 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       }
     }, 30000);
 
+    // What session sharing's room hub gets: the socket itself can't cross
+    // to its process, so a stable key and a send function do.
+    const roomSocket = {
+      termixSocketKey: randomUUID(),
+      send: (payload: string) => {
+        if (ws.readyState === WebSocket.OPEN) ws.send(payload);
+      },
+    };
+
     ws.on(
       "close",
       bind(() => {
         clearInterval(wsPingInterval);
         void deps
           .getSharing()
-          ?.unsubscribeRoom(ws)
+          .then((sharing) => sharing?.unsubscribeRoom(roomSocket))
           .catch(() => {});
         sshLogger.info("Terminal WebSocket disconnected", {
           operation: "terminal_ws_disconnect",
@@ -833,13 +844,14 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               const session = currentSessionId
                 ? sessionManager.getSession(currentSessionId)
                 : null;
-              const tmux = deps.getTmux();
+              const tmux = session?.sshStream ? await deps.getTmux() : null;
               if (session?.sshStream && tmux) {
+                const shell = tmuxHandle(session.sshConn, session.sshStream);
                 const existingName = tmuxData.sessionName || undefined;
                 if (existingName) {
                   void tmux
                     .attachOrCreate(
-                      session.sshStream,
+                      shell,
                       existingName,
                       undefined,
                       session.hostId,
@@ -860,18 +872,13 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 } else {
                   const newName = `termix-${session.hostId}-${Date.now().toString(36).slice(-4)}`;
                   void tmux
-                    .attachOrCreate(
-                      session.sshStream,
-                      undefined,
-                      newName,
-                      session.hostId,
-                    )
+                    .attachOrCreate(shell, undefined, newName, session.hostId)
                     .catch(() => {});
                   const sshConn = session.sshConn;
                   if (sshConn) {
                     (async () => {
                       const confirmed = await tmux.waitForSession(
-                        sshConn,
+                        tmuxHandle(sshConn),
                         newName,
                       );
                       session.tmuxSessionName = confirmed;
@@ -1094,9 +1101,9 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               const { roomId } = (data ?? {}) as { roomId?: string };
               if (typeof roomId !== "string" || !roomId) break;
               try {
-                const sharing = deps.getSharing();
+                const sharing = await deps.getSharing();
                 const joined = sharing
-                  ? await sharing.subscribeRoom(roomId, ws)
+                  ? await sharing.subscribeRoom(roomId, roomSocket)
                   : false;
                 if (!joined) {
                   ws.send(
@@ -1119,9 +1126,11 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               const { roomId } = (data ?? {}) as { roomId?: string };
               void deps
                 .getSharing()
-                ?.unsubscribeRoom(
-                  ws,
-                  typeof roomId === "string" ? roomId : undefined,
+                .then((sharing) =>
+                  sharing?.unsubscribeRoom(
+                    roomSocket,
+                    typeof roomId === "string" ? roomId : undefined,
+                  ),
                 )
                 .catch(() => {});
               break;
@@ -1133,7 +1142,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 tabInstanceId?: string;
               };
               try {
-                const sharing = deps.getSharing();
+                const sharing = await deps.getSharing();
                 const authorized = sharing
                   ? await sharing.authorizeJoin(joinData.shareId)
                   : null;
@@ -2343,142 +2352,154 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 }, delay);
               };
 
-              const tmux = deps.getTmux();
-              if (tmuxAttachSession && conn && tmux) {
-                // Direct attach (tmux monitor): the session is known to exist, so
-                // skip detection and reuse the same path as the manual
-                // "tmux_attach" websocket message.
-                void tmux
-                  .attachOrCreate(
-                    stream,
-                    tmuxAttachSession,
-                    undefined,
-                    serverHostId ?? id,
-                  )
-                  .catch(() => {});
-                {
-                  const session = sessionManager.getSession(boundSessionId);
-                  if (session) session.tmuxSessionName = tmuxAttachSession;
-                }
-                sshLogger.info("Attached to requested tmux session", {
-                  operation: "tmux_direct_attach",
-                  sessionName: tmuxAttachSession,
-                  hostId: id,
-                });
-                ws.send(
-                  JSON.stringify({
-                    type: "tmux_session_attached",
-                    sessionName: tmuxAttachSession,
-                  }),
-                );
-              } else if (autoTmux && conn && tmux) {
-                (async () => {
-                  try {
-                    const detection = await tmux.detect(conn);
-                    const plan = planTmuxAttach(
-                      detection.sessions,
-                      autoTmuxAskWhenOne,
-                    );
-                    if (!detection.available) {
-                      sshLogger.warn("tmux not found on remote host", {
-                        operation: "tmux_detection",
-                        hostId: id,
-                      });
-                      ws.send(
-                        JSON.stringify({
-                          type: "tmux_unavailable",
-                          message:
-                            "tmux is not installed on the remote host. Falling back to standard shell.",
-                        }),
-                      );
-                      runPostShellCommands(0);
-                    } else if (plan === "create") {
-                      const newName = `termix-${id}-${Date.now().toString(36).slice(-4)}`;
-                      void tmux
-                        .attachOrCreate(
-                          stream,
-                          undefined,
-                          newName,
-                          serverHostId ?? id,
-                        )
-                        .catch(() => {});
-                      const confirmed = await tmux.waitForSession(
-                        conn,
-                        newName,
-                      );
-                      const session = sessionManager.getSession(boundSessionId);
-                      if (session) {
-                        session.tmuxSessionName = confirmed;
-                      }
-                      sshLogger.info("Created new tmux session", {
-                        operation: "tmux_new_session",
-                        sessionName: confirmed,
-                        hostId: id,
-                      });
-                      ws.send(
-                        JSON.stringify({
-                          type: "tmux_session_created",
-                          sessionName: confirmed,
-                        }),
-                      );
-                      runPostShellCommands(0);
-                    } else if (plan === "attach") {
-                      const sessionName = detection.sessions[0].name;
-                      void tmux
-                        .attachOrCreate(
-                          stream,
-                          sessionName,
-                          undefined,
-                          serverHostId ?? id,
-                        )
-                        .catch(() => {});
-                      const session = sessionManager.getSession(boundSessionId);
-                      if (session) {
-                        session.tmuxSessionName = sessionName;
-                      }
-                      sshLogger.info("Auto-attached to the only tmux session", {
-                        operation: "tmux_auto_attach",
-                        sessionName,
-                        hostId: id,
-                      });
-                      ws.send(
-                        JSON.stringify({
-                          type: "tmux_session_attached",
-                          sessionName,
-                        }),
-                      );
-                      // Reattaching: the session has its own state, so
-                      // initialPath/executeCommand are not re-run in it.
-                    } else {
-                      sshLogger.info(
-                        "Multiple tmux sessions found, sending list to frontend",
-                        {
-                          operation: "tmux_sessions_available",
-                          sessions: detection.sessions,
-                          hostId: id,
-                        },
-                      );
-                      ws.send(
-                        JSON.stringify({
-                          type: "tmux_sessions_available",
-                          sessions: detection.sessions,
-                        }),
-                      );
-                      // Commands deferred until user picks a session
-                    }
-                  } catch (error) {
-                    sshLogger.error("tmux detection failed", error, {
-                      operation: "tmux_detection_error",
-                      hostId: id,
-                    });
-                    // Fallback: run commands in plain shell
-                    runPostShellCommands(0);
+              // The tmux service is another plugin's, reached asynchronously.
+              void (async () => {
+                const tmux =
+                  (tmuxAttachSession || autoTmux) && conn
+                    ? await deps.getTmux().catch(() => null)
+                    : null;
+                const shell = tmuxHandle(conn, stream);
+                if (tmuxAttachSession && conn && tmux) {
+                  // Direct attach (tmux monitor): the session is known to exist, so
+                  // skip detection and reuse the same path as the manual
+                  // "tmux_attach" websocket message.
+                  void tmux
+                    .attachOrCreate(
+                      shell,
+                      tmuxAttachSession,
+                      undefined,
+                      serverHostId ?? id,
+                    )
+                    .catch(() => {});
+                  {
+                    const session = sessionManager.getSession(boundSessionId);
+                    if (session) session.tmuxSessionName = tmuxAttachSession;
                   }
-                })();
-              } else {
-                // No tmux -- run commands directly as before
-                runPostShellCommands(0);
-              }
+                  sshLogger.info("Attached to requested tmux session", {
+                    operation: "tmux_direct_attach",
+                    sessionName: tmuxAttachSession,
+                    hostId: id,
+                  });
+                  ws.send(
+                    JSON.stringify({
+                      type: "tmux_session_attached",
+                      sessionName: tmuxAttachSession,
+                    }),
+                  );
+                } else if (autoTmux && conn && tmux) {
+                  (async () => {
+                    try {
+                      const detection = await tmux.detect(shell);
+                      const plan = planTmuxAttach(
+                        detection.sessions,
+                        autoTmuxAskWhenOne,
+                      );
+                      if (!detection.available) {
+                        sshLogger.warn("tmux not found on remote host", {
+                          operation: "tmux_detection",
+                          hostId: id,
+                        });
+                        ws.send(
+                          JSON.stringify({
+                            type: "tmux_unavailable",
+                            message:
+                              "tmux is not installed on the remote host. Falling back to standard shell.",
+                          }),
+                        );
+                        runPostShellCommands(0);
+                      } else if (plan === "create") {
+                        const newName = `termix-${id}-${Date.now().toString(36).slice(-4)}`;
+                        void tmux
+                          .attachOrCreate(
+                            shell,
+                            undefined,
+                            newName,
+                            serverHostId ?? id,
+                          )
+                          .catch(() => {});
+                        const confirmed = await tmux.waitForSession(
+                          shell,
+                          newName,
+                        );
+                        const session =
+                          sessionManager.getSession(boundSessionId);
+                        if (session) {
+                          session.tmuxSessionName = confirmed;
+                        }
+                        sshLogger.info("Created new tmux session", {
+                          operation: "tmux_new_session",
+                          sessionName: confirmed,
+                          hostId: id,
+                        });
+                        ws.send(
+                          JSON.stringify({
+                            type: "tmux_session_created",
+                            sessionName: confirmed,
+                          }),
+                        );
+                        runPostShellCommands(0);
+                      } else if (plan === "attach") {
+                        const sessionName = detection.sessions[0].name;
+                        void tmux
+                          .attachOrCreate(
+                            shell,
+                            sessionName,
+                            undefined,
+                            serverHostId ?? id,
+                          )
+                          .catch(() => {});
+                        const session =
+                          sessionManager.getSession(boundSessionId);
+                        if (session) {
+                          session.tmuxSessionName = sessionName;
+                        }
+                        sshLogger.info(
+                          "Auto-attached to the only tmux session",
+                          {
+                            operation: "tmux_auto_attach",
+                            sessionName,
+                            hostId: id,
+                          },
+                        );
+                        ws.send(
+                          JSON.stringify({
+                            type: "tmux_session_attached",
+                            sessionName,
+                          }),
+                        );
+                        // Reattaching: the session has its own state, so
+                        // initialPath/executeCommand are not re-run in it.
+                      } else {
+                        sshLogger.info(
+                          "Multiple tmux sessions found, sending list to frontend",
+                          {
+                            operation: "tmux_sessions_available",
+                            sessions: detection.sessions,
+                            hostId: id,
+                          },
+                        );
+                        ws.send(
+                          JSON.stringify({
+                            type: "tmux_sessions_available",
+                            sessions: detection.sessions,
+                          }),
+                        );
+                        // Commands deferred until user picks a session
+                      }
+                    } catch (error) {
+                      sshLogger.error("tmux detection failed", error, {
+                        operation: "tmux_detection_error",
+                        hostId: id,
+                      });
+                      // Fallback: run commands in plain shell
+                      runPostShellCommands(0);
+                    }
+                  })();
+                } else {
+                  // No tmux -- run commands directly as before
+                  runPostShellCommands(0);
+                }
+              })();
 
               // Only a brand new shell runs the post connect setup. A
               // reattach or a joined share must not type it again.

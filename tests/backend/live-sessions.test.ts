@@ -19,7 +19,7 @@ function setup(permissions: string[], recording = false) {
   const manager = new TerminalSessionManager({
     log,
     getTimeoutMinutes: () => 30,
-    getRecordings: () =>
+    getRecordings: async () =>
       recording
         ? {
             open: async () => ({

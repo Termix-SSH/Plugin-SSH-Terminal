@@ -89,7 +89,9 @@ describe("ssh-terminal activate", () => {
   it("offers a host import normalizer", async () => {
     server = await startServer();
     expect(
-      server.mock.ctx.registry.consume("ssh-terminal.hostImportNormalizer"),
+      await server.mock.ctx.registry.consume(
+        "ssh-terminal.hostImportNormalizer",
+      ),
     ).toBe(hostImportNormalizer);
   });
 
