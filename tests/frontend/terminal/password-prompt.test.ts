@@ -100,4 +100,28 @@ describe("isAtPasswordPrompt", () => {
   it("is false at a normal prompt", () => {
     expect(isAtPasswordPrompt("me@host:~$ ")).toBe(false);
   });
+
+  // As sudo-rs 0.2 on Ubuntu 26.04 prints it: a `*` per typed character,
+  // erased with backspace, space, backspace.
+  const sudoRs = "$ sudo true\r\n[sudo: authenticate] Password: ";
+
+  it("stays true while sudo-rs echoes a * for each typed character", () => {
+    expect(isAtPasswordPrompt(`${sudoRs}***`)).toBe(true);
+    expect(isAtPasswordPrompt(`${sudoRs}***\b \b`)).toBe(true);
+    expect(isAtPasswordPrompt(`${sudoRs}*\b \b`)).toBe(true);
+  });
+
+  it("is false once sudo-rs takes the password, and true again on a retry", () => {
+    const answered = `${sudoRs}***\b \b\b \b\b \b\r\n`;
+    expect(isAtPasswordPrompt(answered)).toBe(false);
+    expect(
+      isAtPasswordPrompt(
+        `${answered}sudo: Authentication failed, try again.\r\n[sudo: authenticate] Password: *`,
+      ),
+    ).toBe(true);
+  });
+
+  it("does not take a command ending in * for a prompt", () => {
+    expect(isAtPasswordPrompt("me@host:~$ ls *")).toBe(false);
+  });
 });
