@@ -4,8 +4,9 @@ import type { Host } from "../types";
  * The slots the terminal offers plugins, and what it hands them.
  *
  * - "terminal.toolbar" (buttons): actions are invoked with a TerminalSlotApi.
- * - "terminal.toolbarStatus" (components): small live readouts at the end
- *   of the toolbar (host metrics), rendered with TerminalToolbarStatusProps.
+ * - "terminal.toolbarStatus" (data): small live readouts at the end of the
+ *   toolbar (host metrics). Row key is the tab, context is
+ *   TerminalToolbarStatusContext.
  * - "terminal.sidePanel" (components): a side panel an action opens with
  *   `openSidePanel(id)`, rendered with TerminalSidePanelProps.
  * - "terminal.overlay" (components): always mounted over the terminal and
@@ -44,7 +45,8 @@ export interface TerminalSlotApi {
   } | null;
 }
 
-interface TerminalToolbarStatusProps {
+export interface TerminalToolbarStatusContext {
+  hostId: number;
   host: Host;
   isConnected: boolean;
   /** Visible on a desktop viewport and connected: poll only while true. */

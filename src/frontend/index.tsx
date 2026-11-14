@@ -353,7 +353,9 @@ export function activate(app: TermixApp): void {
   app.declareActionSlot({ id: TERMINAL_TOOLBAR_SLOT, accepts: ["button"] });
   app.declareActionSlot({
     id: TERMINAL_TOOLBAR_STATUS_SLOT,
-    accepts: ["component"],
+    accepts: ["data"],
+    shapes: ["bars", "stat", "text"],
+    rows: "tab",
   });
   app.declareActionSlot({
     id: TERMINAL_SIDE_PANEL_SLOT,

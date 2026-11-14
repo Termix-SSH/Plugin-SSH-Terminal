@@ -18,7 +18,7 @@ import {
   type ToolbarButtonInfo,
 } from "./toolbar-buttons";
 import {
-  ComponentSlot,
+  DataSlot,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -28,7 +28,6 @@ import {
 } from "@termix-ssh/plugin-sdk/ui";
 import {
   invokeAction,
-  useSlotContributions,
   useTabs,
   useTranslation,
   type PluginHostRecord,
@@ -57,6 +56,8 @@ interface TerminalToolbarProps {
   slotApi?: TerminalSlotApi;
   /** Dims the strip of a split pane that is not focused. */
   isFocused?: boolean;
+  /** The terminal's tab, the row key for toolbar readouts. */
+  tabId?: string;
 }
 
 interface MenuEntry {
@@ -80,16 +81,17 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
   onOpenFiles,
   slotApi,
   isFocused = true,
+  tabId,
 }) => {
   const { t } = useTranslation();
+  const [ownKey] = useState(
+    () => `terminal-${Math.random().toString(36).slice(2, 10)}`,
+  );
+  const statusKey = tabId ?? ownKey;
   const tabs = useTabs();
   const isMobile = useIsMobile();
   const settings = useMemo(() => readToolbarSettings(host), [host]);
   const catalog = useToolbarButtons(host);
-  const statusContributions = useSlotContributions(
-    TERMINAL_TOOLBAR_STATUS_SLOT,
-    { host },
-  );
   const buttons = useMemo(
     () =>
       visibleButtons(catalog, settings.buttons).filter(
@@ -97,7 +99,8 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
       ),
     [catalog, settings.buttons, isTmuxAttached],
   );
-  const hasStatus = settings.showStatus && statusContributions.length > 0;
+  // Readouts come in as data; the strip hides itself while it is empty.
+  const hasStatus = settings.showStatus;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -376,12 +379,19 @@ export const TerminalToolbar: React.FC<TerminalToolbarProps> = ({
       {hasStatus && wide && (
         <div
           data-toolbar-status
-          className="flex h-full shrink-0 items-center border-l border-border pl-1"
+          className="flex h-full shrink-0 items-center border-l border-border pl-1 empty:hidden"
         >
-          <ComponentSlot
+          <DataSlot
             slotId={TERMINAL_TOOLBAR_STATUS_SLOT}
+            rowKey={statusKey}
             when={{ host }}
-            props={{ host, isConnected, active: isConnected }}
+            context={{
+              hostId: Number(host.id),
+              host,
+              isConnected,
+              active: isConnected,
+            }}
+            layout="inline"
           />
         </div>
       )}
