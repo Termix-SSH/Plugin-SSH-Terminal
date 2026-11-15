@@ -3,7 +3,7 @@ import {
   readFontSize,
   saveFontSize,
 } from "./font-size-storage";
-import { getErrorMessage } from "./terminal-helpers";
+import { getErrorMessage, safeSignInUrl } from "./terminal-helpers";
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   useEffect,
@@ -1265,9 +1265,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     }
 
     function handleBrowserSignInOpenUrl() {
-      if (browserSignIn?.url) {
-        window.open(browserSignIn.url, "_blank", "noopener,noreferrer");
-      }
+      const url = safeSignInUrl(browserSignIn?.url);
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function handleAuthDialogSubmit(credentials: {
