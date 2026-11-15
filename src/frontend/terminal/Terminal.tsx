@@ -174,6 +174,7 @@ import {
   useHosts,
   useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
+import { useRemoteImage } from "./remote-image";
 
 type HostKeyVerificationData = Omit<
   React.ComponentProps<typeof HostKeyVerificationDialog>,
@@ -333,6 +334,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const backgroundColor = backgroundImage
       ? "transparent"
       : themeColors.background;
+    // Loaded through Termix: a plugin view can't load pictures from other sites.
+    const backgroundSrc = useRemoteImage(backgroundImage);
     const fitAddonRef = useRef<FitAddon | null>(null);
     const webSocketRef = useRef<WebSocket | null>(null);
     const cwdWaitersRef = useRef<Array<(path: string) => void>>([]);
@@ -4048,8 +4051,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           className="relative min-h-0 w-full flex-1"
           style={{
             backgroundColor: backgroundImage ? "transparent" : backgroundColor,
-            ...(backgroundImage && {
-              backgroundImage: `url(${backgroundImage})`,
+            ...(backgroundSrc && {
+              backgroundImage: `url("${backgroundSrc}")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
