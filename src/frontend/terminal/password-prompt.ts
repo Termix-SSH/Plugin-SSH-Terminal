@@ -20,7 +20,19 @@ export function isAtPasswordPrompt(output: string): boolean {
     output.lastIndexOf("\n"),
     output.lastIndexOf("\r"),
   );
-  return isPasswordPrompt(output.slice(lineStart + 1));
+  return isPasswordPrompt(withoutFeedback(output.slice(lineStart + 1)));
+}
+
+/**
+ * sudo-rs (Ubuntu 26.04) echoes a `*` for each typed character and erases
+ * with backspaces, so the line no longer ends in the prompt while typing.
+ */
+function withoutFeedback(line: string): string {
+  let shown = "";
+  for (const char of line) {
+    shown = char === "\b" ? shown.slice(0, -1) : shown + char;
+  }
+  return shown.replace(/\*+\s*$/, "");
 }
 
 export function isSudoCommand(line: string): boolean {
