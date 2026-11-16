@@ -67,7 +67,7 @@
     "searchRegex": "Use Regular Expression",
     "searchResultCount": "{{index}} of {{count}}",
     "searchWholeWord": "Match Whole Word",
-    "sessionTakenOver": "Session was opened in another tab. Reconnecting...",
+    "sessionTakenOver": "This session was opened in another window or tab.",
     "tmuxAttached": "Attached clients",
     "tmuxAttachedCount_one": "{{count}} attached",
     "tmuxAttachedCount_other": "{{count}} attached",
