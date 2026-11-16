@@ -3,7 +3,7 @@ import {
   readFontSize,
   saveFontSize,
 } from "./font-size-storage";
-import { getErrorMessage } from "./terminal-helpers";
+import { getErrorMessage, safeSignInUrl } from "./terminal-helpers";
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   useEffect,
@@ -124,6 +124,7 @@ import {
   handleTerminalClipboardKeyEvent,
 } from "./terminal-clipboard.ts";
 import { quoteTerminalImagePath } from "./terminal-image-path.ts";
+import { shouldRunPostConnect } from "./post-connect.ts";
 import {
   dispatchKeybindingAction,
   isTerminalKeybindingAction,
@@ -175,6 +176,7 @@ import {
   useHosts,
   useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
+import { useRemoteImage } from "./remote-image";
 
 type HostKeyVerificationData = Omit<
   React.ComponentProps<typeof HostKeyVerificationDialog>,
@@ -335,6 +337,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const backgroundColor = backgroundImage
       ? "transparent"
       : themeColors.background;
+    // Loaded through Termix: a plugin view can't load pictures from other sites.
+    const backgroundSrc = useRemoteImage(backgroundImage);
     const fitAddonRef = useRef<FitAddon | null>(null);
     const webSocketRef = useRef<WebSocket | null>(null);
     const cwdWaitersRef = useRef<Array<(path: string) => void>>([]);
@@ -1267,9 +1271,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     }
 
     function handleBrowserSignInOpenUrl() {
-      if (browserSignIn?.url) {
-        window.open(browserSignIn.url, "_blank", "noopener,noreferrer");
-      }
+      const url = safeSignInUrl(browserSignIn?.url);
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function handleAuthDialogSubmit(credentials: {
@@ -2344,6 +2347,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             isReconnectingRef.current = false;
 
             logTerminalActivity();
+
+            if (!shouldRunPostConnect(msg)) return;
 
             setTimeout(async () => {
               const settings = termSettingsRef.current;
@@ -4000,6 +4005,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         slotApi={slotApi}
         onOpenFiles={onOpenFileManager ? openFilesAtCwd : undefined}
         isFocused={isFocusedPane}
+        tabId={sessionTabId ?? undefined}
       />
     );
     const toolbarOnTop = readToolbarSettings(host).position === "top";
@@ -4053,8 +4059,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           className="relative min-h-0 w-full flex-1"
           style={{
             backgroundColor: backgroundImage ? "transparent" : backgroundColor,
-            ...(backgroundImage && {
-              backgroundImage: `url(${backgroundImage})`,
+            ...(backgroundSrc && {
+              backgroundImage: `url("${backgroundSrc}")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -4130,15 +4136,19 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               );
               const Panel = contribution?.component;
               if (!Panel) return null;
+              // The panel's box: it fills it, here or drawn over a frame.
               return (
-                <Panel
-                  host={host}
-                  hostId={hostConfig.id}
-                  hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
-                  panelProps={dock.props}
-                  onClose={closeDock}
-                  onRunInTerminal={handleRunCommandInTerminal}
-                />
+                <div className="absolute top-12 right-2 z-[120] flex h-[calc(100%-4rem)] w-[min(420px,calc(100%-1rem))] flex-col border border-border bg-background shadow-xl">
+                  <Panel
+                    host={host}
+                    hostId={hostConfig.id}
+                    hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
+                    panelProps={dock.props}
+                    placed
+                    onClose={closeDock}
+                    onRunInTerminal={handleRunCommandInTerminal}
+                  />
+                </div>
               );
             })()}
 
