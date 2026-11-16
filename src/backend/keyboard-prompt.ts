@@ -10,6 +10,7 @@
 import type { WebSocket } from "ws";
 import type {
   PluginBrowserSignInRound,
+  PluginKeyboardInteractiveDecision,
   PluginKeyboardInteractivePrompt,
   PluginSsh,
   PluginSshHost,
@@ -79,7 +80,7 @@ export class SSHAuthManager {
     finish: (responses: string[]) => void,
     resolvedCredentials: ResolvedCredentials,
     hostConfig?: HostFlags,
-  ): void {
+  ): Promise<void> {
     this.context.isKeyboardInteractive = true;
 
     const host = {
@@ -92,11 +93,24 @@ export class SSHAuthManager {
       authType: resolvedCredentials.authType,
     } as PluginSshHost;
 
-    const decision = this.context.ssh.classifyKeyboardInteractive(
-      { name, instructions, prompts },
-      host,
+    // A handler in a plugin process answers with a Promise.
+    return Promise.resolve(
+      this.context.ssh.classifyKeyboardInteractive(
+        { name, instructions, prompts },
+        host,
+      ),
+    ).then(
+      (decision) => this.answerRound(decision, prompts, finish, host),
+      () => finish(prompts.map(() => "")),
     );
+  }
 
+  private answerRound(
+    decision: PluginKeyboardInteractiveDecision,
+    prompts: KeyboardInteractivePrompt[],
+    finish: (responses: string[]) => void,
+    host: PluginSshHost,
+  ): void {
     switch (decision.kind) {
       case "auto":
         finish(decision.responses);

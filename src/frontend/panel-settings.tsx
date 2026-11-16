@@ -1,15 +1,5 @@
 import type { ReactNode } from "react";
-import { Rows3, SlidersHorizontal } from "lucide-react";
-import {
-  useTranslation,
-  type SettingsState,
-} from "@termix-ssh/plugin-sdk/frontend";
-import {
-  FakeSwitch,
-  InlineView,
-  SectionCard,
-  SettingRow,
-} from "@termix-ssh/plugin-sdk/ui";
+import { usePluginId, useTabs } from "@termix-ssh/plugin-sdk/frontend";
 
 export type ActionsSettingKey =
   "macrosAlwaysShowActions" | "historyAlwaysShowActions";
@@ -30,44 +20,12 @@ export function rowActionProps(always: boolean, actions: ReactNode) {
     : { actions };
 }
 
-/** Display settings page for a sidebar panel's list. */
-export function PanelSettings({
-  settings,
-  settingKey,
-  title,
-  onBack,
-}: {
-  settings: SettingsState;
-  settingKey: ActionsSettingKey;
-  title: string;
-  onBack: () => void;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <InlineView
-      stacked
-      open
-      onOpenChange={(open) => !open && onBack()}
-      icon={<SlidersHorizontal className="size-4" />}
-      title={title}
-    >
-      <SectionCard
-        title={t("settings.user.displayTitle")}
-        icon={<Rows3 className="size-3.5" />}
-      >
-        <SettingRow
-          label={t(`settings.user.${settingKey}.label`)}
-          description={t(`settings.user.${settingKey}.description`)}
-        >
-          <FakeSwitch
-            checked={settings.values[settingKey] === true}
-            onChange={(v) =>
-              void settings.save({ ...settings.values, [settingKey]: v })
-            }
-          />
-        </SettingRow>
-      </SectionCard>
-    </InlineView>
-  );
+/** Opens this plugin's page in Settings. */
+export function useOpenSettingsPage() {
+  const tabs = useTabs();
+  const pluginId = usePluginId();
+  return () =>
+    tabs.openSingletonTab("settings", {
+      data: { section: `plugin:${pluginId}` },
+    });
 }

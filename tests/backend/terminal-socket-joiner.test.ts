@@ -66,9 +66,9 @@ function setup() {
     ctx,
     log: log as never,
     sessionManager: sessionManager as never,
-    getTmux: () => null,
-    getSharing: () => sharing as never,
-    getGuests: () => null,
+    getTmux: async () => null,
+    getSharing: async () => sharing as never,
+    getGuests: async () => null,
   });
   return { terminal, ownerStream, ownerConn };
 }

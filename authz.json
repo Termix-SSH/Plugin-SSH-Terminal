@@ -1,0 +1,91 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Termix-SSH/Termix/main/scripts/authz/authz.schema.json",
+  "seed": [],
+  "routes": {
+    "GET /plugin-api/ssh-terminal/client-settings": {
+      "access": "user"
+    },
+    "POST /plugin-api/ssh-terminal/command-history": {
+      "access": "user"
+    },
+    "DELETE /plugin-api/ssh-terminal/command-history/:hostId": {
+      "access": "user",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      },
+      "destructive": true,
+      "filtered": true,
+      "note": "History is per user, so this reaches only the caller own rows"
+    },
+    "GET /plugin-api/ssh-terminal/command-history/:hostId": {
+      "access": "user",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      },
+      "filtered": true,
+      "note": "History is per user, so this reaches only the caller own rows"
+    },
+    "GET /plugin-api/ssh-terminal/command-history/:hostId/recent": {
+      "access": "user",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      },
+      "filtered": true,
+      "note": "History is per user, so this reaches only the caller own rows"
+    },
+    "POST /plugin-api/ssh-terminal/command-history/delete": {
+      "access": "user",
+      "destructive": true
+    },
+    "GET /plugin-api/ssh-terminal/default-appearance": {
+      "access": "user"
+    },
+    "PUT /plugin-api/ssh-terminal/hosts/:hostId/auto-tmux": {
+      "access": "user",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      },
+      "body": {
+        "enabled": true
+      }
+    },
+    "POST /plugin-api/ssh-terminal/image-storage/test": {
+      "access": "user"
+    },
+    "POST /plugin-api/ssh-terminal/image-upload": {
+      "access": "user"
+    },
+    "GET /plugin-api/ssh-terminal/sessions": {
+      "access": "user"
+    },
+    "PUT /plugin-api/ssh-terminal/user-settings": {
+      "access": "user"
+    },
+    "POST /plugin-api/ssh-terminal/watch-alert": {
+      "access": "user",
+      "resource": {
+        "kind": "host",
+        "min": "connect",
+        "key": "hostId"
+      },
+      "body": {
+        "hostId": "{{host}}",
+        "rule": "authz-rule"
+      }
+    },
+    "WS /plugin-ws/ssh-terminal/local-terminal": {
+      "access": "user",
+      "allowed": "any",
+      "note": "Desktop app only"
+    },
+    "WS /plugin-ws/ssh-terminal/terminal": {
+      "access": "user",
+      "note": "Share link guests arrive with a shareToken instead of a session; the run also checks a read only guest cannot type",
+      "allow": ["guest"]
+    }
+  }
+}

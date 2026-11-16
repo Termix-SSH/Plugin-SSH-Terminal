@@ -15,7 +15,7 @@ const log = { info: vi.fn(), success: vi.fn(), warn: vi.fn(), error: vi.fn() };
 const sessionManager = new TerminalSessionManager({
   log,
   getTimeoutMinutes: () => 30,
-  getRecordings: () => ({
+  getRecordings: async () => ({
     open: async (meta) => {
       opens(meta);
       return { append: appends, persist: persists, discard: discards };
@@ -128,9 +128,10 @@ describe("TerminalSessionManager - session logging", () => {
     const withoutRecordings = new TerminalSessionManager({
       log,
       getTimeoutMinutes: () => 30,
-      getRecordings: () => null,
+      getRecordings: async () => null,
     });
     const id = withoutRecordings.createSession("u1", 1, "host", 80, 24);
+    await new Promise((r) => setTimeout(r, 0));
     expect(withoutRecordings.getSession(id)?.sessionLoggingEnabled).toBe(false);
     withoutRecordings.bufferOutput(id, "output");
     withoutRecordings.destroySession(id);

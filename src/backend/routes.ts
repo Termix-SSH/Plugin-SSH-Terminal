@@ -804,7 +804,10 @@ export function registerTerminalRoutes(
       return res.status(400).json({ error: "Missing required parameters" });
     }
 
-    const hostIdNum = parseInt(hostId, 10);
+    const hostIdNum = Number(hostId);
+    if (!Number.isInteger(hostIdNum)) {
+      return res.status(400).json({ error: "Invalid host" });
+    }
     const trimmedCommand = command.trim();
     const skipped = {
       id: 0,
@@ -830,6 +833,10 @@ export function registerTerminalRoutes(
     }
 
     try {
+      const access = await ctx.hosts.checkAccess(hostIdNum, "connect");
+      if (!access.hasAccess) {
+        return res.status(404).json({ error: "Host not found" });
+      }
       const executedAt = new Date().toISOString();
       await history.create(userId, hostIdNum, trimmedCommand, executedAt);
       res.status(201).json({
@@ -840,9 +847,7 @@ export function registerTerminalRoutes(
       });
     } catch (err) {
       log.error("Failed to save command to history", err);
-      res.status(500).json({
-        error: getErrorMessage(err, "Failed to save command"),
-      });
+      res.status(500).json({ error: "Failed to save command" });
     }
   });
 
