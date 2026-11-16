@@ -66,7 +66,7 @@ import {
   subscribeSessions,
 } from "../session-registry";
 import { docsUrl } from "../docs";
-import { PanelSettings, rowActionProps } from "../panel-settings";
+import { useOpenSettingsPage, rowActionProps } from "../panel-settings";
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "";
@@ -464,7 +464,7 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
   const settings = useSettings("user");
   const [draft, setDraft] = useState<TerminalMacro | null>(null);
   const [search, setSearch] = useState("");
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const openSettingsPage = useOpenSettingsPage();
   const alwaysShowActions = settings.values.macrosAlwaysShowActions === true;
   const editing = draft !== null;
   useEffect(() => {
@@ -688,7 +688,7 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setSettingsOpen(true)}
+            onClick={() => openSettingsPage()}
             title={t("macros.settingsTitle")}
             aria-label={t("macros.settingsTitle")}
           >
@@ -774,15 +774,6 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
           );
         })}
       </PanelList>
-
-      {settingsOpen && (
-        <PanelSettings
-          settings={settings}
-          settingKey="macrosAlwaysShowActions"
-          title={t("macros.settingsTitle")}
-          onBack={() => setSettingsOpen(false)}
-        />
-      )}
 
       <InlineView
         open={!!draft}

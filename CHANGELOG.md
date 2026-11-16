@@ -10,6 +10,7 @@
 - Live readouts at the end of the toolbar come in as plain values, with no extra frame per tab (needs Termix 26.11.2)
 - Side panels, toolbar buttons and sign-in prompts from other plugins draw in their own frames over the terminal. Prompts only take clicks while they show, and broadcast and Find in all terminals still see your splits (needs Termix 26.11.2)
 - A background image from another site loads through Termix, so the terminal never contacts that site itself (needs Termix 26.11.2)
+- The settings buttons in the History and Macros panels open the SSH Terminal page in Settings
 
 ### Fixed
 
