@@ -2,6 +2,10 @@
 
 ## 1.4.1
 
+### Added
+
+- A padding setting for the space around the terminal text, per host or as a default
+
 ### Changed
 
 - The macros panel puts search, its buttons and the add button on one row on Termix 26.11.2 and later

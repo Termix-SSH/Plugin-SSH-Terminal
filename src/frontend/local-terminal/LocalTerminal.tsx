@@ -35,6 +35,7 @@ import {
 } from "../terminal/terminal-slots";
 import { registerLocalSession, setActiveSession } from "../session-registry";
 import { createTerminalInputAccess } from "../terminal/terminal-input-access";
+import { applyTerminalPadding } from "../terminal/terminal-padding";
 
 export function LocalTerminal({
   instanceId,
@@ -198,6 +199,7 @@ export function LocalTerminal({
     terminal.options.scrollback = appearance.scrollback;
     terminal.options.letterSpacing = appearance.letterSpacing;
     terminal.options.lineHeight = appearance.lineHeight;
+    applyTerminalPadding(terminal, appearance.padding);
     terminal.options.minimumContrastRatio = appearance.minimumContrastRatio;
     fit();
   }, [appTheme, appearance, fit, terminal]);

@@ -46,6 +46,7 @@ import {
 } from "../../shared/terminal-settings";
 import { invalidateTerminalClientSettings } from "../terminal-settings";
 import { docsUrl } from "../docs";
+import { MAX_TERMINAL_PADDING } from "../terminal/terminal-padding";
 
 const PLUGIN_ID = "ssh-terminal";
 const CUSTOM_FONT_OPTION = "__custom__";
@@ -308,6 +309,24 @@ export function HostTerminalSettings({
                   step={0.5}
                   value={[form.letterSpacing]}
                   onValueChange={([v]) => setField("letterSpacing", v)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.paddingPx")}
+                    <HostDefaultBadge settingKey="padding" />
+                  </label>
+                  <span className="text-[10px] text-muted-foreground tabular-nums">
+                    {form.padding}px
+                  </span>
+                </div>
+                <Slider
+                  min={0}
+                  max={MAX_TERMINAL_PADDING}
+                  step={1}
+                  value={[form.padding]}
+                  onValueChange={([v]) => setField("padding", v)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">

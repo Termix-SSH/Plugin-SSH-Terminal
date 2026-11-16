@@ -324,6 +324,9 @@
       "letterSpacing": {
         "label": "Letter spacing"
       },
+      "padding": {
+        "label": "Padding"
+      },
       "lineHeight": {
         "label": "Line height"
       },
@@ -548,6 +551,7 @@
     "hostNotFound": "Host not found",
     "letterSpacing": "Letter Spacing",
     "letterSpacingPx": "Letter Spacing (px)",
+    "paddingPx": "Padding (px)",
     "lineHeight": "Line Height",
     "lineHeightLabel": "Line Height",
     "linkClickBehaviorConfirm": "Show popup to open or copy",

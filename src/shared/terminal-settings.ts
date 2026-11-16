@@ -56,6 +56,8 @@ export interface TerminalAppearance {
   fontFamily: string;
   scrollback: number;
   letterSpacing: number;
+  /** Space around the text, in px. */
+  padding: number;
   lineHeight: number;
   bellStyle: BellStyle;
   minimumContrastRatio: number;
@@ -107,6 +109,7 @@ const APPEARANCE_KEYS = [
   "fontFamily",
   "scrollback",
   "letterSpacing",
+  "padding",
   "lineHeight",
   "bellStyle",
   "minimumContrastRatio",
@@ -166,6 +169,7 @@ export const DEFAULT_APPEARANCE: TerminalAppearance = {
   fontFamily: DEFAULT_FONT_FAMILY,
   scrollback: 10000,
   letterSpacing: 0,
+  padding: 0,
   lineHeight: 1,
   bellStyle: "none",
   minimumContrastRatio: 1,
@@ -313,6 +317,7 @@ function pick(key: string, value: unknown): unknown {
     case "fontSize":
     case "scrollback":
     case "letterSpacing":
+    case "padding":
     case "lineHeight":
     case "minimumContrastRatio":
     case "backgroundImageOpacity":

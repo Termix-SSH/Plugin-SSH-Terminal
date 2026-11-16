@@ -530,6 +530,14 @@
             "personal": true
           },
           {
+            "key": "padding",
+            "type": "number",
+            "labelKey": "settings.host.padding.label",
+            "hidden": true,
+            "default": 0,
+            "personal": true
+          },
+          {
             "key": "lineHeight",
             "type": "number",
             "labelKey": "settings.host.lineHeight.label",

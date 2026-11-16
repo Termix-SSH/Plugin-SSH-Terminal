@@ -177,6 +177,7 @@ import {
   useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
 import { useRemoteImage } from "./remote-image";
+import { applyTerminalPadding } from "./terminal-padding";
 import {
   rememberTmuxSession,
   type RememberedTmuxSession,
@@ -2969,6 +2970,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       terminal.options.minimumContrastRatio = config.minimumContrastRatio;
       terminal.options.letterSpacing = config.letterSpacing;
       terminal.options.lineHeight = config.lineHeight;
+      applyTerminalPadding(terminal, config.padding);
 
       terminal.options.theme = {
         background: config.backgroundImage
@@ -3109,6 +3111,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       terminal.unicode.activeVersion = "11";
 
       terminal.open(xtermRef.current);
+      applyTerminalPadding(terminal, termSettingsRef.current.padding);
 
       const xtermTextarea = xtermRef.current.querySelector("textarea");
       if (xtermTextarea) {
