@@ -175,6 +175,10 @@ import {
   useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
 import { useRemoteImage } from "./remote-image";
+import {
+  rememberTmuxSession,
+  type RememberedTmuxSession,
+} from "./tmux-reattach";
 
 type HostKeyVerificationData = Omit<
   React.ComponentProps<typeof HostKeyVerificationDialog>,
@@ -460,6 +464,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }>;
     } | null>(null);
     const tmuxSessionNameRef = useRef<string | null>(null);
+    // The tmux session to attach again when this tab has to log in anew
+    // (its session on the server ended, e.g. after the computer slept).
+    const tmuxReattachRef = useRef<RememberedTmuxSession | null>(null);
     const tmuxSessionPropRef = useRef(tmuxSession);
     tmuxSessionPropRef.current = tmuxSession;
     const [isTmuxAttached, setIsTmuxAttached] = useState(false);
@@ -2101,6 +2108,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 initialPath,
                 executeCommand,
                 tmuxAttachSession,
+                tmuxReattach: tmuxReattachRef.current ?? undefined,
                 zmodem: termUserRef.current.zmodem,
               },
             }),
@@ -2603,6 +2611,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
             logTerminalActivity();
 
+            // A restored tab learns its tmux session here, for the next time
+            // it has to log in anew.
+            if (msg.tmuxSession === null) {
+              tmuxReattachRef.current = null;
+            } else if (typeof msg.tmuxSession?.name === "string") {
+              tmuxReattachRef.current = rememberTmuxSession(
+                tmuxReattachRef.current,
+                msg.tmuxSession.name,
+                msg.tmuxSession.created,
+              );
+            }
+
             addLog({
               type: "success",
               stage: "connection",
@@ -2649,6 +2669,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             const sessionName =
               typeof msg.sessionName === "string" ? msg.sessionName : "";
             tmuxSessionNameRef.current = sessionName || "(active)";
+            tmuxReattachRef.current = rememberTmuxSession(
+              tmuxReattachRef.current,
+              sessionName,
+              msg.created,
+            );
             setIsTmuxAttached(true);
             addLog({
               type: "info",
@@ -2675,6 +2700,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             });
           } else if (msg.type === "tmux_detached") {
             tmuxSessionNameRef.current = null;
+            tmuxReattachRef.current = null;
             setIsTmuxAttached(false);
             toast.info(t("terminal.tmuxDetached"), { duration: 3000 });
           } else if (msg.type === "connection_log") {
@@ -4325,12 +4351,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               isOpen={true}
               sessions={tmuxSessionPicker.sessions}
               onSelect={(sessionName) => {
+                const picked = tmuxSessionPicker.sessions.find(
+                  (s) => s.name === sessionName,
+                );
+                tmuxReattachRef.current = picked
+                  ? { name: picked.name, created: picked.created }
+                  : null;
                 setTmuxSessionPicker(null);
                 if (webSocketRef.current?.readyState === WebSocket.OPEN) {
                   webSocketRef.current.send(
                     JSON.stringify({
                       type: "tmux_attach",
-                      data: { sessionName },
+                      data: { sessionName, created: picked?.created },
                     }),
                   );
                 }
@@ -4348,7 +4380,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 }
                 setTimeout(() => terminal?.focus(), 50);
               }}
-              onCancel={() => setTmuxSessionPicker(null)}
+              onCancel={() => {
+                tmuxReattachRef.current = null;
+                setTmuxSessionPicker(null);
+              }}
               backgroundColor={backgroundColor}
             />
           )}

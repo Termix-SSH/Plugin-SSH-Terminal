@@ -68,6 +68,8 @@ export interface TerminalSession {
   recordingFlushTimer: NodeJS.Timeout | null;
   drainTimer: NodeJS.Timeout | null;
   tmuxSessionName: string | null;
+  /** tmux's session_created for tmuxSessionName, when known; survives a rename. */
+  tmuxSessionCreated: number | null;
   sessionLoggingEnabled: boolean;
   sessionStartedAt: number;
   lastPersistedBytes: number;
@@ -241,6 +243,7 @@ export class TerminalSessionManager {
       recordingFlushTimer: null,
       drainTimer: null,
       tmuxSessionName: null,
+      tmuxSessionCreated: null,
       sessionLoggingEnabled: !!recordingSink,
       sessionStartedAt: now,
       lastPersistedBytes: 0,

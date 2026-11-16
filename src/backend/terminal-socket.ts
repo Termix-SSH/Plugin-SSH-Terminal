@@ -37,7 +37,12 @@ import {
 } from "./helpers.js";
 import { SSHAuthManager } from "./keyboard-prompt.js";
 import { HOST_KEYS } from "./settings.js";
-import { planTmuxAttach } from "./tmux-attach-plan.js";
+import {
+  findTmuxSession,
+  planTmuxAttach,
+  readTmuxSessionRef,
+  type TmuxSessionRef,
+} from "./tmux-attach-plan.js";
 import { stripTerminalQueries } from "./terminal-queries.js";
 import { tmuxScrollCommand } from "./tmux-scroll.js";
 import { SHELL_CWD_COMMAND } from "./shell-cwd.js";
@@ -103,6 +108,9 @@ interface ConnectToHostData {
   /** Attach straight to this tmux session once the shell is ready
    * (tmux monitor opens its panes through a real PTY this way). */
   tmuxAttachSession?: string;
+  /** The tmux session this tab showed before its session ended. Auto-Tmux
+   * attaches it again when the host still has it. */
+  tmuxReattach?: TmuxSessionRef;
   /** The browser handles ZMODEM (rz/sz), so transfers get binary frames. */
   zmodem?: boolean;
 }
@@ -128,6 +136,39 @@ export interface TerminalSocketDeps {
   getGuests: () => Promise<SessionGuestsV1 | null>;
   /** Hosts whose tunnel the registered transport opens, so it is not opened twice. */
   cloudflareClaims?: (hostId: number) => boolean;
+}
+
+/**
+ * tmux's creation time for a session just made, so the tab can find it again
+ * after a rename. Undefined when it cannot be read.
+ */
+async function tmuxCreatedAt(
+  tmux: TmuxSessionsV1,
+  client: unknown,
+  name: string,
+): Promise<number | undefined> {
+  try {
+    const { sessions } = await tmux.detect(client);
+    return sessions.find((s) => s.name === name)?.created;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * The tmux session a server session shows. Sent when a tab reattaches to it,
+ * so a restored tab knows which tmux session to attach again if it ever has to
+ * log in anew.
+ */
+function tmuxSessionOf(session: {
+  tmuxSessionName: string | null;
+  tmuxSessionCreated?: number | null;
+}): TmuxSessionRef | null {
+  if (!session.tmuxSessionName) return null;
+  return {
+    name: session.tmuxSessionName,
+    created: session.tmuxSessionCreated ?? undefined,
+  };
 }
 
 /**
@@ -371,7 +412,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     let isAwaitingAuthCredentials = false;
     let lastConnectOptions: Pick<
       ConnectToHostData,
-      "initialPath" | "executeCommand" | "tmuxAttachSession"
+      "initialPath" | "executeCommand" | "tmuxAttachSession" | "tmuxReattach"
     > = {};
 
     let wsAlive = true;
@@ -523,6 +564,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 initialPath: connectData.initialPath,
                 executeCommand: connectData.executeCommand,
                 tmuxAttachSession: connectData.tmuxAttachSession,
+                tmuxReattach: connectData.tmuxReattach,
               };
               handleConnectToHost(connectData).catch((error) => {
                 const errMsg = getErrorMessage(error);
@@ -626,6 +668,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                   JSON.stringify({
                     type: "sessionAttached",
                     sessionId: attachData.sessionId,
+                    tmuxSession: tmuxSessionOf(session),
                   }),
                 );
                 ws.send(
@@ -840,7 +883,10 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               break;
 
             case "tmux_attach": {
-              const tmuxData = data as { sessionName: string };
+              const tmuxData = data as {
+                sessionName: string;
+                created?: unknown;
+              };
               const session = currentSessionId
                 ? sessionManager.getSession(currentSessionId)
                 : null;
@@ -858,6 +904,11 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                     )
                     .catch(() => {});
                   session.tmuxSessionName = existingName;
+                  session.tmuxSessionCreated =
+                    readTmuxSessionRef({
+                      name: existingName,
+                      created: tmuxData.created,
+                    })?.created ?? null;
                   sshLogger.info("User selected tmux session to attach", {
                     operation: "tmux_user_attach",
                     sessionName: existingName,
@@ -867,6 +918,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                     JSON.stringify({
                       type: "tmux_session_attached",
                       sessionName: existingName,
+                      created: session.tmuxSessionCreated ?? undefined,
                     }),
                   );
                 } else {
@@ -882,6 +934,12 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                         newName,
                       );
                       session.tmuxSessionName = confirmed;
+                      session.tmuxSessionCreated =
+                        (await tmuxCreatedAt(
+                          tmux,
+                          tmuxHandle(sshConn),
+                          confirmed,
+                        )) ?? null;
                       sshLogger.info("User requested new tmux session", {
                         operation: "tmux_user_create",
                         sessionName: confirmed,
@@ -891,6 +949,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                         JSON.stringify({
                           type: "tmux_session_created",
                           sessionName: confirmed,
+                          created: session.tmuxSessionCreated ?? undefined,
                         }),
                       );
                     })();
@@ -908,6 +967,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                 const tmuxName = session.tmuxSessionName;
                 session.sshStream?.write("\x02d");
                 session.tmuxSessionName = null;
+                session.tmuxSessionCreated = null;
                 sshLogger.info("User detached from tmux session", {
                   operation: "tmux_user_detach",
                   sessionName: tmuxName,
@@ -1386,6 +1446,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
     async function handleConnectToHost(data: ConnectToHostData) {
       const { hostConfig, initialPath, executeCommand, tmuxAttachSession } =
         data;
+      const tmuxReattach = readTmuxSessionRef(data.tmuxReattach);
       const tcpNoDelay =
         hostConfig.pluginSettings?.["ssh-terminal"]?.tcpNoDelay === true;
       const {
@@ -2049,6 +2110,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               JSON.stringify({
                 type: "sessionAttached",
                 sessionId: reusedSessionId,
+                tmuxSession: tmuxSessionOf(existingSession),
               }),
             );
             ws.send(
@@ -2373,7 +2435,10 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                     .catch(() => {});
                   {
                     const session = sessionManager.getSession(boundSessionId);
-                    if (session) session.tmuxSessionName = tmuxAttachSession;
+                    if (session) {
+                      session.tmuxSessionName = tmuxAttachSession;
+                      session.tmuxSessionCreated = null;
+                    }
                   }
                   sshLogger.info("Attached to requested tmux session", {
                     operation: "tmux_direct_attach",
@@ -2390,10 +2455,17 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                   (async () => {
                     try {
                       const detection = await tmux.detect(shell);
-                      const plan = planTmuxAttach(
-                        detection.sessions,
-                        autoTmuxAskWhenOne,
-                      );
+                      // A tab whose session ended goes back to the tmux
+                      // session it was showing, however many the host has.
+                      const previous = tmuxReattach
+                        ? findTmuxSession(detection.sessions, tmuxReattach)
+                        : null;
+                      const plan = previous
+                        ? "attach"
+                        : planTmuxAttach(
+                            detection.sessions,
+                            autoTmuxAskWhenOne,
+                          );
                       if (!detection.available) {
                         sshLogger.warn("tmux not found on remote host", {
                           operation: "tmux_detection",
@@ -2421,10 +2493,16 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                           shell,
                           newName,
                         );
+                        const created = await tmuxCreatedAt(
+                          tmux,
+                          shell,
+                          confirmed,
+                        );
                         const session =
                           sessionManager.getSession(boundSessionId);
                         if (session) {
                           session.tmuxSessionName = confirmed;
+                          session.tmuxSessionCreated = created ?? null;
                         }
                         sshLogger.info("Created new tmux session", {
                           operation: "tmux_new_session",
@@ -2435,11 +2513,13 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                           JSON.stringify({
                             type: "tmux_session_created",
                             sessionName: confirmed,
+                            created,
                           }),
                         );
                         runPostShellCommands(0);
                       } else if (plan === "attach") {
-                        const sessionName = detection.sessions[0].name;
+                        const target = previous ?? detection.sessions[0];
+                        const sessionName = target.name;
                         void tmux
                           .attachOrCreate(
                             shell,
@@ -2452,11 +2532,16 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                           sessionManager.getSession(boundSessionId);
                         if (session) {
                           session.tmuxSessionName = sessionName;
+                          session.tmuxSessionCreated = target.created ?? null;
                         }
                         sshLogger.info(
-                          "Auto-attached to the only tmux session",
+                          previous
+                            ? "Reattached to the tab's tmux session"
+                            : "Auto-attached to the only tmux session",
                           {
-                            operation: "tmux_auto_attach",
+                            operation: previous
+                              ? "tmux_reattach"
+                              : "tmux_auto_attach",
                             sessionName,
                             hostId: id,
                           },
@@ -2465,6 +2550,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
                           JSON.stringify({
                             type: "tmux_session_attached",
                             sessionName,
+                            created: target.created,
                           }),
                         );
                         // Reattaching: the session has its own state, so
