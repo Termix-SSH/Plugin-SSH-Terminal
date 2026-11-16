@@ -37,6 +37,7 @@ function open(restoredSessionId: string | null = null, shareId?: string) {
     initialPath: undefined,
     executeCommand: undefined,
     tmuxAttachSession: undefined,
+    tmuxReattachRef: { current: null },
   });
   return JSON.parse(ws.send.mock.calls[0][0]);
 }
