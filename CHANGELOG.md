@@ -22,6 +22,7 @@
 - Opening a terminal in a folder always treats the folder name as plain text
 - Command history is only saved for hosts you can reach, and a failed save no longer shows database errors
 - Connecting to a shared host you have no login for says so, instead of saying the host is not on the sync server (needs Termix 26.11.2)
+- A terminal that loses its connection while the network is down (for example right after the computer wakes) retries with the usual growing wait instead of many times a second, which filled the connection log with "Connection closed unexpectedly". A first connection that fails stops at the error with its Reconnect button
 - A terminal tab with Auto tmux whose session ended (for example while the computer slept) goes back to the tmux session it was showing, even a renamed one, instead of asking which session to open
 
 ## 1.4.0

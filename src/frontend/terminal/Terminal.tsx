@@ -2767,11 +2767,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             message: t("terminal.websocketAbnormalClose"),
           });
 
-          if (wasConnectedRef.current) {
+          // A failed reconnect attempt never got connected, so
+          // wasConnectedRef is false for it too. It keeps backing off;
+          // only a tab's first connection stops at the error.
+          if (wasConnectedRef.current || reconnectAttempts.current > 0) {
             attemptReconnection();
           } else {
             updateConnectionError(t("terminal.websocketAbnormalClose"));
             setIsConnecting(false);
+            // Otherwise the effect that connects a visible tab tries again
+            // on the next frame, over and over while the server can't be
+            // reached. The error screen has a Reconnect button.
+            shouldNotReconnectRef.current = true;
           }
           return;
         }
