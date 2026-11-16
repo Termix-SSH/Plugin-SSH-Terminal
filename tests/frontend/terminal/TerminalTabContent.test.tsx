@@ -86,6 +86,17 @@ describe("TerminalTabContent in a split", () => {
     renderTab(undefined, { tmuxSession: 42 });
     await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
     expect(captured.props.at(-1)?.executeCommand).toBeUndefined();
+    expect(captured.props.at(-1)?.tmuxAttachSession).toBeUndefined();
+  });
+  it("asks for a direct attach, so Auto tmux does not show the session picker instead", async () => {
+    renderTab(undefined, { tmuxSession: "agent's session" });
+    await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+    expect(captured.props.at(-1)?.tmuxAttachSession).toBe("agent's session");
+  });
+  it("asks for no tmux session in an ordinary tab", async () => {
+    renderTab(undefined);
+    await waitFor(() => expect(captured.props.length).toBeGreaterThan(0));
+    expect(captured.props.at(-1)?.tmuxAttachSession).toBeUndefined();
   });
 });
 
