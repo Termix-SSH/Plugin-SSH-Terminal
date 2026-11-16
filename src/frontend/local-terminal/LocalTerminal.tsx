@@ -42,12 +42,14 @@ export function LocalTerminal({
   sessionId = instanceId,
   isFocusedPane = false,
   label,
+  onClose,
 }: {
   instanceId: string;
   isVisible: boolean;
   sessionId?: string;
   isFocusedPane?: boolean;
   label?: string;
+  onClose?: () => void;
 }) {
   const { t } = useTranslation();
   // Read via a ref inside the session-lifecycle effect below so a language
@@ -55,6 +57,9 @@ export function LocalTerminal({
   // the running local shell and spawn a new session.
   const tRef = useRef(t);
   tRef.current = t;
+  // Kept in a ref so a new callback identity doesn't restart the shell.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const { theme: appTheme } = useTheme();
   const api = usePluginApi();
   // The same look as SSH terminals get from the user's host defaults.
@@ -288,6 +293,11 @@ export function LocalTerminal({
           } else if (frame.type === "exit") {
             sessionReadyRef.current = false;
             emitSessionMessage({ type: "session_closed" });
+            // Close the tab when the shell ends, like SSH sessions do.
+            if (onCloseRef.current) {
+              onCloseRef.current();
+              return;
+            }
             terminal.write(
               `
 
