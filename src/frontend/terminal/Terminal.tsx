@@ -60,6 +60,7 @@ import { useCommandHistory } from "./command-history/CommandHistoryContext";
 import { getAndroidHardwareKeySequence } from "./android-hardware-keyboard";
 import {
   buildImageUploadFormData,
+  selectImageUploadApi,
   type TerminalImageUploadSource,
 } from "./terminal-image-upload";
 import { createTerminalNativePasteHandler } from "./terminal-native-paste";
@@ -164,6 +165,7 @@ import {
   useTranslation,
   invokeAction,
   usePluginApi,
+  usePluginApiFor,
   useSlotContributions,
   getCustomKeybindings,
   runKeybindingAction,
@@ -263,6 +265,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
   ) {
     const { t } = useTranslation();
     const api = usePluginApi();
+    const remoteApi = usePluginApiFor("remote");
     const { instance: terminal, ref: xtermRef } = useXTerm();
     const commandHistoryContext = useCommandHistory();
     const confirm = useConfirm();
@@ -3865,7 +3868,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           hostConfig.instanceId ?? "",
           source,
         );
-        const response = await api.post("/image-upload", form, {
+        const uploadApi = selectImageUploadApi(
+          sessionOriginRef.current,
+          api,
+          remoteApi,
+        );
+        const response = await uploadApi.post("/image-upload", form, {
           headers: { "Content-Type": undefined },
         });
         const { shellPath } = response.data as {
