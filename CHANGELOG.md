@@ -24,6 +24,12 @@
 - Connecting to a shared host you have no login for says so, instead of saying the host is not on the sync server (needs Termix 26.11.2)
 - A terminal that loses its connection while the network is down (for example right after the computer wakes) retries with the usual growing wait instead of many times a second, which filled the connection log with "Connection closed unexpectedly". A first connection that fails stops at the error with its Reconnect button
 - A terminal tab with Auto tmux whose session ended (for example while the computer slept) goes back to the tmux session it was showing, even a renamed one, instead of asking which session to open
+- A sudo-rs password prompt keeps the password out of the command history, like sudo
+- Hosts with SSH turned off, like RDP only hosts, no longer get an SSH login check or warning
+- Pasting an image into a desktop terminal that runs on the linked server uploads it there
+- Opening a tmux session from Tmux Monitor attaches it even with Auto tmux on and several sessions
+- A local terminal tab closes when its shell exits
+- Two windows with the same terminal tab no longer keep taking the session from each other. The other window says so and offers Retry
 
 ## 1.4.0
 
