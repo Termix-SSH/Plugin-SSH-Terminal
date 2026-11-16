@@ -140,6 +140,26 @@ export function sftpPathToLocalPath(sftpPath: string): string {
   return sftpPath;
 }
 
+/**
+ * The line typed into a new shell to start in a folder, or null when the path
+ * cannot be typed safely. The path may come from a remote file listing, so it
+ * must never be expanded by the shell.
+ */
+export function cdCommandFor(initialPath: string): string | null {
+  // A control character would end the typed line early.
+  if (!initialPath.trim() || /[\u0000-\u001f\u007f]/.test(initialPath)) {
+    return null;
+  }
+  if (isWindowsSftpPath(initialPath)) {
+    const winPath = sftpPathToLocalPath(initialPath);
+    // cmd.exe and PowerShell share no way to quote $, backticks or %, so
+    // such a path is not typed at all.
+    if (/["$`%\u2018-\u201f]/.test(winPath)) return null;
+    return `cd "${winPath}"\r`;
+  }
+  return `cd '${initialPath.replace(/'/g, "'\\''")}'\r`;
+}
+
 const SSH_DNS_RETRY_DELAYS_MS = [250, 750, 1500];
 
 type Lookup = typeof dns.lookup;
@@ -225,6 +245,10 @@ export const HOST_NOT_ON_THIS_SERVER_MESSAGE =
   "This host does not exist on the sync server, so the connection was refused. " +
   'Run a sync so the server knows about it, or set the connection origin to "This device" for this host.';
 
+export const HOST_LOGIN_REQUIRED_MESSAGE =
+  "You have no login for this shared host, so the connection was refused. " +
+  'Ask its owner to turn on "Share SSH Authentication" for it, or set your own personal login for it.';
+
 export function resolveServerJumpHosts(
   clientJumpHosts: Array<{ hostId: number }> | undefined,
   serverJumpHosts: Array<{ hostId: number }> | undefined,
@@ -291,5 +315,21 @@ export class MemoryAgent extends BaseAgent {
     } catch (err) {
       callback(err instanceof Error ? err : new Error(String(err)));
     }
+  }
+}
+
+/**
+ * What the auth provider wants after the server refused auth. A provider in
+ * a plugin process answers with a Promise; a throwing one means nothing.
+ */
+export async function authFollowUp<T>(
+  onAuthFailed: ((context: never) => T | Promise<T>) | undefined,
+  context: unknown,
+): Promise<T | undefined> {
+  if (!onAuthFailed) return undefined;
+  try {
+    return await onAuthFailed(context as never);
+  } catch {
+    return undefined;
   }
 }

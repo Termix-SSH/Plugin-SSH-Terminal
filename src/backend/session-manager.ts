@@ -105,7 +105,7 @@ export interface SessionManagerDeps {
   /** Minutes a detached session is kept; read on every detach. */
   getTimeoutMinutes: () => number;
   /** The recordings.writer service, when a plugin provides it. */
-  getRecordings: () => RecordingsWriterV1 | null;
+  getRecordings: () => Promise<RecordingsWriterV1 | null>;
 }
 
 export class TerminalSessionManager {
@@ -179,19 +179,20 @@ export class TerminalSessionManager {
     const now = Date.now();
     let recordingSink: Promise<RecordingSink | null> | null = null;
     let recordingHeader: string | null = null;
-    const recordings = sessionLoggingEnabled ? this.deps.getRecordings() : null;
-    if (recordings) {
+    if (sessionLoggingEnabled) {
       // Events recorded before this resolves wait in pendingRecordingData.
-      recordingSink = Promise.resolve()
-        .then(() =>
-          recordings.open({
-            sessionId: id,
-            hostId,
-            userId,
-            protocol: "ssh",
-            format: "asciicast",
-            startedAt: now,
-          }),
+      recordingSink = this.deps
+        .getRecordings()
+        .then(
+          (recordings) =>
+            recordings?.open({
+              sessionId: id,
+              hostId,
+              userId,
+              protocol: "ssh",
+              format: "asciicast",
+              startedAt: now,
+            }) ?? null,
         )
         .catch((err) => {
           this.log.warn("Could not start a session recording", {
@@ -250,7 +251,13 @@ export class TerminalSessionManager {
     if (recordingSink) {
       void recordingSink.then((sink) => {
         const live = this.sessions.get(id);
-        if (!sink || !live) return;
+        if (!live) return;
+        if (!sink) {
+          // Nobody records sessions right now.
+          live.sessionLoggingEnabled = false;
+          live.recordingSink = null;
+          return;
+        }
         live.recording = true;
         this.sendRecordingNotice(live);
       });

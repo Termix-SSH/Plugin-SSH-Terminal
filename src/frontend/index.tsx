@@ -353,13 +353,21 @@ export function activate(app: TermixApp): void {
   app.declareActionSlot({ id: TERMINAL_TOOLBAR_SLOT, accepts: ["button"] });
   app.declareActionSlot({
     id: TERMINAL_TOOLBAR_STATUS_SLOT,
-    accepts: ["component"],
+    accepts: ["data"],
+    shapes: ["bars", "stat", "text"],
+    rows: "tab",
   });
   app.declareActionSlot({
     id: TERMINAL_SIDE_PANEL_SLOT,
     accepts: ["component"],
+    fit: "fill",
   });
-  app.declareActionSlot({ id: TERMINAL_OVERLAY_SLOT, accepts: ["component"] });
+  // Overlays cover the terminal but only take clicks while they show.
+  app.declareActionSlot({
+    id: TERMINAL_OVERLAY_SLOT,
+    accepts: ["component"],
+    fit: "overlay",
+  });
 
   // A terminal other code can embed (collab rooms, the homepage widget, the
   // tmux monitor, the file manager's window) without importing this plugin.

@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.4.1
+
+### Changed
+
+- The macros panel puts search, its buttons and the add button on one row on Termix 26.11.2 and later
+- Runs in its own process with only the access it needs (plugin API 2, needs Termix 26.11.2)
+- When a signed certificate from SSH Certificate Signer, Step CA or OPKSSH stops working, the terminal asks you to sign in again even when that plugin runs in its own process (needs Termix 26.11.2)
+- Warpgate sign-in prompts and Tailscale SSH checks still show when those plugins run in their own process (needs Termix 26.11.2)
+- Live readouts at the end of the toolbar come in as plain values, with no extra frame per tab (needs Termix 26.11.2)
+- Side panels, toolbar buttons and sign-in prompts from other plugins draw in their own frames over the terminal. Prompts only take clicks while they show, and broadcast and Find in all terminals still see your splits (needs Termix 26.11.2)
+- A background image from another site loads through Termix, so the terminal never contacts that site itself (needs Termix 26.11.2)
+- The settings buttons in the History and Macros panels open the SSH Terminal page in Settings
+
+### Fixed
+
+- A sign in link sent by the SSH server only opens when it is a web address
+- Macro editor Run button now matches the Save button size
+- Quick Connect with a saved credential logs in on the server, so a credential shared with you for use only works there too (needs Termix 26.11.2)
+- Reconnecting a terminal tab no longer runs the startup snippet, environment exports and auto mosh again, and joining a shared session never runs them
+- Opening a terminal in a folder always treats the folder name as plain text
+- Command history is only saved for hosts you can reach, and a failed save no longer shows database errors
+- Connecting to a shared host you have no login for says so, instead of saying the host is not on the sync server (needs Termix 26.11.2)
+
 ## 1.4.0
 
 ### Added
