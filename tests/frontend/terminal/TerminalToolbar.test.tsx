@@ -8,6 +8,7 @@ const env = vi.hoisted(() => ({
   isMobile: false as boolean | undefined,
   toolbar: [] as Array<Record<string, unknown>>,
   status: [] as Array<Record<string, unknown>>,
+  dataSlot: null as Record<string, unknown> | null,
   hostActions: [] as Array<Record<string, unknown>>,
   invoked: [] as unknown[][],
   tabs: { openTab: vi.fn(), openSingletonTab: vi.fn() },
@@ -33,7 +34,10 @@ vi.mock("@termix-ssh/plugin-sdk/frontend", async (importOriginal) => ({
 vi.mock("@termix-ssh/plugin-sdk/ui", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useIsMobile: () => env.isMobile,
-  ComponentSlot: () => <span data-testid="status-slot" />,
+  DataSlot: (props: Record<string, unknown>) => {
+    env.dataSlot = props;
+    return <span data-testid="status-slot" />;
+  },
 }));
 
 import { TerminalToolbar } from "../../../src/frontend/terminal/TerminalToolbar";
@@ -286,10 +290,16 @@ describe("TerminalToolbar", () => {
   });
 
   it("shows live stats only on a wide strip with the setting on", () => {
-    env.status = [{ actionId: "metrics", titleKey: "m", kind: "component" }];
     stubWidths(400, 1000);
-    renderToolbar();
+    renderToolbar({ tabId: "tab-9", isConnected: true });
     expect(screen.getByTestId("status-slot")).toBeInTheDocument();
+    // Readouts are data keyed by the tab, polling only while connected.
+    expect(env.dataSlot).toMatchObject({
+      slotId: "terminal.toolbarStatus",
+      rowKey: "tab-9",
+      layout: "inline",
+      context: { hostId: 7, isConnected: true, active: true },
+    });
     cleanup();
     renderToolbar({
       host: withSettings({ terminalToolbarShowStatus: false }),

@@ -57,9 +57,9 @@ function createTerminal() {
     ctx,
     log: log as never,
     sessionManager: sessionManager as never,
-    getTmux: () => null,
-    getSharing: () => null,
-    getGuests: () => null,
+    getTmux: async () => null,
+    getSharing: async () => null,
+    getGuests: async () => null,
   });
 }
 
