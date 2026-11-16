@@ -2621,23 +2621,20 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               webSocketRef.current.close();
             }
           } else if (msg.type === "sessionTakenOver") {
+            // Another window has the session now. Taking it straight back
+            // makes the two windows take it from each other forever.
             sessionIdRef.current = null;
-
-            if (terminal) {
-              terminal.clear();
-            }
+            shouldNotReconnectRef.current = true;
             setIsConnected(false);
-            setIsConnecting(true);
+            setIsConnecting(false);
+            updateConnectionError(t("terminal.sessionTakenOver"));
 
             addLog({
               type: "warning",
               stage: "connection",
               message: t("terminal.sessionTakenOver"),
             });
-
-            const cols = terminal?.cols || 80;
-            const rows = terminal?.rows || 24;
-            connectToHost(cols, rows);
+            webSocketRef.current?.close();
           } else if (msg.type === "tmux_sessions_available") {
             setTmuxSessionPicker({
               sessions: msg.sessions,
