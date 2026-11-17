@@ -99,6 +99,7 @@
     "imageUploaded": "Image uploaded: {{path}}",
     "imageClipboardUnavailable": "This browser cannot read images from the clipboard",
     "imageClipboardEmpty": "No image found in the clipboard",
+    "imageDropHint": "Drop an image to upload it",
     "localShell": "Local terminal shell",
     "localBackendUnreachable": "The local backend is not reachable",
     "processExited": "Process exited ({{code}})",

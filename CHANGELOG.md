@@ -5,6 +5,7 @@
 ### Added
 
 - A padding setting for the space around the terminal text, per host or as a default
+- Drop an image on a terminal to upload it to the host and type its path, like pasting one. Several images are typed in order
 
 ### Changed
 

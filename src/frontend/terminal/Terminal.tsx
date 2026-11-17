@@ -64,6 +64,7 @@ import {
   type TerminalImageUploadSource,
 } from "./terminal-image-upload";
 import { createTerminalNativePasteHandler } from "./terminal-native-paste";
+import { createTerminalImageDropHandlers } from "./terminal-image-drop";
 import { TerminalSearchBar } from "./search/TerminalSearchBar.tsx";
 import {
   CommandAutocomplete,
@@ -77,7 +78,7 @@ import {
   type TerminalSlotApi,
 } from "./terminal-slots";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { ImagePlus, Save } from "lucide-react";
 import { TerminalToolbar } from "./TerminalToolbar.tsx";
 import { BroadcastBar } from "../terminal-tools/broadcast/BroadcastBar";
 import {
@@ -373,6 +374,17 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
     const imageUploadRef = useRef(handleImageUpload);
+    const [isImageDragOver, setIsImageDragOver] = useState(false);
+    const droppedImagesRef = useRef(handleDroppedImages);
+    const imageDropHandlers = useMemo(
+      () =>
+        createTerminalImageDropHandlers({
+          uploadImages: (files) => void droppedImagesRef.current(files),
+          rejectFiles: () => toast.error(t("terminal.imageChooseFile")),
+          setDragging: setIsImageDragOver,
+        }),
+      [t],
+    );
     const [isConnecting, setIsConnecting] = useState(false);
     const [isFitted, setIsFitted] = useState(false);
     const [connectionError, setConnectionError] = useState<string | null>(null);
@@ -3866,6 +3878,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     async function handleImageUpload(
       file: File,
       source: TerminalImageUploadSource,
+      inputPrefix = "",
     ) {
       if (file.type && !file.type.startsWith("image/")) {
         toast.error(t("terminal.imageChooseFile"));
@@ -3895,7 +3908,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           webSocketRef.current?.send(
             JSON.stringify({
               type: "input",
-              data: quoteTerminalImagePath(shellPath),
+              data: inputPrefix + quoteTerminalImagePath(shellPath),
             }),
           );
           toast.success(t("terminal.imageUploaded", { path: shellPath }));
@@ -3915,9 +3928,17 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }
     }
 
+    // One at a time, so the paths are typed in drop order with a space between.
+    async function handleDroppedImages(files: File[]) {
+      for (const [index, file] of files.entries()) {
+        await handleImageUpload(file, "file", index > 0 ? " " : "");
+      }
+    }
+
     // Keep the terminal session and upload callback current without rebuilding xterm.
     useEffect(() => {
       imageUploadRef.current = handleImageUpload;
+      droppedImagesRef.current = handleDroppedImages;
     });
 
     async function handleClipboardImage() {
@@ -4090,6 +4111,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         {toolbarOnTop && toolbar}
         <div
           className="relative min-h-0 w-full flex-1"
+          {...imageDropHandlers}
           style={{
             backgroundColor: backgroundImage ? "transparent" : backgroundColor,
             ...(backgroundSrc && {
@@ -4125,6 +4147,15 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               }
             }}
           />
+
+          {isImageDragOver && (
+            <div className="pointer-events-none absolute inset-0 z-[125] flex items-center justify-center border-2 border-dashed border-accent-brand bg-background/70">
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <ImagePlus className="size-4 text-accent-brand" />
+                {t("terminal.imageDropHint")}
+              </div>
+            </div>
+          )}
 
           <ZmodemBar
             state={zmodemState}
