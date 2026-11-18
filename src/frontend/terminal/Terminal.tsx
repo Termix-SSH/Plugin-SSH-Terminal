@@ -59,10 +59,13 @@ import {
 import { useCommandHistory } from "./command-history/CommandHistoryContext";
 import { getAndroidHardwareKeySequence } from "./android-hardware-keyboard";
 import {
+  buildFileUploadFormData,
   buildImageUploadFormData,
+  isConvertibleImage,
   selectImageUploadApi,
   type TerminalImageUploadSource,
 } from "./terminal-image-upload";
+import { TERMINAL_UPLOAD_MAX_BYTES } from "../../shared/terminal-upload";
 import { createTerminalNativePasteHandler } from "./terminal-native-paste";
 import { createTerminalImageDropHandlers } from "./terminal-image-drop";
 import { TerminalSearchBar } from "./search/TerminalSearchBar.tsx";
@@ -78,7 +81,7 @@ import {
   type TerminalSlotApi,
 } from "./terminal-slots";
 import { toast } from "sonner";
-import { ImagePlus, Save } from "lucide-react";
+import { FileUp, Save } from "lucide-react";
 import { TerminalToolbar } from "./TerminalToolbar.tsx";
 import { BroadcastBar } from "../terminal-tools/broadcast/BroadcastBar";
 import {
@@ -124,7 +127,7 @@ import {
   getRightClickAction,
   handleTerminalClipboardKeyEvent,
 } from "./terminal-clipboard.ts";
-import { quoteTerminalImagePath } from "./terminal-image-path.ts";
+import { createUploadedPathInput } from "./terminal-image-path.ts";
 import { shouldRunPostConnect } from "./post-connect.ts";
 import {
   dispatchKeybindingAction,
@@ -376,13 +379,14 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
     const imageUploadRef = useRef(handleImageUpload);
+    const [uploadedPathInput] = useState(createUploadedPathInput);
     const [isImageDragOver, setIsImageDragOver] = useState(false);
-    const droppedImagesRef = useRef(handleDroppedImages);
+    const droppedFilesRef = useRef(handleDroppedFiles);
     const imageDropHandlers = useMemo(
       () =>
         createTerminalImageDropHandlers({
-          uploadImages: (files) => void droppedImagesRef.current(files),
-          rejectFiles: () => toast.error(t("terminal.imageChooseFile")),
+          uploadFiles: (files) => void droppedFilesRef.current(files),
+          rejectFolders: () => toast.error(t("terminal.fileDropFolder")),
           setDragging: setIsImageDragOver,
         }),
       [t],
@@ -2190,6 +2194,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             return;
           }
           if (ws.readyState !== WebSocket.OPEN) return;
+          uploadedPathInput.userTyped(data);
           if (data === "\r" || data === "\n") {
             const currentCmd = getCurrentCommand().trim();
             const termixMatch = currentCmd.match(/^termix\s+(.+)$/);
@@ -3910,7 +3915,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
     const hasConnectionError = !!connectionError;
 
-    function getImageUploadErrorMessage(error: unknown): string {
+    function getImageUploadErrorMessage(
+      error: unknown,
+      fallback = t("terminal.imageUploadFailed"),
+    ): string {
       if (error instanceof Error && error.message) return error.message;
       const response = (
         error as {
@@ -3919,17 +3927,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           };
         }
       )?.response;
-      return (
-        response?.data?.error ||
-        response?.data?.message ||
-        t("terminal.imageUploadFailed")
-      );
+      return response?.data?.error || response?.data?.message || fallback;
     }
 
     async function handleImageUpload(
       file: File,
       source: TerminalImageUploadSource,
-      inputPrefix = "",
     ) {
       if (file.type && !file.type.startsWith("image/")) {
         toast.error(t("terminal.imageChooseFile"));
@@ -3959,7 +3962,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           webSocketRef.current?.send(
             JSON.stringify({
               type: "input",
-              data: inputPrefix + quoteTerminalImagePath(shellPath),
+              data: uploadedPathInput.path(shellPath),
             }),
           );
           toast.success(t("terminal.imageUploaded", { path: shellPath }));
@@ -3979,17 +3982,73 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }
     }
 
-    // One at a time, so the paths are typed in drop order with a space between.
-    async function handleDroppedImages(files: File[]) {
-      for (const [index, file] of files.entries()) {
-        await handleImageUpload(file, "file", index > 0 ? " " : "");
+    /**
+     * Upload a dropped file that is not an image to the host as it is, and
+     * type its path followed by a space.
+     */
+    async function handleFileUpload(file: File) {
+      if (file.size > TERMINAL_UPLOAD_MAX_BYTES) {
+        toast.error(t("terminal.fileTooLarge", { name: file.name }));
+        return;
+      }
+      setIsImageUploading(true);
+      try {
+        const form = buildFileUploadFormData(file, hostConfig.instanceId ?? "");
+        const uploadApi = selectImageUploadApi(
+          sessionOriginRef.current,
+          api,
+          remoteApi,
+        );
+        const response = await uploadApi.post("/file-upload", form, {
+          headers: { "Content-Type": undefined },
+        });
+        const { shellPath } = response.data as { shellPath: string };
+        const pathInserted =
+          webSocketRef.current?.readyState === WebSocket.OPEN;
+        if (pathInserted) {
+          webSocketRef.current?.send(
+            JSON.stringify({
+              type: "input",
+              data: uploadedPathInput.path(shellPath),
+            }),
+          );
+          toast.success(t("terminal.fileUploaded", { path: shellPath }));
+        } else {
+          toast.warning(
+            t("terminal.fileUploadedNotPasted", { path: shellPath }),
+          );
+        }
+      } catch (error) {
+        const response = (error as { response?: { data?: { code?: string } } })
+          ?.response;
+        const code = response?.data?.code;
+        // With image storage set to local, only images can be uploaded.
+        if (code === "FILE_LOCAL_STORAGE_UNSUPPORTED") {
+          toast.error(t("terminal.imageChooseFile"));
+          return;
+        }
+        const message = getImageUploadErrorMessage(
+          error,
+          t("terminal.fileUploadFailed"),
+        );
+        toast.error(code ? `${message} (${code})` : message);
+      } finally {
+        setIsImageUploading(false);
+      }
+    }
+
+    // One at a time, so the paths are typed in drop order.
+    async function handleDroppedFiles(files: File[]) {
+      for (const file of files) {
+        if (isConvertibleImage(file)) await handleImageUpload(file, "file");
+        else await handleFileUpload(file);
       }
     }
 
     // Keep the terminal session and upload callback current without rebuilding xterm.
     useEffect(() => {
       imageUploadRef.current = handleImageUpload;
-      droppedImagesRef.current = handleDroppedImages;
+      droppedFilesRef.current = handleDroppedFiles;
     });
 
     async function handleClipboardImage() {
@@ -4205,8 +4264,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           {isImageDragOver && (
             <div className="pointer-events-none absolute inset-0 z-[125] flex items-center justify-center border-2 border-dashed border-accent-brand bg-background/70">
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <ImagePlus className="size-4 text-accent-brand" />
-                {t("terminal.imageDropHint")}
+                <FileUp className="size-4 text-accent-brand" />
+                {t("terminal.fileDropHint")}
               </div>
             </div>
           )}

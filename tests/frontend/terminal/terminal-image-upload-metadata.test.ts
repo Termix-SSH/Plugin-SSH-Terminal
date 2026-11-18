@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildFileUploadFormData,
   buildImageUploadFormData,
+  isConvertibleImage,
   selectImageUploadApi,
 } from "../../../src/frontend/terminal/terminal-image-upload";
 
@@ -52,5 +54,44 @@ describe("selectImageUploadApi", () => {
 
   it("uploads to the local backend when the session is local", () => {
     expect(selectImageUploadApi("local", localApi, remoteApi)).toBe(localApi);
+  });
+});
+
+describe("buildFileUploadFormData", () => {
+  it("sends the file under its own name with the tab and a client timestamp", () => {
+    const file = new File(["%PDF"], "Q3 report.pdf", {
+      type: "application/pdf",
+    });
+
+    const form = buildFileUploadFormData(file, "tab-1");
+
+    const sent = form.get("file") as File;
+    expect(sent.name).toBe("Q3 report.pdf");
+    expect(sent.size).toBe(4);
+    expect(form.get("instanceId")).toBe("tab-1");
+    expect(form.has("image")).toBe(false);
+    const timestamp = form.get("clientUploadTimestamp");
+    expect(Number.isNaN(Date.parse(timestamp as string))).toBe(false);
+  });
+});
+
+describe("isConvertibleImage", () => {
+  const typed = (type: string) => new File(["x"], "x", { type });
+
+  it("sends the image types the backend converts to PNG down the image path", () => {
+    for (const type of [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/HEIC",
+    ]) {
+      expect(isConvertibleImage(typed(type))).toBe(true);
+    }
+  });
+
+  it("uploads other files as they are, image types the backend cannot decode included", () => {
+    for (const type of ["image/svg+xml", "image/bmp", "application/pdf", ""]) {
+      expect(isConvertibleImage(typed(type))).toBe(false);
+    }
   });
 });

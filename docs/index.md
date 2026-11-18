@@ -73,9 +73,18 @@ If you changed these before version 1.3.0, your browser's choices move to your a
 
 A macro types into a terminal for you and waits for it to answer, for logins and prompts. See [macros](macros.md).
 
-## Images
+## Images and files
 
-Paste or drop an image into a terminal and Termix uploads it to the host and types its path. This is handy for coding agents like Claude Code running in the terminal. Admins pick where images are stored and for how long in Settings, SSH Terminal.
+Paste or drop an image into a terminal and Termix uploads it to the host and types its path with a space after it, so you can go on typing. Right after a word you typed, the path also gets a space in front. This is handy for coding agents like Claude Code running in the terminal. Admins pick where images are stored and for how long in Settings, SSH Terminal.
+
+Drop any other file, like a PDF, a log or a zip, and Termix uploads it as it is to `/tmp/termix-files/<random id>/<name>` on the host and types its path with a space after it. Several files are typed in the order you dropped them. Files:
+
+- Keep their name, reduced to letters, digits, `.`, `_` and `-`, at most 100 characters.
+- Are readable only by your SSH user, and are removed after the image expiry. The image count and size limits apply to them separately.
+- Go to the host over SFTP only. With image storage set to local, only images can be dropped.
+- Can be up to 50 MB. For larger files, use [rz](#rz-and-sz).
+
+Folders cannot be dropped. Drop the files in them, or a zip of the folder.
 
 ## rz and sz
 

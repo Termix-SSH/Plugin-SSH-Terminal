@@ -2,6 +2,14 @@
 
 ## 1.4.2
 
+### Added
+
+- Drop any file on a terminal, not just an image, to upload it to the host and type its path. Other files keep their name, go to /tmp/termix-files over SFTP with the image expiry and limits, and can be up to 50 MB
+
+### Changed
+
+- An uploaded image's path is typed with a space after it, like a file's, so the next word you type or the next path you drop or paste is a separate argument. A path dropped or pasted right after a typed word gets a space in front
+
 ### Fixed
 
 - The local terminal shows again in the desktop app (needs Termix 26.11.3)

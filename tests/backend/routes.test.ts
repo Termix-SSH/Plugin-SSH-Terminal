@@ -160,6 +160,61 @@ describe("client settings and image storage", () => {
   });
 });
 
+describe("file upload", () => {
+  const upload = (instanceId = "tab-1") => {
+    const form = new FormData();
+    form.append("file", new Blob(["%PDF"]), "report.pdf");
+    form.append("instanceId", instanceId);
+    return form;
+  };
+
+  it("needs a file", async () => {
+    server = await startServer();
+    const form = new FormData();
+    form.append("instanceId", "tab-1");
+    const result = await server.request("POST", "/file-upload", { body: form });
+    expect(result.status).toBe(400);
+    expect(result.body.code).toBe("FILE_MISSING");
+  });
+
+  it("needs the terminal tab it is for", async () => {
+    server = await startServer();
+    const result = await server.request("POST", "/file-upload", {
+      body: upload(""),
+    });
+    expect(result.status).toBe(400);
+    expect(result.body.code).toBe("FILE_SESSION_MISSING");
+  });
+
+  it("refuses files while image storage is set to local", async () => {
+    server = await startServer({ settings: { imageStorageMode: "local" } });
+    const result = await server.request("POST", "/file-upload", {
+      body: upload(),
+    });
+    expect(result.status).toBe(400);
+    expect(result.body.code).toBe("FILE_LOCAL_STORAGE_UNSUPPORTED");
+  });
+
+  it("says when the terminal is not connected", async () => {
+    server = await startServer();
+    const result = await server.request("POST", "/file-upload", {
+      body: upload(),
+    });
+    expect(result.status).toBe(409);
+    expect(result.body.code).toBe("FILE_TERMINAL_NOT_CONNECTED");
+  });
+
+  it("takes the upload in a field named file only", async () => {
+    server = await startServer();
+    const form = new FormData();
+    form.append("image", new Blob(["%PDF"]), "report.pdf");
+    form.append("instanceId", "tab-1");
+    const result = await server.request("POST", "/file-upload", { body: form });
+    expect(result.status).toBe(400);
+    expect(result.body.code).toBe("LIMIT_UNEXPECTED_FILE");
+  });
+});
+
 describe("terminal settings routes", () => {
   it("gives a host-less terminal the user's default look", async () => {
     server = await startServer();

@@ -1,11 +1,13 @@
 import express, {
   type NextFunction,
   type Request,
+  type RequestHandler,
   type Response,
   type Router,
 } from "express";
 import { randomUUID } from "crypto";
 import multer from "multer";
+import type { Client } from "ssh2";
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import { getErrorMessage, type TerminalLogger } from "./helpers.js";
 import type { HistoryRepository } from "./history-repository.js";
@@ -19,6 +21,7 @@ import {
   readImageStorageSettings,
 } from "./settings.js";
 import { TERMINAL_APPEARANCE_KEYS } from "../shared/terminal-settings.js";
+import { TERMINAL_UPLOAD_MAX_BYTES } from "../shared/terminal-upload.js";
 import {
   createConcurrencyLimiter,
   exceedsNormalizedImageSize,
@@ -27,11 +30,37 @@ import {
 import {
   selectImageStorageMode,
   probeLocalImageVisibility,
+  storeFileViaSftp,
   storeImageLocally,
   storeImageViaSftp,
   TerminalImageStorageError,
   type ImageSftpClient,
+  type TerminalImageStorageErrorCode,
 } from "./images/image-storage.js";
+
+/** How the file upload route reports a storage error. */
+const FILE_STORAGE_ERRORS: Partial<
+  Record<
+    TerminalImageStorageErrorCode,
+    { status: number; code: string; error: string }
+  >
+> = {
+  IMAGE_STORAGE_LIMIT_REACHED: {
+    status: 507,
+    code: "FILE_STORAGE_LIMIT_REACHED",
+    error: "File storage limit reached",
+  },
+  IMAGE_REMOTE_QUOTA_UNAVAILABLE: {
+    status: 503,
+    code: "FILE_REMOTE_QUOTA_UNAVAILABLE",
+    error: "File storage limits cannot be verified",
+  },
+  IMAGE_REMOTE_WRITE_FAILED: {
+    status: 502,
+    code: "FILE_REMOTE_WRITE_FAILED",
+    error: "Failed to write the file to the remote host",
+  },
+};
 
 const WATCH_RULE_NAME_MAX = 120;
 const WATCH_ALERTS_PER_MINUTE = 30;
@@ -87,19 +116,27 @@ export function registerTerminalRoutes(
 ): void {
   const json = express.json({ limit: "2mb" });
 
-  // Browser image handoff for local terminal-agent workflows.
+  // Browser image and file handoff for local terminal-agent workflows.
+  const uploadLimits = {
+    fileSize: TERMINAL_UPLOAD_MAX_BYTES,
+    fields: 4,
+    fieldSize: 64 * 1024,
+    files: 1,
+    parts: 5,
+    headerPairs: 200,
+  };
   const imageUpload = multer({
     storage: multer.memoryStorage(),
-    limits: {
-      fileSize: 50 * 1024 * 1024,
-      fields: 4,
-      fieldSize: 64 * 1024,
-      files: 1,
-      parts: 5,
-      headerPairs: 200,
-    },
+    limits: uploadLimits,
   });
   const imageUploadMiddleware = imageUpload.single("image");
+  // A file keeps its name, so read it as UTF-8 rather than multer's latin1.
+  const fileUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: uploadLimits,
+    defParamCharset: "utf8",
+  });
+  const fileUploadMiddleware = fileUpload.single("file");
 
   let sharpFactory: SharpFactory | null = null;
   let sharpLoadFailure: string | null = null;
@@ -123,53 +160,80 @@ export function registerTerminalRoutes(
   const imageMultipartAdmissionLimiter = createConcurrencyLimiter(4, 4);
   let imageUploadSequence = 0;
 
-  async function handleImageUploadMiddleware(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    let releaseAdmission: (() => void) | undefined;
-    try {
-      releaseAdmission = await imageMultipartAdmissionLimiter.acquire();
-    } catch {
-      res.status(503).json({
-        error: "Image upload capacity is temporarily unavailable",
-        code: "IMAGE_UPLOAD_CAPACITY_EXCEEDED",
-      });
-      return;
-    }
-
-    imageUploadMiddleware(req, res, (error: unknown) => {
+  // Image and file uploads share the admission limit: at most four
+  // multipart bodies are read into memory at once.
+  function admitUpload(kind: "image" | "file", parse: RequestHandler) {
+    const label = kind === "image" ? "Image" : "File";
+    const codePrefix = kind.toUpperCase();
+    return async function handleUploadMiddleware(
+      req: Request,
+      res: Response,
+      next: NextFunction,
+    ): Promise<void> {
+      let releaseAdmission: (() => void) | undefined;
       try {
-        if (!error) {
-          next();
-          return;
-        }
-        if (error instanceof multer.MulterError) {
-          log.warn("Image upload multipart request rejected", {
-            operation: "terminal_image_upload_multipart_rejected",
-            code: error.code,
-            field: error.field,
+        releaseAdmission = await imageMultipartAdmissionLimiter.acquire();
+      } catch {
+        res.status(503).json({
+          error: `${label} upload capacity is temporarily unavailable`,
+          code: `${codePrefix}_UPLOAD_CAPACITY_EXCEEDED`,
+        });
+        return;
+      }
+
+      parse(req, res, (error: unknown) => {
+        try {
+          if (!error) {
+            next();
+            return;
+          }
+          if (error instanceof multer.MulterError) {
+            log.warn(`${label} upload multipart request rejected`, {
+              operation: `terminal_${kind}_upload_multipart_rejected`,
+              code: error.code,
+              field: error.field,
+              contentType: req.headers["content-type"]?.split(";", 1)[0],
+            });
+            res.status(400).json({
+              error: `${label} upload request rejected`,
+              code: error.code,
+              field: error.field,
+            });
+            return;
+          }
+          log.warn(`${label} upload multipart request malformed`, {
+            operation: `terminal_${kind}_upload_multipart_invalid`,
             contentType: req.headers["content-type"]?.split(";", 1)[0],
           });
           res.status(400).json({
-            error: "Image upload request rejected",
-            code: error.code,
-            field: error.field,
+            error: `Malformed ${kind} upload request`,
+            code: `${codePrefix}_MULTIPART_INVALID`,
           });
+        } finally {
+          releaseAdmission?.();
+        }
+      });
+    };
+  }
+
+  /** An SFTP channel on the terminal's own SSH connection. */
+  function openSessionSftp(sshConn: Client): Promise<ImageSftpClient> {
+    return new Promise<ImageSftpClient>((resolve, reject) => {
+      let settled = false;
+      const timer = setTimeout(() => {
+        settled = true;
+        reject(new Error("SFTP channel acquisition timed out"));
+      }, 3_000);
+      sshConn.sftp((err, sftp) => {
+        if (settled) {
+          sftp?.end?.();
           return;
         }
-        log.warn("Image upload multipart request malformed", {
-          operation: "terminal_image_upload_multipart_invalid",
-          contentType: req.headers["content-type"]?.split(";", 1)[0],
-        });
-        res.status(400).json({
-          error: "Malformed image upload request",
-          code: "IMAGE_MULTIPART_INVALID",
-        });
-      } finally {
-        releaseAdmission?.();
-      }
+        settled = true;
+        clearTimeout(timer);
+        if (err) return reject(err);
+        resolve(sftp);
+      });
     });
   }
 
@@ -226,7 +290,7 @@ export function registerTerminalRoutes(
    */
   router.post(
     "/image-upload",
-    handleImageUploadMiddleware,
+    admitUpload("image", imageUploadMiddleware),
     async (req: Request, res: Response) => {
       const userId = ctx.currentActor();
       const instanceId = req.body?.instanceId;
@@ -373,25 +437,7 @@ export function registerTerminalRoutes(
         const stored =
           storageMode === "remote-sftp"
             ? await (async () => {
-                remoteSftp = await new Promise<ImageSftpClient>(
-                  (resolve, reject) => {
-                    let settled = false;
-                    const timer = setTimeout(() => {
-                      settled = true;
-                      reject(new Error("SFTP channel acquisition timed out"));
-                    }, 3_000);
-                    session!.sshConn!.sftp((err, sftp) => {
-                      if (settled) {
-                        sftp?.end?.();
-                        return;
-                      }
-                      settled = true;
-                      clearTimeout(timer);
-                      if (err) return reject(err);
-                      resolve(sftp);
-                    });
-                  },
-                );
+                remoteSftp = await openSessionSftp(session!.sshConn!);
                 return storeImageViaSftp(remoteSftp, normalizedImage, {
                   ttlMs: storageSettings.ttlMs,
                   maxCount: storageSettings.maxCount,
@@ -439,6 +485,135 @@ export function registerTerminalRoutes(
           error: "Failed to write image to the remote host",
           code: "IMAGE_REMOTE_WRITE_FAILED",
         });
+      } finally {
+        remoteSftp?.end?.();
+      }
+    },
+  );
+
+  /**
+   * @openapi
+   * /plugin-api/ssh-terminal/file-upload:
+   *   post:
+   *     summary: Upload a file into a terminal session
+   *     description: Stores a file that is not an image on the terminal's host over SFTP, as /tmp/termix-files/<random id>/<name> (a .termix-files folder in the home on Windows), under the image storage expiry and limits. The name keeps only A-Z a-z 0-9 . _ - and is cut to 100 characters with the extension kept. The bytes are stored as they are. Returns the path to hand to the program. Refused when image storage is set to local.
+   *     tags:
+   *       - Terminal
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         multipart/form-data:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               file:
+   *                 type: string
+   *                 format: binary
+   *               instanceId:
+   *                 type: string
+   *               clientUploadTimestamp:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: The stored file's path.
+   *       400:
+   *         description: Missing file or session, or image storage is set to local.
+   *       409:
+   *         description: The terminal is not connected.
+   *       502:
+   *         description: Writing to the remote host failed.
+   *       503:
+   *         description: The terminal has no SSH connection to store the file on, or the storage limits cannot be checked.
+   *       507:
+   *         description: The storage limit was reached.
+   */
+  router.post(
+    "/file-upload",
+    admitUpload("file", fileUploadMiddleware),
+    async (req: Request, res: Response) => {
+      const userId = ctx.currentActor();
+      const instanceId = req.body?.instanceId;
+      if (!req.file) {
+        return res.status(400).json({
+          error: "File required",
+          code: "FILE_MISSING",
+        });
+      }
+      if (!isNonEmptyString(userId) || !isNonEmptyString(instanceId)) {
+        return res.status(400).json({
+          error: "Missing terminal session",
+          code: "FILE_SESSION_MISSING",
+        });
+      }
+
+      const requestId = randomUUID();
+      log.info("Terminal file upload received", {
+        operation: "terminal_file_upload_received",
+        requestId,
+        serverReceivedAt: new Date().toISOString(),
+        bytes: req.file.size,
+      });
+
+      // Files are stored as they are, so they never go to the Termix
+      // server's own disk: only over SFTP to the terminal's host.
+      const storageSettings = await readImageStorageSettings(ctx);
+      if (storageSettings.mode === "local") {
+        return res.status(400).json({
+          error: "Files can only be uploaded to the terminal's host over SFTP",
+          code: "FILE_LOCAL_STORAGE_UNSUPPORTED",
+        });
+      }
+      const session = findTerminalSession(userId, instanceId);
+      if (!session) {
+        return res.status(409).json({
+          error: "Terminal is not connected",
+          code: "FILE_TERMINAL_NOT_CONNECTED",
+        });
+      }
+      if (!session.sshConn) {
+        return res.status(503).json({
+          error: "File upload needs an SSH connection",
+          code: "FILE_STORAGE_UNAVAILABLE",
+        });
+      }
+
+      let remoteSftp: ImageSftpClient | undefined;
+      try {
+        remoteSftp = await openSessionSftp(session.sshConn);
+        const stored = await storeFileViaSftp(
+          remoteSftp,
+          req.file.buffer,
+          req.file.originalname,
+          {
+            ttlMs: storageSettings.ttlMs,
+            maxCount: storageSettings.maxCount,
+            maxBytes: storageSettings.maxBytes,
+          },
+        );
+        res.json(stored);
+      } catch (error) {
+        const mapped =
+          error instanceof TerminalImageStorageError
+            ? FILE_STORAGE_ERRORS[error.code]
+            : undefined;
+        const response =
+          mapped ?? FILE_STORAGE_ERRORS.IMAGE_REMOTE_WRITE_FAILED!;
+        log.warn("File upload storage write failed", {
+          operation: "terminal_file_upload_sftp_failed",
+          code: response.code,
+          requestId,
+          userId,
+          instanceId,
+          reason: getErrorMessage(
+            error instanceof TerminalImageStorageError
+              ? (error.cause ?? error)
+              : error,
+            "unknown",
+          ),
+        });
+        return res
+          .status(response.status)
+          .json({ error: response.error, code: response.code });
       } finally {
         remoteSftp?.end?.();
       }

@@ -79,13 +79,21 @@ export async function startServer(
     mock,
     async request(method, path, { user = "user-1", body: given } = {}) {
       const body = method === "GET" ? undefined : given;
+      // FormData goes as multipart, with fetch setting the boundary.
+      const multipart = body instanceof FormData;
       const response = await fetch(`http://127.0.0.1:${port}${path}`, {
         method,
         headers: {
           "x-test-user": user,
-          ...(body !== undefined ? { "content-type": "application/json" } : {}),
+          ...(body !== undefined && !multipart
+            ? { "content-type": "application/json" }
+            : {}),
         },
-        body: body !== undefined ? JSON.stringify(body) : undefined,
+        body: multipart
+          ? body
+          : body !== undefined
+            ? JSON.stringify(body)
+            : undefined,
       });
       const text = await response.text();
       return { status: response.status, body: text ? JSON.parse(text) : null };

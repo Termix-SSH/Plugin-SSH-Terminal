@@ -5,8 +5,11 @@ import os from "os";
 import path from "path";
 import { randomUUID } from "crypto";
 import {
+  REMOTE_FILE_DIR,
   REMOTE_IMAGE_DIR,
+  remoteFileWriteTimeoutMs,
   selectImageStorageMode,
+  storeFileViaSftp,
   storeImageLocally,
   storeImageViaSftp,
   TerminalImageStorageError,
@@ -605,5 +608,367 @@ describe("storeImageViaSftp", () => {
     expect((error as TerminalImageStorageError).message).toBe(
       "Failed to write image to the remote host",
     );
+  });
+});
+
+describe("storeFileViaSftp", () => {
+  const DIR_MODE = 0o040700;
+  const FILE_MODE = 0o100600;
+  const UUID =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+  const PDF_BYTES = Buffer.from("%PDF-1.7\n\u0000binary\u00ff");
+
+  /** A small in-memory SFTP host: folders, files, modes and times. */
+  function memoryHost(options: { home?: string; writeError?: Error } = {}) {
+    const nowSeconds = () => Math.floor(Date.now() / 1000);
+    const dirs = new Map<string, { mtime: number }>([
+      ["/tmp", { mtime: 0 }],
+      ["/C:/Users/Test User", { mtime: 0 }],
+    ]);
+    const files = new Map<
+      string,
+      { data: Buffer; mtime: number; mode?: number }
+    >();
+    const unreadable = new Set<string>();
+    const lstatModes = new Map<string, number>();
+    const calls = {
+      mkdir: [] as Array<{ dir: string; mode?: number }>,
+      createWriteStream: [] as Array<{ path: string; mode?: number }>,
+    };
+    const parentOf = (p: string) => p.slice(0, p.lastIndexOf("/")) || "/";
+    const childrenOf = (dir: string) => [
+      ...[...dirs.keys()].filter((d) => parentOf(d) === dir && d !== dir),
+      ...[...files.keys()].filter((f) => parentOf(f) === dir),
+    ];
+    const touch = (dir: string) => {
+      const entry = dirs.get(dir);
+      if (entry) entry.mtime = nowSeconds();
+    };
+
+    const sftp: ImageSftpClient = {
+      realpath: options.home
+        ? (_path, callback) => callback(undefined, options.home!)
+        : undefined,
+      mkdir(dir, attrsOrCallback, maybeCallback) {
+        const callback =
+          typeof attrsOrCallback === "function"
+            ? attrsOrCallback
+            : maybeCallback!;
+        calls.mkdir.push({
+          dir,
+          mode:
+            typeof attrsOrCallback === "function"
+              ? undefined
+              : attrsOrCallback.mode,
+        });
+        if (dirs.has(dir) || files.has(dir)) {
+          callback(new Error("EEXIST"));
+          return;
+        }
+        if (!dirs.has(parentOf(dir))) {
+          callback(new Error("ENOENT"));
+          return;
+        }
+        dirs.set(dir, { mtime: nowSeconds() });
+        touch(parentOf(dir));
+        callback();
+      },
+      lstat(target, callback) {
+        const mode = lstatModes.get(target);
+        if (mode !== undefined) callback(undefined, { mode, mtime: 0 });
+        else if (dirs.has(target))
+          callback(undefined, { mode: DIR_MODE, ...dirs.get(target) });
+        else if (files.has(target))
+          callback(undefined, { mode: FILE_MODE, mtime: 0 });
+        else callback(new Error("ENOENT"));
+      },
+      chmod: (_target, _mode, callback) => callback(),
+      readdir(dir, callback) {
+        if (!dirs.has(dir) || unreadable.has(dir)) {
+          callback(new Error("EACCES"), []);
+          return;
+        }
+        callback(
+          undefined,
+          childrenOf(dir).map((child) => {
+            const filename = child.slice(dir.length + 1);
+            const file = files.get(child);
+            return file
+              ? {
+                  filename,
+                  attrs: {
+                    mode: FILE_MODE,
+                    mtime: file.mtime,
+                    size: file.data.length,
+                  },
+                }
+              : {
+                  filename,
+                  attrs: {
+                    mode: DIR_MODE,
+                    mtime: dirs.get(child)!.mtime,
+                    size: 4096,
+                  },
+                };
+          }),
+        );
+      },
+      createWriteStream(remotePath, writeOptions) {
+        calls.createWriteStream.push({
+          path: remotePath,
+          mode: writeOptions?.mode,
+        });
+        const stream = new EventEmitter() as NodeJS.WritableStream & {
+          destroy: () => void;
+        };
+        stream.destroy = () => undefined;
+        (stream as { end: unknown }).end = (data: Buffer) => {
+          queueMicrotask(() => {
+            if (options.writeError || !dirs.has(parentOf(remotePath))) {
+              // A real host has created the file by the time a write fails.
+              if (dirs.has(parentOf(remotePath)))
+                files.set(remotePath, { data: Buffer.alloc(0), mtime: 0 });
+              stream.emit("error", options.writeError ?? new Error("ENOENT"));
+              return;
+            }
+            files.set(remotePath, {
+              data: Buffer.from(data),
+              mtime: nowSeconds(),
+              mode: writeOptions?.mode,
+            });
+            touch(parentOf(remotePath));
+            stream.emit("close");
+          });
+        };
+        return stream;
+      },
+      unlink(remotePath, callback) {
+        if (files.delete(remotePath)) callback();
+        else callback(new Error("ENOENT"));
+      },
+      rmdir(dir, callback) {
+        if (!dirs.has(dir)) callback(new Error("ENOENT"));
+        else if (childrenOf(dir).length > 0) callback(new Error("ENOTEMPTY"));
+        else {
+          dirs.delete(dir);
+          callback();
+        }
+      },
+    };
+
+    /** An earlier upload: a folder named by an id, holding one file. */
+    function seedUpload(bytes: number, ageSeconds: number, id = randomUUID()) {
+      if (!dirs.has(REMOTE_FILE_DIR)) dirs.set(REMOTE_FILE_DIR, { mtime: 0 });
+      const mtime = nowSeconds() - ageSeconds;
+      dirs.set(`${REMOTE_FILE_DIR}/${id}`, { mtime });
+      files.set(`${REMOTE_FILE_DIR}/${id}/data.bin`, {
+        data: Buffer.alloc(bytes),
+        mtime,
+      });
+      return `${REMOTE_FILE_DIR}/${id}`;
+    }
+
+    const uploadFolders = () =>
+      [...dirs.keys()].filter((dir) =>
+        UUID.test(dir.slice(REMOTE_FILE_DIR.length + 1)),
+      );
+
+    return {
+      sftp,
+      dirs,
+      files,
+      calls,
+      unreadable,
+      lstatModes,
+      seedUpload,
+      uploadFolders,
+    };
+  }
+
+  it("stores the file in a new random folder under its sanitised name", async () => {
+    const host = memoryHost();
+    const stored = await storeFileViaSftp(
+      host.sftp,
+      PDF_BYTES,
+      "Q3 report (final).pdf",
+    );
+
+    expect(stored.storage).toBe("remote-sftp");
+    expect(stored.filename).toBe("Q3_report__final_.pdf");
+    const [root, tmp, dir, id, name] = stored.shellPath.split("/");
+    expect([root, tmp, dir, name]).toEqual([
+      "",
+      "tmp",
+      "termix-files",
+      "Q3_report__final_.pdf",
+    ]);
+    expect(id).toMatch(UUID);
+    expect(id).toBe(stored.id);
+  });
+
+  it("writes the bytes as they are", async () => {
+    const host = memoryHost();
+    const stored = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf");
+    expect(host.files.get(stored.shellPath)?.data).toEqual(PDF_BYTES);
+  });
+
+  it("gives each upload its own folder, so equal names never collide", async () => {
+    const host = memoryHost();
+    const first = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf");
+    const second = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf");
+    expect(first.shellPath).not.toBe(second.shellPath);
+    expect(host.uploadFolders()).toHaveLength(2);
+  });
+
+  it("requests restrictive modes for the folders and the file", async () => {
+    const host = memoryHost();
+    const stored = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf");
+    expect(host.calls.mkdir).toEqual([
+      { dir: REMOTE_FILE_DIR, mode: 0o700 },
+      { dir: `${REMOTE_FILE_DIR}/.termix-write-lock`, mode: 0o700 },
+      { dir: `${REMOTE_FILE_DIR}/${stored.id}`, mode: 0o700 },
+    ]);
+    expect(host.calls.createWriteStream).toEqual([
+      { path: stored.shellPath, mode: 0o600 },
+    ]);
+  });
+
+  it("types a path with no newline, quote or extra path segment", async () => {
+    const host = memoryHost();
+    const stored = await storeFileViaSftp(
+      host.sftp,
+      PDF_BYTES,
+      "-rf\n../x;$(id)'.sh",
+    );
+    expect(stored.filename).toBe("rf_.._x___id__.sh");
+    expect(stored.shellPath).toBe(
+      `${REMOTE_FILE_DIR}/${stored.id}/rf_.._x___id__.sh`,
+    );
+  });
+
+  it("leaves the image folder alone", async () => {
+    const host = memoryHost();
+    await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf");
+    expect(host.dirs.has(REMOTE_IMAGE_DIR)).toBe(false);
+  });
+
+  it("stores Windows files under the SSH user's home", async () => {
+    const host = memoryHost({ home: "/C:/Users/Test User" });
+    const stored = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf");
+    expect(stored.shellPath).toBe(
+      `C:/Users/Test User/.termix-files/${stored.id}/a.pdf`,
+    );
+    expect(
+      host.files.get(`/C:/Users/Test User/.termix-files/${stored.id}/a.pdf`)
+        ?.data,
+    ).toEqual(PDF_BYTES);
+  });
+
+  it("removes expired upload folders with their files, and nothing else", async () => {
+    const host = memoryHost();
+    const expired = host.seedUpload(10, 7_200);
+    const fresh = host.seedUpload(10, 60);
+    host.dirs.set(`${REMOTE_FILE_DIR}/keep`, { mtime: 0 });
+    host.files.set(`${REMOTE_FILE_DIR}/notes.txt`, {
+      data: Buffer.alloc(1),
+      mtime: 0,
+    });
+
+    await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf", {
+      ttlMs: 3_600_000,
+    });
+
+    expect(host.dirs.has(expired)).toBe(false);
+    expect(host.files.has(`${expired}/data.bin`)).toBe(false);
+    expect(host.dirs.has(fresh)).toBe(true);
+    expect(host.dirs.has(`${REMOTE_FILE_DIR}/keep`)).toBe(true);
+    expect(host.files.has(`${REMOTE_FILE_DIR}/notes.txt`)).toBe(true);
+  });
+
+  it("counts upload folders against the count limit", async () => {
+    const host = memoryHost();
+    host.seedUpload(10, 60);
+    const error = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf", {
+      maxCount: 1,
+      maxBytes: 1_000_000,
+    }).catch((caught: unknown) => caught);
+    expect((error as TerminalImageStorageError).code).toBe(
+      "IMAGE_STORAGE_LIMIT_REACHED",
+    );
+    expect(host.uploadFolders()).toHaveLength(1);
+  });
+
+  it("counts the bytes in upload folders against the size limit", async () => {
+    const host = memoryHost();
+    host.seedUpload(600, 60);
+    const error = await storeFileViaSftp(
+      host.sftp,
+      Buffer.alloc(500),
+      "a.bin",
+      { maxCount: 100, maxBytes: 1_000 },
+    ).catch((caught: unknown) => caught);
+    expect((error as TerminalImageStorageError).code).toBe(
+      "IMAGE_STORAGE_LIMIT_REACHED",
+    );
+
+    const fits = await storeFileViaSftp(host.sftp, Buffer.alloc(400), "b.bin", {
+      maxCount: 100,
+      maxBytes: 1_000,
+    });
+    expect(host.files.has(fits.shellPath)).toBe(true);
+  });
+
+  it("frees the limits once expired uploads are removed", async () => {
+    const host = memoryHost();
+    host.seedUpload(10, 7_200);
+    const stored = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf", {
+      ttlMs: 3_600_000,
+      maxCount: 1,
+      maxBytes: 1_000_000,
+    });
+    expect(host.uploadFolders()).toEqual([`${REMOTE_FILE_DIR}/${stored.id}`]);
+  });
+
+  it("fails closed when an upload folder cannot be listed", async () => {
+    const host = memoryHost();
+    host.unreadable.add(host.seedUpload(10, 60));
+    const error = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf", {
+      maxCount: 100,
+      maxBytes: 1_000_000,
+    }).catch((caught: unknown) => caught);
+    expect((error as TerminalImageStorageError).code).toBe(
+      "IMAGE_REMOTE_QUOTA_UNAVAILABLE",
+    );
+    expect(host.calls.createWriteStream).toEqual([]);
+  });
+
+  it("removes the new folder when the write fails", async () => {
+    const host = memoryHost({ writeError: new Error("disk full") });
+    const error = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf").catch(
+      (caught: unknown) => caught,
+    );
+    expect((error as TerminalImageStorageError).code).toBe(
+      "IMAGE_REMOTE_WRITE_FAILED",
+    );
+    expect(host.uploadFolders()).toEqual([]);
+    expect(host.dirs.has(`${REMOTE_FILE_DIR}/.termix-write-lock`)).toBe(false);
+  });
+
+  it("refuses a /tmp/termix-files that is a symlink, and writes nothing", async () => {
+    const host = memoryHost();
+    host.files.set(REMOTE_FILE_DIR, { data: Buffer.alloc(0), mtime: 0 });
+    host.lstatModes.set(REMOTE_FILE_DIR, 0o120777);
+    const error = await storeFileViaSftp(host.sftp, PDF_BYTES, "a.pdf").catch(
+      (caught: unknown) => caught,
+    );
+    expect((error as TerminalImageStorageError).code).toBe(
+      "IMAGE_REMOTE_WRITE_FAILED",
+    );
+    expect(host.calls.createWriteStream).toEqual([]);
+  });
+
+  it("gives a large file a second per MiB on top of the image write time", () => {
+    expect(remoteFileWriteTimeoutMs(1_024)).toBe(11_000);
+    expect(remoteFileWriteTimeoutMs(50 * 1024 * 1024)).toBe(60_000);
   });
 });

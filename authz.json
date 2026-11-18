@@ -53,6 +53,9 @@
         "enabled": true
       }
     },
+    "POST /plugin-api/ssh-terminal/file-upload": {
+      "access": "user"
+    },
     "POST /plugin-api/ssh-terminal/image-storage/test": {
       "access": "user"
     },
