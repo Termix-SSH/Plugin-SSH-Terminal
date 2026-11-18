@@ -67,7 +67,7 @@
     "searchRegex": "Користи регуларни израз",
     "searchResultCount": "{{index}} од {{count}}",
     "searchWholeWord": "Подржи целу реч",
-    "sessionTakenOver": "Сесија је отворена у другом табу. Поново повезивање...",
+    "sessionTakenOver": "Ова сесија је отворена у другом прозору или картици.",
     "tmuxAttached": "Прикључени клијенти",
     "tmuxAttachedCount_one": "{{count}} прикључен",
     "tmuxAttachedCount_few": "{{count}} прикључена",
@@ -101,6 +101,7 @@
     "imageUploaded": "Слика је отпремљена: {{path}}",
     "imageClipboardUnavailable": "Овај прегледач не може да чита слике из клипборда",
     "imageClipboardEmpty": "Није пронађена слика у клипборду",
+    "imageDropHint": "Испустите слику да бисте је отпремили",
     "localShell": "Локални терминал шел",
     "localBackendUnreachable": "Локални бекенд није доступан",
     "processExited": "Процес је завршен ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Усмерите SSH саобраћај преко Cloudflare Zero Trust путем WebSocket-а"
       },
-      "tcpNoDelay": {
-        "label": "Онемогући Наглов алгоритам (TCP_NODELAY)",
-        "description": "Онемогућава груписање TCP пакета ради смањења кашњења SSH уноса, посебно на LAN везама. Може повећати мрежно оптерећење."
-      },
       "cloudflareTunnelHostname": {
         "label": "Име хоста тунела",
         "description": "Јавно име хоста Cloudflare Tunnel-а"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Размак слова"
+      },
+      "padding": {
+        "label": "Ивица"
       },
       "lineHeight": {
         "label": "Висина линије"
@@ -551,6 +551,7 @@
     "hostNotFound": "Хост није пронађен",
     "letterSpacing": "Размак између слова",
     "letterSpacingPx": "Размак између слова (px)",
+    "paddingPx": "Ивица (px)",
     "lineHeight": "Висина линије",
     "lineHeightLabel": "Висина линије",
     "linkClickBehaviorConfirm": "Прикажи прозорче за отварање или копирање",

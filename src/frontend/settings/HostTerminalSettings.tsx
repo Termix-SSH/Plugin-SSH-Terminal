@@ -46,6 +46,7 @@ import {
 } from "../../shared/terminal-settings";
 import { invalidateTerminalClientSettings } from "../terminal-settings";
 import { docsUrl } from "../docs";
+import { MAX_TERMINAL_PADDING } from "../terminal/terminal-padding";
 
 const PLUGIN_ID = "ssh-terminal";
 const CUSTOM_FONT_OPTION = "__custom__";
@@ -60,7 +61,11 @@ type HostPluginSettings = Record<string, Record<string, unknown>>;
 export function HostTerminalSettings({
   form: editorForm,
   updateForm,
-}: Pick<HostEditorSectionProps, "form" | "setField" | "updateForm" | "host">) {
+  advanced = true,
+}: Pick<HostEditorSectionProps, "form" | "setField" | "updateForm" | "host"> & {
+  /** False in the simple host editor: theme, font and size only. */
+  advanced?: boolean;
+}) {
   const { t } = useTranslation();
   const confirm = useConfirm();
   const [themeName, setThemeName] = useState("");
@@ -71,7 +76,6 @@ export function HostTerminalSettings({
   const stored = ((editorForm?.pluginSettings as HostPluginSettings)?.[
     PLUGIN_ID
   ] ?? {}) as Record<string, unknown>;
-  const tcpNoDelay = stored.tcpNoDelay === true;
   // The form holds what the host follows, so this is what it will look like.
   const form = readHostTerminalSettings(stored) as HostTerminalValues;
 
@@ -194,7 +198,7 @@ export function HostTerminalSettings({
                       });
                     }
                   }}
-                  className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
                 >
                   {Object.entries(TERMINAL_THEMES)
                     .filter(
@@ -235,7 +239,7 @@ export function HostTerminalSettings({
                       setField("fontFamily", e.target.value);
                     }
                   }}
-                  className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring font-mono"
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring font-mono"
                 >
                   {TERMINAL_FONTS.map((f) => (
                     <option key={f.value} value={f.value}>
@@ -273,100 +277,125 @@ export function HostTerminalSettings({
                   onValueChange={([v]) => setField("fontSize", v)}
                 />
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.cursorStyleLabel")}
-                  <HostDefaultBadge settingKey="cursorStyle" />
-                </label>
-                <Select2
-                  value={form.cursorStyle}
-                  onChange={(e) =>
-                    setField("cursorStyle", e.target.value as CursorStyle)
-                  }
-                  className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-                >
-                  {CURSOR_STYLES.map((s) => (
-                    <option key={s.value} value={s.value}>
-                      {t(s.labelKey)}
-                    </option>
-                  ))}
-                </Select2>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    {t("hosts.letterSpacingPx")}
-                    <HostDefaultBadge settingKey="letterSpacing" />
-                  </label>
-                  <span className="text-[10px] text-muted-foreground tabular-nums">
-                    {form.letterSpacing}px
-                  </span>
-                </div>
-                <Slider
-                  min={-2}
-                  max={10}
-                  step={0.5}
-                  value={[form.letterSpacing]}
-                  onValueChange={([v]) => setField("letterSpacing", v)}
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    {t("hosts.lineHeightLabel")}
-                    <HostDefaultBadge settingKey="lineHeight" />
-                  </label>
-                  <span className="text-[10px] text-muted-foreground tabular-nums">
-                    {form.lineHeight.toFixed(1)}
-                  </span>
-                </div>
-                <Slider
-                  min={1.0}
-                  max={2.0}
-                  step={0.1}
-                  value={[form.lineHeight]}
-                  onValueChange={([v]) => setField("lineHeight", v)}
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.bellStyleLabel")}
-                  <HostDefaultBadge settingKey="bellStyle" />
-                </label>
-                <Select2
-                  value={form.bellStyle}
-                  onChange={(e) =>
-                    setField("bellStyle", e.target.value as BellStyle)
-                  }
-                  className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-                >
-                  {BELL_STYLES.map((b) => (
-                    <option key={b.value} value={b.value}>
-                      {t(b.labelKey)}
-                    </option>
-                  ))}
-                </Select2>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.backspaceModeLabel")}
-                  <HostDefaultBadge settingKey="backspaceMode" />
-                </label>
-                <Select2
-                  value={form.backspaceMode}
-                  onChange={(e) =>
-                    setField("backspaceMode", e.target.value as BackspaceMode)
-                  }
-                  className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-                >
-                  <option value="normal">
-                    {t("hosts.backspaceModeNormal")}
-                  </option>
-                  <option value="control-h">
-                    {t("hosts.backspaceModeControlH")}
-                  </option>
-                </Select2>
-              </div>
+              {advanced && (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {t("hosts.cursorStyleLabel")}
+                      <HostDefaultBadge settingKey="cursorStyle" />
+                    </label>
+                    <Select2
+                      value={form.cursorStyle}
+                      onChange={(e) =>
+                        setField("cursorStyle", e.target.value as CursorStyle)
+                      }
+                      className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      {CURSOR_STYLES.map((s) => (
+                        <option key={s.value} value={s.value}>
+                          {t(s.labelKey)}
+                        </option>
+                      ))}
+                    </Select2>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        {t("hosts.letterSpacingPx")}
+                        <HostDefaultBadge settingKey="letterSpacing" />
+                      </label>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                        {form.letterSpacing}px
+                      </span>
+                    </div>
+                    <Slider
+                      min={-2}
+                      max={10}
+                      step={0.5}
+                      value={[form.letterSpacing]}
+                      onValueChange={([v]) => setField("letterSpacing", v)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        {t("hosts.paddingPx")}
+                        <HostDefaultBadge settingKey="padding" />
+                      </label>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                        {form.padding}px
+                      </span>
+                    </div>
+                    <Slider
+                      min={0}
+                      max={MAX_TERMINAL_PADDING}
+                      step={1}
+                      value={[form.padding]}
+                      onValueChange={([v]) => setField("padding", v)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        {t("hosts.lineHeightLabel")}
+                        <HostDefaultBadge settingKey="lineHeight" />
+                      </label>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                        {form.lineHeight.toFixed(1)}
+                      </span>
+                    </div>
+                    <Slider
+                      min={1.0}
+                      max={2.0}
+                      step={0.1}
+                      value={[form.lineHeight]}
+                      onValueChange={([v]) => setField("lineHeight", v)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {t("hosts.bellStyleLabel")}
+                      <HostDefaultBadge settingKey="bellStyle" />
+                    </label>
+                    <Select2
+                      value={form.bellStyle}
+                      onChange={(e) =>
+                        setField("bellStyle", e.target.value as BellStyle)
+                      }
+                      className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      {BELL_STYLES.map((b) => (
+                        <option key={b.value} value={b.value}>
+                          {t(b.labelKey)}
+                        </option>
+                      ))}
+                    </Select2>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {t("hosts.backspaceModeLabel")}
+                      <HostDefaultBadge settingKey="backspaceMode" />
+                    </label>
+                    <Select2
+                      value={form.backspaceMode}
+                      onChange={(e) =>
+                        setField(
+                          "backspaceMode",
+                          e.target.value as BackspaceMode,
+                        )
+                      }
+                      className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      <option value="normal">
+                        {t("hosts.backspaceModeNormal")}
+                      </option>
+                      <option value="control-h">
+                        {t("hosts.backspaceModeControlH")}
+                      </option>
+                    </Select2>
+                  </div>
+                </>
+              )}
             </div>
           </>
           {form.theme === "custom" && (
@@ -556,393 +585,396 @@ export function HostTerminalSettings({
               </div>
             </div>
           )}
-          <SettingRow
-            label={t("hosts.cursorBlinking")}
-            defaultKey="cursorBlink"
-            description={t("hosts.cursorBlinkingDesc")}
-          >
-            <FakeSwitch
-              checked={form.cursorBlink}
-              onChange={(v) => setField("cursorBlink", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.rightClickSelectsWordLabel")}
-            defaultKey="rightClickSelectsWord"
-            description={t("hosts.rightClickSelectsWordShortDesc")}
-          >
-            <FakeSwitch
-              checked={form.rightClickSelectsWord}
-              onChange={(v) => setField("rightClickSelectsWord", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.wheelZoomLabel")}
-            defaultKey="wheelZoom"
-            description={t("hosts.wheelZoomShortDesc")}
-          >
-            <FakeSwitch
-              checked={form.wheelZoom}
-              onChange={(v) => setField("wheelZoom", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.macOptionIsMetaLabel")}
-            defaultKey="macOptionIsMeta"
-            description={t("hosts.macOptionIsMetaShortDesc")}
-          >
-            <FakeSwitch
-              checked={form.macOptionIsMeta}
-              onChange={(v) => setField("macOptionIsMeta", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.syntaxHighlightingLabel")}
-            defaultKey="syntaxHighlighting"
-            description={t("hosts.syntaxHighlightingDesc")}
-          >
-            <FakeSwitch
-              checked={form.syntaxHighlighting}
-              onChange={(v) => setField("syntaxHighlighting", v)}
-            />
-          </SettingRow>
-          {form.syntaxHighlighting && (
-            <div className="flex flex-col ml-4">
-              {(
-                [
-                  [
-                    "logLevels",
-                    "syntaxCategoryLogLevels",
-                    "syntaxCategoryLogLevelsDesc",
-                  ],
-                  ["paths", "syntaxCategoryPaths", "syntaxCategoryPathsDesc"],
-                  [
-                    "timestamps",
-                    "syntaxCategoryTimestamps",
-                    "syntaxCategoryTimestampsDesc",
-                  ],
-                  [
-                    "ipAddresses",
-                    "syntaxCategoryIpAddresses",
-                    "syntaxCategoryIpAddressesDesc",
-                  ],
-                  ["urls", "syntaxCategoryUrls", "syntaxCategoryUrlsDesc"],
-                  [
-                    "numbers",
-                    "syntaxCategoryNumbers",
-                    "syntaxCategoryNumbersDesc",
-                  ],
-                ] as const
-              ).map(([key, labelKey, descKey]) => (
-                <SettingRow
-                  key={key}
-                  defaultKey="syntaxHighlightingOptions"
-                  label={t(`hosts.${labelKey}`)}
-                  description={t(`hosts.${descKey}`)}
-                >
-                  <FakeSwitch
-                    checked={form.syntaxHighlightingOptions?.[key] ?? true}
-                    onChange={(v) =>
-                      setField("syntaxHighlightingOptions", {
-                        ...form.syntaxHighlightingOptions,
-                        [key]: v,
-                      })
+          {advanced && (
+            <>
+              <SettingRow
+                label={t("hosts.cursorBlinking")}
+                defaultKey="cursorBlink"
+                description={t("hosts.cursorBlinkingDesc")}
+              >
+                <FakeSwitch
+                  checked={form.cursorBlink}
+                  onChange={(v) => setField("cursorBlink", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.rightClickSelectsWordLabel")}
+                defaultKey="rightClickSelectsWord"
+                description={t("hosts.rightClickSelectsWordShortDesc")}
+              >
+                <FakeSwitch
+                  checked={form.rightClickSelectsWord}
+                  onChange={(v) => setField("rightClickSelectsWord", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.wheelZoomLabel")}
+                defaultKey="wheelZoom"
+                description={t("hosts.wheelZoomShortDesc")}
+              >
+                <FakeSwitch
+                  checked={form.wheelZoom}
+                  onChange={(v) => setField("wheelZoom", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.macOptionIsMetaLabel")}
+                defaultKey="macOptionIsMeta"
+                description={t("hosts.macOptionIsMetaShortDesc")}
+              >
+                <FakeSwitch
+                  checked={form.macOptionIsMeta}
+                  onChange={(v) => setField("macOptionIsMeta", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.syntaxHighlightingLabel")}
+                defaultKey="syntaxHighlighting"
+                description={t("hosts.syntaxHighlightingDesc")}
+              >
+                <FakeSwitch
+                  checked={form.syntaxHighlighting}
+                  onChange={(v) => setField("syntaxHighlighting", v)}
+                />
+              </SettingRow>
+              {form.syntaxHighlighting && (
+                <div className="flex flex-col ml-4">
+                  {(
+                    [
+                      [
+                        "logLevels",
+                        "syntaxCategoryLogLevels",
+                        "syntaxCategoryLogLevelsDesc",
+                      ],
+                      [
+                        "paths",
+                        "syntaxCategoryPaths",
+                        "syntaxCategoryPathsDesc",
+                      ],
+                      [
+                        "timestamps",
+                        "syntaxCategoryTimestamps",
+                        "syntaxCategoryTimestampsDesc",
+                      ],
+                      [
+                        "ipAddresses",
+                        "syntaxCategoryIpAddresses",
+                        "syntaxCategoryIpAddressesDesc",
+                      ],
+                      ["urls", "syntaxCategoryUrls", "syntaxCategoryUrlsDesc"],
+                      [
+                        "numbers",
+                        "syntaxCategoryNumbers",
+                        "syntaxCategoryNumbersDesc",
+                      ],
+                    ] as const
+                  ).map(([key, labelKey, descKey]) => (
+                    <SettingRow
+                      key={key}
+                      defaultKey="syntaxHighlightingOptions"
+                      label={t(`hosts.${labelKey}`)}
+                      description={t(`hosts.${descKey}`)}
+                    >
+                      <FakeSwitch
+                        checked={form.syntaxHighlightingOptions?.[key] ?? true}
+                        onChange={(v) =>
+                          setField("syntaxHighlightingOptions", {
+                            ...form.syntaxHighlightingOptions,
+                            [key]: v,
+                          })
+                        }
+                      />
+                    </SettingRow>
+                  ))}
+                </div>
+              )}
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.backgroundImageLabel")}
+                  <HostDefaultBadge settingKey="backgroundImage" />
+                </label>
+                <p className="text-[10px] text-muted-foreground">
+                  {t("hosts.backgroundImageDesc")}
+                </p>
+                <input
+                  type="url"
+                  value={form.backgroundImage}
+                  onChange={(e) => setField("backgroundImage", e.target.value)}
+                  placeholder="https://example.com/image.jpg"
+                  className="flex h-9 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring font-mono"
+                />
+              </div>
+              {form.backgroundImage && (
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {t("hosts.backgroundImageOpacityLabel")}
+                      <HostDefaultBadge settingKey="backgroundImageOpacity" />
+                    </label>
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
+                      {Math.round(form.backgroundImageOpacity * 100)}%
+                    </span>
+                  </div>
+                  <Slider
+                    min={0.05}
+                    max={1}
+                    step={0.05}
+                    value={[form.backgroundImageOpacity]}
+                    onValueChange={([v]) =>
+                      setField("backgroundImageOpacity", v)
                     }
                   />
-                </SettingRow>
-              ))}
-            </div>
-          )}
-          <div className="flex flex-col gap-1.5">
-            <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.backgroundImageLabel")}
-              <HostDefaultBadge settingKey="backgroundImage" />
-            </label>
-            <p className="text-[10px] text-muted-foreground">
-              {t("hosts.backgroundImageDesc")}
-            </p>
-            <input
-              type="url"
-              value={form.backgroundImage}
-              onChange={(e) => setField("backgroundImage", e.target.value)}
-              placeholder="https://example.com/image.jpg"
-              className="flex h-9 w-full border border-border bg-popover px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring font-mono"
-            />
-          </div>
-          {form.backgroundImage && (
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.backgroundImageOpacityLabel")}
-                  <HostDefaultBadge settingKey="backgroundImageOpacity" />
-                </label>
-                <span className="text-[10px] text-muted-foreground tabular-nums">
-                  {Math.round(form.backgroundImageOpacity * 100)}%
-                </span>
-              </div>
-              <Slider
-                min={0.05}
-                max={1}
-                step={0.05}
-                value={[form.backgroundImageOpacity]}
-                onValueChange={([v]) => setField("backgroundImageOpacity", v)}
-              />
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </SectionCard>
 
-      <SectionCard
-        title={t("hosts.behaviorAndAdvanced")}
-        icon={<Zap className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("settings.host.tcpNoDelay.label")}
-            description={t("settings.host.tcpNoDelay.description")}
-          >
-            <FakeSwitch
-              checked={tcpNoDelay}
-              onChange={(value) => writeValues({ tcpNoDelay: value })}
-            />
-          </SettingRow>
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.scrollbackBufferLabel")}
-                <HostDefaultBadge settingKey="scrollback" />
-              </label>
-              <span className="text-[10px] text-muted-foreground tabular-nums">
-                {form.scrollback.toLocaleString()}{" "}
-                {t("hosts.scrollbackMaxLines")}
-              </span>
+      {advanced && (
+        <SectionCard
+          title={t("hosts.behaviorAndAdvanced")}
+          icon={<Zap className="size-3.5" />}
+        >
+          <div className="flex flex-col gap-4 py-3">
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.scrollbackBufferLabel")}
+                  <HostDefaultBadge settingKey="scrollback" />
+                </label>
+                <span className="text-[10px] text-muted-foreground tabular-nums">
+                  {form.scrollback.toLocaleString()}{" "}
+                  {t("hosts.scrollbackMaxLines")}
+                </span>
+              </div>
+              <Slider
+                min={1000}
+                max={100000}
+                step={1000}
+                value={[form.scrollback]}
+                onValueChange={([v]) => setField("scrollback", v)}
+              />
             </div>
-            <Slider
-              min={1000}
-              max={100000}
-              step={1000}
-              value={[form.scrollback]}
-              onValueChange={([v]) => setField("scrollback", v)}
-            />
-          </div>
-          <SettingRow
-            label={t("hosts.enableAutoTmux")}
-            defaultKey="autoTmux"
-            description={
-              <>
-                {t("hosts.enableAutoTmuxDesc")}{" "}
+            <SettingRow
+              label={t("hosts.enableAutoTmux")}
+              defaultKey="autoTmux"
+              description={
+                <>
+                  {t("hosts.enableAutoTmuxDesc")}{" "}
+                  <a
+                    href={docsUrl("", "sessions-that-survive")}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-accent-brand hover:underline"
+                  >
+                    {t("hosts.docsLink")}
+                  </a>
+                </>
+              }
+            >
+              <FakeSwitch
+                checked={form.autoTmux}
+                onChange={(v) => setField("autoTmux", v)}
+              />
+            </SettingRow>
+            {form.autoTmux && (
+              <SettingRow
+                label={t("hosts.autoTmuxAskWhenOne")}
+                defaultKey="autoTmuxAskWhenOne"
+                description={t("hosts.autoTmuxAskWhenOneDesc")}
+              >
+                <FakeSwitch
+                  checked={form.autoTmuxAskWhenOne}
+                  onChange={(v) => setField("autoTmuxAskWhenOne", v)}
+                />
+              </SettingRow>
+            )}
+            <SettingRow
+              label={t("hosts.useSSHTitleLabel")}
+              defaultKey="useSSHTitle"
+              description={t("hosts.useSSHTitleDesc")}
+            >
+              <FakeSwitch
+                checked={form.useSSHTitle}
+                onChange={(v) => setField("useSSHTitle", v)}
+              />
+            </SettingRow>
+            <SettingRow
+              label={t("hosts.enableAutoMosh")}
+              defaultKey="autoMosh"
+              description={t("hosts.enableAutoMoshDesc")}
+            >
+              <FakeSwitch
+                checked={form.autoMosh}
+                onChange={(v) => setField("autoMosh", v)}
+              />
+            </SettingRow>
+            <SettingRow
+              label={t("hosts.autoReconnectLabel")}
+              defaultKey="autoReconnect"
+              description={t("hosts.autoReconnectDesc")}
+            >
+              <FakeSwitch
+                checked={form.autoReconnect}
+                onChange={(v) => setField("autoReconnect", v)}
+              />
+            </SettingRow>
+            <SettingRow
+              label={t("hosts.keepOpenOnExitLabel")}
+              defaultKey="keepOpenOnExit"
+              description={t("hosts.keepOpenOnExitDesc")}
+            >
+              <FakeSwitch
+                checked={form.keepOpenOnExit}
+                onChange={(v) => setField("keepOpenOnExit", v)}
+              />
+            </SettingRow>
+            <SettingRow
+              label={t("hosts.passwordPromptAutoFillLabel")}
+              defaultKey="passwordPromptAutoFill"
+              description={t("hosts.passwordPromptAutoFillDesc")}
+            >
+              <FakeSwitch
+                checked={form.passwordPromptAutoFill}
+                onChange={(v) => setField("passwordPromptAutoFill", v)}
+              />
+            </SettingRow>
+            <SettingRow
+              label={t("hosts.sudoPasswordAutoFillLabel")}
+              defaultKey="sudoPasswordAutoFill"
+              description={t("hosts.sudoPasswordAutoFillDesc")}
+            >
+              <FakeSwitch
+                checked={form.sudoPasswordAutoFill}
+                onChange={(v) => setField("sudoPasswordAutoFill", v)}
+              />
+            </SettingRow>
+            <SettingRow
+              label={t("hosts.suPasswordAutoFillLabel")}
+              defaultKey="suPasswordAutoFill"
+              description={t("hosts.suPasswordAutoFillDesc")}
+            >
+              <FakeSwitch
+                checked={form.suPasswordAutoFill}
+                onChange={(v) => setField("suPasswordAutoFill", v)}
+              />
+            </SettingRow>
+            <div className="flex flex-col gap-1.5">
+              <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                {t("hosts.localEchoLabel")}
+                <HostDefaultBadge settingKey="localEcho" />
+              </label>
+              <Select2
+                value={form.localEcho}
+                onChange={(e) =>
+                  setField("localEcho", e.target.value as "off" | "auto" | "on")
+                }
+                className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+              >
+                <option value="off">{t("hosts.localEchoOff")}</option>
+                <option value="auto">{t("hosts.localEchoAuto")}</option>
+                <option value="on">{t("hosts.localEchoOn")}</option>
+              </Select2>
+              <p className="text-[10px] text-muted-foreground">
+                {t("hosts.localEchoDesc")}{" "}
                 <a
-                  href={docsUrl("", "sessions-that-survive")}
+                  href={docsUrl("appearance")}
                   target="_blank"
                   rel="noreferrer"
                   className="text-accent-brand hover:underline"
                 >
                   {t("hosts.docsLink")}
                 </a>
-              </>
-            }
-          >
-            <FakeSwitch
-              checked={form.autoTmux}
-              onChange={(v) => setField("autoTmux", v)}
-            />
-          </SettingRow>
-          {form.autoTmux && (
-            <SettingRow
-              label={t("hosts.autoTmuxAskWhenOne")}
-              defaultKey="autoTmuxAskWhenOne"
-              description={t("hosts.autoTmuxAskWhenOneDesc")}
-            >
-              <FakeSwitch
-                checked={form.autoTmuxAskWhenOne}
-                onChange={(v) => setField("autoTmuxAskWhenOne", v)}
-              />
-            </SettingRow>
-          )}
-          <SettingRow
-            label={t("hosts.useSSHTitleLabel")}
-            defaultKey="useSSHTitle"
-            description={t("hosts.useSSHTitleDesc")}
-          >
-            <FakeSwitch
-              checked={form.useSSHTitle}
-              onChange={(v) => setField("useSSHTitle", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.enableAutoMosh")}
-            defaultKey="autoMosh"
-            description={t("hosts.enableAutoMoshDesc")}
-          >
-            <FakeSwitch
-              checked={form.autoMosh}
-              onChange={(v) => setField("autoMosh", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.autoReconnectLabel")}
-            defaultKey="autoReconnect"
-            description={t("hosts.autoReconnectDesc")}
-          >
-            <FakeSwitch
-              checked={form.autoReconnect}
-              onChange={(v) => setField("autoReconnect", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.keepOpenOnExitLabel")}
-            defaultKey="keepOpenOnExit"
-            description={t("hosts.keepOpenOnExitDesc")}
-          >
-            <FakeSwitch
-              checked={form.keepOpenOnExit}
-              onChange={(v) => setField("keepOpenOnExit", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.passwordPromptAutoFillLabel")}
-            defaultKey="passwordPromptAutoFill"
-            description={t("hosts.passwordPromptAutoFillDesc")}
-          >
-            <FakeSwitch
-              checked={form.passwordPromptAutoFill}
-              onChange={(v) => setField("passwordPromptAutoFill", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.sudoPasswordAutoFillLabel")}
-            defaultKey="sudoPasswordAutoFill"
-            description={t("hosts.sudoPasswordAutoFillDesc")}
-          >
-            <FakeSwitch
-              checked={form.sudoPasswordAutoFill}
-              onChange={(v) => setField("sudoPasswordAutoFill", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.suPasswordAutoFillLabel")}
-            defaultKey="suPasswordAutoFill"
-            description={t("hosts.suPasswordAutoFillDesc")}
-          >
-            <FakeSwitch
-              checked={form.suPasswordAutoFill}
-              onChange={(v) => setField("suPasswordAutoFill", v)}
-            />
-          </SettingRow>
-          <div className="flex flex-col gap-1.5">
-            <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.localEchoLabel")}
-              <HostDefaultBadge settingKey="localEcho" />
-            </label>
-            <Select2
-              value={form.localEcho}
-              onChange={(e) =>
-                setField("localEcho", e.target.value as "off" | "auto" | "on")
-              }
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-            >
-              <option value="off">{t("hosts.localEchoOff")}</option>
-              <option value="auto">{t("hosts.localEchoAuto")}</option>
-              <option value="on">{t("hosts.localEchoOn")}</option>
-            </Select2>
-            <p className="text-[10px] text-muted-foreground">
-              {t("hosts.localEchoDesc")}{" "}
-              <a
-                href={docsUrl("appearance")}
-                target="_blank"
-                rel="noreferrer"
-                className="text-accent-brand hover:underline"
-              >
-                {t("hosts.docsLink")}
-              </a>
-            </p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.linkClickBehaviorLabel")}
-              <HostDefaultBadge settingKey="linkClickBehavior" />
-            </label>
-            <Select2
-              value={form.linkClickBehavior}
-              onChange={(e) =>
-                setField(
-                  "linkClickBehavior",
-                  e.target.value as "confirm" | "direct" | "modifier",
-                )
-              }
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-            >
-              <option value="confirm">
-                {t("hosts.linkClickBehaviorConfirm")}
-              </option>
-              <option value="direct">
-                {t("hosts.linkClickBehaviorDirect")}
-              </option>
-              <option value="modifier">
-                {t("hosts.linkClickBehaviorModifier")}
-              </option>
-            </Select2>
-            <p className="text-[10px] text-muted-foreground">
-              {t("hosts.linkClickBehaviorDesc")}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-border pt-4">
+              </p>
+            </div>
             <div className="flex flex-col gap-1.5">
               <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.fastScrollModifierLabel")}
-                <HostDefaultBadge settingKey="fastScrollModifier" />
+                {t("hosts.linkClickBehaviorLabel")}
+                <HostDefaultBadge settingKey="linkClickBehavior" />
               </label>
               <Select2
-                value={form.fastScrollModifier}
+                value={form.linkClickBehavior}
                 onChange={(e) =>
                   setField(
-                    "fastScrollModifier",
-                    e.target.value as FastScrollModifier,
+                    "linkClickBehavior",
+                    e.target.value as "confirm" | "direct" | "modifier",
                   )
                 }
-                className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
               >
-                {FAST_SCROLL_MODIFIERS.map((m) => (
-                  <option key={m.value} value={m.value}>
-                    {t(m.labelKey)}
-                  </option>
-                ))}
+                <option value="confirm">
+                  {t("hosts.linkClickBehaviorConfirm")}
+                </option>
+                <option value="direct">
+                  {t("hosts.linkClickBehaviorDirect")}
+                </option>
+                <option value="modifier">
+                  {t("hosts.linkClickBehaviorModifier")}
+                </option>
               </Select2>
+              <p className="text-[10px] text-muted-foreground">
+                {t("hosts.linkClickBehaviorDesc")}
+              </p>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-border pt-4">
+              <div className="flex flex-col gap-1.5">
                 <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.fastScrollSensitivityLabel")}
-                  <HostDefaultBadge settingKey="fastScrollSensitivity" />
+                  {t("hosts.fastScrollModifierLabel")}
+                  <HostDefaultBadge settingKey="fastScrollModifier" />
                 </label>
-                <span className="text-[10px] text-muted-foreground tabular-nums">
-                  {form.fastScrollSensitivity}
-                </span>
+                <Select2
+                  value={form.fastScrollModifier}
+                  onChange={(e) =>
+                    setField(
+                      "fastScrollModifier",
+                      e.target.value as FastScrollModifier,
+                    )
+                  }
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                >
+                  {FAST_SCROLL_MODIFIERS.map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {t(m.labelKey)}
+                    </option>
+                  ))}
+                </Select2>
               </div>
-              <Slider
-                min={1}
-                max={10}
-                step={1}
-                value={[form.fastScrollSensitivity]}
-                onValueChange={([v]) => setField("fastScrollSensitivity", v)}
-              />
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.fastScrollSensitivityLabel")}
+                    <HostDefaultBadge settingKey="fastScrollSensitivity" />
+                  </label>
+                  <span className="text-[10px] text-muted-foreground tabular-nums">
+                    {form.fastScrollSensitivity}
+                  </span>
+                </div>
+                <Slider
+                  min={1}
+                  max={10}
+                  step={1}
+                  value={[form.fastScrollSensitivity]}
+                  onValueChange={([v]) => setField("fastScrollSensitivity", v)}
+                />
+              </div>
             </div>
+            {form.autoMosh && (
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.moshCommandLabel")}
+                  <HostDefaultBadge settingKey="moshCommand" />
+                </label>
+                <Input
+                  placeholder="mosh"
+                  value={form.moshCommand}
+                  onChange={(e) => setField("moshCommand", e.target.value)}
+                />
+              </div>
+            )}
           </div>
-          {form.autoMosh && (
-            <div className="flex flex-col gap-1.5">
-              <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.moshCommandLabel")}
-                <HostDefaultBadge settingKey="moshCommand" />
-              </label>
-              <Input
-                placeholder="mosh"
-                value={form.moshCommand}
-                onChange={(e) => setField("moshCommand", e.target.value)}
-              />
-            </div>
-          )}
-        </div>
-      </SectionCard>
+        </SectionCard>
+      )}
     </>
   );
 }

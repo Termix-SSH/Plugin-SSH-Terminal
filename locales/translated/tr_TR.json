@@ -67,7 +67,7 @@
     "searchRegex": "Düzenli İfade Kullan",
     "searchResultCount": "{{count}} içinde {{index}}",
     "searchWholeWord": "Tam Kelime Eşleştir",
-    "sessionTakenOver": "Oturum başka bir sekmede açıldı. Yeniden bağlanılıyor...",
+    "sessionTakenOver": "Bu oturum başka bir pencerede veya sekmede açıldı.",
     "tmuxAttached": "Bağlı istemciler",
     "tmuxAttachedCount_one": "{{count}} bağlı",
     "tmuxAttachedCount_other": "{{count}} bağlı",
@@ -99,6 +99,7 @@
     "imageUploaded": "Görüntü yüklendi: {{path}}",
     "imageClipboardUnavailable": "Bu tarayıcı panodan görüntüleri okuyamaz",
     "imageClipboardEmpty": "Panoda görüntü bulunamadı",
+    "imageDropHint": "Yüklemek için bir görüntü sürükleyip bırakın",
     "localShell": "Yerel terminal kabuğu",
     "localBackendUnreachable": "Yerel arka uç erişilemiyor",
     "processExited": "İşlem sonlandırıldı ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "SSH trafiğini WebSocket üzerinden Cloudflare Zero Trust'a yönlendir"
       },
-      "tcpNoDelay": {
-        "label": "Nagle Algoritmasını Devre Dışı Bırak (TCP_NODELAY)",
-        "description": "Özellikle LAN bağlantılarında SSH girdi gecikmesini azaltmak için TCP paket toplamasını devre dışı bırakır. Ağ yükünü artırabilir."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel Ana Bilgisayar Adı",
         "description": "Cloudflare Tunnel genel ana bilgisayar adı"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Harf aralığı"
+      },
+      "padding": {
+        "label": "Dolgu"
       },
       "lineHeight": {
         "label": "Satır yüksekliği"
@@ -548,6 +548,7 @@
     "hostNotFound": "Sunucu bulunamadı",
     "letterSpacing": "Harf Aralığı",
     "letterSpacingPx": "Harf Aralığı (px)",
+    "paddingPx": "Dolgu (px)",
     "lineHeight": "Satır Yüksekliği",
     "lineHeightLabel": "Satır Yüksekliği",
     "linkClickBehaviorConfirm": "Açmak veya kopyalamak için açılır pencere göster",

@@ -67,7 +67,7 @@
     "searchRegex": "使用正規表示式",
     "searchResultCount": "第 {{index}} 筆，共 {{count}} 筆",
     "searchWholeWord": "符合整個單字",
-    "sessionTakenOver": "此工作階段已在另一個分頁中開啟。正在重新連線...",
+    "sessionTakenOver": "此工作階段已在另一個視窗或分頁中開啟。",
     "tmuxAttached": "已連線的用戶端",
     "tmuxAttachedCount_other": "{{count}} 個已附加",
     "tmuxCopyHint": "調整選取範圍後，按 Enter 複製到剪貼簿",
@@ -97,6 +97,7 @@
     "imageUploaded": "影像已上傳：{{path}}",
     "imageClipboardUnavailable": "此瀏覽器無法從剪貼簿讀取影像",
     "imageClipboardEmpty": "剪貼簿中未找到影像",
+    "imageDropHint": "拖放圖片以上傳",
     "localShell": "本機終端機 shell",
     "localBackendUnreachable": "無法連線至本機後端",
     "processExited": "程序已結束（{{code}}）",
@@ -276,10 +277,6 @@
         "label": "Cloudflare Tunnel",
         "description": "透過 WebSocket 將 SSH 流量路由至 Cloudflare Zero Trust"
       },
-      "tcpNoDelay": {
-        "label": "停用 Nagle 演算法 (TCP_NODELAY)",
-        "description": "停用 TCP 封包批次處理以降低 SSH 輸入延遲，特別是在區域網路連線時。可能會增加網路開銷。"
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel 主機名稱",
         "description": "Cloudflare Tunnel 公開主機名稱"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "字間距"
+      },
+      "padding": {
+        "label": "內距"
       },
       "lineHeight": {
         "label": "行高"
@@ -545,6 +545,7 @@
     "hostNotFound": "找不到主機",
     "letterSpacing": "字距",
     "letterSpacingPx": "字距 (px)",
+    "paddingPx": "內距 (px)",
     "lineHeight": "行高",
     "lineHeightLabel": "行高",
     "linkClickBehaviorConfirm": "顯示彈出視窗以開啟或複製",

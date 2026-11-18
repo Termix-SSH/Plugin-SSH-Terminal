@@ -67,7 +67,7 @@
     "searchRegex": "Usa espressione regolare",
     "searchResultCount": "{{index}} di {{count}}",
     "searchWholeWord": "Parola intera",
-    "sessionTakenOver": "La sessione è stata aperta in un'altra scheda. Riconnessione in corso...",
+    "sessionTakenOver": "Questa sessione è stata aperta in un'altra finestra o scheda.",
     "tmuxAttached": "Client connessi",
     "tmuxAttachedCount_one": "{{count}} sessione attiva",
     "tmuxAttachedCount_many": "{{count}} sessioni attive",
@@ -101,6 +101,7 @@
     "imageUploaded": "Immagine caricata: {{path}}",
     "imageClipboardUnavailable": "Questo browser non può leggere immagini dagli appunti",
     "imageClipboardEmpty": "Nessuna immagine trovata negli appunti",
+    "imageDropHint": "Trascina un'immagine per caricarla",
     "localShell": "Shell del terminale locale",
     "localBackendUnreachable": "Il backend locale non è raggiungibile",
     "processExited": "Processo terminato ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Tunnel Cloudflare",
         "description": "Instrada il traffico SSH tramite Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Disabilita l'algoritmo di Nagle (TCP_NODELAY)",
-        "description": "Disabilita l'aggregazione dei pacchetti TCP per ridurre la latenza di input SSH, specialmente sulle connessioni LAN. Potrebbe aumentare il sovraccarico di rete."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nome host del tunnel",
         "description": "Nome host pubblico del tunnel Cloudflare"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Spaziatura caratteri"
+      },
+      "padding": {
+        "label": "Riempimento"
       },
       "lineHeight": {
         "label": "Altezza riga"
@@ -551,6 +551,7 @@
     "hostNotFound": "Host non trovato",
     "letterSpacing": "Spaziatura caratteri",
     "letterSpacingPx": "Spaziatura caratteri (px)",
+    "paddingPx": "Riempimento (px)",
     "lineHeight": "Altezza riga",
     "lineHeightLabel": "Altezza riga",
     "linkClickBehaviorConfirm": "Mostra popup per aprire o copiare",

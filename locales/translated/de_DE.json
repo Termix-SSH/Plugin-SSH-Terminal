@@ -67,7 +67,7 @@
     "searchRegex": "Regulären Ausdruck verwenden",
     "searchResultCount": "{{index}} von {{count}}",
     "searchWholeWord": "Ganzes Wort suchen",
-    "sessionTakenOver": "Sitzung wurde in einem anderen Tab geöffnet. Verbindung wird wiederhergestellt...",
+    "sessionTakenOver": "Diese Sitzung wurde in einem anderen Fenster oder Tab geöffnet.",
     "tmuxAttached": "Verbundene Clients",
     "tmuxAttachedCount_one": "{{count}} angehängt",
     "tmuxAttachedCount_other": "{{count}} angehängt",
@@ -99,6 +99,7 @@
     "imageUploaded": "Bild hochgeladen: {{path}}",
     "imageClipboardUnavailable": "Dieser Browser kann keine Bilder aus der Zwischenablage lesen",
     "imageClipboardEmpty": "Kein Bild in der Zwischenablage gefunden",
+    "imageDropHint": "Bild ablegen, um es hochzuladen",
     "localShell": "Lokale Terminal-Shell",
     "localBackendUnreachable": "Der lokale Backend-Server ist nicht erreichbar",
     "processExited": "Prozess beendet ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "SSH-Verkehr über Cloudflare Zero Trust via WebSocket leiten"
       },
-      "tcpNoDelay": {
-        "label": "Nagle-Algorithmus deaktivieren (TCP_NODELAY)",
-        "description": "Deaktiviert das Batching von TCP-Paketen, um die Eingabelatenz bei SSH zu verringern, insbesondere bei LAN-Verbindungen. Kann den Netzwerk-Overhead erhöhen."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-Hostname",
         "description": "Öffentlicher Hostname des Cloudflare Tunnels"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Zeichenabstand"
+      },
+      "padding": {
+        "label": "Abstand"
       },
       "lineHeight": {
         "label": "Zeilenhöhe"
@@ -548,6 +548,7 @@
     "hostNotFound": "Host nicht gefunden",
     "letterSpacing": "Zeichenabstand",
     "letterSpacingPx": "Zeichenabstand (px)",
+    "paddingPx": "Abstand (px)",
     "lineHeight": "Zeilenhöhe",
     "lineHeightLabel": "Zeilenhöhe",
     "linkClickBehaviorConfirm": "Popup zum Öffnen oder Kopieren anzeigen",

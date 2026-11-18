@@ -67,7 +67,7 @@
     "searchRegex": "रेगुलर एक्सप्रेशन का उपयोग करें",
     "searchResultCount": "{{count}} में से {{index}}",
     "searchWholeWord": "पूरा शब्द मैच करें",
-    "sessionTakenOver": "सत्र को एक अन्य टैब में खोला गया था। पुनः कनेक्ट हो रहा है...",
+    "sessionTakenOver": "यह सत्र किसी अन्य विंडो या टैब में खोला गया था।",
     "tmuxAttached": "जुड़े हुए क्लाइंट",
     "tmuxAttachedCount_one": "{{count}} जुड़ा हुआ",
     "tmuxAttachedCount_other": "{{count}} जुड़े हुए",
@@ -99,6 +99,7 @@
     "imageUploaded": "इमेज अपलोड की गई: {{path}}",
     "imageClipboardUnavailable": "यह ब्राउज़र क्लिपबोर्ड से इमेज नहीं पढ़ सकता",
     "imageClipboardEmpty": "क्लिपबोर्ड में कोई इमेज नहीं मिली",
+    "imageDropHint": "अपलोड करने के लिए एक छवि छोड़ें",
     "localShell": "लोकल टर्मिनल शेल",
     "localBackendUnreachable": "स्थानीय बैकएंड तक पहुंच नहीं है",
     "processExited": "प्रक्रिया समाप्त हो गई ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare टनल",
         "description": "WebSocket के माध्यम से Cloudflare Zero Trust के ऊपर SSH ट्रैफ़िक राउट करें"
       },
-      "tcpNoDelay": {
-        "label": "नेगल्स एल्गोरिदम अक्षम करें (TCP_NODELAY)",
-        "description": "LAN कनेक्शन पर विशेष रूप से SSH इनपुट लेटेंसी कम करने के लिए TCP पैकेट बैचिंग को अक्षम करता है। नेटवर्क ओवरहेड बढ़ सकता है।"
-      },
       "cloudflareTunnelHostname": {
         "label": "टनल होस्टनेम",
         "description": "Cloudflare टनल सार्वजनिक होस्टनेम"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "अक्षर अंतराल"
+      },
+      "padding": {
+        "label": "पैडिंग"
       },
       "lineHeight": {
         "label": "लाइन ऊंचाई"
@@ -548,6 +548,7 @@
     "hostNotFound": "होस्ट नहीं मिला",
     "letterSpacing": "अक्षर अंतराल",
     "letterSpacingPx": "अक्षर अंतराल (px)",
+    "paddingPx": "पैडिंग (px)",
     "lineHeight": "लाइन ऊंचाई",
     "lineHeightLabel": "लाइन ऊंचाई",
     "linkClickBehaviorConfirm": "खोलने या कॉपी करने के लिए पॉपअप दिखाएं",

@@ -67,7 +67,7 @@
     "searchRegex": "Naudoti reguliariąsias išraiškas",
     "searchResultCount": "{{index}} iš {{count}}",
     "searchWholeWord": "Atitikti visą žodį",
-    "sessionTakenOver": "Sesija atidaryta kitoje kortelėje. Perjungiamasi...",
+    "sessionTakenOver": "Ši sesija buvo atidaryta kitame lange ar skirtuke.",
     "tmuxAttached": "Prijungti klientai",
     "tmuxAttachedCount_one": "{{count}} prijungtas",
     "tmuxAttachedCount_few": "{{count}} prijungti",
@@ -103,6 +103,7 @@
     "imageUploaded": "Paveikslėlis įkeltas: {{path}}",
     "imageClipboardUnavailable": "Šis naršyklė negali skaityti paveikslėlių iš iškarpinės",
     "imageClipboardEmpty": "Iškarpinėje nerastas joks paveikslėlis",
+    "imageDropHint": "Nukreipkite paveikslėlį, kad jį įkeltumėte",
     "localShell": "Vietinis terminalo shell",
     "localBackendUnreachable": "Vietinis galinis serveris nepasiekiamas",
     "processExited": "Procesas baigtas ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Cloudflare tunelis",
         "description": "Maršrutuokite SSH srautą per Cloudflare Zero Trust naudojant WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Išjungti Nagle algoritmą (TCP_NODELAY)",
-        "description": "Išjungia TCP paketų grupavimą, kad sumažintų SSH įvesties vėlavimą, ypač vietiniame tinkle. Tai gali padidinti tinklo apkrovą."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunelio pavadinimas",
         "description": "Cloudflare tunelio viešasis pavadinimas"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Rašmenų tarpas"
+      },
+      "padding": {
+        "label": "Atitraukimas"
       },
       "lineHeight": {
         "label": "Eilutės aukštis"
@@ -554,6 +554,7 @@
     "hostNotFound": "Serveris nerastas",
     "letterSpacing": "Rašmenų tarpas",
     "letterSpacingPx": "Rašmenų tarpas (px)",
+    "paddingPx": "Atitraukimas (px)",
     "lineHeight": "Eilučių aukštis",
     "lineHeightLabel": "Eilučių aukštis",
     "linkClickBehaviorConfirm": "Rodyti langą atidarymui arba kopijavimui",

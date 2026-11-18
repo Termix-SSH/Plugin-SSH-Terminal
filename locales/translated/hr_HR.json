@@ -67,7 +67,7 @@
     "searchRegex": "Koristi regularni izraz",
     "searchResultCount": "{{index}} od {{count}}",
     "searchWholeWord": "Podudaranje cijele riječi",
-    "sessionTakenOver": "Sesija je otvorena u drugom kartici. Ponovno povezivanje...",
+    "sessionTakenOver": "Ova sesija je otvorena u drugom prozoru ili kartici.",
     "tmuxAttached": "Povezani klijenti",
     "tmuxAttachedCount_one": "{{count}} spojeno",
     "tmuxAttachedCount_few": "{{count}} spojena",
@@ -101,6 +101,7 @@
     "imageUploaded": "Slika je otpremljena: {{path}}",
     "imageClipboardUnavailable": "Ovaj preglednik ne može čitati slike iz međuspremnika",
     "imageClipboardEmpty": "Nema slike u međuspremniku",
+    "imageDropHint": "Ispustite sliku za otpremanje",
     "localShell": "Lokalni terminalni shell",
     "localBackendUnreachable": "Lokalni pozadinski servis nije dostupan",
     "processExited": "Proces je završio ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Usmjerite SSH promet preko Cloudflare Zero Trusta putem WebSocketa"
       },
-      "tcpNoDelay": {
-        "label": "Onemogući Nagleov algoritam (TCP_NODELAY)",
-        "description": "Onemogućuje grupiranje TCP paketa kako bi se smanjila latencija SSH unosa, posebno na LAN vezama. Može povećati mrežno opterećenje."
-      },
       "cloudflareTunnelHostname": {
         "label": "Naziv hosta tunela",
         "description": "Javni naziv hosta Cloudflare Tunela"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Razmak između slova"
+      },
+      "padding": {
+        "label": "Razmak"
       },
       "lineHeight": {
         "label": "Visina retka"
@@ -551,6 +551,7 @@
     "hostNotFound": "Host nije pronađen",
     "letterSpacing": "Razmak između slova",
     "letterSpacingPx": "Razmak između slova (px)",
+    "paddingPx": "Razmak (px)",
     "lineHeight": "Visina retka",
     "lineHeightLabel": "Visina retka",
     "linkClickBehaviorConfirm": "Prikaži skočni prozor za otvaranje ili kopiranje",

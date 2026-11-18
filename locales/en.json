@@ -67,7 +67,7 @@
     "searchRegex": "Use Regular Expression",
     "searchResultCount": "{{index}} of {{count}}",
     "searchWholeWord": "Match Whole Word",
-    "sessionTakenOver": "Session was opened in another tab. Reconnecting...",
+    "sessionTakenOver": "This session was opened in another window or tab.",
     "tmuxAttached": "Attached clients",
     "tmuxAttachedCount_one": "{{count}} attached",
     "tmuxAttachedCount_other": "{{count}} attached",
@@ -99,6 +99,7 @@
     "imageUploaded": "Image uploaded: {{path}}",
     "imageClipboardUnavailable": "This browser cannot read images from the clipboard",
     "imageClipboardEmpty": "No image found in the clipboard",
+    "imageDropHint": "Drop an image to upload it",
     "localShell": "Local terminal shell",
     "localBackendUnreachable": "The local backend is not reachable",
     "processExited": "Process exited ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Route SSH traffic over Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Disable Nagle's Algorithm (TCP_NODELAY)",
-        "description": "Disables TCP packet batching to reduce SSH input latency, especially on LAN connections. May increase network overhead."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel Hostname",
         "description": "Cloudflare Tunnel public hostname"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Letter spacing"
+      },
+      "padding": {
+        "label": "Padding"
       },
       "lineHeight": {
         "label": "Line height"
@@ -548,6 +548,7 @@
     "hostNotFound": "Host not found",
     "letterSpacing": "Letter Spacing",
     "letterSpacingPx": "Letter Spacing (px)",
+    "paddingPx": "Padding (px)",
     "lineHeight": "Line Height",
     "lineHeightLabel": "Line Height",
     "linkClickBehaviorConfirm": "Show popup to open or copy",

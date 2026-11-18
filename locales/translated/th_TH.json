@@ -67,7 +67,7 @@
     "searchRegex": "ใช้ Regular Expression",
     "searchResultCount": "{{index}} จาก {{count}}",
     "searchWholeWord": "ตรงทั้งคำ",
-    "sessionTakenOver": "เซสชันถูกเปิดในแท็บอื่น กำลังเชื่อมต่อใหม่...",
+    "sessionTakenOver": "เซสชันนี้ถูกเปิดในหน้าต่างหรือแท็บอื่นแล้ว",
     "tmuxAttached": "ไคลเอนต์ที่เชื่อมต่อ",
     "tmuxAttachedCount_other": "เชื่อมต่อ {{count}} เซสชัน",
     "tmuxCopyHint": "ปรับการเลือกแล้วกด Enter เพื่อคัดลอกไปยังคลิปบอร์ด",
@@ -97,6 +97,7 @@
     "imageUploaded": "อัปโหลดรูปภาพแล้ว: {{path}}",
     "imageClipboardUnavailable": "เบราว์เซอร์นี้ไม่สามารถอ่านรูปภาพจากคลิปบอร์ดได้",
     "imageClipboardEmpty": "ไม่พบรูปภาพในคลิปบอร์ด",
+    "imageDropHint": "วางรูปภาพเพื่ออัปโหลด",
     "localShell": "Shell ของเทอร์มินัลท้องถิ่น",
     "localBackendUnreachable": "ไม่สามารถเข้าถึง backend ท้องถิ่นได้",
     "processExited": "กระบวนการสิ้นสุดแล้ว ({{code}})",
@@ -276,10 +277,6 @@
         "label": "Cloudflare Tunnel",
         "description": "กำหนดเส้นทาง SSH ผ่าน Cloudflare Zero Trust โดยใช้ WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "ปิดใช้งานอัลกอริทึมของเนเกล (TCP_NODELAY)",
-        "description": "ปิดการใช้งานการรวมกลุ่มแพ็กเก็ต TCP เพื่อลดความล่าช้าในการป้อนข้อมูล SSH โดยเฉพาะบนการเชื่อมต่อ LAN อาจเพิ่มภาระเครือข่าย"
-      },
       "cloudflareTunnelHostname": {
         "label": "ชื่อโฮสต์ของ Tunnel",
         "description": "ชื่อโฮสต์สาธารณะของ Cloudflare Tunnel"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "ระยะห่างระหว่างตัวอักษร"
+      },
+      "padding": {
+        "label": "ระยะห่างภายใน"
       },
       "lineHeight": {
         "label": "ความสูงบรรทัด"
@@ -545,6 +545,7 @@
     "hostNotFound": "ไม่พบโฮสต์",
     "letterSpacing": "ระยะห่างระหว่างตัวอักษร",
     "letterSpacingPx": "ระยะห่างระหว่างตัวอักษร (px)",
+    "paddingPx": "ระยะห่างภายใน (พิกเซล)",
     "lineHeight": "ความสูงบรรทัด",
     "lineHeightLabel": "ความสูงบรรทัด",
     "linkClickBehaviorConfirm": "แสดงป๊อปอัปเพื่อยืนยันการเปิดหรือคัดลอก",

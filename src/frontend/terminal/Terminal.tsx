@@ -3,7 +3,7 @@ import {
   readFontSize,
   saveFontSize,
 } from "./font-size-storage";
-import { getErrorMessage } from "./terminal-helpers";
+import { getErrorMessage, safeSignInUrl } from "./terminal-helpers";
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   useEffect,
@@ -60,9 +60,11 @@ import { useCommandHistory } from "./command-history/CommandHistoryContext";
 import { getAndroidHardwareKeySequence } from "./android-hardware-keyboard";
 import {
   buildImageUploadFormData,
+  selectImageUploadApi,
   type TerminalImageUploadSource,
 } from "./terminal-image-upload";
 import { createTerminalNativePasteHandler } from "./terminal-native-paste";
+import { createTerminalImageDropHandlers } from "./terminal-image-drop";
 import { TerminalSearchBar } from "./search/TerminalSearchBar.tsx";
 import {
   CommandAutocomplete,
@@ -76,7 +78,7 @@ import {
   type TerminalSlotApi,
 } from "./terminal-slots";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { ImagePlus, Save } from "lucide-react";
 import { TerminalToolbar } from "./TerminalToolbar.tsx";
 import { BroadcastBar } from "../terminal-tools/broadcast/BroadcastBar";
 import {
@@ -123,6 +125,7 @@ import {
   handleTerminalClipboardKeyEvent,
 } from "./terminal-clipboard.ts";
 import { quoteTerminalImagePath } from "./terminal-image-path.ts";
+import { shouldRunPostConnect } from "./post-connect.ts";
 import {
   dispatchKeybindingAction,
   isTerminalKeybindingAction,
@@ -163,6 +166,7 @@ import {
   useTranslation,
   invokeAction,
   usePluginApi,
+  usePluginApiFor,
   useSlotContributions,
   getCustomKeybindings,
   runKeybindingAction,
@@ -173,6 +177,12 @@ import {
   useHosts,
   useTabs,
 } from "@termix-ssh/plugin-sdk/frontend";
+import { useRemoteImage } from "./remote-image";
+import { applyTerminalPadding } from "./terminal-padding";
+import {
+  rememberTmuxSession,
+  type RememberedTmuxSession,
+} from "./tmux-reattach";
 
 type HostKeyVerificationData = Omit<
   React.ComponentProps<typeof HostKeyVerificationDialog>,
@@ -214,6 +224,8 @@ interface SSHTerminalProps {
 }
 
 const ALTERNATE_SCREEN_SEQUENCE = /\x1b\[\?(47|1047|1049)([hl])/g;
+/** A shell that ends sooner than this after connecting keeps its tab open. */
+const QUICK_EXIT_MS = 5000;
 
 function updateAlternateScreenMode(output: string, currentMode: boolean) {
   ALTERNATE_SCREEN_SEQUENCE.lastIndex = 0;
@@ -257,6 +269,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
   ) {
     const { t } = useTranslation();
     const api = usePluginApi();
+    const remoteApi = usePluginApiFor("remote");
     const { instance: terminal, ref: xtermRef } = useXTerm();
     const commandHistoryContext = useCommandHistory();
     const confirm = useConfirm();
@@ -332,6 +345,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const backgroundColor = backgroundImage
       ? "transparent"
       : themeColors.background;
+    // Loaded through Termix: a plugin view can't load pictures from other sites.
+    const backgroundSrc = useRemoteImage(backgroundImage);
     const fitAddonRef = useRef<FitAddon | null>(null);
     const webSocketRef = useRef<WebSocket | null>(null);
     const cwdWaitersRef = useRef<Array<(path: string) => void>>([]);
@@ -361,6 +376,17 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
     const imageUploadRef = useRef(handleImageUpload);
+    const [isImageDragOver, setIsImageDragOver] = useState(false);
+    const droppedImagesRef = useRef(handleDroppedImages);
+    const imageDropHandlers = useMemo(
+      () =>
+        createTerminalImageDropHandlers({
+          uploadImages: (files) => void droppedImagesRef.current(files),
+          rejectFiles: () => toast.error(t("terminal.imageChooseFile")),
+          setDragging: setIsImageDragOver,
+        }),
+      [t],
+    );
     const [isConnecting, setIsConnecting] = useState(false);
     const [isFitted, setIsFitted] = useState(false);
     const [connectionError, setConnectionError] = useState<string | null>(null);
@@ -403,7 +429,42 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       new Set<(message: TerminalSessionMessage) => void>(),
     );
     const connectTimeoutHoldsRef = useRef(0);
-    const emitSessionMessage = (message: TerminalSessionMessage) => {
+    // Others watching this session. The participants overlay mounts only
+    // then, and gets the last list it missed.
+    const [sessionShared, setSessionShared] = useState(false);
+    const lastParticipantsRef = useRef<TerminalSessionMessage | null>(null);
+    // Messages of the connect in progress, for overlays that mount late (a
+    // framed sign-in overlay can miss "auth required" otherwise).
+    const connectMessagesRef = useRef<TerminalSessionMessage[] | null>(null);
+    const sessionSeqRef = useRef(0);
+    const emitSessionMessage = (raw: TerminalSessionMessage) => {
+      const message: TerminalSessionMessage = {
+        ...raw,
+        seq: ++sessionSeqRef.current,
+      };
+      if (message.type === "connected" || message.type === "session_closed") {
+        connectMessagesRef.current = null;
+      } else if (connectMessagesRef.current) {
+        connectMessagesRef.current.push(message);
+        if (connectMessagesRef.current.length > 50) {
+          connectMessagesRef.current.shift();
+        }
+      }
+      if (
+        message.type === "participants" &&
+        Array.isArray(message.participants)
+      ) {
+        lastParticipantsRef.current = message;
+        setSessionShared(
+          message.participants.some(
+            (participant) =>
+              !(participant as { isOwner?: boolean } | null)?.isOwner,
+          ),
+        );
+      } else if (message.type === "session_closed") {
+        lastParticipantsRef.current = null;
+        setSessionShared(false);
+      }
       for (const listener of sessionListenersRef.current) {
         try {
           listener(message);
@@ -456,6 +517,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }>;
     } | null>(null);
     const tmuxSessionNameRef = useRef<string | null>(null);
+    // The tmux session to attach again when this tab has to log in anew
+    // (its session on the server ended, e.g. after the computer slept).
+    const tmuxReattachRef = useRef<RememberedTmuxSession | null>(null);
     const tmuxSessionPropRef = useRef(tmuxSession);
     tmuxSessionPropRef.current = tmuxSession;
     const [isTmuxAttached, setIsTmuxAttached] = useState(false);
@@ -471,6 +535,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const isReconnectingRef = useRef(false);
     const isConnectingRef = useRef(false);
     const wasConnectedRef = useRef(false);
+    const connectedAtRef = useRef(0);
     const wasSessionExpiredRef = useRef(false);
 
     useEffect(() => {
@@ -918,6 +983,17 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         backgroundColor,
         subscribe: (listener) => {
           sessionListenersRef.current.add(listener);
+          const missed = [...(connectMessagesRef.current ?? [])];
+          const last = lastParticipantsRef.current;
+          if (last) missed.push(last);
+          if (missed.length > 0) {
+            queueMicrotask(() => {
+              for (const message of missed) {
+                if (!sessionListenersRef.current.has(listener)) return;
+                listener(message);
+              }
+            });
+          }
           return () => {
             sessionListenersRef.current.delete(listener);
           };
@@ -1264,9 +1340,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     }
 
     function handleBrowserSignInOpenUrl() {
-      if (browserSignIn?.url) {
-        window.open(browserSignIn.url, "_blank", "noopener,noreferrer");
-      }
+      const url = safeSignInUrl(browserSignIn?.url);
+      if (url) window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function handleAuthDialogSubmit(credentials: {
@@ -1988,6 +2063,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
       const ws = new WebSocket(baseWsUrl, wsProtocols);
       webSocketRef.current = ws;
+      connectMessagesRef.current = [];
       zmodemRef.current?.attach({
         send: (message) => {
           if (ws.readyState === WebSocket.OPEN) {
@@ -2098,6 +2174,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 initialPath,
                 executeCommand,
                 tmuxAttachSession,
+                tmuxReattach: tmuxReattachRef.current ?? undefined,
                 zmodem: termUserRef.current.zmodem,
               },
             }),
@@ -2311,6 +2388,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             setIsConnecting(false);
           } else if (msg.type === "connected") {
             dismissMfaPrompt();
+            connectedAtRef.current = Date.now();
             if (keepScrollbackRef.current) {
               keepScrollbackRef.current = false;
               reconnectAttempts.current = 0;
@@ -2341,6 +2419,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             isReconnectingRef.current = false;
 
             logTerminalActivity();
+
+            if (!shouldRunPostConnect(msg)) return;
 
             setTimeout(async () => {
               const settings = termSettingsRef.current;
@@ -2598,6 +2678,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
             logTerminalActivity();
 
+            // A restored tab learns its tmux session here, for the next time
+            // it has to log in anew.
+            if (msg.tmuxSession === null) {
+              tmuxReattachRef.current = null;
+            } else if (typeof msg.tmuxSession?.name === "string") {
+              tmuxReattachRef.current = rememberTmuxSession(
+                tmuxReattachRef.current,
+                msg.tmuxSession.name,
+                msg.tmuxSession.created,
+              );
+            }
+
             addLog({
               type: "success",
               stage: "connection",
@@ -2616,23 +2708,20 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               webSocketRef.current.close();
             }
           } else if (msg.type === "sessionTakenOver") {
+            // Another window has the session now. Taking it straight back
+            // makes the two windows take it from each other forever.
             sessionIdRef.current = null;
-
-            if (terminal) {
-              terminal.clear();
-            }
+            shouldNotReconnectRef.current = true;
             setIsConnected(false);
-            setIsConnecting(true);
+            setIsConnecting(false);
+            updateConnectionError(t("terminal.sessionTakenOver"));
 
             addLog({
               type: "warning",
               stage: "connection",
               message: t("terminal.sessionTakenOver"),
             });
-
-            const cols = terminal?.cols || 80;
-            const rows = terminal?.rows || 24;
-            connectToHost(cols, rows);
+            webSocketRef.current?.close();
           } else if (msg.type === "tmux_sessions_available") {
             setTmuxSessionPicker({
               sessions: msg.sessions,
@@ -2644,6 +2733,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             const sessionName =
               typeof msg.sessionName === "string" ? msg.sessionName : "";
             tmuxSessionNameRef.current = sessionName || "(active)";
+            tmuxReattachRef.current = rememberTmuxSession(
+              tmuxReattachRef.current,
+              sessionName,
+              msg.created,
+            );
             setIsTmuxAttached(true);
             addLog({
               type: "info",
@@ -2670,6 +2764,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             });
           } else if (msg.type === "tmux_detached") {
             tmuxSessionNameRef.current = null;
+            tmuxReattachRef.current = null;
             setIsTmuxAttached(false);
             toast.info(t("terminal.tmuxDetached"), { duration: 3000 });
           } else if (msg.type === "connection_log") {
@@ -2736,11 +2831,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             message: t("terminal.websocketAbnormalClose"),
           });
 
-          if (wasConnectedRef.current) {
+          // A failed reconnect attempt never got connected, so
+          // wasConnectedRef is false for it too. It keeps backing off;
+          // only a tab's first connection stops at the error.
+          if (wasConnectedRef.current || reconnectAttempts.current > 0) {
             attemptReconnection();
           } else {
             updateConnectionError(t("terminal.websocketAbnormalClose"));
             setIsConnecting(false);
+            // Otherwise the effect that connects a visible tab tries again
+            // on the next frame, over and over while the server can't be
+            // reached. The error screen has a Reconnect button.
+            shouldNotReconnectRef.current = true;
           }
           return;
         }
@@ -2931,6 +3033,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       terminal.options.minimumContrastRatio = config.minimumContrastRatio;
       terminal.options.letterSpacing = config.letterSpacing;
       terminal.options.lineHeight = config.lineHeight;
+      applyTerminalPadding(terminal, config.padding);
 
       terminal.options.theme = {
         background: config.backgroundImage
@@ -3071,6 +3174,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       terminal.unicode.activeVersion = "11";
 
       terminal.open(xtermRef.current);
+      applyTerminalPadding(terminal, termSettingsRef.current.padding);
 
       const xtermTextarea = xtermRef.current.querySelector("textarea");
       if (xtermTextarea) {
@@ -3825,6 +3929,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     async function handleImageUpload(
       file: File,
       source: TerminalImageUploadSource,
+      inputPrefix = "",
     ) {
       if (file.type && !file.type.startsWith("image/")) {
         toast.error(t("terminal.imageChooseFile"));
@@ -3837,7 +3942,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           hostConfig.instanceId ?? "",
           source,
         );
-        const response = await api.post("/image-upload", form, {
+        const uploadApi = selectImageUploadApi(
+          sessionOriginRef.current,
+          api,
+          remoteApi,
+        );
+        const response = await uploadApi.post("/image-upload", form, {
           headers: { "Content-Type": undefined },
         });
         const { shellPath } = response.data as {
@@ -3849,7 +3959,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           webSocketRef.current?.send(
             JSON.stringify({
               type: "input",
-              data: quoteTerminalImagePath(shellPath),
+              data: inputPrefix + quoteTerminalImagePath(shellPath),
             }),
           );
           toast.success(t("terminal.imageUploaded", { path: shellPath }));
@@ -3869,9 +3979,17 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }
     }
 
+    // One at a time, so the paths are typed in drop order with a space between.
+    async function handleDroppedImages(files: File[]) {
+      for (const [index, file] of files.entries()) {
+        await handleImageUpload(file, "file", index > 0 ? " " : "");
+      }
+    }
+
     // Keep the terminal session and upload callback current without rebuilding xterm.
     useEffect(() => {
       imageUploadRef.current = handleImageUpload;
+      droppedImagesRef.current = handleDroppedImages;
     });
 
     async function handleClipboardImage() {
@@ -3992,6 +4110,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         slotApi={slotApi}
         onOpenFiles={onOpenFileManager ? openFilesAtCwd : undefined}
         isFocused={isFocusedPane}
+        tabId={sessionTabId ?? undefined}
       />
     );
     const toolbarOnTop = readToolbarSettings(host).position === "top";
@@ -3999,7 +4118,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     // Closes the tab when the shell ends, unless the host keeps it open to
     // show the last output.
     function endSession() {
-      if (!termSettingsRef.current.keepOpenOnExit) {
+      // A shell that ends right away is a refusal (a gateway, a forced
+      // command): keep its message on screen.
+      const quickExit = Date.now() - connectedAtRef.current < QUICK_EXIT_MS;
+      if (!termSettingsRef.current.keepOpenOnExit && !quickExit) {
         onClose?.();
         return;
       }
@@ -4043,10 +4165,11 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         {toolbarOnTop && toolbar}
         <div
           className="relative min-h-0 w-full flex-1"
+          {...imageDropHandlers}
           style={{
             backgroundColor: backgroundImage ? "transparent" : backgroundColor,
-            ...(backgroundImage && {
-              backgroundImage: `url(${backgroundImage})`,
+            ...(backgroundSrc && {
+              backgroundImage: `url("${backgroundSrc}")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -4078,6 +4201,15 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               }
             }}
           />
+
+          {isImageDragOver && (
+            <div className="pointer-events-none absolute inset-0 z-[125] flex items-center justify-center border-2 border-dashed border-accent-brand bg-background/70">
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <ImagePlus className="size-4 text-accent-brand" />
+                {t("terminal.imageDropHint")}
+              </div>
+            </div>
+          )}
 
           <ZmodemBar
             state={zmodemState}
@@ -4122,15 +4254,19 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               );
               const Panel = contribution?.component;
               if (!Panel) return null;
+              // The panel's box: it fills it, here or drawn over a frame.
               return (
-                <Panel
-                  host={host}
-                  hostId={hostConfig.id}
-                  hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
-                  panelProps={dock.props}
-                  onClose={closeDock}
-                  onRunInTerminal={handleRunCommandInTerminal}
-                />
+                <div className="absolute top-12 right-2 z-[120] flex h-[calc(100%-4rem)] w-[min(420px,calc(100%-1rem))] flex-col border border-border bg-background shadow-xl">
+                  <Panel
+                    host={host}
+                    hostId={hostConfig.id}
+                    hostLabel={`${hostConfig.username}@${hostConfig.name || hostConfig.ip}`}
+                    panelProps={dock.props}
+                    placed
+                    onClose={closeDock}
+                    onRunInTerminal={handleRunCommandInTerminal}
+                  />
+                </div>
               );
             })()}
 
@@ -4273,7 +4409,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
           <ComponentSlot
             slotId={TERMINAL_OVERLAY_SLOT}
-            when={{ host }}
+            when={{ host, shared: sessionShared }}
             props={overlayProps as unknown as Record<string, unknown>}
           />
 
@@ -4315,12 +4451,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
               isOpen={true}
               sessions={tmuxSessionPicker.sessions}
               onSelect={(sessionName) => {
+                const picked = tmuxSessionPicker.sessions.find(
+                  (s) => s.name === sessionName,
+                );
+                tmuxReattachRef.current = picked
+                  ? { name: picked.name, created: picked.created }
+                  : null;
                 setTmuxSessionPicker(null);
                 if (webSocketRef.current?.readyState === WebSocket.OPEN) {
                   webSocketRef.current.send(
                     JSON.stringify({
                       type: "tmux_attach",
-                      data: { sessionName },
+                      data: { sessionName, created: picked?.created },
                     }),
                   );
                 }
@@ -4338,7 +4480,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
                 }
                 setTimeout(() => terminal?.focus(), 50);
               }}
-              onCancel={() => setTmuxSessionPicker(null)}
+              onCancel={() => {
+                tmuxReattachRef.current = null;
+                setTmuxSessionPicker(null);
+              }}
               backgroundColor={backgroundColor}
             />
           )}

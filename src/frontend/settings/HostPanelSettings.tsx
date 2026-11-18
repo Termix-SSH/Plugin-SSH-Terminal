@@ -22,7 +22,7 @@ const PLUGIN_ID = "ssh-terminal";
 type HostPluginSettings = Record<string, Record<string, unknown>>;
 
 const SELECT =
-  "flex h-8 w-40 border border-border bg-background px-2 text-xs outline-none focus:ring-1 focus:ring-ring";
+  "flex h-8 w-40 border border-border bg-(--field) px-2 text-xs outline-none focus:ring-1 focus:ring-ring";
 
 /** The host editor's panel bar card: on or off, side, and which panels. */
 export function HostPanelSettings({

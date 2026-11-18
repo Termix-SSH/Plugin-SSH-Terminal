@@ -67,7 +67,7 @@
     "searchRegex": "Fes servir una expressió regular",
     "searchResultCount": "{{index}} de {{count}}",
     "searchWholeWord": "Coincidència de paraula sencera",
-    "sessionTakenOver": "La sessió s'ha obert en una altra pestanya. Tornant a connectar...",
+    "sessionTakenOver": "Aquesta sessió s'ha obert en una altra finestra o pestanya.",
     "tmuxAttached": "Clients connectats",
     "tmuxAttachedCount_one": "{{count}} adjunt",
     "tmuxAttachedCount_many": "{{count}} adjunts",
@@ -101,6 +101,7 @@
     "imageUploaded": "Imatge pujada: {{path}}",
     "imageClipboardUnavailable": "Aquest navegador no pot llegir imatges del porta-retalls",
     "imageClipboardEmpty": "No s'ha trobat cap imatge al porta-retalls",
+    "imageDropHint": "Deixa anar una imatge per pujar-la",
     "localShell": "Shell del terminal local",
     "localBackendUnreachable": "El backend local no és accessible",
     "processExited": "El procés ha finalitzat ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Túnel de Cloudflare",
         "description": "Encamina el trànsit SSH a través de Cloudflare Zero Trust mitjançant WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Desactiva l'algorisme de Nagle (TCP_NODELAY)",
-        "description": "Desactiva l'agrupament de paquets TCP per reduir la latència d'entrada SSH, especialment en connexions LAN. Pot augmentar la càrrega de xarxa."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nom d'amfitrió del túnel",
         "description": "Nom d'amfitrió públic del túnel de Cloudflare"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Espaiat de lletres"
+      },
+      "padding": {
+        "label": "Espaiat"
       },
       "lineHeight": {
         "label": "Alçada de línia"
@@ -551,6 +551,7 @@
     "hostNotFound": "Amfitrió no trobat",
     "letterSpacing": "Espaiat de lletres",
     "letterSpacingPx": "Espaiat de lletres (px)",
+    "paddingPx": "Espaiat (px)",
     "lineHeight": "Alçada de línia",
     "lineHeightLabel": "Alçada de línia",
     "linkClickBehaviorConfirm": "Mostra un emergent per obrir o copiar",

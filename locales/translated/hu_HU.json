@@ -67,7 +67,7 @@
     "searchRegex": "Reguláris kifejezés használata",
     "searchResultCount": "{{index}}/{{count}}",
     "searchWholeWord": "Teljes szó egyezése",
-    "sessionTakenOver": "A munkamenet egy másik fülön nyílt meg. Újracsatlakozás...",
+    "sessionTakenOver": "Ezt a munkamenetet egy másik ablakban vagy lapon nyitották meg.",
     "tmuxAttached": "Csatlakoztatott kliensek",
     "tmuxAttachedCount_one": "{{count}} csatlakoztatva",
     "tmuxAttachedCount_other": "{{count}} csatlakoztatva",
@@ -99,6 +99,7 @@
     "imageUploaded": "Kép feltöltve: {{path}}",
     "imageClipboardUnavailable": "Ez a böngésző nem tudja olvasni a képeket a vágólapról",
     "imageClipboardEmpty": "Nem található kép a vágólapban",
+    "imageDropHint": "Húzzon ide egy képet a feltöltéshez",
     "localShell": "Helyi terminál shell",
     "localBackendUnreachable": "A helyi backend nem érhető el",
     "processExited": "A folyamat befejeződött ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare-alagút",
         "description": "Az SSH-forgalom irányítása a Cloudflare Zero Truston keresztül WebSocketen"
       },
-      "tcpNoDelay": {
-        "label": "Nagle-algoritmus letiltása (TCP_NODELAY)",
-        "description": "A TCP-csomagok csoportosítását letiltja az SSH bemeneti késleltetés csökkentése érdekében, különösen LAN-csatlakozások esetén. Növelheti a hálózati terhelést."
-      },
       "cloudflareTunnelHostname": {
         "label": "Alagút hosztneve",
         "description": "A Cloudflare-alagút nyilvános hosztneve"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Karaktertávolság"
+      },
+      "padding": {
+        "label": "Margó"
       },
       "lineHeight": {
         "label": "Sormagasság"
@@ -548,6 +548,7 @@
     "hostNotFound": "Host nem található",
     "letterSpacing": "Karaktertávolság",
     "letterSpacingPx": "Karaktertávolság (px)",
+    "paddingPx": "Margó (px)",
     "lineHeight": "Sormagasság",
     "lineHeightLabel": "Sormagasság",
     "linkClickBehaviorConfirm": "Felugró ablak megjelenítése a megnyitás vagy másolás választásához",

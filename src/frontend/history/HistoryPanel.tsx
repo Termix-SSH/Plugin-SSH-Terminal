@@ -24,7 +24,7 @@ import {
   getCommandHistory,
   hostSetting,
 } from "../terminal-api";
-import { PanelSettings, rowActionProps } from "../panel-settings";
+import { useOpenSettingsPage, rowActionProps } from "../panel-settings";
 
 /** Command history for the terminal the user is working in. */
 export function HistoryPanel({ targetTab }: PanelProps) {
@@ -33,7 +33,7 @@ export function HistoryPanel({ targetTab }: PanelProps) {
   const api = usePluginApi();
   const [search, setSearch] = useState("");
   const [commands, setCommands] = useState<string[]>([]);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const openSettingsPage = useOpenSettingsPage();
   const settings = useSettings("user");
   const alwaysShowActions = settings.values.historyAlwaysShowActions === true;
 
@@ -64,17 +64,6 @@ export function HistoryPanel({ targetTab }: PanelProps) {
       cancelled = true;
     };
   }, [api, hostId, trackingEnabled]);
-
-  if (settingsOpen) {
-    return (
-      <PanelSettings
-        settings={settings}
-        settingKey="historyAlwaysShowActions"
-        title={t("history.settingsTitle")}
-        onBack={() => setSettingsOpen(false)}
-      />
-    );
-  }
 
   if (activeIsTerminal && !trackingEnabled) {
     return (
@@ -155,7 +144,7 @@ export function HistoryPanel({ targetTab }: PanelProps) {
             size="icon"
             title={t("history.settingsTitle")}
             aria-label={t("history.settingsTitle")}
-            onClick={() => setSettingsOpen(true)}
+            onClick={() => openSettingsPage()}
           >
             <SlidersHorizontal className="size-3.5" />
           </Button>

@@ -35,6 +35,7 @@ import {
 } from "../terminal/terminal-slots";
 import { registerLocalSession, setActiveSession } from "../session-registry";
 import { createTerminalInputAccess } from "../terminal/terminal-input-access";
+import { applyTerminalPadding } from "../terminal/terminal-padding";
 
 export function LocalTerminal({
   instanceId,
@@ -42,12 +43,14 @@ export function LocalTerminal({
   sessionId = instanceId,
   isFocusedPane = false,
   label,
+  onClose,
 }: {
   instanceId: string;
   isVisible: boolean;
   sessionId?: string;
   isFocusedPane?: boolean;
   label?: string;
+  onClose?: () => void;
 }) {
   const { t } = useTranslation();
   // Read via a ref inside the session-lifecycle effect below so a language
@@ -55,6 +58,9 @@ export function LocalTerminal({
   // the running local shell and spawn a new session.
   const tRef = useRef(t);
   tRef.current = t;
+  // Kept in a ref so a new callback identity doesn't restart the shell.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const { theme: appTheme } = useTheme();
   const api = usePluginApi();
   // The same look as SSH terminals get from the user's host defaults.
@@ -86,7 +92,9 @@ export function LocalTerminal({
   const sessionListenersRef = useRef(
     new Set<(message: TerminalSessionMessage) => void>(),
   );
-  const emitSessionMessage = useCallback((message: TerminalSessionMessage) => {
+  const sessionSeqRef = useRef(0);
+  const emitSessionMessage = useCallback((raw: TerminalSessionMessage) => {
+    const message = { ...raw, seq: ++sessionSeqRef.current };
     for (const listener of sessionListenersRef.current) {
       try {
         listener(message);
@@ -193,6 +201,7 @@ export function LocalTerminal({
     terminal.options.scrollback = appearance.scrollback;
     terminal.options.letterSpacing = appearance.letterSpacing;
     terminal.options.lineHeight = appearance.lineHeight;
+    applyTerminalPadding(terminal, appearance.padding);
     terminal.options.minimumContrastRatio = appearance.minimumContrastRatio;
     fit();
   }, [appTheme, appearance, fit, terminal]);
@@ -288,6 +297,11 @@ export function LocalTerminal({
           } else if (frame.type === "exit") {
             sessionReadyRef.current = false;
             emitSessionMessage({ type: "session_closed" });
+            // Close the tab when the shell ends, like SSH sessions do.
+            if (onCloseRef.current) {
+              onCloseRef.current();
+              return;
+            }
             terminal.write(
               `
 

@@ -67,7 +67,7 @@
     "searchRegex": "Χρήση Κανονικής Έκφρασης",
     "searchResultCount": "{{index}} από {{count}}",
     "searchWholeWord": "Ταίριασμα Ολόκληρης Λέξης",
-    "sessionTakenOver": "Η συνεδρία ανοίχτηκε σε άλλη καρτέλα. Επανασύνδεση...",
+    "sessionTakenOver": "Αυτή η συνεδρία ανοίχτηκε σε άλλο παράθυρο ή καρτέλα.",
     "tmuxAttached": "Συνδεδεμένοι πελάτες",
     "tmuxAttachedCount_one": "{{count}} προσαρτημένο",
     "tmuxAttachedCount_other": "{{count}} προσαρτημένα",
@@ -99,6 +99,7 @@
     "imageUploaded": "Η εικόνα ανεβάστηκε: {{path}}",
     "imageClipboardUnavailable": "Αυτός ο περιηγητής δεν μπορεί να διαβάσει εικόνες από το πρόχειρο",
     "imageClipboardEmpty": "Δεν βρέθηκε εικόνα στο πρόχειρο",
+    "imageDropHint": "Αφήστε μια εικόνα για να την ανεβάσετε",
     "localShell": "Τοπικό shell τερματικού",
     "localBackendUnreachable": "Το τοπικό backend δεν είναι προσβάσιμο",
     "processExited": "Η διεργασία τερματίστηκε ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Σήραγγα Cloudflare",
         "description": "Κατεύθυνση της κίνησης SSH μέσω του Cloudflare Zero Trust μέσω WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Απενεργοποίηση αλγορίθμου Nagle (TCP_NODELAY)",
-        "description": "Απενεργοποιεί τη δέσμευση πακέτων TCP για τη μείωση της καθυστέρησης εισόδου SSH, ειδικά σε συνδέσεις LAN. Ενδέχεται να αυξήσει το δικτυακό κόστος."
-      },
       "cloudflareTunnelHostname": {
         "label": "Όνομα υπολογιστή σήραγγας",
         "description": "Δημόσιο όνομα υπολογιστή της σήραγγας Cloudflare"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Διάστημα γραμμάτων"
+      },
+      "padding": {
+        "label": "Διάκενο"
       },
       "lineHeight": {
         "label": "Ύψος γραμμής"
@@ -548,6 +548,7 @@
     "hostNotFound": "Ο υπολογιστής δεν βρέθηκε",
     "letterSpacing": "Διάστημα Γραμμάτων",
     "letterSpacingPx": "Διάστημα Γραμμάτων (px)",
+    "paddingPx": "Διάκενο (px)",
     "lineHeight": "Ύψος Γραμμής",
     "lineHeightLabel": "Ύψος Γραμμής",
     "linkClickBehaviorConfirm": "Εμφάνιση παραθύρου για άνοιγμα ή αντιγραφή",

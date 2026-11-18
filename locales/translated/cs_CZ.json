@@ -67,7 +67,7 @@
     "searchRegex": "Použít regulární výraz",
     "searchResultCount": "{{index}} z {{count}}",
     "searchWholeWord": "Hledat celé slovo",
-    "sessionTakenOver": "Relace byla otevřena v jiné záložce. Opětovné připojování...",
+    "sessionTakenOver": "Tato relace byla otevřena v jiném okně nebo kartě.",
     "tmuxAttached": "Připojení klienti",
     "tmuxAttachedCount_one": "{{count}} připojen",
     "tmuxAttachedCount_few": "{{count}} připojeny",
@@ -103,6 +103,7 @@
     "imageUploaded": "Obrázek nahrán: {{path}}",
     "imageClipboardUnavailable": "Tento prohlížeč neumí číst obrázky ze schránky",
     "imageClipboardEmpty": "Ve schránce nebyl nalezen žádný obrázek",
+    "imageDropHint": "Přetáhněte obrázek pro nahrání",
     "localShell": "Místní terminálový shell",
     "localBackendUnreachable": "Lokální backend není dostupný",
     "processExited": "Proces ukončen ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Směrovat SSH provoz přes Cloudflare Zero Trust pomocí WebSocketu"
       },
-      "tcpNoDelay": {
-        "label": "Zakázat Nagleův algoritmus (TCP_NODELAY)",
-        "description": "Zakáže seskupování TCP paketů pro snížení latence SSH vstupu, zejména při připojení v LAN. Může zvýšit síťovou zátěž."
-      },
       "cloudflareTunnelHostname": {
         "label": "Název tunelu",
         "description": "Veřejný název Cloudflare Tunnelu"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Mezery mezi písmeny"
+      },
+      "padding": {
+        "label": "Odsazení"
       },
       "lineHeight": {
         "label": "Výška řádku"
@@ -554,6 +554,7 @@
     "hostNotFound": "Hostitel nebyl nalezen",
     "letterSpacing": "Mezery mezi znaky",
     "letterSpacingPx": "Mezery mezi znaky (px)",
+    "paddingPx": "Odsazení (px)",
     "lineHeight": "Výška řádku",
     "lineHeightLabel": "Výška řádku",
     "linkClickBehaviorConfirm": "Zobrazit vyskakovací okno pro otevření nebo kopírování",

@@ -220,8 +220,6 @@
   "settings.host.connectFrom.server": "d75b2349294e",
   "settings.host.cloudflareTunnelEnabled.label": "3f3d9b0543b7",
   "settings.host.cloudflareTunnelEnabled.description": "c33745997e33",
-  "settings.host.tcpNoDelay.label": "6c6366737a87",
-  "settings.host.tcpNoDelay.description": "c3fb7b64dd87",
   "settings.host.cloudflareTunnelHostname.label": "57bb19f3ec7e",
   "settings.host.cloudflareTunnelHostname.description": "d6fb63e52596",
   "settings.host.cloudflareTunnelPort.label": "a9b32f5cb8eb",

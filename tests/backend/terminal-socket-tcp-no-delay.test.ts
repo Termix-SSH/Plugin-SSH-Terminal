@@ -57,9 +57,9 @@ function createTerminal() {
     ctx,
     log: log as never,
     sessionManager: sessionManager as never,
-    getTmux: () => null,
-    getSharing: () => null,
-    getGuests: () => null,
+    getTmux: async () => null,
+    getSharing: async () => null,
+    getGuests: async () => null,
   });
 }
 
@@ -104,9 +104,9 @@ afterEach(() => {
 });
 
 describe("terminal socket TCP_NODELAY setting", () => {
-  it("applies the per-host value and defaults to false", async () => {
-    await expect(connectWithTcpNoDelay(true)).resolves.toBe(true);
+  it("always turns Nagle off, even with an old saved false", async () => {
+    await expect(connectWithTcpNoDelay(false)).resolves.toBe(true);
     FakeSshClient.instances = [];
-    await expect(connectWithTcpNoDelay()).resolves.toBe(false);
+    await expect(connectWithTcpNoDelay()).resolves.toBe(true);
   });
 });

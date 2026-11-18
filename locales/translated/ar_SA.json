@@ -67,7 +67,7 @@
     "searchRegex": "استخدام التعبيرات النمطية",
     "searchResultCount": "{{index}} من {{count}}",
     "searchWholeWord": "تطابق الكلمة كاملة",
-    "sessionTakenOver": "تم فتح الجلسة في علامة تبويب أخرى. جارٍ إعادة الاتصال...",
+    "sessionTakenOver": "تم فتح هذه الجلسة في نافذة أو علامة تبويب أخرى.",
     "tmuxAttached": "العملاء المتصلون",
     "tmuxAttachedCount_zero": "0 مرفق",
     "tmuxAttachedCount_one": "{{count}} مرفق",
@@ -107,6 +107,7 @@
     "imageUploaded": "تم رفع الصورة: {{path}}",
     "imageClipboardUnavailable": "لا يمكن لهذا المتصفح قراءة الصور من الحافظة",
     "imageClipboardEmpty": "لم يتم العثور على صورة في الحافظة",
+    "imageDropHint": "أفلت صورة لرفعها",
     "localShell": "محطة shell المحلية",
     "localBackendUnreachable": "الخادم المحلي غير متاح",
     "processExited": "انتهت العملية ({{code}})",
@@ -291,10 +292,6 @@
         "label": "نفق Cloudflare",
         "description": "توجيه حركة SSH عبر Cloudflare Zero Trust باستخدام WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "تعطيل خوارزمية ناغل (TCP_NODELAY)",
-        "description": "يعطل تجميع حزم TCP لتقليل زمن استجابة الإدخال في SSH، خاصة في اتصالات الشبكة المحلية. قد يزيد من الحمل على الشبكة."
-      },
       "cloudflareTunnelHostname": {
         "label": "اسم مضيف النفق",
         "description": "اسم المضيف العام لـ Cloudflare Tunnel"
@@ -335,6 +332,9 @@
       },
       "letterSpacing": {
         "label": "تباعد الحروف"
+      },
+      "padding": {
+        "label": "الحشو"
       },
       "lineHeight": {
         "label": "ارتفاع السطر"
@@ -560,6 +560,7 @@
     "hostNotFound": "لم يتم العثور على المضيف",
     "letterSpacing": "تباعد الأحرف",
     "letterSpacingPx": "تباعد الأحرف (بكسل)",
+    "paddingPx": "الحشو (بكسل)",
     "lineHeight": "ارتفاع السطر",
     "lineHeightLabel": "ارتفاع السطر",
     "linkClickBehaviorConfirm": "إظهار نافذة منبثقة لفتح أو نسخ الرابط",

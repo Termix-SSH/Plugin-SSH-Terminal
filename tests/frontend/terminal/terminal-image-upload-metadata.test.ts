@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildImageUploadFormData } from "../../../src/frontend/terminal/terminal-image-upload";
+import {
+  buildImageUploadFormData,
+  selectImageUploadApi,
+} from "../../../src/frontend/terminal/terminal-image-upload";
 
 describe("buildImageUploadFormData", () => {
   it("tags a picked-file upload with source=file and a client timestamp", () => {
@@ -36,5 +39,18 @@ describe("buildImageUploadFormData", () => {
     );
 
     expect(form.get("clientUploadTimestamp")).toBe("2026-08-15T12:00:00.000Z");
+  });
+});
+
+describe("selectImageUploadApi", () => {
+  const localApi = { name: "local" };
+  const remoteApi = { name: "remote" };
+
+  it("uploads to the linked server when the session was opened there", () => {
+    expect(selectImageUploadApi("remote", localApi, remoteApi)).toBe(remoteApi);
+  });
+
+  it("uploads to the local backend when the session is local", () => {
+    expect(selectImageUploadApi("local", localApi, remoteApi)).toBe(localApi);
   });
 });

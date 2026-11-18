@@ -67,7 +67,7 @@
     "searchRegex": "使用正则表达式",
     "searchResultCount": "{{index}} / {{count}}",
     "searchWholeWord": "全字匹配",
-    "sessionTakenOver": "会话已在另一个标签页中打开。正在重新连接...",
+    "sessionTakenOver": "此会话已在另一个窗口或标签页中打开。",
     "tmuxAttached": "已连接的客户端",
     "tmuxAttachedCount_other": "{{count}} 个已附加",
     "tmuxCopyHint": "调整选区并按 Enter 键复制到剪贴板",
@@ -97,6 +97,7 @@
     "imageUploaded": "图像已上传：{{path}}",
     "imageClipboardUnavailable": "此浏览器无法从剪贴板读取图像",
     "imageClipboardEmpty": "剪贴板中未找到图像",
+    "imageDropHint": "拖放图片以上传",
     "localShell": "本地终端 shell",
     "localBackendUnreachable": "无法连接到本地后端",
     "processExited": "进程已退出（{{code}}）",
@@ -276,10 +277,6 @@
         "label": "Cloudflare Tunnel",
         "description": "通过 WebSocket 将 SSH 流量路由到 Cloudflare Zero Trust"
       },
-      "tcpNoDelay": {
-        "label": "禁用 Nagle 算法 (TCP_NODELAY)",
-        "description": "禁用 TCP 数据包批处理以降低 SSH 输入延迟，特别是在局域网连接中。可能会增加网络开销。"
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel 主机名",
         "description": "Cloudflare Tunnel 公共主机名"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "字间距"
+      },
+      "padding": {
+        "label": "内边距"
       },
       "lineHeight": {
         "label": "行高"
@@ -545,6 +545,7 @@
     "hostNotFound": "未找到主机",
     "letterSpacing": "字间距",
     "letterSpacingPx": "字间距 (px)",
+    "paddingPx": "内边距 (px)",
     "lineHeight": "行高",
     "lineHeightLabel": "行高",
     "linkClickBehaviorConfirm": "显示弹窗以打开或复制",

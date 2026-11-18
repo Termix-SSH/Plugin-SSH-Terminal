@@ -67,7 +67,7 @@
     "searchRegex": "Reguliere expressie gebruiken",
     "searchResultCount": "{{index}} van {{count}}",
     "searchWholeWord": "Hele woord overeenkomen",
-    "sessionTakenOver": "Sessie is geopend in een ander tabblad. Opnieuw verbinden...",
+    "sessionTakenOver": "Deze sessie is geopend in een ander venster of tabblad.",
     "tmuxAttached": "Aangesloten clients",
     "tmuxAttachedCount_one": "{{count}} verbonden",
     "tmuxAttachedCount_other": "{{count}} verbonden",
@@ -99,6 +99,7 @@
     "imageUploaded": "Afbeelding geüpload: {{path}}",
     "imageClipboardUnavailable": "Deze browser kan geen afbeeldingen van het klembord lezen",
     "imageClipboardEmpty": "Geen afbeelding gevonden op het klembord",
+    "imageDropHint": "Sleep een afbeelding om deze te uploaden",
     "localShell": "Lokale terminalshell",
     "localBackendUnreachable": "De lokale backend is niet bereikbaar",
     "processExited": "Proces is afgesloten ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Routeer SSH-verkeer via Cloudflare Zero Trust door WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Nagle's algoritme uitschakelen (TCP_NODELAY)",
-        "description": "Schakelt TCP-packet batching uit om SSH-ingangsvertraging te verminderen, vooral op LAN-verbindingen. Kan het netwerkoverhead verhogen."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-hostnaam",
         "description": "Openbare hostnaam van Cloudflare Tunnel"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Letterafstand"
+      },
+      "padding": {
+        "label": "Ruimte"
       },
       "lineHeight": {
         "label": "Regelhoogte"
@@ -548,6 +548,7 @@
     "hostNotFound": "Host niet gevonden",
     "letterSpacing": "Letterafstand",
     "letterSpacingPx": "Letterafstand (px)",
+    "paddingPx": "Ruimte (px)",
     "lineHeight": "Regelafstand",
     "lineHeightLabel": "Regelafstand",
     "linkClickBehaviorConfirm": "Pop-up tonen om te openen of kopiëren",

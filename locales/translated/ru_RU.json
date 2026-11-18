@@ -67,7 +67,7 @@
     "searchRegex": "Использовать регулярное выражение",
     "searchResultCount": "{{index}} из {{count}}",
     "searchWholeWord": "Точное совпадение слова",
-    "sessionTakenOver": "Сессия открыта в другой вкладке. Переподключение...",
+    "sessionTakenOver": "Эта сессия была открыта в другом окне или вкладке.",
     "tmuxAttached": "Подключенные клиенты",
     "tmuxAttachedCount_one": "{{count}} подключено",
     "tmuxAttachedCount_few": "{{count}} подключено",
@@ -103,6 +103,7 @@
     "imageUploaded": "Изображение загружено: {{path}}",
     "imageClipboardUnavailable": "Этот браузер не может читать изображения из буфера обмена",
     "imageClipboardEmpty": "В буфере обмена не найдено изображений",
+    "imageDropHint": "Перетащите изображение, чтобы загрузить его",
     "localShell": "Локальный терминал",
     "localBackendUnreachable": "Локальный бэкенд недоступен",
     "processExited": "Процесс завершён ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Туннель Cloudflare",
         "description": "Маршрутизация SSH-трафика через Cloudflare Zero Trust по WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Отключить алгоритм Нейгла (TCP_NODELAY)",
-        "description": "Отключает пакетную обработку TCP для снижения задержки ввода SSH, особенно в локальной сети. Может увеличить сетевую нагрузку."
-      },
       "cloudflareTunnelHostname": {
         "label": "Имя хоста туннеля",
         "description": "Публичное имя хоста туннеля Cloudflare"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Межбуквенный интервал"
+      },
+      "padding": {
+        "label": "Отступы"
       },
       "lineHeight": {
         "label": "Высота строки"
@@ -554,6 +554,7 @@
     "hostNotFound": "Хост не найден",
     "letterSpacing": "Межбуквенный интервал",
     "letterSpacingPx": "Межбуквенный интервал (px)",
+    "paddingPx": "Отступы (px)",
     "lineHeight": "Высота строки",
     "lineHeightLabel": "Высота строки",
     "linkClickBehaviorConfirm": "Показывать всплывающее окно для открытия или копирования",

@@ -67,7 +67,7 @@
     "searchRegex": "Brug regulært udtryk",
     "searchResultCount": "{{index}} af {{count}}",
     "searchWholeWord": "Match hele ord",
-    "sessionTakenOver": "Sessionen blev åbnet i en anden fane. Genforbinder...",
+    "sessionTakenOver": "Denne session blev åbnet i et andet vindue eller en anden fane.",
     "tmuxAttached": "Tilsluttede klienter",
     "tmuxAttachedCount_one": "{{count}} tilsluttet",
     "tmuxAttachedCount_other": "{{count}} tilsluttede",
@@ -99,6 +99,7 @@
     "imageUploaded": "Billede uploadet: {{path}}",
     "imageClipboardUnavailable": "Denne browser kan ikke læse billeder fra udklipsholderen",
     "imageClipboardEmpty": "Intet billede fundet i udklipsholderen",
+    "imageDropHint": "Træk et billede her for at uploade det",
     "localShell": "Lokal terminal shell",
     "localBackendUnreachable": "Den lokale backend er ikke tilgængelig",
     "processExited": "Processen afsluttede ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Diriger SSH-trafik over Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Deaktiver Nagle's algoritme (TCP_NODELAY)",
-        "description": "Deaktiverer samling af TCP-pakker for at reducere SSH-inputforsinkelse, især på LAN-forbindelser. Kan øge netværksbelastningen."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-værtsnavn",
         "description": "Cloudflare Tunnel offentligt værtsnavn"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Bogstavafstand"
+      },
+      "padding": {
+        "label": "Polstring"
       },
       "lineHeight": {
         "label": "Linjehøjde"
@@ -548,6 +548,7 @@
     "hostNotFound": "Vært ikke fundet",
     "letterSpacing": "Bogstavafstand",
     "letterSpacingPx": "Bogstavafstand (px)",
+    "paddingPx": "Polstring (px)",
     "lineHeight": "Linjehøjde",
     "lineHeightLabel": "Linjehøjde",
     "linkClickBehaviorConfirm": "Vis popup til åbning eller kopiering",

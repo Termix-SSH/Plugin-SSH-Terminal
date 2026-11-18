@@ -67,7 +67,7 @@
     "searchRegex": "Izmantot regulāru izteiksmi",
     "searchResultCount": "{{index}} no {{count}}",
     "searchWholeWord": "Atbilstība pilnam vārdam",
-    "sessionTakenOver": "Sesija tika atvērta citā cilnē. Notiek pārsavienojums...",
+    "sessionTakenOver": "Šī sesija tika atvērta citā logā vai cilnē.",
     "tmuxAttached": "Pieslēgtie klienti",
     "tmuxAttachedCount_zero": "0 pievienots",
     "tmuxAttachedCount_one": "{{count}} pievienots",
@@ -101,6 +101,7 @@
     "imageUploaded": "Attēls augšupielādēts: {{path}}",
     "imageClipboardUnavailable": "Šis pārlūks nevar lasīt attēlus no starpliktuves",
     "imageClipboardEmpty": "Starpliktuvē nav atrasts attēls",
+    "imageDropHint": "Nometiet attēlu, lai to augšupielādētu",
     "localShell": "Vietējais termināļa čauls",
     "localBackendUnreachable": "Vietējais backend nav sasniedzams",
     "processExited": "Process izbeidzās ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Cloudflare tunelis",
         "description": "Maršrutēt SSH datplūsmu caur Cloudflare Zero Trust, izmantojot WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Atspējot Nagle algoritmu (TCP_NODELAY)",
-        "description": "Atspējo TCP paketu grupēšanu, lai samazinātu SSH ievades latenci, īpaši LAN savienojumos. Var palielināt tīkla slodzi."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tuneļa resursdators",
         "description": "Cloudflare tuneļa publiskais resursdators"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Burtu atstarpe"
+      },
+      "padding": {
+        "label": "Aizpilde"
       },
       "lineHeight": {
         "label": "Rindas augstums"
@@ -551,6 +551,7 @@
     "hostNotFound": "Serveris nav atrasts",
     "letterSpacing": "Burtu atstarpe",
     "letterSpacingPx": "Burtu atstarpe (px)",
+    "paddingPx": "Aizpilde (px)",
     "lineHeight": "Rindas augstums",
     "lineHeightLabel": "Rindas augstums",
     "linkClickBehaviorConfirm": "Rādīt izlūkojumu, lai atvērtu vai kopētu",

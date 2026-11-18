@@ -67,7 +67,7 @@
     "searchRegex": "Використовувати регулярний вираз",
     "searchResultCount": "{{index}} з {{count}}",
     "searchWholeWord": "Ціле слово",
-    "sessionTakenOver": "Сесію відкрито в іншій вкладці. Перепідключення...",
+    "sessionTakenOver": "Цю сесію відкрито в іншому вікні або вкладці.",
     "tmuxAttached": "Підключені клієнти",
     "tmuxAttachedCount_one": "{{count}} підключений",
     "tmuxAttachedCount_few": "{{count}} підключених",
@@ -103,6 +103,7 @@
     "imageUploaded": "Зображення завантажено: {{path}}",
     "imageClipboardUnavailable": "Цей браузер не може читати зображення з буфера обміну",
     "imageClipboardEmpty": "У буфері обміну не знайдено зображення",
+    "imageDropHint": "Перетягніть зображення, щоб завантажити його",
     "localShell": "Локальна оболонка терміналу",
     "localBackendUnreachable": "Локальний бекенд недоступний",
     "processExited": "Процес завершено ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Маршрутизація SSH-трафіку через Cloudflare Zero Trust за допомогою WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Вимкнути алгоритм Нейгла (TCP_NODELAY)",
-        "description": "Вимикає пакетну обробку TCP для зменшення затримки вводу SSH, особливо в локальних мережах. Може збільшити мережеве навантаження."
-      },
       "cloudflareTunnelHostname": {
         "label": "Ім'я хоста тунелю",
         "description": "Публічне ім'я хоста Cloudflare Tunnel"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Міжлітерний інтервал"
+      },
+      "padding": {
+        "label": "Відступи"
       },
       "lineHeight": {
         "label": "Висота рядка"
@@ -554,6 +554,7 @@
     "hostNotFound": "Хост не знайдено",
     "letterSpacing": "Міжлітерний інтервал",
     "letterSpacingPx": "Міжлітерний інтервал (px)",
+    "paddingPx": "Відступи (px)",
     "lineHeight": "Висота рядка",
     "lineHeightLabel": "Висота рядка",
     "linkClickBehaviorConfirm": "Показувати спливаюче вікно для відкриття або копіювання",

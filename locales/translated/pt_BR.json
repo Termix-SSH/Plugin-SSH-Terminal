@@ -67,7 +67,7 @@
     "searchRegex": "Usar Expressão Regular",
     "searchResultCount": "{{index}} de {{count}}",
     "searchWholeWord": "Correspondência Exata da Palavra",
-    "sessionTakenOver": "A sessão foi aberta em outra aba. Reconectando...",
+    "sessionTakenOver": "Esta sessão foi aberta em outra janela ou aba.",
     "tmuxAttached": "Clientes conectados",
     "tmuxAttachedCount_one": "{{count}} anexado",
     "tmuxAttachedCount_many": "{{count}} anexados",
@@ -101,6 +101,7 @@
     "imageUploaded": "Imagem enviada: {{path}}",
     "imageClipboardUnavailable": "Este navegador não pode ler imagens da área de transferência",
     "imageClipboardEmpty": "Nenhuma imagem encontrada na área de transferência",
+    "imageDropHint": "Solte uma imagem para enviá-la",
     "localShell": "Shell do terminal local",
     "localBackendUnreachable": "O backend local não está acessível",
     "processExited": "Processo encerrado ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Túnel Cloudflare",
         "description": "Encaminhe o tráfego SSH pelo Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Desativar algoritmo de Nagle (TCP_NODELAY)",
-        "description": "Desativa o agrupamento de pacotes TCP para reduzir a latência de entrada do SSH, especialmente em conexões de LAN. Pode aumentar a sobrecarga da rede."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nome do host do túnel",
         "description": "Nome do host público do túnel Cloudflare"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Espaçamento entre letras"
+      },
+      "padding": {
+        "label": "Espaçamento"
       },
       "lineHeight": {
         "label": "Altura da linha"
@@ -551,6 +551,7 @@
     "hostNotFound": "Host não encontrado",
     "letterSpacing": "Espaçamento entre Letras",
     "letterSpacingPx": "Espaçamento entre Letras (px)",
+    "paddingPx": "Espaçamento (px)",
     "lineHeight": "Altura da Linha",
     "lineHeightLabel": "Altura da Linha",
     "linkClickBehaviorConfirm": "Mostrar pop-up para abrir ou copiar",

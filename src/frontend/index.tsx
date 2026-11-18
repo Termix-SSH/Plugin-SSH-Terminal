@@ -109,7 +109,13 @@ function TerminalStandalone({ hostId, params }: StandaloneViewProps) {
 }
 
 /** The desktop app's own shell, one tab per open. */
-function LocalTerminalTab({ tab, isVisible, isFocusedPane, label }: TabProps) {
+function LocalTerminalTab({
+  tab,
+  isVisible,
+  isFocusedPane,
+  label,
+  shell,
+}: TabProps) {
   return (
     <Suspense fallback={null}>
       <LocalTerminal
@@ -118,6 +124,7 @@ function LocalTerminalTab({ tab, isVisible, isFocusedPane, label }: TabProps) {
         sessionId={tab.id}
         isFocusedPane={isFocusedPane}
         label={label}
+        onClose={() => shell.closeTab(tab.id)}
       />
     </Suspense>
   );
@@ -245,6 +252,8 @@ export function activate(app: TermixApp): void {
     icon: SquareTerminal,
     order: 10,
     defaults: true,
+    // Shown in the simple host editor (SDK 2.10.0).
+    ...{ simple: true },
     component: HostTerminalSection,
   });
 
@@ -353,13 +362,21 @@ export function activate(app: TermixApp): void {
   app.declareActionSlot({ id: TERMINAL_TOOLBAR_SLOT, accepts: ["button"] });
   app.declareActionSlot({
     id: TERMINAL_TOOLBAR_STATUS_SLOT,
-    accepts: ["component"],
+    accepts: ["data"],
+    shapes: ["bars", "stat", "text"],
+    rows: "tab",
   });
   app.declareActionSlot({
     id: TERMINAL_SIDE_PANEL_SLOT,
     accepts: ["component"],
+    fit: "fill",
   });
-  app.declareActionSlot({ id: TERMINAL_OVERLAY_SLOT, accepts: ["component"] });
+  // Overlays cover the terminal but only take clicks while they show.
+  app.declareActionSlot({
+    id: TERMINAL_OVERLAY_SLOT,
+    accepts: ["component"],
+    fit: "overlay",
+  });
 
   // A terminal other code can embed (collab rooms, the homepage widget, the
   // tmux monitor, the file manager's window) without importing this plugin.

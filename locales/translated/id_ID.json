@@ -67,7 +67,7 @@
     "searchRegex": "Gunakan Ekspresi Reguler",
     "searchResultCount": "{{index}} dari {{count}}",
     "searchWholeWord": "Cocokkan Seluruh Kata",
-    "sessionTakenOver": "Sesi dibuka di tab lain. Menghubungkan ulang...",
+    "sessionTakenOver": "Sesi ini dibuka di jendela atau tab lain.",
     "tmuxAttached": "Klien yang terhubung",
     "tmuxAttachedCount_other": "{{count}} terlampir",
     "tmuxCopyHint": "Sesuaikan seleksi dan tekan Enter untuk menyalin ke papan klip",
@@ -97,6 +97,7 @@
     "imageUploaded": "Gambar diunggah: {{path}}",
     "imageClipboardUnavailable": "Browser ini tidak dapat membaca gambar dari papan klip",
     "imageClipboardEmpty": "Tidak ada gambar ditemukan di papan klip",
+    "imageDropHint": "Lepaskan gambar untuk mengunggahnya",
     "localShell": "Shell terminal lokal",
     "localBackendUnreachable": "Backend lokal tidak dapat dijangkau",
     "processExited": "Proses keluar ({{code}})",
@@ -276,10 +277,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Arahkan lalu lintas SSH melalui Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Nonaktifkan Algoritma Nagle (TCP_NODELAY)",
-        "description": "Menonaktifkan pengelompokan paket TCP untuk mengurangi latensi input SSH, terutama pada koneksi LAN. Dapat meningkatkan beban jaringan."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nama Host Terowongan",
         "description": "Nama host publik Cloudflare Tunnel"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "Jarak huruf"
+      },
+      "padding": {
+        "label": "Jarak dalam"
       },
       "lineHeight": {
         "label": "Tinggi baris"
@@ -545,6 +545,7 @@
     "hostNotFound": "Host tidak ditemukan",
     "letterSpacing": "Jarak Huruf",
     "letterSpacingPx": "Jarak Huruf (px)",
+    "paddingPx": "Jarak dalam (px)",
     "lineHeight": "Tinggi Baris",
     "lineHeightLabel": "Tinggi Baris",
     "linkClickBehaviorConfirm": "Tampilkan popup untuk membuka atau menyalin",

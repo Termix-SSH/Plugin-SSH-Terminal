@@ -63,9 +63,9 @@ function socketFor(permissionLevel: "read-only" | "read-write") {
     ctx: {} as never,
     log: log as never,
     sessionManager: sessions.manager as never,
-    getTmux: () => null,
-    getSharing: () => null,
-    getGuests: () => ({
+    getTmux: async () => null,
+    getSharing: async () => null,
+    getGuests: async () => ({
       resolve: async () => ({
         ok: true,
         share: { id: "share-1", sessionId: "s1", permissionLevel },

@@ -67,7 +67,7 @@
     "searchRegex": "Използване на регулярен израз",
     "searchResultCount": "{{index}} от {{count}}",
     "searchWholeWord": "Съвпадение на цялата дума",
-    "sessionTakenOver": "Сесията е отворена в друг раздел. Повторно свързване...",
+    "sessionTakenOver": "Тази сесия е отворена в друг прозорец или раздел.",
     "tmuxAttached": "Свързани клиенти",
     "tmuxAttachedCount_one": "{{count}} свързан",
     "tmuxAttachedCount_other": "{{count}} свързани",
@@ -99,6 +99,7 @@
     "imageUploaded": "Изображението е качено: {{path}}",
     "imageClipboardUnavailable": "Този браузър не може да чете изображения от клипборда",
     "imageClipboardEmpty": "Не е намерено изображение в клипборда",
+    "imageDropHint": "Пуснете изображение, за да го качите",
     "localShell": "Локален терминален шел",
     "localBackendUnreachable": "Локалният бекенд е недостъпен",
     "processExited": "Процесът приключи ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Посочете SSH трафика през Cloudflare Zero Trust чрез WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Изключване на алгоритъма на Нейл (TCP_NODELAY)",
-        "description": "Изключва пакетизирането на TCP, за да намали латентността при въвеждане в SSH, особено при LAN връзки. Може да увеличи мрежовия трафик."
-      },
       "cloudflareTunnelHostname": {
         "label": "Име на хоста на тунела",
         "description": "Публично име на хоста на Cloudflare Tunnel"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Разстояние между буквите"
+      },
+      "padding": {
+        "label": "Отстъп"
       },
       "lineHeight": {
         "label": "Височина на реда"
@@ -548,6 +548,7 @@
     "hostNotFound": "Хостът не е намерен",
     "letterSpacing": "Разстояние между буквите",
     "letterSpacingPx": "Разстояние между буквите (px)",
+    "paddingPx": "Отстъп (px)",
     "lineHeight": "Височина на реда",
     "lineHeightLabel": "Височина на реда",
     "linkClickBehaviorConfirm": "Показване на прозорец за отваряне или копиране",

@@ -67,7 +67,7 @@
     "searchRegex": "Kasuta regulaaravaldist",
     "searchResultCount": "{{index}} / {{count}}",
     "searchWholeWord": "Otsi täpset sõna",
-    "sessionTakenOver": "Sessioon avati teises vahekaardis. Ühenduse taastamine...",
+    "sessionTakenOver": "See sessioon avati teises aknas või vahekaardis.",
     "tmuxAttached": "Ühendatud kliendid",
     "tmuxAttachedCount_one": "{{count}} ühendatud",
     "tmuxAttachedCount_other": "{{count}} ühendatud",
@@ -99,6 +99,7 @@
     "imageUploaded": "Pilt üles laaditud: {{path}}",
     "imageClipboardUnavailable": "See brauser ei saa lugeda pilte lõikelaualt",
     "imageClipboardEmpty": "Lõikelaualt ei leitud pilti",
+    "imageDropHint": "Lohista pilt siia, et see üles laadida",
     "localShell": "Lokaalne terminali käsurea",
     "localBackendUnreachable": "Lokaalne taustaprogramm ei ole saadaval",
     "processExited": "Protsess lõpetas töö ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare'i tunnel",
         "description": "Suuna SSH-liiklus Cloudflare Zero Trusti kaudu WebSocketi vahendusel"
       },
-      "tcpNoDelay": {
-        "label": "Keela Nagle'i algoritm (TCP_NODELAY)",
-        "description": "Keelab TCP-pakettide partitsioneerimise, et vähendada SSH sisendi latentsust, eriti LAN-ühendustel. Võib suurendada võrgukoormust."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnele perenimi",
         "description": "Cloudflare'i tunnele avalik perenimi"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Tähede vahe"
+      },
+      "padding": {
+        "label": "Väljendus"
       },
       "lineHeight": {
         "label": "Ridade kõrgus"
@@ -548,6 +548,7 @@
     "hostNotFound": "Hosti ei leitud",
     "letterSpacing": "Tähede vahe",
     "letterSpacingPx": "Tähede vahe (px)",
+    "paddingPx": "Väljendus (px)",
     "lineHeight": "Rea kõrgus",
     "lineHeightLabel": "Rea kõrgus",
     "linkClickBehaviorConfirm": "Kuva hüpikaken avamiseks või kopeerimiseks",

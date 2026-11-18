@@ -67,7 +67,7 @@
     "searchRegex": "正規表現を使用",
     "searchResultCount": "{{index}} / {{count}}",
     "searchWholeWord": "単語全体に一致",
-    "sessionTakenOver": "セッションが別のタブで開かれました。再接続中...",
+    "sessionTakenOver": "このセッションは、別のウィンドウまたはタブで開かれました。",
     "tmuxAttached": "接続中のクライアント",
     "tmuxAttachedCount_other": "{{count}} 個接続中",
     "tmuxCopyHint": "選択範囲を調整し、Enter を押してクリップボードにコピーします",
@@ -97,6 +97,7 @@
     "imageUploaded": "画像をアップロードしました: {{path}}",
     "imageClipboardUnavailable": "このブラウザはクリップボードから画像を読み取ることができません",
     "imageClipboardEmpty": "クリップボードに画像が見つかりません",
+    "imageDropHint": "画像をドロップしてアップロード",
     "localShell": "ローカルターミナルシェル",
     "localBackendUnreachable": "ローカルバックエンドに接続できません",
     "processExited": "プロセスが終了しました ({{code}})",
@@ -276,10 +277,6 @@
         "label": "Cloudflare Tunnel",
         "description": "WebSocket を介して Cloudflare Zero Trust 経由で SSH トラフィックをルーティングします"
       },
-      "tcpNoDelay": {
-        "label": "ナグルアルゴリズムを無効化 (TCP_NODELAY)",
-        "description": "TCP パケットのバッチ処理を無効化して SSH の入力遅延を低減します。特に LAN 接続で効果的です。ネットワークのオーバーヘッドが増加する可能性があります。"
-      },
       "cloudflareTunnelHostname": {
         "label": "トンネルホスト名",
         "description": "Cloudflare Tunnel の公開ホスト名"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "文字間隔"
+      },
+      "padding": {
+        "label": "パディング"
       },
       "lineHeight": {
         "label": "行の高さ"
@@ -545,6 +545,7 @@
     "hostNotFound": "ホストが見つかりません",
     "letterSpacing": "文字間隔",
     "letterSpacingPx": "文字間隔 (px)",
+    "paddingPx": "パディング (px)",
     "lineHeight": "行の高さ",
     "lineHeightLabel": "行の高さ",
     "linkClickBehaviorConfirm": "ポップアップで開くかコピーするか確認",

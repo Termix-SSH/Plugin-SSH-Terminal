@@ -67,7 +67,7 @@
     "searchRegex": "Usar Expressão Regular",
     "searchResultCount": "{{index}} de {{count}}",
     "searchWholeWord": "Correspondência de Palavra Inteira",
-    "sessionTakenOver": "A sessão foi aberta noutra aba. A reconectar...",
+    "sessionTakenOver": "Esta sessão foi aberta noutra janela ou separador.",
     "tmuxAttached": "Clientes ligados",
     "tmuxAttachedCount_one": "{{count}} sessão anexada",
     "tmuxAttachedCount_many": "{{count}} sessões anexadas",
@@ -101,6 +101,7 @@
     "imageUploaded": "Imagem carregada: {{path}}",
     "imageClipboardUnavailable": "Este navegador não consegue ler imagens da área de transferência",
     "imageClipboardEmpty": "Nenhuma imagem encontrada na área de transferência",
+    "imageDropHint": "Largue uma imagem para a carregar",
     "localShell": "Shell do terminal local",
     "localBackendUnreachable": "O backend local não está acessível",
     "processExited": "O processo terminou ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Encaminhar tráfego SSH através do Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Desativar algoritmo de Nagle (TCP_NODELAY)",
-        "description": "Desativa o agrupamento de pacotes TCP para reduzir a latência de entrada SSH, especialmente em ligações LAN. Pode aumentar o tráfego de rede."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nome do Host do Túnel",
         "description": "Nome de host público do Cloudflare Tunnel"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Espaçamento entre letras"
+      },
+      "padding": {
+        "label": "Espaçamento"
       },
       "lineHeight": {
         "label": "Altura da linha"
@@ -551,6 +551,7 @@
     "hostNotFound": "Host não encontrado",
     "letterSpacing": "Espaçamento entre Letras",
     "letterSpacingPx": "Espaçamento entre Letras (px)",
+    "paddingPx": "Espaçamento (px)",
     "lineHeight": "Altura da Linha",
     "lineHeightLabel": "Altura da Linha",
     "linkClickBehaviorConfirm": "Mostrar popup para abrir ou copiar",

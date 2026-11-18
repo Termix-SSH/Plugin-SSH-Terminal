@@ -67,7 +67,7 @@
     "searchRegex": "Sử dụng biểu thức chính quy",
     "searchResultCount": "{{index}} trong số {{count}}",
     "searchWholeWord": "Khớp toàn bộ từ",
-    "sessionTakenOver": "Phiên làm việc đã được mở trong tab khác. Đang kết nối lại...",
+    "sessionTakenOver": "Phiên làm việc này đã được mở trong một cửa sổ hoặc tab khác.",
     "tmuxAttached": "Client đang kết nối",
     "tmuxAttachedCount_other": "{{count}} phiên bản đang kết nối",
     "tmuxCopyHint": "Điều chỉnh vùng chọn và nhấn Enter để sao chép vào clipboard",
@@ -97,6 +97,7 @@
     "imageUploaded": "Đã tải lên hình ảnh: {{path}}",
     "imageClipboardUnavailable": "Trình duyệt này không thể đọc hình ảnh từ clipboard",
     "imageClipboardEmpty": "Không tìm thấy hình ảnh trong clipboard",
+    "imageDropHint": "Thả hình ảnh để tải lên",
     "localShell": "Shell terminal cục bộ",
     "localBackendUnreachable": "Không thể kết nối đến backend cục bộ",
     "processExited": "Quá trình đã thoát ({{code}})",
@@ -276,10 +277,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Định tuyến lưu lượng SSH qua Cloudflare Zero Trust thông qua WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Tắt thuật toán Nagle (TCP_NODELAY)",
-        "description": "Tắt việc gom gói TCP để giảm độ trễ đầu vào SSH, đặc biệt trên kết nối LAN. Có thể làm tăng tải mạng."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tên máy chủ Tunnel",
         "description": "Tên máy chủ công cộng của Cloudflare Tunnel"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "Khoảng cách chữ"
+      },
+      "padding": {
+        "label": "Khoảng đệm"
       },
       "lineHeight": {
         "label": "Chiều cao dòng"
@@ -545,6 +545,7 @@
     "hostNotFound": "Không tìm thấy máy chủ",
     "letterSpacing": "Khoảng cách chữ",
     "letterSpacingPx": "Khoảng cách chữ (px)",
+    "paddingPx": "Khoảng đệm (px)",
     "lineHeight": "Chiều cao dòng",
     "lineHeightLabel": "Chiều cao dòng",
     "linkClickBehaviorConfirm": "Hiển thị hộp thoại để mở hoặc sao chép",

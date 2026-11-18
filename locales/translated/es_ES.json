@@ -67,7 +67,7 @@
     "searchRegex": "Usar expresión regular",
     "searchResultCount": "{{index}} de {{count}}",
     "searchWholeWord": "Coincidencia de palabra completa",
-    "sessionTakenOver": "La sesión se ha abierto en otra pestaña. Reconectando...",
+    "sessionTakenOver": "Esta sesión se abrió en otra ventana o pestaña.",
     "tmuxAttached": "Clientes conectados",
     "tmuxAttachedCount_one": "{{count}} sesión adjunta",
     "tmuxAttachedCount_many": "{{count}} sesiones adjuntas",
@@ -101,6 +101,7 @@
     "imageUploaded": "Imagen subida: {{path}}",
     "imageClipboardUnavailable": "Este navegador no puede leer imágenes del portapapeles",
     "imageClipboardEmpty": "No se ha encontrado ninguna imagen en el portapapeles",
+    "imageDropHint": "Suelta una imagen para subirla",
     "localShell": "Shell de terminal local",
     "localBackendUnreachable": "El backend local no es accesible",
     "processExited": "El proceso ha finalizado ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Túnel Cloudflare",
         "description": "Enrutar tráfico SSH mediante Cloudflare Zero Trust vía WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Desactivar el algoritmo de Nagle (TCP_NODELAY)",
-        "description": "Desactiva el agrupamiento de paquetes TCP para reducir la latencia de entrada de SSH, especialmente en conexiones LAN. Puede aumentar la sobrecarga de red."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nombre de host del túnel",
         "description": "Dominio público de Cloudflare Tunnel"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Interletraje"
+      },
+      "padding": {
+        "label": "Relleno"
       },
       "lineHeight": {
         "label": "Altura de línea"
@@ -551,6 +551,7 @@
     "hostNotFound": "Host no encontrado",
     "letterSpacing": "Interletraje",
     "letterSpacingPx": "Interletraje (px)",
+    "paddingPx": "Relleno (px)",
     "lineHeight": "Altura de línea",
     "lineHeightLabel": "Altura de línea",
     "linkClickBehaviorConfirm": "Mostrar ventana emergente para abrir o copiar",

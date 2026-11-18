@@ -67,7 +67,7 @@
     "searchRegex": "השתמש בביטוי רגולרי",
     "searchResultCount": "{{index}} מתוך {{count}}",
     "searchWholeWord": "התאם מילה שלמה",
-    "sessionTakenOver": "ההפעלה נפתחה בלשונית אחרת. מתחבר מחדש...",
+    "sessionTakenOver": "הסשן הזה נפתח בחלון או בלשונית אחרת.",
     "tmuxAttached": "לקוחות מחוברים",
     "tmuxAttachedCount_one": "{{count}} מחובר",
     "tmuxAttachedCount_two": "{{count}} מחוברים",
@@ -101,6 +101,7 @@
     "imageUploaded": "התמונה הועלתה: {{path}}",
     "imageClipboardUnavailable": "דפדפן זה אינו יכול לקרוא תמונות מהלוח",
     "imageClipboardEmpty": "לא נמצאה תמונה בלוח",
+    "imageDropHint": "גרור תמונה לכאן כדי להעלות אותה",
     "localShell": "Shell של מסוף מקומי",
     "localBackendUnreachable": "לא ניתן להגיע לשרת המקומי",
     "processExited": "התהליך הסתיים ({{code}})",
@@ -282,10 +283,6 @@
         "label": "מנהרת Cloudflare",
         "description": "העברת תעבורת SSH דרך Cloudflare Zero Trust באמצעות WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "השבת אלגוריתם נייגל (TCP_NODELAY)",
-        "description": "מבטל את חבילת חבילות TCP כדי להפחית את זמן התגובה של קלט SSH, במיוחד בחיבורי LAN. עשוי להגדיל את העומס הרשת."
-      },
       "cloudflareTunnelHostname": {
         "label": "שם מארח של המנהרה",
         "description": "שם מארח ציבורי של מנהרת Cloudflare"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "רווח בין אותיות"
+      },
+      "padding": {
+        "label": "ריפוד"
       },
       "lineHeight": {
         "label": "גובה שורה"
@@ -551,6 +551,7 @@
     "hostNotFound": "המארח לא נמצא",
     "letterSpacing": "רווח בין אותיות",
     "letterSpacingPx": "רווח בין אותיות (px)",
+    "paddingPx": "ריפוד (פיקסלים)",
     "lineHeight": "גובה שורה",
     "lineHeightLabel": "גובה שורה",
     "linkClickBehaviorConfirm": "הצגת חלון קופץ לפתיחה או העתקה",

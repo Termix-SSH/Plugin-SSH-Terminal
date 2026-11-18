@@ -67,7 +67,7 @@
     "searchRegex": "Utiliser une expression régulière",
     "searchResultCount": "{{index}} sur {{count}}",
     "searchWholeWord": "Correspondance mot entier",
-    "sessionTakenOver": "La session a été ouverte dans un autre onglet. Reconnexion en cours...",
+    "sessionTakenOver": "Cette session a été ouverte dans une autre fenêtre ou un autre onglet.",
     "tmuxAttached": "Clients attachés",
     "tmuxAttachedCount_one": "{{count}} session attachée",
     "tmuxAttachedCount_many": "{{count}} sessions attachées",
@@ -101,6 +101,7 @@
     "imageUploaded": "Image téléchargée : {{path}}",
     "imageClipboardUnavailable": "Ce navigateur ne peut pas lire les images depuis le presse-papiers",
     "imageClipboardEmpty": "Aucune image trouvée dans le presse-papiers",
+    "imageDropHint": "Déposez une image pour la télécharger",
     "localShell": "Shell du terminal local",
     "localBackendUnreachable": "Le backend local n'est pas accessible",
     "processExited": "Le processus s'est terminé ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Tunnel Cloudflare",
         "description": "Acheminer le trafic SSH via Cloudflare Zero Trust à l'aide de WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Désactiver l'algorithme de Nagle (TCP_NODELAY)",
-        "description": "Désactive le regroupement des paquets TCP pour réduire la latence d'entrée SSH, en particulier sur les connexions LAN. Peut augmenter la charge réseau."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nom d'hôte du tunnel",
         "description": "Nom d'hôte public du tunnel Cloudflare"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Espacement des lettres"
+      },
+      "padding": {
+        "label": "Marge intérieure"
       },
       "lineHeight": {
         "label": "Hauteur de ligne"
@@ -551,6 +551,7 @@
     "hostNotFound": "Hôte introuvable",
     "letterSpacing": "Espacement des lettres",
     "letterSpacingPx": "Espacement des lettres (px)",
+    "paddingPx": "Marge intérieure (px)",
     "lineHeight": "Hauteur de ligne",
     "lineHeightLabel": "Hauteur de ligne",
     "linkClickBehaviorConfirm": "Afficher une fenêtre contextuelle pour ouvrir ou copier",

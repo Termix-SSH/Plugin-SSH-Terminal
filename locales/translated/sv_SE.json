@@ -67,7 +67,7 @@
     "searchRegex": "Använd reguljärt uttryck",
     "searchResultCount": "{{index}} av {{count}}",
     "searchWholeWord": "Matcha hela ordet",
-    "sessionTakenOver": "Sessionen öppnades i en annan flik. Återansluter...",
+    "sessionTakenOver": "Denna session öppnades i ett annat fönster eller en annan flik.",
     "tmuxAttached": "Anslutna klienter",
     "tmuxAttachedCount_one": "{{count}} ansluten",
     "tmuxAttachedCount_other": "{{count}} anslutna",
@@ -99,6 +99,7 @@
     "imageUploaded": "Bild uppladdad: {{path}}",
     "imageClipboardUnavailable": "Den här webbläsaren kan inte läsa bilder från urklipp",
     "imageClipboardEmpty": "Ingen bild hittades i urklipp",
+    "imageDropHint": "Släpp en bild för att ladda upp den",
     "localShell": "Lokal terminalshell",
     "localBackendUnreachable": "Den lokala backenden är inte nåbar",
     "processExited": "Processen avslutades ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Dirigera SSH-trafik över Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Inaktivera Nagles algoritm (TCP_NODELAY)",
-        "description": "Inaktiverar sammanfogning av TCP-paket för att minska SSH-latens, särskilt på LAN-anslutningar. Kan öka nätverksbelastningen."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnelvärdnamn",
         "description": "Offentligt värdnamn för Cloudflare Tunnel"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Bokstavsmellanrum"
+      },
+      "padding": {
+        "label": "Marginal"
       },
       "lineHeight": {
         "label": "Radhöjd"
@@ -548,6 +548,7 @@
     "hostNotFound": "Värdmaskinen hittades inte",
     "letterSpacing": "Bokstavsmellanrum",
     "letterSpacingPx": "Bokstavsmellanrum (px)",
+    "paddingPx": "Marginal (px)",
     "lineHeight": "Radhöjd",
     "lineHeightLabel": "Radhöjd",
     "linkClickBehaviorConfirm": "Visa popup för att öppna eller kopiera",

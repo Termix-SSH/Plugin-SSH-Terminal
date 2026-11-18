@@ -15,9 +15,22 @@ const history = (s: TestServer) =>
     )
     .all();
 
+const host = (id: number, userId = "user-1") => ({
+  id,
+  userId,
+  name: `h${id}`,
+  ip: "10.0.0.1",
+  port: 22,
+  username: "root",
+  tags: null,
+  folder: null,
+  authType: "password",
+});
+const hosts = [host(1), host(2)];
+
 describe("command history routes", () => {
   it("saves, lists newest first without duplicates, deletes and clears", async () => {
-    server = await startServer();
+    server = await startServer({ hosts });
     for (const command of ["ls", "pwd", "ls"]) {
       const saved = await server.request("POST", "/command-history", {
         body: { hostId: 1, command },
@@ -46,6 +59,20 @@ describe("command history routes", () => {
     expect(server.db.persisted).toBeGreaterThan(0);
   });
 
+  it("refuses a host the user can't reach without database details", async () => {
+    server = await startServer({ hosts: [host(1)] });
+    const missing = await server.request("POST", "/command-history", {
+      body: { hostId: 2, command: "ls" },
+    });
+    expect(missing.status).toBe(404);
+    expect(JSON.stringify(missing.body)).not.toMatch(/constraint|sqlite/i);
+    const bad = await server.request("POST", "/command-history", {
+      body: { hostId: "1; ls", command: "ls" },
+    });
+    expect(bad.status).toBe(400);
+    expect(history(server)).toEqual([]);
+  });
+
   it("acknowledges but never stores a command that looks like a secret", async () => {
     server = await startServer();
     const saved = await server.request("POST", "/command-history", {
@@ -64,7 +91,7 @@ describe("command history routes", () => {
   });
 
   it("stores nothing for a host that turned command history off", async () => {
-    server = await startServer();
+    server = await startServer({ hosts });
     await server.mock.ctx.settings.setHost(2, "enableCommandHistory", false);
     await server.request("POST", "/command-history", {
       body: { hostId: 2, command: "ls" },
@@ -92,7 +119,7 @@ describe("command history routes", () => {
   });
 
   it("lists recent commands with duplicates for a hosts.view holder", async () => {
-    server = await startServer({ permissions: ["hosts.view"] });
+    server = await startServer({ permissions: ["hosts.view"], hosts });
     for (const command of ["uptime", "uptime"]) {
       await server.request("POST", "/command-history", {
         body: { hostId: 1, command },
@@ -134,18 +161,6 @@ describe("client settings and image storage", () => {
 });
 
 describe("terminal settings routes", () => {
-  const host = (id: number, userId = "user-1") => ({
-    id,
-    userId,
-    name: `h${id}`,
-    ip: "10.0.0.1",
-    port: 22,
-    username: "root",
-    tags: null,
-    folder: null,
-    authType: "password",
-  });
-
   it("gives a host-less terminal the user's default look", async () => {
     server = await startServer();
     await server.mock.ctx.settings.setUser("user-1", "theme", "dracula");

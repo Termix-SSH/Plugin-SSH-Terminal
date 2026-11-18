@@ -67,7 +67,7 @@
     "searchRegex": "Użyj wyrażenia regularnego",
     "searchResultCount": "{{index}} z {{count}}",
     "searchWholeWord": "Dopasuj całe słowo",
-    "sessionTakenOver": "Sesja została otwarta w innej karcie. Łączenie ponownie...",
+    "sessionTakenOver": "Ta sesja została otwarta w innym oknie lub karcie.",
     "tmuxAttached": "Podłączeni klienci",
     "tmuxAttachedCount_one": "{{count}} przyłączony",
     "tmuxAttachedCount_few": "{{count}} przyłączone",
@@ -103,6 +103,7 @@
     "imageUploaded": "Obraz przesłany: {{path}}",
     "imageClipboardUnavailable": "Ta przeglądarka nie może odczytywać obrazów ze schowka",
     "imageClipboardEmpty": "Nie znaleziono obrazu w schowku",
+    "imageDropHint": "Upuść obraz, aby go przesłać",
     "localShell": "Lokalna powłoka terminala",
     "localBackendUnreachable": "Lokalny backend jest nieosiągalny",
     "processExited": "Proces zakończony ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Przekieruj ruch SSH przez Cloudflare Zero Trust za pomocą WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Wyłącz algorytm Nagle'a (TCP_NODELAY)",
-        "description": "Wyłącza grupowanie pakietów TCP, aby zmniejszyć opóźnienie wejścia SSH, szczególnie w połączeniach LAN. Może zwiększyć obciążenie sieci."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nazwa hosta tunelu",
         "description": "Publiczna nazwa hosta Cloudflare Tunnel"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Odstępy między literami"
+      },
+      "padding": {
+        "label": "Odstępy"
       },
       "lineHeight": {
         "label": "Wysokość linii"
@@ -554,6 +554,7 @@
     "hostNotFound": "Host nie znaleziony",
     "letterSpacing": "Odstępy między literami",
     "letterSpacingPx": "Odstępy między literami (px)",
+    "paddingPx": "Odstępy (px)",
     "lineHeight": "Wysokość wiersza",
     "lineHeightLabel": "Wysokość wiersza",
     "linkClickBehaviorConfirm": "Pokaż okno dialogowe do otwarcia lub skopiowania",

@@ -71,15 +71,9 @@ describe("HostTerminalSettings", () => {
     });
   });
 
-  it("defaults TCP_NODELAY off and saves the per-host toggle", () => {
-    const { current } = renderSettings({ pluginSettings: {} });
-    const toggle = switchFor("settings.host.tcpNoDelay.label");
-
-    fireEvent.click(toggle);
-
-    expect(current().pluginSettings).toEqual({
-      "ssh-terminal": { tcpNoDelay: true },
-    });
+  it("has no Nagle toggle, keys always go out at once", () => {
+    renderSettings({ pluginSettings: {} });
+    expect(screen.queryByText("settings.host.tcpNoDelay.label")).toBeNull();
   });
 
   it("writes a look change next to the host's other values", () => {

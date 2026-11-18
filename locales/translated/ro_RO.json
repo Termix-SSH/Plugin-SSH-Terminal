@@ -67,7 +67,7 @@
     "searchRegex": "Folosește expresie regulată",
     "searchResultCount": "{{index}} din {{count}}",
     "searchWholeWord": "Potrivește cuvântul întreg",
-    "sessionTakenOver": "Sesiunea a fost deschisă într-o altă filă. Se reconectează...",
+    "sessionTakenOver": "Această sesiune a fost deschisă într-o altă fereastră sau filă.",
     "tmuxAttached": "Clienți atașați",
     "tmuxAttachedCount_one": "{{count}} atașat",
     "tmuxAttachedCount_few": "{{count}} atașate",
@@ -101,6 +101,7 @@
     "imageUploaded": "Imagine încărcată: {{path}}",
     "imageClipboardUnavailable": "Acest browser nu poate citi imagini din clipboard",
     "imageClipboardEmpty": "Nicio imagine găsită în clipboard",
+    "imageDropHint": "Trageți o imagine pentru a o încărca",
     "localShell": "Shell terminal local",
     "localBackendUnreachable": "Backend-ul local nu este accesibil",
     "processExited": "Procesul s-a încheiat ({{code}})",
@@ -282,10 +283,6 @@
         "label": "Tunel Cloudflare",
         "description": "Rutează traficul SSH prin Cloudflare Zero Trust folosind WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Dezactivează algoritmul Nagle (TCP_NODELAY)",
-        "description": "Dezactivează gruparea pachetelor TCP pentru a reduce latența intrării SSH, în special pe conexiunile LAN. Poate crește supraîncărcarea rețelei."
-      },
       "cloudflareTunnelHostname": {
         "label": "Numele gazdei tunelului",
         "description": "Numele gazdei publice al tunelului Cloudflare"
@@ -326,6 +323,9 @@
       },
       "letterSpacing": {
         "label": "Spațiere litere"
+      },
+      "padding": {
+        "label": "Spațiere"
       },
       "lineHeight": {
         "label": "Înălțime linie"
@@ -551,6 +551,7 @@
     "hostNotFound": "Gazda nu a fost găsită",
     "letterSpacing": "Spațiere între litere",
     "letterSpacingPx": "Spațiere între litere (px)",
+    "paddingPx": "Spațiere (px)",
     "lineHeight": "Înălțime linie",
     "lineHeightLabel": "Înălțime linie",
     "linkClickBehaviorConfirm": "Afișează fereastra pentru a deschide sau copia",

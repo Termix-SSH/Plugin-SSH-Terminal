@@ -67,7 +67,7 @@
     "searchRegex": "নিয়মিত অভিব্যক্তি ব্যবহার করুন",
     "searchResultCount": "{{count}} এর মধ্যে {{index}}",
     "searchWholeWord": "পুরো শব্দ মিলান",
-    "sessionTakenOver": "সেশনটি অন্য ট্যাবে খোলা হয়েছে। পুনঃসংযুক্ত হচ্ছে...",
+    "sessionTakenOver": "এই সেশনটি অন্য একটি উইন্ডো বা ট্যাবে খোলা হয়েছিল।",
     "tmuxAttached": "সংযুক্ত ক্লায়েন্ট",
     "tmuxAttachedCount_one": "{{count}} সংযুক্ত",
     "tmuxAttachedCount_other": "{{count}} সংযুক্ত",
@@ -99,6 +99,7 @@
     "imageUploaded": "ইমেজ আপলোড হয়েছে: {{path}}",
     "imageClipboardUnavailable": "এই ব্রাউজারটি ক্লিপবোর্ড থেকে ইমেজ পড়তে পারে না",
     "imageClipboardEmpty": "ক্লিপবোর্ডে কোনো ইমেজ পাওয়া যায়নি",
+    "imageDropHint": "আপলোড করতে একটি ছবি ড্রপ করুন",
     "localShell": "লোকাল টার্মিনাল শেল",
     "localBackendUnreachable": "লোকাল ব্যাকএন্ডে সংযোগ করা যাচ্ছে না",
     "processExited": "প্রসেস বের হয়ে গেছে ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare টানেল",
         "description": "WebSocket এর মাধ্যমে Cloudflare Zero Trust এর উপর দিয়ে SSH ট্রাফিক রাউট করুন"
       },
-      "tcpNoDelay": {
-        "label": "নেগলের অ্যালগরিদম বন্ধ করুন (TCP_NODELAY)",
-        "description": "LAN সংযোগে বিশেষ করে SSH ইনপুট ল্যাটেন্সি কমানোর জন্য TCP প্যাকেট ব্যাচিং বন্ধ করে। এটি নেটওয়ার্ক ওভারহেড বাড়তে পারে।"
-      },
       "cloudflareTunnelHostname": {
         "label": "টানেল হোস্টনেম",
         "description": "Cloudflare টানেলের পাবলিক হোস্টনেম"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "অক্ষর ব্যবধান"
+      },
+      "padding": {
+        "label": "প্যাডিং"
       },
       "lineHeight": {
         "label": "লাইন উচ্চতা"
@@ -548,6 +548,7 @@
     "hostNotFound": "হোস্ট পাওয়া যায়নি",
     "letterSpacing": "অক্ষর ব্যবধান",
     "letterSpacingPx": "অক্ষর ব্যবধান (px)",
+    "paddingPx": "প্যাডিং (px)",
     "lineHeight": "লাইন হাইট",
     "lineHeightLabel": "লাইন হাইট",
     "linkClickBehaviorConfirm": "খোলা বা কপি করার জন্য পপআপ দেখান",

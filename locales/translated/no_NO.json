@@ -67,7 +67,7 @@
     "searchRegex": "Bruk regulært uttrykk",
     "searchResultCount": "{{index}} av {{count}}",
     "searchWholeWord": "Match helt ord",
-    "sessionTakenOver": "Sesjonen ble åpnet i en annen fane. Kobler til på nytt...",
+    "sessionTakenOver": "Denne økten ble åpnet i et annet vindu eller en annen fane.",
     "tmuxAttached": "Tilkoblede klienter",
     "tmuxAttachedCount_one": "{{count}} tilkoblet",
     "tmuxAttachedCount_other": "{{count}} tilkoblet",
@@ -99,6 +99,7 @@
     "imageUploaded": "Bilde lastet opp: {{path}}",
     "imageClipboardUnavailable": "Denne nettleseren kan ikke lese bilder fra utklippstavlen",
     "imageClipboardEmpty": "Fant ingen bilder i utklippstavlen",
+    "imageDropHint": "Slipp et bilde for å laste det opp",
     "localShell": "Lokal terminalshell",
     "localBackendUnreachable": "Den lokale bakenden er ikke tilgjengelig",
     "processExited": "Prosessen avsluttet ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare-tunnel",
         "description": "Send SSH-trafikk over Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Deaktiver Nagle-algoritmen (TCP_NODELAY)",
-        "description": "Deaktiverer samling av TCP-pakker for å redusere inndataforsinkelse i SSH, spesielt på LAN-tilkoblinger. Kan øke nettverksbelastningen."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-vertnavn",
         "description": "Offentlig vertnavn for Cloudflare-tunnel"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Bokstavavstand"
+      },
+      "padding": {
+        "label": "Polstring"
       },
       "lineHeight": {
         "label": "Linjehøyde"
@@ -548,6 +548,7 @@
     "hostNotFound": "Verten ble ikke funnet",
     "letterSpacing": "Bokstavavstand",
     "letterSpacingPx": "Bokstavavstand (px)",
+    "paddingPx": "Polstring (px)",
     "lineHeight": "Linjehøyde",
     "lineHeightLabel": "Linjehøyde",
     "linkClickBehaviorConfirm": "Vis popup for å åpne eller kopiere",

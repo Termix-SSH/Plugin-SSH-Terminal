@@ -67,7 +67,7 @@
     "searchRegex": "Gunakan Ungkapan Biasa",
     "searchResultCount": "{{index}} daripada {{count}}",
     "searchWholeWord": "Padankan Perkataan Penuh",
-    "sessionTakenOver": "Sesi telah dibuka dalam tab lain. Menyambung semula...",
+    "sessionTakenOver": "Sesi ini dibuka di tetingkap atau tab lain.",
     "tmuxAttached": "Klien yang disambungkan",
     "tmuxAttachedCount_other": "{{count}} disambilk",
     "tmuxCopyHint": "Laraskan pemilihan dan tekan Enter untuk menyalin ke papan klip",
@@ -97,6 +97,7 @@
     "imageUploaded": "Imej dimuat naik: {{path}}",
     "imageClipboardUnavailable": "Pelayar ini tidak boleh membaca imej dari papan klip",
     "imageClipboardEmpty": "Tiada imej ditemui dalam papan klip",
+    "imageDropHint": "Lepaskan imej untuk memuat naiknya",
     "localShell": "Shell terminal tempatan",
     "localBackendUnreachable": "Backend tempatan tidak boleh dicapai",
     "processExited": "Proses telah tamat ({{code}})",
@@ -276,10 +277,6 @@
         "label": "Terowong Cloudflare",
         "description": "Arahkan lalu lintas SSH melalui Cloudflare Zero Trust menggunakan WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Laraskan Algoritma Nagle (TCP_NODELAY)",
-        "description": "Melaraskan pengumpulan pakej TCP untuk mengurangkan kelewatan input SSH, terutamanya pada sambungan LAN. Mungkin meningkatkan beban rangkaian."
-      },
       "cloudflareTunnelHostname": {
         "label": "Nama Hos Terowong",
         "description": "Nama hos awam Terowong Cloudflare"
@@ -320,6 +317,9 @@
       },
       "letterSpacing": {
         "label": "Jarak huruf"
+      },
+      "padding": {
+        "label": "Pad"
       },
       "lineHeight": {
         "label": "Ketinggian baris"
@@ -545,6 +545,7 @@
     "hostNotFound": "Hos tidak dijumpai",
     "letterSpacing": "Jarak Huruf",
     "letterSpacingPx": "Jarak Huruf (px)",
+    "paddingPx": "Pad (px)",
     "lineHeight": "Ketinggian Baris",
     "lineHeightLabel": "Ketinggian Baris",
     "linkClickBehaviorConfirm": "Paparkan tetingkap timbul untuk buka atau salin",

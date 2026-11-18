@@ -67,7 +67,7 @@
     "searchRegex": "Gebruik Gewone Uitdrukking",
     "searchResultCount": "{{index}} van {{count}}",
     "searchWholeWord": "Pas Hele Woord Aan",
-    "sessionTakenOver": "Sessie is in 'n ander oortjie oopgemaak. Maak herverbinding...",
+    "sessionTakenOver": "Hierdie sessie is in 'n ander venster of oortjie oopgemaak.",
     "tmuxAttached": "Aangeslote kliënte",
     "tmuxAttachedCount_one": "{{count}} geheg",
     "tmuxAttachedCount_other": "{{count}} geheg",
@@ -99,6 +99,7 @@
     "imageUploaded": "Beeld opgelaai: {{path}}",
     "imageClipboardUnavailable": "Hierdie blaaier kan nie beelde van die knipbord lees nie",
     "imageClipboardEmpty": "Geen beeld in die knipbord gevind nie",
+    "imageDropHint": "Sleep 'n prentjie na hier om dit op te laai",
     "localShell": "Plaaslike terminaal-shell",
     "localBackendUnreachable": "Die plaaslike backend is nie bereikbaar nie",
     "processExited": "Proses het geëindig ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare-tunnel",
         "description": "Rig SSH-verkeer oor Cloudflare Zero Trust via WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Deaktiveer Nagle se algoritme (TCP_NODELAY)",
-        "description": "Deaktiveer TCP-pakketbundeling om SSH-invoerlatensie te verminder, veral op LAN-verbindinge. Kan netwerkbelasting verhoog."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnel-hostnaam",
         "description": "Openbare Cloudflare-tunnel-hostnaam"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Letterafstand"
+      },
+      "padding": {
+        "label": "Afvulling"
       },
       "lineHeight": {
         "label": "Reëlhoogte"
@@ -548,6 +548,7 @@
     "hostNotFound": "Gasheer nie gevind nie",
     "letterSpacing": "Letterafstand",
     "letterSpacingPx": "Letterafstand (px)",
+    "paddingPx": "Afvulling (px)",
     "lineHeight": "Reëlhoogte",
     "lineHeightLabel": "Reëlhoogte",
     "linkClickBehaviorConfirm": "Wys pop-up om te open of te kopieer",

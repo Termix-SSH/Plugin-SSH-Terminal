@@ -67,7 +67,7 @@
     "searchRegex": "Použiť regulárny výraz",
     "searchResultCount": "{{index}} z {{count}}",
     "searchWholeWord": "Hľadať celé slovo",
-    "sessionTakenOver": "Relácia bola otvorená v inej karte. Opätovné pripájanie...",
+    "sessionTakenOver": "Táto relácia bola otvorená v inom okne alebo karte.",
     "tmuxAttached": "Pripojení klienti",
     "tmuxAttachedCount_one": "{{count}} pripojený",
     "tmuxAttachedCount_few": "{{count}} pripojené",
@@ -103,6 +103,7 @@
     "imageUploaded": "Obrázok nahraný: {{path}}",
     "imageClipboardUnavailable": "Tento prehliadač nedokáže čítať obrázky zo schránky",
     "imageClipboardEmpty": "V schránke sa nenašiel žiadny obrázok",
+    "imageDropHint": "Presuňte obrázok sem na jeho nahranie",
     "localShell": "Lokálny terminálový shell",
     "localBackendUnreachable": "Lokálny backend nie je dostupný",
     "processExited": "Proces sa ukončil ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Presmerovať SSH prevádzku cez Cloudflare Zero Trust prostredníctvom WebSocket"
       },
-      "tcpNoDelay": {
-        "label": "Zakázať Nagleov algoritmus (TCP_NODELAY)",
-        "description": "Zakáže spájanie TCP paketov na zníženie oneskorenia SSH vstupu, najmä pri LAN pripojeniach. Môže zvýšiť sieťovú záťaž."
-      },
       "cloudflareTunnelHostname": {
         "label": "Meno hostiteľa tunela",
         "description": "Verejné meno hostiteľa Cloudflare Tunnel"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Medzery medzi písmenami"
+      },
+      "padding": {
+        "label": "Odsadenie"
       },
       "lineHeight": {
         "label": "Výška riadku"
@@ -554,6 +554,7 @@
     "hostNotFound": "Hostiteľ sa nenašiel",
     "letterSpacing": "Medzery medzi znakmi",
     "letterSpacingPx": "Medzery medzi znakmi (px)",
+    "paddingPx": "Odsadenie (px)",
     "lineHeight": "Výška riadku",
     "lineHeightLabel": "Výška riadku",
     "linkClickBehaviorConfirm": "Zobraziť výzvu na otvorenie alebo kopírovanie",

@@ -67,7 +67,7 @@
     "searchRegex": "Uporabi regularni izraz",
     "searchResultCount": "{{index}} od {{count}}",
     "searchWholeWord": "Ujemanje celotne besede",
-    "sessionTakenOver": "Seja je bila odprta v drugem zavihku. Ponovno povezovanje...",
+    "sessionTakenOver": "Ta seja je bila odprta v drugem oknu ali zavihku.",
     "tmuxAttached": "Priklopljeni odjemalci",
     "tmuxAttachedCount_one": "{{count}} priključen",
     "tmuxAttachedCount_two": "{{count}} priključena",
@@ -103,6 +103,7 @@
     "imageUploaded": "Slika naložena: {{path}}",
     "imageClipboardUnavailable": "Ta brskalnik ne more brati slik iz odložišča",
     "imageClipboardEmpty": "V odložišču ni bilo najdene nobene slike",
+    "imageDropHint": "Spustite sliko za nalaganje",
     "localShell": "Lokalna terminalna lupina",
     "localBackendUnreachable": "Lokalni strežnik ni dosegljiv",
     "processExited": "Postopek je končan ({{code}})",
@@ -285,10 +286,6 @@
         "label": "Cloudflare Tunnel",
         "description": "Usmeri SSH promet prek Cloudflare Zero Trust z uporabo WebSocketa"
       },
-      "tcpNoDelay": {
-        "label": "Onemogoči Naglejev algoritem (TCP_NODELAY)",
-        "description": "Onemogoči združevanje TCP paketov za zmanjšanje zakasnitve SSH vnosa, zlasti pri povezavah v lokalnem omrežju. To lahko poveča omrežno obremenitev."
-      },
       "cloudflareTunnelHostname": {
         "label": "Ime gostitelja tunela",
         "description": "Javno ime gostitelja Cloudflare Tunnela"
@@ -329,6 +326,9 @@
       },
       "letterSpacing": {
         "label": "Razmik med črkami"
+      },
+      "padding": {
+        "label": "Odmik"
       },
       "lineHeight": {
         "label": "Višina vrstice"
@@ -554,6 +554,7 @@
     "hostNotFound": "Gostitelja ni mogoče najti",
     "letterSpacing": "Razmik med črkami",
     "letterSpacingPx": "Razmik med črkami (px)",
+    "paddingPx": "Odmik (px)",
     "lineHeight": "Višina vrstice",
     "lineHeightLabel": "Višina vrstice",
     "linkClickBehaviorConfirm": "Prikaži pogovorno okno za odpiranje ali kopiranje",

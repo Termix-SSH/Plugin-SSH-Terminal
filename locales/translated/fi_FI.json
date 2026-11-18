@@ -67,7 +67,7 @@
     "searchRegex": "Käytä säännöllistä lauseketta",
     "searchResultCount": "{{index}} / {{count}}",
     "searchWholeWord": "Koko sana",
-    "sessionTakenOver": "Istunto avattiin toisessa välilehdessä. Yhdistetään uudelleen...",
+    "sessionTakenOver": "Tämä istunto avattiin toisessa ikkunassa tai välilehdessä.",
     "tmuxAttached": "Liitetyt asiakkaat",
     "tmuxAttachedCount_one": "{{count}} liitetty",
     "tmuxAttachedCount_other": "{{count}} liitettyä",
@@ -99,6 +99,7 @@
     "imageUploaded": "Kuva ladattu: {{path}}",
     "imageClipboardUnavailable": "Tämä selain ei voi lukea kuvia leikepöydältä",
     "imageClipboardEmpty": "Leikepöydältä ei löytynyt kuvaa",
+    "imageDropHint": "Pudota kuva ladatakseen se",
     "localShell": "Paikallinen komentotulkki",
     "localBackendUnreachable": "Paikallinen backend ei ole tavoitettavissa",
     "processExited": "Prosessi päättyi ({{code}})",
@@ -279,10 +280,6 @@
         "label": "Cloudflare-tunneli",
         "description": "Reititä SSH-liikenne Cloudflare Zero Trustin kautta WebSocketin välityksellä"
       },
-      "tcpNoDelay": {
-        "label": "Poista Naglen algoritmi käytöstä (TCP_NODELAY)",
-        "description": "Poistaa TCP-pakettien erittelyn käytöstä SSH-syötteen latenssin vähentämiseksi, erityisesti LAN-yhteyksissä. Voi lisätä verkkokuluerää."
-      },
       "cloudflareTunnelHostname": {
         "label": "Tunnelin isäntänimi",
         "description": "Cloudflare-tunnelin julkinen isäntänimi"
@@ -323,6 +320,9 @@
       },
       "letterSpacing": {
         "label": "Kirjainväli"
+      },
+      "padding": {
+        "label": "Tyhjää tilaa"
       },
       "lineHeight": {
         "label": "Riviväli"
@@ -548,6 +548,7 @@
     "hostNotFound": "Isäntäpalvelinta ei löydy",
     "letterSpacing": "Kirjainväli",
     "letterSpacingPx": "Kirjainväli (px)",
+    "paddingPx": "Tyhjää tilaa (px)",
     "lineHeight": "Riviväli",
     "lineHeightLabel": "Riviväli",
     "linkClickBehaviorConfirm": "Näytä ponnahdusikkuna avaamiseksi tai kopioimiseksi",
