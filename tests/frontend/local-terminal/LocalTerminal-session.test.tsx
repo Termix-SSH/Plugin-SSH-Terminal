@@ -51,6 +51,10 @@ vi.mock("@termix-ssh/plugin-sdk/ui", () => ({
     dispose() {}
   },
   pluginWsUrl: async () => ({ url: "ws://local", protocols: [] }),
+  // Same rule as the SDK: the frame flag or the Electron bridge.
+  isElectron: () =>
+    (window as { IS_ELECTRON?: boolean }).IS_ELECTRON === true ||
+    !!window.electronAPI,
 }));
 vi.mock("../../../src/frontend/terminal-api", () => ({
   getDefaultAppearance: () => new Promise(() => {}),
@@ -224,4 +228,23 @@ it("selects the focused local tab when xterm initializes after an SSH session", 
     JSON.stringify({ type: "input", data: "local\r" }),
   );
   remove();
+});
+
+it("starts in a plugin frame of the desktop app, which has no electronAPI", async () => {
+  delete window.electronAPI;
+  (window as { IS_ELECTRON?: boolean }).IS_ELECTRON = true;
+  try {
+    render(
+      <LocalTerminal
+        instanceId="instance-frame"
+        sessionId="tab-frame"
+        label="Local"
+        isVisible
+        isFocusedPane
+      />,
+    );
+    await waitFor(() => expect(Socket.sockets.length).toBeGreaterThan(0));
+  } finally {
+    delete (window as { IS_ELECTRON?: boolean }).IS_ELECTRON;
+  }
 });

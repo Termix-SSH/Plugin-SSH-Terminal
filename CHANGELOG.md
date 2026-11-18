@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.2
+
+### Fixed
+
+- The local terminal shows again in the desktop app (needs Termix 26.11.3)
+
 ## 1.4.1
 
 ### Added
