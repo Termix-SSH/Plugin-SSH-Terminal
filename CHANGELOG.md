@@ -5,6 +5,7 @@
 ### Fixed
 
 - The local terminal shows again in the desktop app (needs Termix 26.11.3)
+- People who open a shared session link see the terminal again (needs Termix 26.11.3)
 
 ## 1.4.1
 

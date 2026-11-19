@@ -1,5 +1,9 @@
 // The terminal surfaces need xterm's own stylesheet.
 import "@xterm/xterm/css/xterm.css";
+import {
+  GUEST_TERMINAL_SLOT,
+  GuestShareTerminal,
+} from "./terminal/GuestShareTerminal";
 import { lazy, Suspense, type ComponentType } from "react";
 import { toast } from "sonner";
 import {
@@ -136,6 +140,16 @@ function LocalTerminalTab({
  */
 export function activate(app: TermixApp): void {
   app.onDispose(installTerminalGlobalStyles());
+  // Guest pages only draw shared sessions, through session sharing's slot.
+  app.registerSlotContribution(GUEST_TERMINAL_SLOT, {
+    actionId: "ssh-terminal.guestView",
+    titleKey: "nav.terminal",
+    kind: "component",
+    component: GuestShareTerminal as unknown as ComponentType<
+      Record<string, unknown>
+    >,
+  });
+  if (app.guest) return;
   app.registerTab(
     "terminal",
     TerminalTabWithRegistry as unknown as ComponentType<TabProps>,
