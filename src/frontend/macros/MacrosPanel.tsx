@@ -59,9 +59,9 @@ import {
   type TerminalMacro,
 } from "./terminal-macros";
 import {
-  getSessionHandle,
-  sessionsSnapshot,
-  subscribeSessions,
+  getInputHandle,
+  inputSessionsSnapshot,
+  subscribeInputSessions,
 } from "../session-registry";
 import { docsUrl } from "../docs";
 import { useOpenSettingsPage, rowActionProps } from "../panel-settings";
@@ -478,7 +478,11 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
   const abortRef = useRef<AbortController | null>(null);
   const confirmedRef = useRef<Set<string>>(new Set());
   const movedLocalRef = useRef(false);
-  const sessions = useSyncExternalStore(subscribeSessions, sessionsSnapshot);
+  // The panel runs in its own frame, so it also lists the tabs' sessions.
+  const sessions = useSyncExternalStore(
+    subscribeInputSessions,
+    inputSessionsSnapshot,
+  );
 
   const macros = useMemo(
     () => sanitizeTerminalMacros(settings.values.macros),
@@ -605,7 +609,7 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
 
   const execute = useCallback(
     async (macro: TerminalMacro) => {
-      const terminal = target ? getSessionHandle(target.id) : null;
+      const terminal = target ? getInputHandle(target.id) : null;
       if (!terminal?.sendInput || !terminal.subscribeOutput) {
         toast.error(t("macros.needTerminal"));
         return;
@@ -641,7 +645,7 @@ export function MacrosPanel({ targetTab, active, setEditing }: PanelProps) {
   );
 
   const requestRun = (macro: TerminalMacro) => {
-    if (!target || !getSessionHandle(target.id)?.sendInput) {
+    if (!target || !getInputHandle(target.id)?.sendInput) {
       toast.error(t("macros.needTerminal"));
       return;
     }
