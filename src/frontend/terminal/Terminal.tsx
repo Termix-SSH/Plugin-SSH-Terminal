@@ -1780,6 +1780,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           terminal?.modes?.applicationCursorKeysMode ?? false,
         // What the tab menu's share entry needs, read at call time.
         getShareTarget: () => slotApiRef.current?.getShareTarget() ?? null,
+        openSidePanel: (panelId: string, props?: Record<string, unknown>) =>
+          setDock({ id: panelId, props: props ?? {} }),
         openFileManager: () => openFilesAtCwd(),
         // Asks the server for the shell's working directory.
         getCwd: () => requestCwd(),

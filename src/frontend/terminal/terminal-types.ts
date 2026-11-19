@@ -70,6 +70,8 @@ export interface TerminalHandle {
   resetDisplay: () => void;
   openTool: (view: TerminalToolView) => void;
   getShareTarget: () => unknown;
+  /** Opens a "terminal.sidePanel" contribution, like the toolbar's API. */
+  openSidePanel: (panelId: string, props?: Record<string, unknown>) => void;
   openFileManager: () => void;
   getCwd: () => Promise<string | null>;
 }

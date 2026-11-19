@@ -6,6 +6,7 @@
 
 - The local terminal shows again in the desktop app (needs Termix 26.11.3)
 - People who open a shared session link see the terminal again (needs Termix 26.11.3)
+- Share from the tab or its right-click menu opens the share panel beside the terminal (needs Termix 26.11.3)
 
 ## 1.4.1
 
