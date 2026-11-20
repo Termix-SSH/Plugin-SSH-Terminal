@@ -51,7 +51,7 @@ import {
   isSudoPrompt as isSudoPromptOutput,
   stripAnsi,
   suTargetUser,
-} from "./password-prompt";
+} from "../../shared/password-prompt";
 import {
   highlightTerminalOutput,
   updateControlStringMode,
@@ -350,6 +350,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const fitAddonRef = useRef<FitAddon | null>(null);
     const webSocketRef = useRef<WebSocket | null>(null);
     const cwdWaitersRef = useRef<Array<(path: string) => void>>([]);
+    const fillWaitersRef = useRef<Array<(ok: boolean) => void>>([]);
     const terminalInputDisposableRef = useRef<{ dispose(): void } | null>(null);
     const localEchoRef = useRef<TerminalLocalEcho | null>(null);
     const sessionOriginRef = useRef<"local" | "remote">("local");
@@ -1481,16 +1482,46 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         : hostConfig.password || sudoPassword;
 
       if (!passwordToFill && hostConfig.id) {
+        // A framed view never gets saved passwords; the backend fills them.
+        const lookup = (field: "password" | "sudoPassword") =>
+          getHostPassword(hostConfig.id!, field).catch(() => null);
         passwordToFill = isSudoPrompt
-          ? (await getHostPassword(hostConfig.id, "sudoPassword")) ||
-            (await getHostPassword(hostConfig.id, "password")) ||
+          ? (await lookup("sudoPassword")) ||
+            (await lookup("password")) ||
             undefined
-          : (await getHostPassword(hostConfig.id, "password")) ||
-            (await getHostPassword(hostConfig.id, "sudoPassword")) ||
+          : (await lookup("password")) ||
+            (await lookup("sudoPassword")) ||
             undefined;
       }
 
       return passwordToFill;
+    }
+
+    /** Asks the backend to type the saved password at the waiting prompt. */
+    function requestServerFill(isSudoPrompt: boolean): Promise<boolean> {
+      const socket = webSocketRef.current;
+      if (!socket || socket.readyState !== WebSocket.OPEN) {
+        return Promise.resolve(false);
+      }
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+          fillWaitersRef.current = fillWaitersRef.current.filter(
+            (waiter) => waiter !== done,
+          );
+          resolve(false);
+        }, 5000);
+        const done = (ok: boolean) => {
+          clearTimeout(timer);
+          resolve(ok);
+        };
+        fillWaitersRef.current.push(done);
+        socket.send(
+          JSON.stringify({
+            type: "fill_password",
+            kind: isSudoPrompt ? "sudo" : "login",
+          }),
+        );
+      });
     }
 
     function maybeOfferPasswordFill(strippedData: string) {
@@ -1562,8 +1593,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         if (ok)
           void (async () => {
             const passwordToFill = await resolvePasswordForPrompt(isSudoPrompt);
-            if (
-              passwordToFill &&
+            if (!passwordToFill) {
+              await requestServerFill(isSudoPrompt);
+            } else if (
               webSocketRef.current &&
               webSocketRef.current.readyState === WebSocket.OPEN
             ) {
@@ -1614,7 +1646,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             const password = await getHostPassword(
               Number(match.id),
               "password",
-            );
+            ).catch(() => null);
             if (
               password &&
               webSocketRef.current &&
@@ -1858,12 +1890,19 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             Number.isFinite(Number(saved.id)),
         );
         password = match
-          ? await getHostPassword(Number(match.id), "password")
+          ? await getHostPassword(Number(match.id), "password").catch(
+              () => null,
+            )
           : null;
       } else {
-        password = await resolvePasswordForPrompt(
-          isSudoPromptOutput(outputTailRef.current, lastCommandRef.current),
+        const isSudo = isSudoPromptOutput(
+          outputTailRef.current,
+          lastCommandRef.current,
         );
+        password = await resolvePasswordForPrompt(isSudo);
+        if (!password) {
+          return (await requestServerFill(isSudo)) ? "filled" : "no-password";
+        }
       }
       if (!password) return "no-password";
       // The prompt may have gone while the password loaded.
@@ -2278,6 +2317,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           }
           if (msg.type === "pong") {
             pongReceivedRef.current = true;
+            return;
+          }
+          if (msg.type === "fill_password_result") {
+            fillWaitersRef.current.shift()?.(msg.ok === true);
             return;
           }
           if (msg.type === "resized") {

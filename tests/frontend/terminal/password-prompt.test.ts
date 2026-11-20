@@ -6,7 +6,7 @@ import {
   stripAnsi,
   suTargetUser,
   isAtPasswordPrompt,
-} from "../../../src/frontend/terminal/password-prompt";
+} from "../../../src/shared/password-prompt";
 
 describe("isPasswordPrompt", () => {
   it("matches sudo, sudo-rs, macOS and SSH prompts", () => {
