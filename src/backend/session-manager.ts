@@ -54,6 +54,10 @@ export interface TerminalSession {
 
   outputBuffer: string[];
   outputBufferBytes: number;
+  /** The last few hundred characters of output, to tell when a prompt waits. */
+  outputTail: string;
+  /** The host's sync id when the client sent one, for later lookups. */
+  hostSyncId?: string | null;
   /** Output listeners from the sessions.live service. */
   dataListeners: Set<(data: string) => void>;
   /** Resolves once the recordings service answered; null when off. */
@@ -232,6 +236,7 @@ export class TerminalSessionManager {
       detachTimeout: null,
       outputBuffer: [],
       outputBufferBytes: 0,
+      outputTail: "",
       dataListeners: new Set(),
       recordingSink,
       recording: false,
@@ -910,6 +915,7 @@ export class TerminalSessionManager {
 
     session.outputBuffer.push(data);
     session.outputBufferBytes += data.length;
+    session.outputTail = (session.outputTail + data).slice(-256);
 
     while (
       session.outputBufferBytes > MAX_BUFFER_BYTES &&

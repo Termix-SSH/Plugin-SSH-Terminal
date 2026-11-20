@@ -1,4 +1,14 @@
 import type { TerminalHandle } from "./terminal/terminal-types";
+import {
+  activeRemoteSession,
+  listRemoteSessions,
+  publishFocus,
+  publishSession,
+  publishesSessions,
+  remoteInput,
+  remoteSession,
+  watchRemoteSessions,
+} from "./session-hub";
 
 export interface TerminalSessionInfo {
   id: string;
@@ -50,7 +60,12 @@ export function registerSession(
 ): () => void {
   sessions.set(info.id, { ...info, ref });
   notify();
+  const unpublish = publishSession(
+    info,
+    () => sessions.get(info.id)?.ref ?? null,
+  );
   return () => {
+    unpublish();
     sessions.delete(info.id);
     if (activeId === info.id) activeId = [...sessions.keys()].pop() ?? null;
     notify();
@@ -64,7 +79,9 @@ export function registerLocalSession(
 ): () => void {
   const session = { ...info, hostId: null, kind: "local" as const, ref };
   localSessions.set(info.id, session);
+  const unpublish = publishSession(session, () => ref);
   return () => {
+    unpublish();
     if (localSessions.get(info.id) !== session) return;
     localSessions.delete(info.id);
     // Keep a missing active target missing until focus explicitly selects another.
@@ -106,6 +123,7 @@ export function getSessionInfo(sessionId: string): TerminalSessionInfo | null {
 
 export function setActiveSession(id: string | null): void {
   activeId = id;
+  if (id) publishFocus(id);
 }
 
 export function getActiveSessionId(): string | null {
@@ -117,9 +135,14 @@ export function listSessions(): TerminalSessionInfo[] {
 }
 
 export function listInputSessions(): TerminalSessionInfo[] {
-  return [...sessions.values(), ...localSessions.values()].map(
+  const own = [...sessions.values(), ...localSessions.values()].map(
     ({ ref: _ref, ...info }) => info,
   );
+  const ids = new Set(own.map((session) => session.id));
+  return [
+    ...own,
+    ...listRemoteSessions().filter((session) => !ids.has(session.id)),
+  ];
 }
 
 // Older test fakes and embedders may not report a connection state.
@@ -134,21 +157,103 @@ function send(session: InputSession, text: string, run?: boolean): boolean {
   return true;
 }
 
-export function sendToActive(text: string, opts?: { run?: boolean }): boolean {
+/** Sends to a session a tab in another frame published here. */
+async function sendRemote(
+  session: NonNullable<ReturnType<typeof remoteSession>>,
+  text: string,
+  run?: boolean,
+): Promise<boolean> {
+  try {
+    if ((await session.call("isConnected")) === false) return false;
+    if (run) await session.call("sendInput", text + "\r");
+    else await session.call("paste", text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function sendToActive(
+  text: string,
+  opts?: { run?: boolean },
+): boolean | Promise<boolean> {
   // Falls back to the newest session when none was focused yet.
   const session = activeId
     ? (sessions.get(activeId) ?? localSessions.get(activeId))
     : [...sessions.values()].pop();
-  if (!session) return false;
-  return send(session, text, opts?.run);
+  if (session) return send(session, text, opts?.run);
+  const published = activeRemoteSession();
+  return published ? sendRemote(published, text, opts?.run) : false;
 }
 
 export function sendToSession(
   sessionId: string,
   text: string,
   opts?: { run?: boolean },
-): boolean {
+): boolean | Promise<boolean> {
   const session = sessions.get(sessionId) ?? localSessions.get(sessionId);
-  if (!session) return false;
-  return send(session, text, opts?.run);
+  if (session) return send(session, text, opts?.run);
+  const published = remoteSession(sessionId);
+  return published ? sendRemote(published, text, opts?.run) : false;
+}
+
+// --- Sessions with input, across frames (the macros panel) --------------
+
+let mirrored: TerminalSessionInfo[] = [];
+let inputSnapshot: TerminalSessionInfo[] = [];
+const inputListeners = new Set<() => void>();
+let stopFollowing: (() => void) | null = null;
+
+function refreshInputSnapshot(): void {
+  const own = listSessions();
+  const ids = new Set(own.map((session) => session.id));
+  inputSnapshot = [...own, ...mirrored.filter((item) => !ids.has(item.id))];
+  for (const listener of [...inputListeners]) listener();
+}
+
+function follow(): () => void {
+  const stopLocal = subscribeSessions(refreshInputSnapshot);
+  const stopRemote = publishesSessions()
+    ? watchRemoteSessions((list) => {
+        mirrored = list;
+        refreshInputSnapshot();
+      })
+    : () => {};
+  return () => {
+    stopLocal();
+    stopRemote();
+    mirrored = [];
+  };
+}
+
+/**
+ * Like subscribeSessions, plus the sessions tabs in other frames hold, for
+ * a panel that only types into them.
+ */
+export function subscribeInputSessions(listener: () => void): () => void {
+  inputListeners.add(listener);
+  stopFollowing ??= follow();
+  refreshInputSnapshot();
+  return () => {
+    inputListeners.delete(listener);
+    if (inputListeners.size > 0 || !stopFollowing) return;
+    stopFollowing();
+    stopFollowing = null;
+  };
+}
+
+export function inputSessionsSnapshot(): TerminalSessionInfo[] {
+  return inputSnapshot;
+}
+
+/** Typing and output for a session, here or in another frame. */
+export function getInputHandle(sessionId: string): {
+  sendInput: (data: string) => void;
+  subscribeOutput: (listener: (data: string) => void) => () => void;
+} | null {
+  const own = sessions.get(sessionId)?.ref;
+  if (own) return own;
+  return mirrored.some((item) => item.id === sessionId)
+    ? remoteInput(sessionId)
+    : null;
 }

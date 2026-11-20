@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   isPasswordPrompt as endsInPasswordPrompt,
   isSudoPrompt as isSudoPromptOutput,
-} from "../../../src/frontend/terminal/password-prompt";
+} from "../../../src/shared/password-prompt";
 
 // Runs the terminal's real prompt handling with fakes around it.
 const source = fs.readFileSync("src/frontend/terminal/Terminal.tsx", "utf8");

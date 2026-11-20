@@ -122,6 +122,7 @@
     }
   ],
   "contributes": {
+    "guest": true,
     "tabs": [
       {
         "id": "terminal",
@@ -914,7 +915,12 @@
         "id": "toggleBroadcast"
       }
     ],
-    "uses": ["files.openEditor", "files.openHost", "snippets.startupCommand"],
+    "uses": [
+      "files.openEditor",
+      "files.openHost",
+      "session.terminalView",
+      "snippets.startupCommand"
+    ],
     "operations": {
       "actions": [
         {
