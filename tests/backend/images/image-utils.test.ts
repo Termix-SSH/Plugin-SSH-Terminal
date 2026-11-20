@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   exceedsImageStorageLimit,
   exceedsNormalizedImageSize,
-  imageExtensionForFormat,
+  imageExtensionForBytes,
   createConcurrencyLimiter,
   isExpiredImage,
   isImageFilename,
@@ -22,12 +22,44 @@ describe("terminal image utilities", () => {
     expect(isImageFilename("b797234d-eb5d-4b1b-b7f3-17c26f257506")).toBe(false);
   });
 
-  it("maps decoded raster formats while excluding SVG", () => {
-    expect(imageExtensionForFormat("jpeg")).toBe("jpg");
-    expect(imageExtensionForFormat("heif")).toBe("heif");
-    expect(imageExtensionForFormat("tiff")).toBe("tiff");
-    expect(imageExtensionForFormat("svg")).toBeUndefined();
-    expect(imageExtensionForFormat(undefined)).toBeUndefined();
+  it("tells an image's type from its first bytes", () => {
+    const bytes = (...parts: Array<string | number[]>) =>
+      Buffer.concat(
+        parts.map((part) =>
+          typeof part === "string"
+            ? Buffer.from(part, "latin1")
+            : Buffer.from(part),
+        ),
+      );
+    // An ftyp box: size, "ftyp", major brand, minor version, compatible brands.
+    const ftyp = (...brands: string[]) => {
+      const box = bytes([0, 0, 0, 0], "ftyp", brands[0]!, [0, 0, 0, 0]);
+      const all = Buffer.concat([box, bytes(...brands.slice(1))]);
+      all.writeUInt32BE(all.length, 0);
+      return all;
+    };
+    const cases: Array<[Buffer, string | undefined]> = [
+      [bytes([0x89], "PNG\r\n", [0x1a, 0x0a]), "png"],
+      [bytes([0xff, 0xd8, 0xff, 0xe0]), "jpg"],
+      [bytes("GIF89a"), "gif"],
+      [bytes("RIFF", [1, 0, 0, 0], "WEBPVP8L"), "webp"],
+      [bytes("II*", [0]), "tiff"],
+      [bytes("MM", [0, 0x2a]), "tiff"],
+      [bytes([0, 0, 0, 0x0c], "jP  \r\n", [0x87, 0x0a]), "jp2"],
+      [bytes([0xff, 0x0a]), "jxl"],
+      [ftyp("avif", "mif1", "miaf"), "avif"],
+      [ftyp("mif1", "mif1", "avif"), "avif"],
+      [ftyp("heic", "mif1", "heic"), "heic"],
+      [ftyp("mif1", "mif1"), "heif"],
+      [ftyp("isom", "isom", "mp41"), undefined],
+      [bytes("<svg xmlns='http://www.w3.org/2000/svg'/>"), undefined],
+      [bytes("BM"), undefined],
+      [bytes("RIFF", [1, 0, 0, 0], "WAVE"), undefined],
+      [Buffer.alloc(0), undefined],
+    ];
+    for (const [input, extension] of cases) {
+      expect(imageExtensionForBytes(input)).toBe(extension);
+    }
   });
 
   it("rejects normalized output beyond the byte ceiling", () => {

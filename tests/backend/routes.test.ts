@@ -1,5 +1,21 @@
 import { afterEach, describe, expect, it } from "vitest";
+import fs from "fs/promises";
+import os from "os";
+import path from "path";
+import { PNG } from "pngjs";
 import { startServer, type TestServer } from "./helpers";
+import {
+  BLUE,
+  closeTo,
+  halves,
+  jpegClaiming,
+  jpegImage,
+  noisyJpeg,
+  pixelAt,
+  pngImage,
+  RED,
+  WEBP_BYTES,
+} from "./images/image-fixtures";
 
 let server: TestServer | null = null;
 
@@ -212,6 +228,107 @@ describe("file upload", () => {
     const result = await server.request("POST", "/file-upload", { body: form });
     expect(result.status).toBe(400);
     expect(result.body.code).toBe("LIMIT_UNEXPECTED_FILE");
+  });
+});
+
+describe("image upload", () => {
+  let dir: string | null = null;
+
+  afterEach(async () => {
+    if (dir) await fs.rm(dir, { recursive: true, force: true });
+    dir = null;
+  });
+
+  /** Uploads one image with storage in a local folder; returns the stored file. */
+  async function uploadImage(bytes: Buffer, name: string) {
+    dir = await fs.mkdtemp(path.join(os.tmpdir(), "termix-image-upload-"));
+    server = await startServer({
+      settings: {
+        imageStorageMode: "local",
+        imageLocalDir: dir,
+        imageHostPath: "/mnt/termix-images",
+      },
+    });
+    const form = new FormData();
+    form.append("image", new Blob([new Uint8Array(bytes)]), name);
+    form.append("instanceId", "tab-1");
+    form.append("source", "file");
+    const result = await server.request("POST", "/image-upload", {
+      body: form,
+    });
+    const stored =
+      result.status === 200
+        ? await fs.readFile(path.join(dir, result.body.filename))
+        : null;
+    return { ...result, stored };
+  }
+
+  it("stores a PNG as a PNG", async () => {
+    const pixels = halves(8, 4);
+    const result = await uploadImage(pngImage(8, 4, pixels), "shot.png");
+    expect(result.status).toBe(200);
+    expect(result.body.filename).toMatch(/^[0-9a-f-]{36}\.png$/);
+    expect(result.body.shellPath).toBe(
+      `/mnt/termix-images/${result.body.filename}`,
+    );
+    const png = PNG.sync.read(result.stored!);
+    expect(png.data).toEqual(pixels);
+  });
+
+  it("stores a JPEG with EXIF orientation 6 as an upright PNG", async () => {
+    const result = await uploadImage(jpegImage(32, 16, 6), "photo.jpg");
+    expect(result.status).toBe(200);
+    expect(result.body.filename).toMatch(/\.png$/);
+    const png = PNG.sync.read(result.stored!);
+    expect([png.width, png.height]).toEqual([16, 32]);
+    expect(closeTo(pixelAt(png, 8, 4), RED)).toBe(true);
+    expect(closeTo(pixelAt(png, 8, 28), BLUE)).toBe(true);
+  });
+
+  it("stores a WebP as it came", async () => {
+    // Named .png on purpose: the type comes from the bytes.
+    const result = await uploadImage(WEBP_BYTES, "sticker.png");
+    expect(result.status).toBe(200);
+    expect(result.body.filename).toMatch(/^[0-9a-f-]{36}\.webp$/);
+    expect(result.stored).toEqual(WEBP_BYTES);
+  });
+
+  it("stores a JPEG over 16 MP as it came", async () => {
+    const jpeg = jpegClaiming(4200, 4000, 6);
+    const result = await uploadImage(jpeg, "photo.jpg");
+    expect(result.status).toBe(200);
+    expect(result.body.filename).toMatch(/^[0-9a-f-]{36}\.jpg$/);
+    expect(result.stored).toEqual(jpeg);
+  });
+
+  it("stores a photo as it came when its PNG would be over 10 MB", async () => {
+    // About 7 MB as a JPEG and 12 MB as a PNG.
+    const jpeg = noisyJpeg(2000, 2000);
+    const result = await uploadImage(jpeg, "photo.jpg");
+    expect(result.status).toBe(200);
+    expect(result.body.filename).toMatch(/^[0-9a-f-]{36}\.jpg$/);
+    expect(result.stored!.equals(jpeg)).toBe(true);
+  });
+
+  it("refuses an image over 10 MB as it came", async () => {
+    // Over 16 MP, so kept as it came, and padded past 10 MB.
+    const jpeg = Buffer.concat([
+      jpegClaiming(4200, 4000),
+      Buffer.alloc(11 * 1024 * 1024),
+    ]);
+    const result = await uploadImage(jpeg, "photo.jpg");
+    expect(result.status).toBe(413);
+    expect(result.body).toEqual({
+      error: "Image is larger than 10 MB",
+      code: "IMAGE_NORMALIZED_SIZE_LIMIT",
+    });
+  });
+
+  it("refuses a file that is not an image it knows", async () => {
+    const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"/>');
+    const result = await uploadImage(svg, "logo.png");
+    expect(result.status).toBe(400);
+    expect(result.body.code).toBe("IMAGE_FORMAT_UNSUPPORTED");
   });
 });
 

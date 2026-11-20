@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.1
+
+### Changed
+
+- A JPEG over 16 megapixels is stored as it came instead of as an upright PNG, because converting a photo that size could run the terminal's backend out of memory
+- An image that would be over the 10 MB limit as a PNG, like most phone photos, is stored as it came instead of being refused, as long as the file itself is under 10 MB
+
+### Fixed
+
+- Pasting or dropping an image works again (needs Termix 26.11.3). Plugins can't load native modules any more, so a PNG or JPEG is now turned into an upright PNG in plain JavaScript, and a GIF, WebP, AVIF, HEIC/HEIF, TIFF, JPEG 2000 or JPEG XL image is stored as it came, with its own extension
+
 ## 1.5.0
 
 ### Added

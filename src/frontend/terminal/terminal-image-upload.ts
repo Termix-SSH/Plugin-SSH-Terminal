@@ -14,8 +14,9 @@ export function buildImageUploadFormData(
   return form;
 }
 
-// The image types the backend decodes and stores as PNG. Any other dropped
-// file, an SVG or a BMP included, is uploaded as it is.
+// The image types the backend takes as images: a PNG or JPEG is stored as an
+// upright PNG, the others as they came. Any other dropped file, an SVG or a
+// BMP included, is uploaded as a file.
 const CONVERTIBLE_IMAGE_TYPES = new Set([
   "image/avif",
   "image/gif",

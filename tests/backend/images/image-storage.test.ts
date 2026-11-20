@@ -107,6 +107,16 @@ describe("storeImageLocally", () => {
     );
   });
 
+  it("names an image stored as it came by its own extension", async () => {
+    const stored = await storeImageLocally(
+      PNG_BYTES,
+      settings({ localDir: dir, hostPath: "/host-view/images" }),
+      "webp",
+    );
+    expect(stored.filename).toBe(`${stored.id}.webp`);
+    expect(stored.shellPath).toBe(`/host-view/images/${stored.id}.webp`);
+  });
+
   it("rejects with IMAGE_STORAGE_LIMIT_REACHED when the count cap is full", async () => {
     await seedFile(10);
     const error = await storeImageLocally(
@@ -337,6 +347,44 @@ describe("storeImageViaSftp", () => {
     expect(stored.storage).toBe("remote-sftp");
     expect(stored.shellPath).toBe(`${REMOTE_IMAGE_DIR}/${stored.id}.png`);
     expect(written.get(stored.shellPath)).toEqual(PNG_BYTES);
+  });
+
+  it("names an image stored as it came by its own extension", async () => {
+    const { sftp, written } = fakeSftp({});
+    const stored = await storeImageViaSftp(sftp, PNG_BYTES, {
+      extension: "heic",
+    });
+    expect(stored.filename).toBe(`${stored.id}.heic`);
+    expect(stored.shellPath).toBe(`${REMOTE_IMAGE_DIR}/${stored.id}.heic`);
+    expect(written.get(stored.shellPath)).toEqual(PNG_BYTES);
+  });
+
+  it("counts and expires images of every stored type, not only PNGs", async () => {
+    const nowMs = 10_000_000;
+    const expiredWebp = `${randomUUID()}.webp`;
+    const unlinked: string[] = [];
+    const limited = fakeSftp({
+      readdirEntries: [{ filename: `${randomUUID()}.avif`, size: 12 }],
+    });
+    const error = await storeImageViaSftp(limited.sftp, PNG_BYTES, {
+      maxCount: 1,
+      maxBytes: 1024,
+    }).catch((caught: unknown) => caught);
+    expect((error as TerminalImageStorageError).code).toBe(
+      "IMAGE_STORAGE_LIMIT_REACHED",
+    );
+
+    const { sftp } = fakeSftp({});
+    sftp.readdir = (_dir, callback) =>
+      callback(undefined, [
+        { filename: expiredWebp, attrs: { mtime: (nowMs - 7_200_000) / 1000 } },
+      ]);
+    sftp.unlink = (remotePath, callback) => {
+      unlinked.push(remotePath);
+      callback();
+    };
+    await storeImageViaSftp(sftp, PNG_BYTES, { ttlMs: 3_600_000, nowMs });
+    expect(unlinked).toEqual([`${REMOTE_IMAGE_DIR}/${expiredWebp}`]);
   });
 
   it("requests restrictive modes for the remote directory and file", async () => {
