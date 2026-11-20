@@ -1,4 +1,4 @@
-import { stripAnsi } from "../../terminal/password-prompt";
+import { stripAnsi } from "../../../shared/password-prompt";
 
 export type WatchKind = "match" | "quiet" | "activity";
 

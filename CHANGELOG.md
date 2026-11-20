@@ -7,6 +7,8 @@
 - The local terminal shows again in the desktop app (needs Termix 26.11.3)
 - People who open a shared session link see the terminal again (needs Termix 26.11.3)
 - Share from the tab or its right-click menu opens the share panel beside the terminal (needs Termix 26.11.3)
+- Filling the saved password or sudo password at a prompt works again
+- The SSH login check no longer runs on hosts with SSH turned off, even when the Terminal setting is still on
 
 ## 1.4.1
 

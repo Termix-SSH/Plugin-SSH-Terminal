@@ -35,6 +35,7 @@ import {
   authFollowUp,
   type TerminalLogger,
 } from "./helpers.js";
+import { isAtPasswordPrompt, stripAnsi } from "../shared/password-prompt.js";
 import { SSHAuthManager } from "./keyboard-prompt.js";
 import { HOST_KEYS } from "./settings.js";
 import {
@@ -869,6 +870,17 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               ws.send(JSON.stringify({ type: "pong" }));
               break;
 
+            case "fill_password": {
+              const kind =
+                (data as { kind?: unknown } | null)?.kind === "sudo"
+                  ? "sudo"
+                  : "login";
+              void fillSavedPassword(kind).then((ok) =>
+                ws.send(JSON.stringify({ type: "fill_password_result", ok })),
+              );
+              break;
+            }
+
             case "zinput": {
               const bytes = decodeZmodemInput(data);
               const zStream =
@@ -1440,6 +1452,37 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
           }),
         );
       });
+      return true;
+    }
+
+    /**
+     * Types the host's saved password at the prompt the terminal waits at.
+     * The terminal view runs in a frame that never gets saved passwords, so
+     * it asks for this instead. Only the session's owner can, and only while
+     * the output ends in a password prompt.
+     */
+    async function fillSavedPassword(kind: "sudo" | "login"): Promise<boolean> {
+      if (isJoiner || !currentSessionId) return false;
+      const session = sessionManager.getSession(currentSessionId);
+      if (!session || session.userId !== userId) return false;
+      if (!isAtPasswordPrompt(stripAnsi(session.outputTail))) return false;
+      const stream = session.sshStream ?? sshStream;
+      if (!stream) return false;
+      const host = (await ctx.ssh
+        .resolveHost(session.hostId, {
+          syncId: session.hostSyncId ?? null,
+        } as { syncId?: string | null })
+        .catch(() => null)) as {
+        password?: unknown;
+        sudoPassword?: unknown;
+      } | null;
+      const password =
+        kind === "sudo"
+          ? host?.sudoPassword || host?.password
+          : host?.password || host?.sudoPassword;
+      if (typeof password !== "string" || !password) return false;
+      session.outputTail = "";
+      stream.write(`${password}\n`);
       return true;
     }
 
@@ -2038,6 +2081,10 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             tabInstanceId,
             sessionLoggingEnabled,
           );
+          const createdSession = sessionManager.getSession(currentSessionId);
+          if (createdSession && !createdSession.hostSyncId) {
+            createdSession.hostSyncId = hostSyncId ?? null;
+          }
 
           // If createSession returned an existing live session (duplicate tabInstanceId),
           // close the newly-established SSH connection and attach this WS to the live session instead.
