@@ -60,6 +60,7 @@ import {
 } from "./terminal-tools/watch/watch-store";
 import { TabBarToolsButton } from "./terminal-tools/TabBarToolsButton";
 import { MacrosPanel } from "./macros/MacrosPanel";
+import { connectSessionHub } from "./session-hub";
 import {
   TERMINAL_KEYBINDING_DEFAULTS,
   validateSendControlCode,
@@ -140,6 +141,8 @@ function LocalTerminalTab({
  */
 export function activate(app: TermixApp): void {
   app.onDispose(installTerminalGlobalStyles());
+  // Tabs, actions and panels each run in their own frame: share the sessions.
+  connectSessionHub(app);
   // Guest pages only draw shared sessions, through session sharing's slot.
   app.registerSlotContribution(GUEST_TERMINAL_SLOT, {
     actionId: "ssh-terminal.guestView",
