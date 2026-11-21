@@ -22,9 +22,19 @@ export function registerOperations(
 
   ctx.operations.register("ssh-terminal.check-login", {
     run: async (_input, context) => {
+      const hostId = requireHost(context);
+      // The Terminal setting and the host's SSH switch are separate, so a
+      // host with SSH turned off can still match this action's when rule.
+      const host = await ctx.hosts?.get?.(hostId).catch(() => null);
+      if (host?.enableSsh === false) {
+        return {
+          summary: "SSH is off",
+          data: { value: null, status: "unknown", label: "SSH is off" },
+        };
+      }
       const started = Date.now();
       try {
-        const result = await ctx.ssh.exec(requireHost(context), "true", {
+        const result = await ctx.ssh.exec(hostId, "exit 0", {
           purpose: "ssh-login-check",
           timeoutMs: 20000,
         });

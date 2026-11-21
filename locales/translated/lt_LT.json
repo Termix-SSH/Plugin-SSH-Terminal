@@ -103,7 +103,9 @@
     "imageUploaded": "Paveikslėlis įkeltas: {{path}}",
     "imageClipboardUnavailable": "Šis naršyklė negali skaityti paveikslėlių iš iškarpinės",
     "imageClipboardEmpty": "Iškarpinėje nerastas joks paveikslėlis",
-    "imageDropHint": "Nukreipkite paveikslėlį, kad jį įkeltumėte",
+    "fileDropHint": "Nukreipkite failą, kad jį įkeltumėte",
+    "fileDropFolder": "Aplankų įkelti negalima. Vietoj to nukreipkite juose esančius failus",
+    "fileTooLarge": "{{name}} yra didesnis nei 50 MB. Didesnius failus įkelkite naudodami rz arba failų tvarkytuvę",
     "localShell": "Vietinis terminalo shell",
     "localBackendUnreachable": "Vietinis galinis serveris nepasiekiamas",
     "processExited": "Procesas baigtas ({{code}})",
@@ -111,6 +113,9 @@
     "sessionExpiredLogin": "Jūsų Termix sesija baigėsi. Prisijunkite iš naujo.",
     "imageUploadFailed": "Nepavyko įkelti paveikslėlio",
     "imageUploadedNotPasted": "Paveikslėlis įkeltas, bet terminalas nebuvo atidarytas, kad jį įklijuotumėte: {{path}}",
+    "fileUploaded": "Failas įkeltas: {{path}}",
+    "fileUploadFailed": "Nepavyko įkelti failo",
+    "fileUploadedNotPasted": "Failas įkeltas, bet terminalas nebuvo atidarytas, kad jį įklijuotumėte: {{path}}",
     "clipboardImageReadFailed": "Nepavyko perskaityti iškarpinės",
     "autocompleteHintComplete": "Tab arba Enter, kad užbaigtumėte",
     "autocompleteHintNavigate": "↑↓ naršymui",
@@ -123,7 +128,13 @@
     "secretCancel": "Atšaukti",
     "hideSecret": "Slėpti slaptažodį",
     "showSecret": "Rodyti slaptažodį",
-    "sessionEndedKeepOpen": "Sesija baigta. Paspauskite Enter, kad prisijungtumėte iš naujo."
+    "sessionEndedKeepOpen": "Sesija baigta. Paspauskite Enter, kad prisijungtumėte iš naujo.",
+    "askUsername": {
+      "title": "Prisijungti kaip",
+      "description": "{{host}} kiekvieną kartą prašo vartotojo vardo. Įveskite tą, kuriuo norite prisijungti.",
+      "connect": "Prisijungti",
+      "cancelled": "Vartotojo vardas nebuvo pateiktas"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Atsijungti nuo tmux",
@@ -196,7 +207,8 @@
       "group": {
         "touch": "Liečiamasis įvestis",
         "images": "Paveikslėlių saugykla",
-        "sessions": "Sesijos"
+        "sessions": "Sesijos",
+        "x11": "X11 persiuntimas"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminalo sesijos išlaikymas",
@@ -236,6 +248,11 @@
       "sessionPersistence": {
         "label": "Išlaikyti sesijas atjungus",
         "description": "Išlaikyti atjungtą terminalą aktyvų serveryje aukščiau nurodytą laiką, kad atidarius jo skirtuką būtų tęsiama nuo ten, kur buvo palikta."
+      },
+      "x11Display": {
+        "label": "X serveris X11 persiuntimui",
+        "description": "Kur atsiveria langai iš hostų, kuriuose įjungtas X11 persiuntimas, pvz., localhost:0. Jis turi būti pasiekiamas iš Termix serverio, todėl tai daugiausia skirta darbalaukio programai su VcXsrv, XQuartz arba Xwayland šiame kompiuteryje. Palikite tuščią, kad išjungtumėte X11 persiuntimą.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -421,6 +438,10 @@
       },
       "keepOpenOnExit": {
         "label": "Išėjus palikti skirtuką atidarytą"
+      },
+      "forwardX11": {
+        "label": "X11 persiuntimas",
+        "description": "Rodyti grafinių programų langus, kuriuos paleidžiate terminale, pvz., xclock ar nustatymų įrankį. Reikia nustatyti X serverį Nustatymuose, SSH terminale ir hoste įjungti X11Forwarding yes."
       }
     },
     "user": {
@@ -458,6 +479,14 @@
       "copyOnSelect": {
         "label": "Automatiškai kopijuoti pažymėtą tekstą",
         "description": "Tekstas kopijuojamas iškart jį pažymėjus terminale."
+      },
+      "gpuRendering": {
+        "label": "GPU vaizdavimas",
+        "description": "Terminalą piešti naudojant WebGL, kas gerai tinka intensyviam išvesties srautui. Išjunkite, jei tekstas atrodo neteisingai."
+      },
+      "inlineImages": {
+        "label": "Vaizdai tekste",
+        "description": "Rodyti vaizdus, kuriuos programos išveda naudodamos sixel arba iTerm vaizdo formatą, pvz., chafa ar yazi peržiūras."
       }
     }
   },

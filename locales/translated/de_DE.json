@@ -99,7 +99,9 @@
     "imageUploaded": "Bild hochgeladen: {{path}}",
     "imageClipboardUnavailable": "Dieser Browser kann keine Bilder aus der Zwischenablage lesen",
     "imageClipboardEmpty": "Kein Bild in der Zwischenablage gefunden",
-    "imageDropHint": "Bild ablegen, um es hochzuladen",
+    "fileDropHint": "Datei hier ablegen, um sie hochzuladen",
+    "fileDropFolder": "Ordner können nicht hochgeladen werden. Legen Sie stattdessen die Dateien darin ab.",
+    "fileTooLarge": "{{name}} ist größer als 50 MB. Laden Sie größere Dateien mit rz oder einem Dateimanager hoch.",
     "localShell": "Lokale Terminal-Shell",
     "localBackendUnreachable": "Der lokale Backend-Server ist nicht erreichbar",
     "processExited": "Prozess beendet ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Ihre Termix-Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
     "imageUploadFailed": "Bild-Upload fehlgeschlagen",
     "imageUploadedNotPasted": "Bild wurde hochgeladen, aber das Terminal war nicht geöffnet, um es einzufügen: {{path}}",
+    "fileUploaded": "Datei hochgeladen: {{path}}",
+    "fileUploadFailed": "Dateiupload fehlgeschlagen",
+    "fileUploadedNotPasted": "Datei hochgeladen, aber das Terminal war nicht geöffnet, um sie einzufügen: {{path}}",
     "clipboardImageReadFailed": "Die Zwischenablage konnte nicht gelesen werden",
     "autocompleteHintComplete": "Tab oder Enter zum Vervollständigen",
     "autocompleteHintNavigate": "↑↓ zum Navigieren",
@@ -119,7 +124,13 @@
     "secretCancel": "Abbrechen",
     "hideSecret": "Secret ausblenden",
     "showSecret": "Secret anzeigen",
-    "sessionEndedKeepOpen": "Sitzung beendet. Drücken Sie Enter, um die Verbindung wiederherzustellen."
+    "sessionEndedKeepOpen": "Sitzung beendet. Drücken Sie Enter, um die Verbindung wiederherzustellen.",
+    "askUsername": {
+      "title": "Anmelden als",
+      "description": "{{host}} fragt jedes Mal nach einem Benutzernamen. Geben Sie den ein, mit dem Sie sich anmelden möchten.",
+      "connect": "Verbinden",
+      "cancelled": "Kein Benutzername angegeben"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmux trennen",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Touch-Eingabe",
         "images": "Bildspeicher",
-        "sessions": "Sitzungen"
+        "sessions": "Sitzungen",
+        "x11": "X11-Weiterleitung"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistenz der Terminal-Sitzung",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Sitzungen nach Trennung beibehalten",
         "description": "Behalten Sie eine getrennte Terminal-Sitzung auf dem Server für die oben angegebene Zeit, sodass das erneute Öffnen des Tabs dort weitermacht, wo er aufgehört hat."
+      },
+      "x11Display": {
+        "label": "X-Server für X11-Weiterleitung",
+        "description": "Wo Fenster von Hosts mit X11-Weiterleitung angezeigt werden, z. B. localhost:0. Er muss vom Termix-Server aus erreichbar sein, daher ist dies hauptsächlich für die Desktop-App mit VcXsrv, XQuartz oder Xwayland auf diesem Computer gedacht. Leer lassen, um die X11-Weiterleitung zu deaktivieren.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Tab beim Beenden offen halten"
+      },
+      "forwardX11": {
+        "label": "X11-Weiterleitung",
+        "description": "Zeigt Fenster von grafischen Programmen an, die Sie im Terminal starten, wie z. B. xclock oder ein Einstellungstool. Erfordert einen in den Einstellungen konfigurierten X-Server, SSH-Terminal und X11Forwarding yes auf dem Host."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Ausgewählten Text automatisch kopieren",
         "description": "Kopiert den Text, sobald Sie ihn im Terminal auswählen."
+      },
+      "gpuRendering": {
+        "label": "GPU-Rendering",
+        "description": "Zeichnet das Terminal mit WebGL, was bei hoher Ausgabe gut mithält. Deaktivieren, wenn der Text falsch dargestellt wird."
+      },
+      "inlineImages": {
+        "label": "Inline-Bilder",
+        "description": "Zeigt Bilder an, die Programme mit Sixel oder dem iTerm-Bildformat ausgeben, wie z. B. chafa oder yazi-Vorschauen."
       }
     }
   },

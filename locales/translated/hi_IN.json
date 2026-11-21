@@ -67,7 +67,7 @@
     "searchRegex": "रेगुलर एक्सप्रेशन का उपयोग करें",
     "searchResultCount": "{{count}} में से {{index}}",
     "searchWholeWord": "पूरा शब्द मैच करें",
-    "sessionTakenOver": "यह सत्र किसी अन्य विंडो या टैब में खोला गया था।",
+    "sessionTakenOver": "यह सेशन किसी अन्य विंडो या टैब में खोला गया था।",
     "tmuxAttached": "जुड़े हुए क्लाइंट",
     "tmuxAttachedCount_one": "{{count}} जुड़ा हुआ",
     "tmuxAttachedCount_other": "{{count}} जुड़े हुए",
@@ -99,7 +99,9 @@
     "imageUploaded": "इमेज अपलोड की गई: {{path}}",
     "imageClipboardUnavailable": "यह ब्राउज़र क्लिपबोर्ड से इमेज नहीं पढ़ सकता",
     "imageClipboardEmpty": "क्लिपबोर्ड में कोई इमेज नहीं मिली",
-    "imageDropHint": "अपलोड करने के लिए एक छवि छोड़ें",
+    "fileDropHint": "अपलोड करने के लिए फ़ाइल यहाँ छोड़ें",
+    "fileDropFolder": "फ़ोल्डर अपलोड नहीं किए जा सकते। इसके बजाय उनमें मौजूद फ़ाइलें छोड़ें",
+    "fileTooLarge": "{{name}} 50 MB से बड़ी है। rz या फ़ाइल मैनेजर का उपयोग करके बड़ी फ़ाइलें अपलोड करें",
     "localShell": "लोकल टर्मिनल शेल",
     "localBackendUnreachable": "स्थानीय बैकएंड तक पहुंच नहीं है",
     "processExited": "प्रक्रिया समाप्त हो गई ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "आपकी Termix सत्र समाप्त हो गया है। फिर से साइन इन करें।",
     "imageUploadFailed": "छवि अपलोड विफल",
     "imageUploadedNotPasted": "छवि अपलोड हो गई, लेकिन टर्मिनल पेस्ट करने के लिए खुला नहीं था: {{path}}",
+    "fileUploaded": "फ़ाइल अपलोड की गई: {{path}}",
+    "fileUploadFailed": "फ़ाइल अपलोड विफल",
+    "fileUploadedNotPasted": "फ़ाइल अपलोड की गई, लेकिन पेस्ट करने के लिए टर्मिनल खुला नहीं था: {{path}}",
     "clipboardImageReadFailed": "क्लिपबोर्ड पढ़ा नहीं जा सका",
     "autocompleteHintComplete": "पूर्ण करने के लिए Tab या Enter दबाएं",
     "autocompleteHintNavigate": "नेविगेट करने के लिए ↑↓",
@@ -119,7 +124,13 @@
     "secretCancel": "रद्द करें",
     "hideSecret": "सीक्रेट छिपाएं",
     "showSecret": "सीक्रेट दिखाएं",
-    "sessionEndedKeepOpen": "सत्र समाप्त हो गया। पुनः कनेक्ट करने के लिए Enter दबाएँ।"
+    "sessionEndedKeepOpen": "सत्र समाप्त हो गया। पुनः कनेक्ट करने के लिए Enter दबाएँ।",
+    "askUsername": {
+      "title": "इस रूप में लॉग इन करें",
+      "description": "{{host}} हर बार उपयोगकर्ता नाम मांगता है। लॉग इन करने के लिए जो उपयोगकर्ता नाम उपयोग करना है, उसे टाइप करें।",
+      "connect": "कनेक्ट करें",
+      "cancelled": "कोई उपयोगकर्ता नाम नहीं दिया गया"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmux डिटेच करें",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "टच इनपुट",
         "images": "इमेज स्टोरेज",
-        "sessions": "सत्र"
+        "sessions": "सत्र",
+        "x11": "X11 फॉरवर्डिंग"
       },
       "sessionTimeoutMinutes": {
         "label": "टर्मिनल सत्र टिकाऊपन",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "डिस्कनेक्ट के बाद सत्र बनाए रखें",
         "description": "उपर्युक्त समय के लिए सर्वर पर डिस्कनेक्ट किए गए टर्मिनल को सक्रिय रखें, ताकि इसके टैब को फिर से खोलने पर वहीँ से आगे बढ़ा जा सके जहाँ छोड़ा गया था।"
+      },
+      "x11Display": {
+        "label": "X11 फॉरवर्डिंग के लिए X सर्वर",
+        "description": "X11 फॉरवर्डिंग वाले होस्ट से विंडो कहाँ दिखाई देंगी, जैसे localhost:0। यह Termix सर्वर से पहुँच योग्य होना चाहिए, इसलिए यह मुख्य रूप से इस कंप्यूटर पर VcXsrv, XQuartz या Xwayland वाले डेस्कटॉप ऐप के लिए है। X11 फॉरवर्डिंग बंद करने के लिए इसे खाली छोड़ दें।",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "बाहर निकलने पर टैब खुला रखें"
+      },
+      "forwardX11": {
+        "label": "X11 फॉरवर्डिंग",
+        "description": "टर्मिनल में शुरू की गई ग्राफिकल प्रोग्रामों की विंडो दिखाएं, जैसे xclock या सेटिंग्स टूल। इसके लिए सेटिंग्स में X सर्वर सेट होना चाहिए, SSH टर्मिनल, और होस्ट पर X11Forwarding yes होना चाहिए।"
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "चयनित टेक्स्ट स्वचालित रूप से कॉपी करें",
         "description": "जैसे ही आप टर्मिनल में टेक्स्ट चयन करते हैं, उसे कॉपी करता है"
+      },
+      "gpuRendering": {
+        "label": "GPU रेंडरिंग",
+        "description": "WebGL का उपयोग करके टर्मिनल को ड्रा करें, जो भारी आउटपुट के साथ चलता है। यदि टेक्स्ट गलत दिखे तो इसे बंद करें।"
+      },
+      "inlineImages": {
+        "label": "इनलाइन इमेज",
+        "description": "सिक्सल या iTerm इमेज फॉर्मेट के साथ प्रोग्राम द्वारा प्रिंट की गई तस्वीरें दिखाएं, जैसे chafa या yazi पूर्वावलोकन।"
       }
     }
   },

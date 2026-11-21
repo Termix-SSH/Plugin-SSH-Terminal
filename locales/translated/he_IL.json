@@ -101,7 +101,9 @@
     "imageUploaded": "התמונה הועלתה: {{path}}",
     "imageClipboardUnavailable": "דפדפן זה אינו יכול לקרוא תמונות מהלוח",
     "imageClipboardEmpty": "לא נמצאה תמונה בלוח",
-    "imageDropHint": "גרור תמונה לכאן כדי להעלות אותה",
+    "fileDropHint": "גרור קובץ לכאן כדי להעלות אותו",
+    "fileDropFolder": "לא ניתן להעלות תיקיות. גרור את הקבצים בתוכן במקום זאת",
+    "fileTooLarge": "{{name}} גדול מ-50 MB. העלה קבצים גדולים יותר באמצעות rz או מנהל קבצים",
     "localShell": "Shell של מסוף מקומי",
     "localBackendUnreachable": "לא ניתן להגיע לשרת המקומי",
     "processExited": "התהליך הסתיים ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "הפעלה ב-Termix הסתיימה. אנא התחבר שוב.",
     "imageUploadFailed": "העלאת התמונה נכשלה",
     "imageUploadedNotPasted": "התמונה הועלתה, אך המסוף לא היה פתוח להדבקתה: {{path}}",
+    "fileUploaded": "הקובץ הועלה: {{path}}",
+    "fileUploadFailed": "העלאת הקובץ נכשלה",
+    "fileUploadedNotPasted": "הקובץ הועלה, אך המסוף לא היה פתוח להדבקתו: {{path}}",
     "clipboardImageReadFailed": "לא ניתן היה לקרוא מהלוח",
     "autocompleteHintComplete": "Tab או Enter להשלמה",
     "autocompleteHintNavigate": "↑↓ לנווט",
@@ -121,7 +126,13 @@
     "secretCancel": "ביטול",
     "hideSecret": "הסתר סוד",
     "showSecret": "הצג סוד",
-    "sessionEndedKeepOpen": "ההפעלה הסתיימה. לחץ על Enter כדי להתחבר מחדש."
+    "sessionEndedKeepOpen": "ההפעלה הסתיימה. לחץ על Enter כדי להתחבר מחדש.",
+    "askUsername": {
+      "title": "התחבר כ",
+      "description": "{{host}} מבקש שם משתמש בכל פעם. הקלד את השם שברצונך להתחבר כמותו.",
+      "connect": "התחבר",
+      "cancelled": "לא סופק שם משתמש"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "ניתוק מ-tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "קלט מגע",
         "images": "אחסון תמונות",
-        "sessions": "הפעלות"
+        "sessions": "הפעלות",
+        "x11": "העברת X11"
       },
       "sessionTimeoutMinutes": {
         "label": "שמירת הפעלות טרמינל",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "שמור הפעלות לאחר ניתוק",
         "description": "שמור טרמינל מנותק פעיל בשרת לזמן הנ\"ל, כך שפתיחת הלשונית מחדש תמשיך מאיפה שהפסיקה."
+      },
+      "x11Display": {
+        "label": "שרת X להעברת X11",
+        "description": "המיקום שבו מופיעים חלונות ממארחים עם העברת X11, כמו localhost:0. חייב להיות נגיש משרת Termix, ולכן זה בעיקר ליישום שולחן העבודה עם VcXsrv, XQuartz או Xwayland במחשב הזה. השאר ריק כדי לכבות את העברת X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "השאר את הלשונית פתוחה ביציאה"
+      },
+      "forwardX11": {
+        "label": "העברת X11",
+        "description": "הצג חלונות של תוכניות גרפיות שאתה מפעיל במסוף, כמו xclock או כלי הגדרות. דורש הגדרת שרת X בהגדרות, מסוף SSH, ו-X11Forwarding yes במארח."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "העתק טקסט נבחר באופן אוטומטי",
         "description": "מעתיק טקסט ברגע שבוחרים אותו בטרמינל"
+      },
+      "gpuRendering": {
+        "label": "עיבוד GPU",
+        "description": "צייר את המסוף באמצעות WebGL, מה שמאפשר להתמודד עם פלט כבד. כבה אם הטקסט מוצג לא נכון."
+      },
+      "inlineImages": {
+        "label": "תמונות מוטמעות",
+        "description": "הצג תמונות שתוכניות מדפיסות בפורמט sixel או iTerm, כמו תצוגות מקדימות של chafa או yazi."
       }
     }
   },

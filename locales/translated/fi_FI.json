@@ -99,7 +99,9 @@
     "imageUploaded": "Kuva ladattu: {{path}}",
     "imageClipboardUnavailable": "Tämä selain ei voi lukea kuvia leikepöydältä",
     "imageClipboardEmpty": "Leikepöydältä ei löytynyt kuvaa",
-    "imageDropHint": "Pudota kuva ladatakseen se",
+    "fileDropHint": "Pudota tiedosto ladatakseen se",
+    "fileDropFolder": "Kansioita ei voi ladata. Pudota niiden sisältämät tiedostot sen sijaan.",
+    "fileTooLarge": "{{name}} on suurempi kuin 50 Mt. Lataa suurempia tiedostoja rz-komennolla tai tiedostonhallinnalla.",
     "localShell": "Paikallinen komentotulkki",
     "localBackendUnreachable": "Paikallinen backend ei ole tavoitettavissa",
     "processExited": "Prosessi päättyi ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Termix-istuntosi on päättynyt. Kirjaudu sisään uudelleen.",
     "imageUploadFailed": "Kuvan lataus epäonnistui",
     "imageUploadedNotPasted": "Kuva ladattiin, mutta terminaali ei ollut auki liimataksesi sen: {{path}}",
+    "fileUploaded": "Tiedosto ladattu: {{path}}",
+    "fileUploadFailed": "Tiedoston lataus epäonnistui",
+    "fileUploadedNotPasted": "Tiedosto ladattu, mutta terminaali ei ollut auki liitettäväksi: {{path}}",
     "clipboardImageReadFailed": "Leikepöytää ei voitu lukea",
     "autocompleteHintComplete": "Tab tai Enter täydentää",
     "autocompleteHintNavigate": "↑↓ siirtyäksesi",
@@ -119,7 +124,13 @@
     "secretCancel": "Peruuta",
     "hideSecret": "Piilota salaisuus",
     "showSecret": "Näytä salaisuus",
-    "sessionEndedKeepOpen": "Istunto päättyi. Paina Enter-painiketta muodostaaksesi yhteyden uudelleen."
+    "sessionEndedKeepOpen": "Istunto päättyi. Paina Enter-painiketta muodostaaksesi yhteyden uudelleen.",
+    "askUsername": {
+      "title": "Kirjaudu sisään nimellä",
+      "description": "{{host}} pyytää käyttäjänimeä joka kerta. Kirjoita nimi, jolla haluat kirjautua sisään.",
+      "connect": "Yhdistä",
+      "cancelled": "Käyttäjänimeä ei annettu"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Irrota tmux",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Kosketustulo",
         "images": "Kuvamuisti",
-        "sessions": "Sessiot"
+        "sessions": "Sessiot",
+        "x11": "X11-etsitys"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminaalisession säilyvyys",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Pidä sessiot yllä katkaisun jälkeen",
         "description": "Pidä katkennut terminaali elossa palvelimella yllä olevan ajan, jotta välilehden uudelleen avaaminen jatkaa siitä, mihin jäi."
+      },
+      "x11Display": {
+        "label": "X-palvelin X11-etsintää varten",
+        "description": "Sijainti, johon X11-etsinnän käyttävien isäntien ikkunat ilmestyvät, kuten localhost:0. Sen on oltava Termix-palvelimelta saavutettavissa, joten tämä on pääasiassa työpöytäsovellusta varten, jossa käytetään VcXsrv:tä, XQuartzia tai Xwaylandia tässä tietokoneessa. Jätä tyhjäksi, jos haluat poistaa X11-etsinnän käytöstä.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Pidä välilehti auki poistumisen jälkeen"
+      },
+      "forwardX11": {
+        "label": "X11-etsitys",
+        "description": "Näytä graafisten ohjelmien ikkunat, jotka käynnistät terminaalissa, kuten xclock tai asetustyökalu. Vaatii X-palvelimen määrittämisen Asetukset → SSH-terminaali -kohdassa ja X11Forwarding yes -asetuksen isännällä."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Kopioi valittu teksti automaattisesti",
         "description": "Kopioi tekstin heti, kun valitset sen terminaalissa"
+      },
+      "gpuRendering": {
+        "label": "GPU-renderöinti",
+        "description": "Piirrä terminaali WebGL:llä, joka pysyy perässä raskaan tulosteen kanssa. Ota pois käytöstä, jos teksti näyttää väärältä."
+      },
+      "inlineImages": {
+        "label": "Upotetut kuvat",
+        "description": "Näytä kuvat, jotka ohjelmat tulostavat sixel- tai iTerm-kuvamuodossa, kuten chafa- tai yazi-esikatselut."
       }
     }
   },

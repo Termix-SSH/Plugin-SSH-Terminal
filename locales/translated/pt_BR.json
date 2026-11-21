@@ -101,7 +101,9 @@
     "imageUploaded": "Imagem enviada: {{path}}",
     "imageClipboardUnavailable": "Este navegador não pode ler imagens da área de transferência",
     "imageClipboardEmpty": "Nenhuma imagem encontrada na área de transferência",
-    "imageDropHint": "Solte uma imagem para enviá-la",
+    "fileDropHint": "Solte um arquivo para enviá-lo",
+    "fileDropFolder": "Pastas não podem ser enviadas. Solte os arquivos delas em vez disso",
+    "fileTooLarge": "{{name}} é maior que 50 MB. Envie arquivos maiores com rz ou um gerenciador de arquivos",
     "localShell": "Shell do terminal local",
     "localBackendUnreachable": "O backend local não está acessível",
     "processExited": "Processo encerrado ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "Sua sessão no Termix expirou. Faça login novamente.",
     "imageUploadFailed": "Falha no upload da imagem",
     "imageUploadedNotPasted": "Imagem enviada, mas o terminal não estava aberto para colá-la: {{path}}",
+    "fileUploaded": "Arquivo enviado: {{path}}",
+    "fileUploadFailed": "Falha no envio do arquivo",
+    "fileUploadedNotPasted": "Arquivo enviado, mas o terminal não estava aberto para colá-lo: {{path}}",
     "clipboardImageReadFailed": "Não foi possível ler a área de transferência",
     "autocompleteHintComplete": "Tab ou Enter para completar",
     "autocompleteHintNavigate": "↑↓ para navegar",
@@ -121,7 +126,13 @@
     "secretCancel": "Cancelar",
     "hideSecret": "Ocultar segredo",
     "showSecret": "Mostrar segredo",
-    "sessionEndedKeepOpen": "Sessão encerrada. Pressione Enter para reconectar."
+    "sessionEndedKeepOpen": "Sessão encerrada. Pressione Enter para reconectar.",
+    "askUsername": {
+      "title": "Entrar como",
+      "description": "{{host}} pede um nome de usuário a cada vez. Digite o que deseja usar para entrar.",
+      "connect": "Conectar",
+      "cancelled": "Nenhum nome de usuário foi fornecido"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Desanexar tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Entrada por toque",
         "images": "Armazenamento de imagens",
-        "sessions": "Sessões"
+        "sessions": "Sessões",
+        "x11": "Encaminhamento X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistência da sessão do terminal",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Manter sessões após desconectar",
         "description": "Manter um terminal desconectado ativo no servidor pelo tempo acima, para que reabrir sua aba retome de onde parou."
+      },
+      "x11Display": {
+        "label": "Servidor X para encaminhamento X11",
+        "description": "Onde as janelas de hosts com encaminhamento X11 aparecem, como localhost:0. Deve ser acessível a partir do servidor Termix, então isso serve principalmente para o aplicativo desktop com VcXsrv, XQuartz ou Xwayland neste computador. Deixe vazio para desativar o encaminhamento X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Manter a aba aberta ao sair"
+      },
+      "forwardX11": {
+        "label": "Encaminhamento X11",
+        "description": "Mostra as janelas de programas gráficos que você inicia no terminal, como xclock ou uma ferramenta de configuração. Exige um servidor X configurado em Configurações, Terminal SSH e X11Forwarding yes no host."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copiar texto selecionado automaticamente",
         "description": "Copia o texto assim que você o seleciona no terminal"
+      },
+      "gpuRendering": {
+        "label": "Renderização por GPU",
+        "description": "Desenha o terminal com WebGL, o que acompanha saídas pesadas. Desative se o texto aparecer incorretamente."
+      },
+      "inlineImages": {
+        "label": "Imagens em linha",
+        "description": "Mostra imagens que programas imprimem com sixel ou o formato de imagem iTerm, como pré-visualizações do chafa ou yazi."
       }
     }
   },

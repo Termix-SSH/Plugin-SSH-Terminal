@@ -97,7 +97,9 @@
     "imageUploaded": "Gambar diunggah: {{path}}",
     "imageClipboardUnavailable": "Browser ini tidak dapat membaca gambar dari papan klip",
     "imageClipboardEmpty": "Tidak ada gambar ditemukan di papan klip",
-    "imageDropHint": "Lepaskan gambar untuk mengunggahnya",
+    "fileDropHint": "Lepaskan file untuk mengunggahnya",
+    "fileDropFolder": "Folder tidak dapat diunggah. Lepaskan file di dalamnya sebagai gantinya",
+    "fileTooLarge": "{{name}} lebih besar dari 50 MB. Unggah file yang lebih besar dengan rz atau manajer file",
     "localShell": "Shell terminal lokal",
     "localBackendUnreachable": "Backend lokal tidak dapat dijangkau",
     "processExited": "Proses keluar ({{code}})",
@@ -105,6 +107,9 @@
     "sessionExpiredLogin": "Sesi Termix Anda telah berakhir. Masuk kembali.",
     "imageUploadFailed": "Pengunggahan gambar gagal",
     "imageUploadedNotPasted": "Gambar berhasil diunggah, tetapi terminal tidak terbuka untuk menempelkannya: {{path}}",
+    "fileUploaded": "File diunggah: {{path}}",
+    "fileUploadFailed": "Pengunggahan file gagal",
+    "fileUploadedNotPasted": "File diunggah, tetapi terminal tidak terbuka untuk menempelkannya: {{path}}",
     "clipboardImageReadFailed": "Gagal membaca papan klip",
     "autocompleteHintComplete": "Tekan Tab atau Enter untuk melengkapi",
     "autocompleteHintNavigate": "↑↓ untuk menavigasi",
@@ -117,7 +122,13 @@
     "secretCancel": "Batal",
     "hideSecret": "Sembunyikan rahasia",
     "showSecret": "Tampilkan rahasia",
-    "sessionEndedKeepOpen": "Sesi berakhir. Tekan Enter untuk terhubung kembali."
+    "sessionEndedKeepOpen": "Sesi berakhir. Tekan Enter untuk terhubung kembali.",
+    "askUsername": {
+      "title": "Masuk sebagai",
+      "description": "{{host}} meminta nama pengguna setiap kali. Ketik nama pengguna yang ingin digunakan untuk masuk.",
+      "connect": "Sambungkan",
+      "cancelled": "Tidak ada nama pengguna yang diberikan"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Lepas tmux",
@@ -187,7 +198,8 @@
       "group": {
         "touch": "Input Sentuh",
         "images": "Penyimpanan Gambar",
-        "sessions": "Sesi"
+        "sessions": "Sesi",
+        "x11": "Penerusan X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Ketahanan Sesi Terminal",
@@ -227,6 +239,11 @@
       "sessionPersistence": {
         "label": "Pertahankan sesi setelah terputus",
         "description": "Pertahankan terminal yang terputus tetap aktif di server selama waktu di atas, sehingga membuka kembali tabnya melanjutkan dari tempat terakhir."
+      },
+      "x11Display": {
+        "label": "Server X untuk penerusan X11",
+        "description": "Di mana jendela dari host dengan penerusan X11 muncul, seperti localhost:0. Ini harus dapat dijangkau dari server Termix, jadi ini sebagian besar untuk aplikasi desktop dengan VcXsrv, XQuartz, atau Xwayland di komputer ini. Kosongkan untuk menonaktifkan penerusan X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -412,6 +429,10 @@
       },
       "keepOpenOnExit": {
         "label": "Biarkan tab tetap terbuka saat keluar"
+      },
+      "forwardX11": {
+        "label": "Penerusan X11",
+        "description": "Tampilkan jendela program grafis yang Anda jalankan di terminal, seperti xclock atau alat pengaturan. Membutuhkan server X yang diatur di Pengaturan, Terminal SSH, dan X11Forwarding yes di host."
       }
     },
     "user": {
@@ -449,6 +470,14 @@
       "copyOnSelect": {
         "label": "Salin teks yang dipilih secara otomatis",
         "description": "Menyalin teks segera setelah Anda memilihnya di terminal"
+      },
+      "gpuRendering": {
+        "label": "Rendering GPU",
+        "description": "Gambar terminal dengan WebGL, yang tetap mengikuti keluaran yang berat. Matikan jika teks terlihat salah."
+      },
+      "inlineImages": {
+        "label": "Gambar sebaris",
+        "description": "Tampilkan gambar yang dicetak oleh program dengan sixel atau format gambar iTerm, seperti pratinjau chafa atau yazi."
       }
     }
   },

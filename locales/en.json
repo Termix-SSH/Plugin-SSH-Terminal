@@ -99,7 +99,9 @@
     "imageUploaded": "Image uploaded: {{path}}",
     "imageClipboardUnavailable": "This browser cannot read images from the clipboard",
     "imageClipboardEmpty": "No image found in the clipboard",
-    "imageDropHint": "Drop an image to upload it",
+    "fileDropHint": "Drop a file to upload it",
+    "fileDropFolder": "Folders can't be uploaded. Drop the files in them instead",
+    "fileTooLarge": "{{name}} is larger than 50 MB. Upload larger files with rz or a file manager",
     "localShell": "Local terminal shell",
     "localBackendUnreachable": "The local backend is not reachable",
     "processExited": "Process exited ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Your Termix session ended. Sign in again.",
     "imageUploadFailed": "Image upload failed",
     "imageUploadedNotPasted": "Image uploaded, but the terminal was not open to paste it: {{path}}",
+    "fileUploaded": "File uploaded: {{path}}",
+    "fileUploadFailed": "File upload failed",
+    "fileUploadedNotPasted": "File uploaded, but the terminal was not open to paste it: {{path}}",
     "clipboardImageReadFailed": "Could not read the clipboard",
     "autocompleteHintComplete": "Tab or Enter to complete",
     "autocompleteHintNavigate": "↑↓ to navigate",
@@ -119,7 +124,13 @@
     "secretCancel": "Cancel",
     "hideSecret": "Hide secret",
     "showSecret": "Show secret",
-    "sessionEndedKeepOpen": "Session ended. Press Enter to reconnect."
+    "sessionEndedKeepOpen": "Session ended. Press Enter to reconnect.",
+    "askUsername": {
+      "title": "Log in as",
+      "description": "{{host}} asks for a username each time. Type the one to log in as.",
+      "connect": "Connect",
+      "cancelled": "No username was given"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Detach tmux",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Touch Input",
         "images": "Image Storage",
-        "sessions": "Sessions"
+        "sessions": "Sessions",
+        "x11": "X11 forwarding"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminal Session Persistence",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Keep sessions after disconnect",
         "description": "Keep a disconnected terminal alive on the server for the time above, so reopening its tab picks up where it left off."
+      },
+      "x11Display": {
+        "label": "X server for X11 forwarding",
+        "description": "Where windows from hosts with X11 forwarding show up, like localhost:0. It must be reachable from the Termix server, so this is mostly for the desktop app with VcXsrv, XQuartz or Xwayland on this computer. Leave empty to turn X11 forwarding off.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Keep tab open on exit"
+      },
+      "forwardX11": {
+        "label": "X11 forwarding",
+        "description": "Show windows of graphical programs you start in the terminal, like xclock or a settings tool. Needs an X server set in Settings, SSH Terminal, and X11Forwarding yes on the host."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Copy selected text automatically",
         "description": "Copies text as soon as you select it in the terminal"
+      },
+      "gpuRendering": {
+        "label": "GPU rendering",
+        "description": "Draw the terminal with WebGL, which keeps up with heavy output. Turn off if text looks wrong."
+      },
+      "inlineImages": {
+        "label": "Inline images",
+        "description": "Show pictures that programs print with sixel or the iTerm image format, like chafa or yazi previews."
       }
     }
   },

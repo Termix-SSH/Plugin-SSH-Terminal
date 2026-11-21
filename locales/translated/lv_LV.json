@@ -101,7 +101,9 @@
     "imageUploaded": "Attēls augšupielādēts: {{path}}",
     "imageClipboardUnavailable": "Šis pārlūks nevar lasīt attēlus no starpliktuves",
     "imageClipboardEmpty": "Starpliktuvē nav atrasts attēls",
-    "imageDropHint": "Nometiet attēlu, lai to augšupielādētu",
+    "fileDropHint": "Nometiet failu, lai to augšupielādētu",
+    "fileDropFolder": "Mapes nevar augšupielādēt. Tā vietā nometiet tajās esošos failus",
+    "fileTooLarge": "{{name}} ir lielāks par 50 MB. Lielākus failus augšupielādējiet, izmantojot rz vai failu pārvaldnieku",
     "localShell": "Vietējais termināļa čauls",
     "localBackendUnreachable": "Vietējais backend nav sasniedzams",
     "processExited": "Process izbeidzās ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "Jūsu Termix sesija ir beigusies. Lūdzu, piesakieties vēlreiz.",
     "imageUploadFailed": "Attēla augšupielāde neizdevās",
     "imageUploadedNotPasted": "Attēls augšupielādēts, bet terminālis nebija atvērts, lai to ielīmētu: {{path}}",
+    "fileUploaded": "Fails augšupielādēts: {{path}}",
+    "fileUploadFailed": "Faila augšupielāde neizdevās",
+    "fileUploadedNotPasted": "Fails augšupielādēts, bet terminālis nebija atvērts, lai to ielīmētu: {{path}}",
     "clipboardImageReadFailed": "Neizdevās izlasīt starpliktuvi",
     "autocompleteHintComplete": "Nospiediet Tab vai Enter, lai pabeigtu",
     "autocompleteHintNavigate": "↑↓, lai navigētu",
@@ -121,7 +126,13 @@
     "secretCancel": "Atcelt",
     "hideSecret": "Paslēpt noslēpumu",
     "showSecret": "Rādīt noslēpumu",
-    "sessionEndedKeepOpen": "Sesija pabeigta. Nospiediet Enter, lai atkārtoti izveidotu savienojumu."
+    "sessionEndedKeepOpen": "Sesija pabeigta. Nospiediet Enter, lai atkārtoti izveidotu savienojumu.",
+    "askUsername": {
+      "title": "Pieslēgties kā",
+      "description": "{{host}} katru reizi prasa lietotājvārdu. Ierakstiet to, kā vēlaties pieslēgties.",
+      "connect": "Savienot",
+      "cancelled": "Lietotājvārds netika norādīts"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Atvienot tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Pieskāriena ievade",
         "images": "Attēlu glabātuve",
-        "sessions": "Sesijas"
+        "sessions": "Sesijas",
+        "x11": "X11 pārvirzīšana"
       },
       "sessionTimeoutMinutes": {
         "label": "Termināļa sesiju saglabāšana",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Saglabāt sesijas pēc atvienošanās",
         "description": "Turēt atvienotu termināli aktīvu serverī iepriekš norādīto laiku, lai, atverot tā cilni, turpinātu tur, kur apstājās."
+      },
+      "x11Display": {
+        "label": "X serveris X11 pārvirzīšanai",
+        "description": "Kur parādās logi no hostiem ar X11 pārvirzīšanu, piemēram, localhost:0. Tam ir jābūt sasniedzamam no Termix servera, tāpēc tas galvenokārt ir paredzēts darbam ar desktop lietotni, izmantojot VcXsrv, XQuartz vai Xwayland šajā datorā. Atstājiet tukšu, lai izslēgtu X11 pārvirzīšanu.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Paturēt cilni atvērtu pēc iziešanas"
+      },
+      "forwardX11": {
+        "label": "X11 pārvirzīšana",
+        "description": "Rādīt grafisko programmu logus, kuras palaižat terminālī, piemēram, xclock vai iestatījumu rīkus. Nepieciešams X serveris, kas iestatīts Iestatījumos, SSH Terminālī, un X11Forwarding yes uz hosta."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Automātiski kopēt atlasīto tekstu",
         "description": "Teksts tiek kopēts tiklīdz to atlasāt terminālī"
+      },
+      "gpuRendering": {
+        "label": "GPU renderēšana",
+        "description": "Termināļa zīmēšana, izmantojot WebGL, kas spēj tikt galā ar lielu izvades apjomu. Izslēdziet, ja teksts izskatās nepareizi."
+      },
+      "inlineImages": {
+        "label": "Iekšējās attēli",
+        "description": "Rādīt attēlus, kurus programmas izdrukā, izmantojot sixel vai iTerm attēlu formātu, piemēram, chafa vai yazi priekšskatījumus."
       }
     }
   },

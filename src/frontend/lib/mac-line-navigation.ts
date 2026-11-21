@@ -13,3 +13,10 @@ export function getMacLineNavigationSequence(e: KeyboardEvent): string | null {
       return null;
   }
 }
+
+/** Cmd+K clears the terminal on a Mac, like Terminal.app and iTerm. */
+export function isMacClearKey(e: KeyboardEvent): boolean {
+  if (e.type !== "keydown" || !isMacPlatform()) return false;
+  if (!e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return false;
+  return e.code === "KeyK";
+}

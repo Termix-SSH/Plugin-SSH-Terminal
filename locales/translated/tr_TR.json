@@ -99,7 +99,9 @@
     "imageUploaded": "Görüntü yüklendi: {{path}}",
     "imageClipboardUnavailable": "Bu tarayıcı panodan görüntüleri okuyamaz",
     "imageClipboardEmpty": "Panoda görüntü bulunamadı",
-    "imageDropHint": "Yüklemek için bir görüntü sürükleyip bırakın",
+    "fileDropHint": "Yüklemek için bir dosya bırakın",
+    "fileDropFolder": "Klasörler yüklenemez. Bunun yerine içindeki dosyaları bırakın",
+    "fileTooLarge": "{{name}} 50 MB'tan büyük. Daha büyük dosyaları rz veya bir dosya yöneticisi ile yükleyin",
     "localShell": "Yerel terminal kabuğu",
     "localBackendUnreachable": "Yerel arka uç erişilemiyor",
     "processExited": "İşlem sonlandırıldı ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Termix oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
     "imageUploadFailed": "Görsel yüklenemedi",
     "imageUploadedNotPasted": "Görsel yüklendi, ancak yapıştırılacak açık bir terminal yok: {{path}}",
+    "fileUploaded": "Dosya yüklendi: {{path}}",
+    "fileUploadFailed": "Dosya yükleme başarısız oldu",
+    "fileUploadedNotPasted": "Dosya yüklendi, ancak yapıştırılacak şekilde açık bir terminal yoktu: {{path}}",
     "clipboardImageReadFailed": "Pano okunamadı",
     "autocompleteHintComplete": "Tamamlamak için Tab veya Enter'a basın",
     "autocompleteHintNavigate": "Gezinmek için ↑↓",
@@ -119,7 +124,13 @@
     "secretCancel": "İptal",
     "hideSecret": "Sırrı gizle",
     "showSecret": "Sırrı göster",
-    "sessionEndedKeepOpen": "Oturum sona erdi. Yeniden bağlanmak için Enter'a basın."
+    "sessionEndedKeepOpen": "Oturum sona erdi. Yeniden bağlanmak için Enter'a basın.",
+    "askUsername": {
+      "title": "Giriş yap",
+      "description": "{{host}} her seferinde bir kullanıcı adı ister. Giriş yapmak istediğiniz kullanıcı adını yazın.",
+      "connect": "Bağlan",
+      "cancelled": "Kullanıcı adı verilmedi"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmux'tan ayrıl",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Dokunmatik Giriş",
         "images": "Görsel Depolama",
-        "sessions": "Oturumlar"
+        "sessions": "Oturumlar",
+        "x11": "X11 yönlendirmesi"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminal Oturumu Kalıcılığı",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Bağlantı kesildikten sonra oturumları koru",
         "description": "Bağlantısı kesilen bir terminali yukarıdaki süre boyunca sunucuda canlı tutun, böylece sekmesini yeniden açtığınızda kaldığı yerden devam edebilir."
+      },
+      "x11Display": {
+        "label": "X11 yönlendirmesi için X sunucusu",
+        "description": "X11 yönlendirmesi olan ana makinelerden gelen pencerelerin göründüğü yer, örneğin localhost:0. Termix sunucusundan erişilebilir olmalıdır, bu nedenle bu ayar çoğunlukla bu bilgisayarda VcXsrv, XQuartz veya Xwayland ile çalışan masaüstü uygulaması içindir. X11 yönlendirmesini kapatmak için boş bırakın.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Çıkışta sekme açık kalsın"
+      },
+      "forwardX11": {
+        "label": "X11 yönlendirmesi",
+        "description": "Terminalde başlattığınız grafiksel programların pencerelerini gösterin, örneğin xclock veya bir ayar aracı. Ayarlar'da bir X sunucusu, SSH Terminal ve ana makinede X11Forwarding yes ayarının yapılandırılmış olması gerekir."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Seçili metni otomatik kopyala",
         "description": "Terminalde metni seçtiğiniz anda kopyalar"
+      },
+      "gpuRendering": {
+        "label": "GPU ile çizim",
+        "description": "Terminali WebGL ile çizerek yoğun çıktıları takiben. Metinler yanlış görünüyorsa kapatın."
+      },
+      "inlineImages": {
+        "label": "Satır içi resimler",
+        "description": "chafa veya yazi önizlemeleri gibi sixel veya iTerm resim formatıyla yazdırdığı resimleri gösterin."
       }
     }
   },

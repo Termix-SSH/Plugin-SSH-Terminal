@@ -97,7 +97,9 @@
     "imageUploaded": "影像已上傳：{{path}}",
     "imageClipboardUnavailable": "此瀏覽器無法從剪貼簿讀取影像",
     "imageClipboardEmpty": "剪貼簿中未找到影像",
-    "imageDropHint": "拖放圖片以上傳",
+    "fileDropHint": "拖放檔案以上傳",
+    "fileDropFolder": "無法上傳資料夾。請改為拖放其中的檔案。",
+    "fileTooLarge": "{{name}} 超過 50 MB。請使用 rz 或檔案管理員上傳較大的檔案。",
     "localShell": "本機終端機 shell",
     "localBackendUnreachable": "無法連線至本機後端",
     "processExited": "程序已結束（{{code}}）",
@@ -105,6 +107,9 @@
     "sessionExpiredLogin": "您的 Termix 工作階段已結束。請重新登入。",
     "imageUploadFailed": "圖片上傳失敗",
     "imageUploadedNotPasted": "圖片已上傳，但終端機未開啟，無法貼上：{{path}}",
+    "fileUploaded": "檔案已上傳：{{path}}",
+    "fileUploadFailed": "檔案上傳失敗",
+    "fileUploadedNotPasted": "檔案已上傳，但終端機未開啟以貼上內容：{{path}}",
     "clipboardImageReadFailed": "無法讀取剪貼簿",
     "autocompleteHintComplete": "按 Tab 或 Enter 完成",
     "autocompleteHintNavigate": "↑↓ 瀏覽",
@@ -117,7 +122,13 @@
     "secretCancel": "取消",
     "hideSecret": "隱藏金鑰",
     "showSecret": "顯示金鑰",
-    "sessionEndedKeepOpen": "工作階段已結束。按 Enter 重新連線。"
+    "sessionEndedKeepOpen": "工作階段已結束。按 Enter 重新連線。",
+    "askUsername": {
+      "title": "登入身分",
+      "description": "{{host}} 每次都會要求輸入使用者名稱。請輸入您要登入的使用者名稱。",
+      "connect": "連線",
+      "cancelled": "未提供使用者名稱"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "分離 tmux",
@@ -187,7 +198,8 @@
       "group": {
         "touch": "觸控輸入",
         "images": "影像儲存",
-        "sessions": "工作階段"
+        "sessions": "工作階段",
+        "x11": "X11 轉發"
       },
       "sessionTimeoutMinutes": {
         "label": "終端機工作階段持續時間",
@@ -227,6 +239,11 @@
       "sessionPersistence": {
         "label": "斷開連線後保留工作階段",
         "description": "在伺服器上保持中斷連線的終端機活躍，時間如上所述，以便重新開啟其分頁時可以從中斷處繼續。"
+      },
+      "x11Display": {
+        "label": "X11 轉發的 X 伺服器",
+        "description": "具有 X11 轉發功能的主機上的視窗顯示位置，例如 localhost:0。此位置必須能從 Termix 伺服器存取，因此主要適用於在本機電腦上執行 VcXsrv、XQuartz 或 Xwayland 的桌面應用程式。留空即可關閉 X11 轉發。",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -412,6 +429,10 @@
       },
       "keepOpenOnExit": {
         "label": "退出時保持分頁開啟"
+      },
+      "forwardX11": {
+        "label": "X11 轉發",
+        "description": "顯示您在終端機中啟動的圖形程式視窗，例如 xclock 或設定工具。需要在設定中設定 X 伺服器、SSH 終端機，並在主機上啟用 X11Forwarding。"
       }
     },
     "user": {
@@ -449,6 +470,14 @@
       "copyOnSelect": {
         "label": "自動複製選取的文字",
         "description": "在終端機中選取文字時立即複製"
+      },
+      "gpuRendering": {
+        "label": "GPU 渲染",
+        "description": "使用 WebGL 繪製終端機，以應對大量輸出。如果文字顯示異常，請關閉此功能。"
+      },
+      "inlineImages": {
+        "label": "內嵌圖片",
+        "description": "顯示程式透過 sixel 或 iTerm 圖片格式輸出的圖片，例如 chafa 或 yazi 預覽。"
       }
     }
   },

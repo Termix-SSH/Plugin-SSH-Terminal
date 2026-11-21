@@ -99,7 +99,9 @@
     "imageUploaded": "Pilt üles laaditud: {{path}}",
     "imageClipboardUnavailable": "See brauser ei saa lugeda pilte lõikelaualt",
     "imageClipboardEmpty": "Lõikelaualt ei leitud pilti",
-    "imageDropHint": "Lohista pilt siia, et see üles laadida",
+    "fileDropHint": "Lohista fail siia, et see üles laadida",
+    "fileDropFolder": "Kaustu ei saa üles laadida. Lohista nende sisu failid siia",
+    "fileTooLarge": "{{name}} on suurem kui 50 MB. Laadi suuremaid faile üles käsuga rz või failihalduri kaudu",
     "localShell": "Lokaalne terminali käsurea",
     "localBackendUnreachable": "Lokaalne taustaprogramm ei ole saadaval",
     "processExited": "Protsess lõpetas töö ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Sinu Termixi sessioon on aegunud. Logi uuesti sisse.",
     "imageUploadFailed": "Pildi üleslaadimine ebaõnnestus",
     "imageUploadedNotPasted": "Pilt laaditi üles, kuid terminal ei olnud kleebimiseks avatud: {{path}}",
+    "fileUploaded": "Fail üles laaditud: {{path}}",
+    "fileUploadFailed": "Faili üleslaadimine ebaõnnestus",
+    "fileUploadedNotPasted": "Fail üles laaditud, kuid terminal ei olnud kleepimiseks avatud: {{path}}",
     "clipboardImageReadFailed": "Lõikelaua sisu lugemine ebaõnnestus",
     "autocompleteHintComplete": "Tab või Enter täitmiseks",
     "autocompleteHintNavigate": "↑↓ navigeerimiseks",
@@ -119,7 +124,13 @@
     "secretCancel": "Tühista",
     "hideSecret": "Peida saladus",
     "showSecret": "Kuva saladus",
-    "sessionEndedKeepOpen": "Seans on lõppenud. Vajuta Enter, et uuesti ühenduda."
+    "sessionEndedKeepOpen": "Seans on lõppenud. Vajuta Enter, et uuesti ühenduda.",
+    "askUsername": {
+      "title": "Logi sisse kasutajana",
+      "description": "{{host}} küsib iga kord kasutajat. Sisesta kasutajanimi, mille nime all sisse logida.",
+      "connect": "Ühendu",
+      "cancelled": "Kasutajat ei antud"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmuxist lahku",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Puute sisend",
         "images": "Pildihoidla",
-        "sessions": "Sessioonid"
+        "sessions": "Sessioonid",
+        "x11": "X11 edastus"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminali sessiooni säilimine",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Hoi sessioone pärast ühenduse katkemist",
         "description": "Hoia ühenduse kaotanud terminali serveris elus ülaltoodud aja jooksul, nii et selle vahele uuesti avamisel jätkatakse seal, kus peatuti."
+      },
+      "x11Display": {
+        "label": "X11 edastuse X-server",
+        "description": "Kuhu ilmuvad aknad hostidelt, millel on X11 edastus lubatud, näiteks localhost:0. See peab olema Termix serverist saadaval, seega sobib see peamiselt lauaarvuti rakendusele koos VcXsrv, XQuartz või Xwaylandiga selles arvutis. Jäta tühjaks, et X11 edastus välja lülitada.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Hoia vaheleht avatuna väljumisel"
+      },
+      "forwardX11": {
+        "label": "X11 edastus",
+        "description": "Kuva graafiliste programmide aknad, mida käivitad terminalis, nagu xclock või seadistusvahend. Nõuab X-serveri seadmist Seadistustes, SSH Terminaalis ja hostil X11Forwarding yes."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Kopeeri valitud tekst automaatselt",
         "description": "Kopeerib teksti kohe, kui selle terminalis valite"
+      },
+      "gpuRendering": {
+        "label": "GPU renderdus",
+        "description": "Joonista terminal WebGLiga, mis hakkab raskema väljundiga toime. Lülita välja, kui tekst näeb valesti välja."
+      },
+      "inlineImages": {
+        "label": "Reas olevad pildid",
+        "description": "Kuva pildid, mida programmid prindivad sixel või iTerm pildiformaadis, nagu chafa või yazi eelvaated."
       }
     }
   },

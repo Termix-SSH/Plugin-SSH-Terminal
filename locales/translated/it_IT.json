@@ -101,7 +101,9 @@
     "imageUploaded": "Immagine caricata: {{path}}",
     "imageClipboardUnavailable": "Questo browser non può leggere immagini dagli appunti",
     "imageClipboardEmpty": "Nessuna immagine trovata negli appunti",
-    "imageDropHint": "Trascina un'immagine per caricarla",
+    "fileDropHint": "Trascina un file per caricarlo",
+    "fileDropFolder": "Le cartelle non possono essere caricate. Trascina invece i file che contengono",
+    "fileTooLarge": "{{name}} è più grande di 50 MB. Carica file più grandi con rz o un file manager",
     "localShell": "Shell del terminale locale",
     "localBackendUnreachable": "Il backend locale non è raggiungibile",
     "processExited": "Processo terminato ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "La sessione Termix è scaduta. Effettua nuovamente l'accesso.",
     "imageUploadFailed": "Caricamento immagine non riuscito",
     "imageUploadedNotPasted": "Immagine caricata, ma il terminale non era aperto per incollarla: {{path}}",
+    "fileUploaded": "File caricato: {{path}}",
+    "fileUploadFailed": "Caricamento file fallito",
+    "fileUploadedNotPasted": "File caricato, ma il terminale non era aperto per incollarlo: {{path}}",
     "clipboardImageReadFailed": "Impossibile leggere gli appunti",
     "autocompleteHintComplete": "Tab o Invio per completare",
     "autocompleteHintNavigate": "↑↓ per navigare",
@@ -121,7 +126,13 @@
     "secretCancel": "Annulla",
     "hideSecret": "Nascondi segreto",
     "showSecret": "Mostra segreto",
-    "sessionEndedKeepOpen": "Sessione terminata. Premi Invio per riconnetterti."
+    "sessionEndedKeepOpen": "Sessione terminata. Premi Invio per riconnetterti.",
+    "askUsername": {
+      "title": "Accedi come",
+      "description": "{{host}} richiede un nome utente ogni volta. Digita quello con cui accedere.",
+      "connect": "Connetti",
+      "cancelled": "Nessun nome utente fornito"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Distacca tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Input touch",
         "images": "Archiviazione immagini",
-        "sessions": "Sessioni"
+        "sessions": "Sessioni",
+        "x11": "Inoltro X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistenza sessione terminale",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Mantieni le sessioni dopo la disconnessione",
         "description": "Mantieni un terminale disconnesso attivo sul server per il tempo indicato sopra, in modo che riaprendone la scheda si riprenda da dove si era interrotto."
+      },
+      "x11Display": {
+        "label": "Server X per l'inoltro X11",
+        "description": "Dove appaiono le finestre degli host con inoltro X11, ad esempio localhost:0. Deve essere raggiungibile dal server Termix, quindi è principalmente per l'app desktop con VcXsrv, XQuartz o Xwayland su questo computer. Lascia vuoto per disabilitare l'inoltro X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Mantieni la scheda aperta all'uscita"
+      },
+      "forwardX11": {
+        "label": "Inoltro X11",
+        "description": "Mostra le finestre dei programmi grafici che avvii nel terminale, come xclock o uno strumento di configurazione. Richiede un server X impostato nelle Impostazioni, nel Terminale SSH e X11Forwarding yes sull'host."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copia automaticamente il testo selezionato",
         "description": "Copia il testo non appena lo selezioni nel terminale"
+      },
+      "gpuRendering": {
+        "label": "Rendering GPU",
+        "description": "Disegna il terminale con WebGL, che gestisce bene un output intenso. Disabilita se il testo appare in modo errato."
+      },
+      "inlineImages": {
+        "label": "Immagini inline",
+        "description": "Mostra le immagini stampate dai programmi con sixel o il formato immagine iTerm, come le anteprime di chafa o yazi."
       }
     }
   },

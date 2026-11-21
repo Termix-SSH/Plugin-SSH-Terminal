@@ -1,3 +1,10 @@
+import { loadRendererAddons } from "./terminal-renderers";
+import {
+  asksForUsername,
+  recentUsernames,
+  rememberUsername,
+  validUsername,
+} from "./ask-username";
 import {
   fontSizeStorageKey as getFontSizeStorageKey,
   readFontSize,
@@ -43,7 +50,10 @@ import { TmuxSessionPicker } from "./TmuxSessionPicker";
 import { getTerminalBufferText } from "./terminal-buffer-text.ts";
 import { createTerminalInputAccess } from "./terminal-input-access.ts";
 import { isPaneNavHotkey } from "../lib/pane-nav-hotkey";
-import { getMacLineNavigationSequence } from "../lib/mac-line-navigation";
+import {
+  getMacLineNavigationSequence,
+  isMacClearKey,
+} from "../lib/mac-line-navigation";
 import { useCommandTracker } from "./command-history/useCommandTracker";
 import {
   isAtPasswordPrompt as isWaitingAtPasswordPrompt,
@@ -51,7 +61,7 @@ import {
   isSudoPrompt as isSudoPromptOutput,
   stripAnsi,
   suTargetUser,
-} from "./password-prompt";
+} from "../../shared/password-prompt";
 import {
   highlightTerminalOutput,
   updateControlStringMode,
@@ -59,10 +69,13 @@ import {
 import { useCommandHistory } from "./command-history/CommandHistoryContext";
 import { getAndroidHardwareKeySequence } from "./android-hardware-keyboard";
 import {
+  buildFileUploadFormData,
   buildImageUploadFormData,
+  isConvertibleImage,
   selectImageUploadApi,
   type TerminalImageUploadSource,
 } from "./terminal-image-upload";
+import { TERMINAL_UPLOAD_MAX_BYTES } from "../../shared/terminal-upload";
 import { createTerminalNativePasteHandler } from "./terminal-native-paste";
 import { createTerminalImageDropHandlers } from "./terminal-image-drop";
 import { TerminalSearchBar } from "./search/TerminalSearchBar.tsx";
@@ -78,7 +91,7 @@ import {
   type TerminalSlotApi,
 } from "./terminal-slots";
 import { toast } from "sonner";
-import { ImagePlus, Save } from "lucide-react";
+import { FileUp, Save } from "lucide-react";
 import { TerminalToolbar } from "./TerminalToolbar.tsx";
 import { BroadcastBar } from "../terminal-tools/broadcast/BroadcastBar";
 import {
@@ -124,10 +137,11 @@ import {
   getRightClickAction,
   handleTerminalClipboardKeyEvent,
 } from "./terminal-clipboard.ts";
-import { quoteTerminalImagePath } from "./terminal-image-path.ts";
+import { createUploadedPathInput } from "./terminal-image-path.ts";
 import { shouldRunPostConnect } from "./post-connect.ts";
 import {
   dispatchKeybindingAction,
+  isOwnKeybindingAction,
   isTerminalKeybindingAction,
 } from "../lib/keybinding-dispatch";
 import {
@@ -350,6 +364,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const fitAddonRef = useRef<FitAddon | null>(null);
     const webSocketRef = useRef<WebSocket | null>(null);
     const cwdWaitersRef = useRef<Array<(path: string) => void>>([]);
+    const fillWaitersRef = useRef<Array<(ok: boolean) => void>>([]);
     const terminalInputDisposableRef = useRef<{ dispose(): void } | null>(null);
     const localEchoRef = useRef<TerminalLocalEcho | null>(null);
     const sessionOriginRef = useRef<"local" | "remote">("local");
@@ -376,13 +391,14 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
     const [isQuickConnectSaved, setIsQuickConnectSaved] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
     const imageUploadRef = useRef(handleImageUpload);
+    const [uploadedPathInput] = useState(createUploadedPathInput);
     const [isImageDragOver, setIsImageDragOver] = useState(false);
-    const droppedImagesRef = useRef(handleDroppedImages);
+    const droppedFilesRef = useRef(handleDroppedFiles);
     const imageDropHandlers = useMemo(
       () =>
         createTerminalImageDropHandlers({
-          uploadImages: (files) => void droppedImagesRef.current(files),
-          rejectFiles: () => toast.error(t("terminal.imageChooseFile")),
+          uploadFiles: (files) => void droppedFilesRef.current(files),
+          rejectFolders: () => toast.error(t("terminal.fileDropFolder")),
           setDragging: setIsImageDragOver,
         }),
       [t],
@@ -412,6 +428,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       "no_keyboard" | "auth_failed" | "timeout"
     >("no_keyboard");
     const [showPassphraseDialog, setShowPassphraseDialog] = useState(false);
+    // A host saved with the username "$ask" asks who to log in as.
+    const askedUsernameRef = useRef<string | null>(null);
+    const [askingUsername, setAskingUsername] = useState(false);
+    const [usernameDraft, setUsernameDraft] = useState("");
     const [, setKeyboardInteractiveDetected] = useState(false);
     // A keyboard-interactive round finished in a browser, named after the
     // handler that claimed it (see "<id>_auth_required").
@@ -1481,16 +1501,46 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         : hostConfig.password || sudoPassword;
 
       if (!passwordToFill && hostConfig.id) {
+        // A framed view never gets saved passwords; the backend fills them.
+        const lookup = (field: "password" | "sudoPassword") =>
+          getHostPassword(hostConfig.id!, field).catch(() => null);
         passwordToFill = isSudoPrompt
-          ? (await getHostPassword(hostConfig.id, "sudoPassword")) ||
-            (await getHostPassword(hostConfig.id, "password")) ||
+          ? (await lookup("sudoPassword")) ||
+            (await lookup("password")) ||
             undefined
-          : (await getHostPassword(hostConfig.id, "password")) ||
-            (await getHostPassword(hostConfig.id, "sudoPassword")) ||
+          : (await lookup("password")) ||
+            (await lookup("sudoPassword")) ||
             undefined;
       }
 
       return passwordToFill;
+    }
+
+    /** Asks the backend to type the saved password at the waiting prompt. */
+    function requestServerFill(isSudoPrompt: boolean): Promise<boolean> {
+      const socket = webSocketRef.current;
+      if (!socket || socket.readyState !== WebSocket.OPEN) {
+        return Promise.resolve(false);
+      }
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+          fillWaitersRef.current = fillWaitersRef.current.filter(
+            (waiter) => waiter !== done,
+          );
+          resolve(false);
+        }, 5000);
+        const done = (ok: boolean) => {
+          clearTimeout(timer);
+          resolve(ok);
+        };
+        fillWaitersRef.current.push(done);
+        socket.send(
+          JSON.stringify({
+            type: "fill_password",
+            kind: isSudoPrompt ? "sudo" : "login",
+          }),
+        );
+      });
     }
 
     function maybeOfferPasswordFill(strippedData: string) {
@@ -1562,8 +1612,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         if (ok)
           void (async () => {
             const passwordToFill = await resolvePasswordForPrompt(isSudoPrompt);
-            if (
-              passwordToFill &&
+            if (!passwordToFill) {
+              await requestServerFill(isSudoPrompt);
+            } else if (
               webSocketRef.current &&
               webSocketRef.current.readyState === WebSocket.OPEN
             ) {
@@ -1614,7 +1665,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             const password = await getHostPassword(
               Number(match.id),
               "password",
-            );
+            ).catch(() => null);
             if (
               password &&
               webSocketRef.current &&
@@ -1780,6 +1831,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           terminal?.modes?.applicationCursorKeysMode ?? false,
         // What the tab menu's share entry needs, read at call time.
         getShareTarget: () => slotApiRef.current?.getShareTarget() ?? null,
+        openSidePanel: (panelId: string, props?: Record<string, unknown>) =>
+          setDock({ id: panelId, props: props ?? {} }),
         openFileManager: () => openFilesAtCwd(),
         // Asks the server for the shell's working directory.
         getCwd: () => requestCwd(),
@@ -1856,12 +1909,19 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             Number.isFinite(Number(saved.id)),
         );
         password = match
-          ? await getHostPassword(Number(match.id), "password")
+          ? await getHostPassword(Number(match.id), "password").catch(
+              () => null,
+            )
           : null;
       } else {
-        password = await resolvePasswordForPrompt(
-          isSudoPromptOutput(outputTailRef.current, lastCommandRef.current),
+        const isSudo = isSudoPromptOutput(
+          outputTailRef.current,
+          lastCommandRef.current,
         );
+        password = await resolvePasswordForPrompt(isSudo);
+        if (!password) {
+          return (await requestServerFill(isSudo)) ? "filled" : "no-password";
+        }
       }
       if (!password) return "no-password";
       // The prompt may have gone while the password loaded.
@@ -1992,6 +2052,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         return;
       }
 
+      if (asksForUsername(hostConfig.username) && !askedUsernameRef.current) {
+        setUsernameDraft(recentUsernames(hostConfig.id)[0] ?? "");
+        setAskingUsername(true);
+        return;
+      }
+
       isConnectingRef.current = true;
       connectionAttemptIdRef.current++;
       wasConnectedRef.current = false;
@@ -2041,6 +2107,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         }
         baseWsUrl = resolvedUrl.url;
         wsProtocols = resolvedUrl.protocols;
+      }
+      if (askedUsernameRef.current) {
+        outboundHostConfig = {
+          ...outboundHostConfig,
+          username: askedUsernameRef.current,
+        };
       }
 
       if (
@@ -2190,6 +2262,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             return;
           }
           if (ws.readyState !== WebSocket.OPEN) return;
+          uploadedPathInput.userTyped(data);
           if (data === "\r" || data === "\n") {
             const currentCmd = getCurrentCommand().trim();
             const termixMatch = currentCmd.match(/^termix\s+(.+)$/);
@@ -2276,6 +2349,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           }
           if (msg.type === "pong") {
             pongReceivedRef.current = true;
+            return;
+          }
+          if (msg.type === "fill_password_result") {
+            fillWaitersRef.current.shift()?.(msg.ok === true);
             return;
           }
           if (msg.type === "resized") {
@@ -3405,6 +3482,20 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       };
     }, [xtermRef, terminal]);
 
+    // WebGL draws an opaque background, which would hide a background image.
+    const gpuRendering =
+      termUser.gpuRendering !== false && !termSettings.backgroundImage;
+    const inlineImages = termUser.inlineImages !== false;
+    useEffect(() => {
+      // Runs after the effect above has opened the terminal.
+      if (!terminal?.element) return;
+      const addons = loadRendererAddons(terminal, {
+        gpuRendering,
+        inlineImages,
+      });
+      return () => addons.dispose();
+    }, [terminal, gpuRendering, inlineImages]);
+
     const isMountedRef = useRef(false);
 
     useEffect(
@@ -3487,9 +3578,18 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             e,
             customKeybindingsRef.current,
           );
-          // The terminal's own actions run here; anything else goes to
-          // whoever registered it (the shell, or another plugin), and the key
-          // passes through while nothing does.
+          // In a plugin view a key bound to another plugin's or the shell's
+          // action is left alone, so it reaches the shell, which runs it. A
+          // view can only run its own plugin's actions.
+          if (
+            matched &&
+            !globalShortcutHandler.current &&
+            !isOwnKeybindingAction(matched.action.type)
+          ) {
+            return false;
+          }
+          // The terminal's own actions run here; the plugin's others go
+          // through core, and the key passes through while nothing does.
           const handled =
             !!matched &&
             (isTerminalKeybindingAction(matched.action.type)
@@ -3576,6 +3676,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           sendUserInput(macLineNav);
           return false;
         }
+        if (isMacClearKey(e)) {
+          e.preventDefault();
+          e.stopPropagation();
+          terminal.clear();
+          return false;
+        }
 
         // Forward global app shortcuts to AppShell directly, xterm swallows
         // all keydown events and synthetic re-dispatch is unreliable.
@@ -3589,8 +3695,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             "Enter",
           ];
           if (globalCodes.includes(e.code)) {
-            e.stopPropagation();
-            globalShortcutHandler.current?.(e);
+            // In a plugin view there is no handler here: let the key go up
+            // to the shell instead of dropping it.
+            if (globalShortcutHandler.current) {
+              e.stopPropagation();
+              globalShortcutHandler.current(e);
+            }
             return false;
           }
         }
@@ -3606,8 +3716,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
         }
 
         if (isTabJumpHotkey(e)) {
-          e.stopPropagation();
-          globalShortcutHandler.current?.(e);
+          if (globalShortcutHandler.current) {
+            e.stopPropagation();
+            globalShortcutHandler.current(e);
+          }
           return false;
         }
 
@@ -3910,7 +4022,10 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
     const hasConnectionError = !!connectionError;
 
-    function getImageUploadErrorMessage(error: unknown): string {
+    function getImageUploadErrorMessage(
+      error: unknown,
+      fallback = t("terminal.imageUploadFailed"),
+    ): string {
       if (error instanceof Error && error.message) return error.message;
       const response = (
         error as {
@@ -3919,17 +4034,12 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           };
         }
       )?.response;
-      return (
-        response?.data?.error ||
-        response?.data?.message ||
-        t("terminal.imageUploadFailed")
-      );
+      return response?.data?.error || response?.data?.message || fallback;
     }
 
     async function handleImageUpload(
       file: File,
       source: TerminalImageUploadSource,
-      inputPrefix = "",
     ) {
       if (file.type && !file.type.startsWith("image/")) {
         toast.error(t("terminal.imageChooseFile"));
@@ -3959,7 +4069,7 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           webSocketRef.current?.send(
             JSON.stringify({
               type: "input",
-              data: inputPrefix + quoteTerminalImagePath(shellPath),
+              data: uploadedPathInput.path(shellPath),
             }),
           );
           toast.success(t("terminal.imageUploaded", { path: shellPath }));
@@ -3979,17 +4089,73 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       }
     }
 
-    // One at a time, so the paths are typed in drop order with a space between.
-    async function handleDroppedImages(files: File[]) {
-      for (const [index, file] of files.entries()) {
-        await handleImageUpload(file, "file", index > 0 ? " " : "");
+    /**
+     * Upload a dropped file that is not an image to the host as it is, and
+     * type its path followed by a space.
+     */
+    async function handleFileUpload(file: File) {
+      if (file.size > TERMINAL_UPLOAD_MAX_BYTES) {
+        toast.error(t("terminal.fileTooLarge", { name: file.name }));
+        return;
+      }
+      setIsImageUploading(true);
+      try {
+        const form = buildFileUploadFormData(file, hostConfig.instanceId ?? "");
+        const uploadApi = selectImageUploadApi(
+          sessionOriginRef.current,
+          api,
+          remoteApi,
+        );
+        const response = await uploadApi.post("/file-upload", form, {
+          headers: { "Content-Type": undefined },
+        });
+        const { shellPath } = response.data as { shellPath: string };
+        const pathInserted =
+          webSocketRef.current?.readyState === WebSocket.OPEN;
+        if (pathInserted) {
+          webSocketRef.current?.send(
+            JSON.stringify({
+              type: "input",
+              data: uploadedPathInput.path(shellPath),
+            }),
+          );
+          toast.success(t("terminal.fileUploaded", { path: shellPath }));
+        } else {
+          toast.warning(
+            t("terminal.fileUploadedNotPasted", { path: shellPath }),
+          );
+        }
+      } catch (error) {
+        const response = (error as { response?: { data?: { code?: string } } })
+          ?.response;
+        const code = response?.data?.code;
+        // With image storage set to local, only images can be uploaded.
+        if (code === "FILE_LOCAL_STORAGE_UNSUPPORTED") {
+          toast.error(t("terminal.imageChooseFile"));
+          return;
+        }
+        const message = getImageUploadErrorMessage(
+          error,
+          t("terminal.fileUploadFailed"),
+        );
+        toast.error(code ? `${message} (${code})` : message);
+      } finally {
+        setIsImageUploading(false);
+      }
+    }
+
+    // One at a time, so the paths are typed in drop order.
+    async function handleDroppedFiles(files: File[]) {
+      for (const file of files) {
+        if (isConvertibleImage(file)) await handleImageUpload(file, "file");
+        else await handleFileUpload(file);
       }
     }
 
     // Keep the terminal session and upload callback current without rebuilding xterm.
     useEffect(() => {
       imageUploadRef.current = handleImageUpload;
-      droppedImagesRef.current = handleDroppedImages;
+      droppedFilesRef.current = handleDroppedFiles;
     });
 
     async function handleClipboardImage() {
@@ -4081,6 +4247,15 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       setMenuAt(null);
       setTimeout(() => terminal?.focus(), 0);
     };
+    function submitAskedUsername() {
+      const name = usernameDraft.trim();
+      if (!validUsername(name) || !terminal) return;
+      askedUsernameRef.current = name;
+      rememberUsername(hostConfig.id, name);
+      setAskingUsername(false);
+      updateConnectionError(null);
+      connectToHost(terminal.cols, terminal.rows);
+    }
     function sendCustomKey() {
       const code = customKey.toLowerCase().charCodeAt(0) - 96;
       if (!(code >= 1 && code <= 26)) return;
@@ -4205,8 +4380,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           {isImageDragOver && (
             <div className="pointer-events-none absolute inset-0 z-[125] flex items-center justify-center border-2 border-dashed border-accent-brand bg-background/70">
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <ImagePlus className="size-4 text-accent-brand" />
-                {t("terminal.imageDropHint")}
+                <FileUp className="size-4 text-accent-brand" />
+                {t("terminal.fileDropHint")}
               </div>
             </div>
           )}
@@ -4545,6 +4720,66 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
             onClose={closeMenu}
             actions={menuActions}
           />
+
+          <PanePrompt
+            open={askingUsername}
+            title={t("terminal.askUsername.title")}
+            description={t("terminal.askUsername.description", {
+              host: hostConfig.name || hostConfig.ip,
+            })}
+            onCancel={() => setAskingUsername(false)}
+            actions={
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setAskingUsername(false);
+                    updateConnectionError(t("terminal.askUsername.cancelled"));
+                  }}
+                >
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!validUsername(usernameDraft)}
+                  onClick={submitAskedUsername}
+                >
+                  {t("terminal.askUsername.connect")}
+                </Button>
+              </>
+            }
+          >
+            <div className="flex flex-col gap-2">
+              <Input
+                autoFocus
+                value={usernameDraft}
+                className="h-8 font-mono"
+                aria-label={t("terminal.askUsername.title")}
+                onChange={(e) => setUsernameDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  e.stopPropagation();
+                  if (e.key === "Enter") submitAskedUsername();
+                }}
+              />
+              {recentUsernames(hostConfig.id).length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {recentUsernames(hostConfig.id).map((name) => (
+                    <Button
+                      key={name}
+                      variant="outline"
+                      size="xs"
+                      className="font-mono"
+                      onClick={() => setUsernameDraft(name)}
+                    >
+                      {name}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </PanePrompt>
 
           <PanePrompt
             open={customKeyOpen}

@@ -1,3 +1,4 @@
+import { isAskUsername, isValidLoginName } from "./ask-username.js";
 import { AsyncResource } from "async_hooks";
 import { StringDecoder } from "string_decoder";
 import { decodeZmodemInput, ZmodemGate } from "./zmodem.js";
@@ -35,8 +36,10 @@ import {
   authFollowUp,
   type TerminalLogger,
 } from "./helpers.js";
+import { isAtPasswordPrompt, stripAnsi } from "../shared/password-prompt.js";
 import { SSHAuthManager } from "./keyboard-prompt.js";
-import { HOST_KEYS } from "./settings.js";
+import { ADMIN_KEYS, HOST_KEYS } from "./settings.js";
+import { bridgeX11, parseDisplay, type X11Display } from "./x11.js";
 import {
   findTmuxSession,
   planTmuxAttach,
@@ -869,6 +872,17 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               ws.send(JSON.stringify({ type: "pong" }));
               break;
 
+            case "fill_password": {
+              const kind =
+                (data as { kind?: unknown } | null)?.kind === "sudo"
+                  ? "sudo"
+                  : "login";
+              void fillSavedPassword(kind).then((ok) =>
+                ws.send(JSON.stringify({ type: "fill_password_result", ok })),
+              );
+              break;
+            }
+
             case "zinput": {
               const bytes = decodeZmodemInput(data);
               const zStream =
@@ -1443,6 +1457,37 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       return true;
     }
 
+    /**
+     * Types the host's saved password at the prompt the terminal waits at.
+     * The terminal view runs in a frame that never gets saved passwords, so
+     * it asks for this instead. Only the session's owner can, and only while
+     * the output ends in a password prompt.
+     */
+    async function fillSavedPassword(kind: "sudo" | "login"): Promise<boolean> {
+      if (isJoiner || !currentSessionId) return false;
+      const session = sessionManager.getSession(currentSessionId);
+      if (!session || session.userId !== userId) return false;
+      if (!isAtPasswordPrompt(stripAnsi(session.outputTail))) return false;
+      const stream = session.sshStream ?? sshStream;
+      if (!stream) return false;
+      const host = (await ctx.ssh
+        .resolveHost(session.hostId, {
+          syncId: session.hostSyncId ?? null,
+        } as { syncId?: string | null })
+        .catch(() => null)) as {
+        password?: unknown;
+        sudoPassword?: unknown;
+      } | null;
+      const password =
+        kind === "sudo"
+          ? host?.sudoPassword || host?.password
+          : host?.password || host?.sudoPassword;
+      if (typeof password !== "string" || !password) return false;
+      session.outputTail = "";
+      stream.write(`${password}\n`);
+      return true;
+    }
+
     async function handleConnectToHost(data: ConnectToHostData) {
       const { hostConfig, initialPath, executeCommand, tmuxAttachSession } =
         data;
@@ -1726,6 +1771,35 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             }
           }
         } catch (error) {
+          // A secret reference that needs the user to unlock a vault first
+          // (Termix 26.11.3) comes back like a connect policy answer.
+          const access = error as {
+            code?: unknown;
+            requestTab?: unknown;
+            requestKind?: unknown;
+          };
+          if (
+            access?.code === "access-required" &&
+            typeof access.requestTab === "string"
+          ) {
+            const message = getErrorMessage(error);
+            sendLog("auth", "error", message);
+            cleanupAuthState(connectionTimeout);
+            ws.send(
+              JSON.stringify({
+                type: "access_required",
+                code: access.code,
+                message,
+                requestTab: access.requestTab,
+                requestKind:
+                  typeof access.requestKind === "string"
+                    ? access.requestKind
+                    : null,
+                hostId: id,
+              }),
+            );
+            return;
+          }
           sshLogger.warn(`Failed to resolve server-side host data for ${id}`, {
             operation: "ssh_host_data",
             hostId: id,
@@ -1754,6 +1828,30 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
         }
       }
 
+      // X11 needs the host's switch and an X server the admin named.
+      let x11Display: X11Display | null = null;
+      if (serverHostId != null) {
+        try {
+          if (
+            (await ctx.settings.getHost(serverHostId, HOST_KEYS.forwardX11)) ===
+            true
+          ) {
+            x11Display = parseDisplay(
+              await ctx.settings.get(ADMIN_KEYS.x11Display),
+            );
+            if (!x11Display) {
+              sendLog(
+                "shell",
+                "warning",
+                "X11 forwarding is on for this host, but no X server is set in Settings, SSH Terminal",
+              );
+            }
+          }
+        } catch {
+          x11Display = null;
+        }
+      }
+
       const tunnel = await resolveTunnelSettings(
         serverHostId != null
           ? (key) => ctx.settings.getHost(serverHostId, key)
@@ -1765,6 +1863,24 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       const cfTunnelPort = tunnel.port;
       const cfTunnelClientId = tunnel.clientId;
       const cfTunnelClientSecret = tunnel.clientSecret;
+
+      // A host saved as "$ask" logs in as whoever the person typed. Only
+      // people who can edit the host can save that, so it is their choice.
+      if (resolvedHostData && isAskUsername(resolvedHostData.username)) {
+        const typed = String(clientUsername ?? "").trim();
+        if (!isValidLoginName(typed)) {
+          ws.send(
+            JSON.stringify({
+              type: "error",
+              message: "Type the username to log in as",
+            }),
+          );
+          cleanupAuthState(connectionTimeout);
+          return;
+        }
+        resolvedHostData = { ...resolvedHostData, username: typed };
+        username = typed;
+      }
 
       // Resolve credentials server-side when frontend doesn't provide them
       let resolvedCredentials = {
@@ -1852,6 +1968,7 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
       );
 
       let connectHost = ip;
+      let dnsFailure: unknown = null;
       if (connectsViaJumpHosts) {
         // The target is only reachable through the jump host's network (e.g. a
         // VPN-only address), so DNS must be resolved there, not on this host.
@@ -1884,29 +2001,14 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             );
           }
         } catch (error) {
-          const message = getErrorMessage(error);
-          sshLogger.error("SSH hostname resolution failed", error, {
-            operation: "terminal_dns_resolve",
-            hostId: id,
-            ip,
-            port,
-            transient: isRetriableDnsError(error),
-          });
+          // A transport provider (like a relay through the linked server) may
+          // still reach the host, so the error only counts on a direct connect.
+          dnsFailure = error;
           sendLog(
             "dns",
-            "error",
-            `DNS resolution failed for ${ip}: ${message}`,
+            "info",
+            `Could not resolve ${ip} here, checking for a relay`,
           );
-          ws.send(
-            JSON.stringify({
-              type: "error",
-              message: isRetriableDnsError(error)
-                ? "SSH error: DNS lookup temporarily failed. Check the Docker/container DNS configuration or try again."
-                : "SSH error: Could not resolve hostname from the Termix server container.",
-            }),
-          );
-          cleanupAuthState(connectionTimeout);
-          return;
         }
       }
       if (!cloudflareTunnelEnabled) {
@@ -2038,6 +2140,10 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             tabInstanceId,
             sessionLoggingEnabled,
           );
+          const createdSession = sessionManager.getSession(currentSessionId);
+          if (createdSession && !createdSession.hostSyncId) {
+            createdSession.hostSyncId = hostSyncId ?? null;
+          }
 
           // If createSession returned an existing live session (duplicate tabInstanceId),
           // close the newly-established SSH connection and attach this WS to the live session instead.
@@ -2225,12 +2331,26 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             }
           }, 15000);
 
+          if (x11Display) {
+            const stopX11 = bridgeX11(conn as never, x11Display, (error) =>
+              sshLogger.warn("X11 channel could not reach the X server", {
+                operation: "ssh_x11",
+                hostId: id,
+                error: getErrorMessage(error),
+              }),
+            );
+            conn.once("close", stopX11);
+          }
+
           conn.shell(
             {
               rows: data.rows,
               cols: data.cols,
               term: "xterm-256color",
             } as PseudoTtyOptions,
+            x11Display
+              ? { x11: { single: false, screen: x11Display.screen } }
+              : {},
             bind((err: Error | undefined, stream: ClientChannel) => {
               shellCallbackReceived = true;
               clearTimeout(shellTimeout);
@@ -3263,6 +3383,35 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               error instanceof Error && error.name === "JumpHostChainError"
                 ? `Failed to connect through jump hosts: ${error.message}`
                 : getErrorMessage(error),
+          }),
+        );
+        if (currentSessionId) {
+          sessionManager.destroySession(currentSessionId);
+          currentSessionId = null;
+        }
+        cleanupAuthState(connectionTimeout);
+        return;
+      }
+      if (dnsFailure && transport.via === "direct") {
+        const error = dnsFailure;
+        sshLogger.error("SSH hostname resolution failed", error, {
+          operation: "terminal_dns_resolve",
+          hostId: id,
+          ip,
+          port,
+          transient: isRetriableDnsError(error),
+        });
+        sendLog(
+          "dns",
+          "error",
+          `DNS resolution failed for ${ip}: ${getErrorMessage(error)}`,
+        );
+        ws.send(
+          JSON.stringify({
+            type: "error",
+            message: isRetriableDnsError(error)
+              ? "SSH error: DNS lookup temporarily failed. Check the Docker/container DNS configuration or try again."
+              : "SSH error: Could not resolve hostname from the Termix server container.",
           }),
         );
         if (currentSessionId) {

@@ -101,7 +101,9 @@
     "imageUploaded": "Imatge pujada: {{path}}",
     "imageClipboardUnavailable": "Aquest navegador no pot llegir imatges del porta-retalls",
     "imageClipboardEmpty": "No s'ha trobat cap imatge al porta-retalls",
-    "imageDropHint": "Deixa anar una imatge per pujar-la",
+    "fileDropHint": "Deixa anar un fitxer per pujar-lo",
+    "fileDropFolder": "No es poden pujar carpetes. Deixa anar els fitxers que hi ha dins en el seu lloc",
+    "fileTooLarge": "{{name}} és més gran de 50 MB. Puga fitxers més grans amb rz o un gestor de fitxers",
     "localShell": "Shell del terminal local",
     "localBackendUnreachable": "El backend local no és accessible",
     "processExited": "El procés ha finalitzat ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "La sessió de Termix ha finalitzat. Inicieu sessió de nou.",
     "imageUploadFailed": "Ha fallat la pujada de la imatge",
     "imageUploadedNotPasted": "La imatge s'ha pujat, però el terminal no estava obert per enganxar-la: {{path}}",
+    "fileUploaded": "Fitxer pujat: {{path}}",
+    "fileUploadFailed": "Ha fallat la pujada del fitxer",
+    "fileUploadedNotPasted": "Fitxer pujat, però el terminal no estava obert per enganxar-lo: {{path}}",
     "clipboardImageReadFailed": "No s'ha pogut llegir el portapapers",
     "autocompleteHintComplete": "Tab o Retorn per completar",
     "autocompleteHintNavigate": "↑↓ per navegar",
@@ -121,7 +126,13 @@
     "secretCancel": "Cancel·lar",
     "hideSecret": "Amaga el secret",
     "showSecret": "Mostra el secret",
-    "sessionEndedKeepOpen": "Sessió finalitzada. Premeu Retorn per tornar a connectar."
+    "sessionEndedKeepOpen": "Sessió finalitzada. Premeu Retorn per tornar a connectar.",
+    "askUsername": {
+      "title": "Inicia sessió com a",
+      "description": "{{host}} demana un nom d'usuari cada vegada. Escriu el que vols utilitzar per iniciar sessió.",
+      "connect": "Connecta",
+      "cancelled": "No s'ha proporcionat cap nom d'usuari"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Desenganxar tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Entrada tàctil",
         "images": "Emmagatzematge d'imatges",
-        "sessions": "Sessions"
+        "sessions": "Sessions",
+        "x11": "Encaminament X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistència de la sessió del terminal",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Mantenir les sessions després de desconnectar",
         "description": "Mantenir una sessió de terminal desconnectada activa al servidor durant el temps indicat, de manera que en tornar a obrir la pestanya es recuperi des d'on s'havia quedat."
+      },
+      "x11Display": {
+        "label": "Servidor X per a l'encaminament X11",
+        "description": "On apareixen les finestres dels amfitrions amb encaminament X11, com localhost:0. Ha de ser accessible des del servidor Termix, així que això és principalment per a l'aplicació d'escriptori amb VcXsrv, XQuartz o Xwayland en aquest ordinador. Deixa-ho buit per desactivar l'encaminament X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Mantenir la pestanya oberta en sortir"
+      },
+      "forwardX11": {
+        "label": "Encaminament X11",
+        "description": "Mostra les finestres de programes gràfics que iniciïs al terminal, com xclock o una eina de configuració. Requereix un servidor X configurat a Configuració, Terminal SSH i X11Forwarding yes a l'amfitrió."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copia automàticament el text seleccionat",
         "description": "Copia el text tan bon punt el selecciones al terminal"
+      },
+      "gpuRendering": {
+        "label": "Renderitzat per GPU",
+        "description": "Dibuixa el terminal amb WebGL, que manté el ritme amb una sortida intensa. Desactiva-ho si el text es veu malament."
+      },
+      "inlineImages": {
+        "label": "Imatges en línia",
+        "description": "Mostra imatges que els programes imprimen amb sixel o el format d'imatge d'iTerm, com les previsualitzacions de chafa o yazi."
       }
     }
   },

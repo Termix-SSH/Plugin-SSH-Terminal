@@ -67,7 +67,7 @@
     "searchRegex": "নিয়মিত অভিব্যক্তি ব্যবহার করুন",
     "searchResultCount": "{{count}} এর মধ্যে {{index}}",
     "searchWholeWord": "পুরো শব্দ মিলান",
-    "sessionTakenOver": "এই সেশনটি অন্য একটি উইন্ডো বা ট্যাবে খোলা হয়েছিল।",
+    "sessionTakenOver": "এই সেশনটি অন্য উইন্ডো বা ট্যাবে খোলা হয়েছে।",
     "tmuxAttached": "সংযুক্ত ক্লায়েন্ট",
     "tmuxAttachedCount_one": "{{count}} সংযুক্ত",
     "tmuxAttachedCount_other": "{{count}} সংযুক্ত",
@@ -99,7 +99,9 @@
     "imageUploaded": "ইমেজ আপলোড হয়েছে: {{path}}",
     "imageClipboardUnavailable": "এই ব্রাউজারটি ক্লিপবোর্ড থেকে ইমেজ পড়তে পারে না",
     "imageClipboardEmpty": "ক্লিপবোর্ডে কোনো ইমেজ পাওয়া যায়নি",
-    "imageDropHint": "আপলোড করতে একটি ছবি ড্রপ করুন",
+    "fileDropHint": "আপলোড করতে একটি ফাইল এখানে ফেলুন",
+    "fileDropFolder": "ফোল্ডার আপলোড করা যায় না। এর পরিবর্তে ফোল্ডারের ভেতরের ফাইলগুলো ফেলুন",
+    "fileTooLarge": "{{name}} ৫০ এমবি-এর চেয়ে বড়। বড় ফাইল আপলোড করতে rz বা ফাইল ম্যানেজার ব্যবহার করুন",
     "localShell": "লোকাল টার্মিনাল শেল",
     "localBackendUnreachable": "লোকাল ব্যাকএন্ডে সংযোগ করা যাচ্ছে না",
     "processExited": "প্রসেস বের হয়ে গেছে ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "আপনার Termix সেশন শেষ হয়েছে। আবার সাইন ইন করুন।",
     "imageUploadFailed": "ইমেজ আপলোড ব্যর্থ হয়েছে",
     "imageUploadedNotPasted": "ইমেজ আপলোড হয়েছে, কিন্তু পেস্ট করার জন্য টার্মিনাল খোলা ছিল না: {{path}}",
+    "fileUploaded": "ফাইল আপলোড হয়েছে: {{path}}",
+    "fileUploadFailed": "ফাইল আপলোড ব্যর্থ হয়েছে",
+    "fileUploadedNotPasted": "ফাইল আপলোড হয়েছে, কিন্তু পেস্ট করার জন্য টার্মিনাল খোলা ছিল না: {{path}}",
     "clipboardImageReadFailed": "ক্লিপবোর্ড পড়া যায়নি",
     "autocompleteHintComplete": "সম্পূর্ণ করতে Tab বা Enter চাপুন",
     "autocompleteHintNavigate": "নেভিগেট করতে ↑↓",
@@ -119,7 +124,13 @@
     "secretCancel": "বাতিল করুন",
     "hideSecret": "সিক্রেট লুকান",
     "showSecret": "সিক্রেট দেখান",
-    "sessionEndedKeepOpen": "সেশন শেষ হয়েছে। পুনরায় সংযোগ করতে Enter চাপুন।"
+    "sessionEndedKeepOpen": "সেশন শেষ হয়েছে। পুনরায় সংযোগ করতে Enter চাপুন।",
+    "askUsername": {
+      "title": "লগইন করুন",
+      "description": "{{host}} প্রতিবার ইউজারনেম চায়। লগইন করার জন্য যে ইউজারনেমটি ব্যবহার করতে চান তা লিখুন।",
+      "connect": "কানেক্ট করুন",
+      "cancelled": "কোনো ইউজারনেম দেওয়া হয়নি"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmux ডিট্যাচ করুন",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "টাচ ইনপুট",
         "images": "ইমেজ স্টোরেজ",
-        "sessions": "সেশন"
+        "sessions": "সেশন",
+        "x11": "X11 ফরওয়ার্ডিং"
       },
       "sessionTimeoutMinutes": {
         "label": "টার্মিনাল সেশন স্থায়িত্ব",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "ডিসকানেক্টের পর সেশন রাখুন",
         "description": "উপরের সময়ের জন্য সার্ভারে ডিসকানেক্টেড টার্মিনাল সক্রিয় রাখুন, যাতে এর ট্যাব আবার খুললে যেখানে থেমেছিল সেখান থেকে শুরু হয়।"
+      },
+      "x11Display": {
+        "label": "X11 ফরওয়ার্ডিংয়ের জন্য X সার্ভার",
+        "description": "X11 ফরওয়ার্ডিং সহ হোস্টগুলোর উইন্ডো কোথায় দেখাবে, যেমন localhost:0। এটি Termix সার্ভার থেকে অ্যাক্সেসযোগ্য হতে হবে, তাই এটি মূলত এই কম্পিউটারে VcXsrv, XQuartz বা Xwayland সহ ডেস্কটপ অ্যাপের জন্য। X11 ফরওয়ার্ডিং বন্ধ করতে খালি রাখুন।",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "বের হওয়ার সময় ট্যাব খোলা রাখুন"
+      },
+      "forwardX11": {
+        "label": "X11 ফরওয়ার্ডিং",
+        "description": "টার্মিনালে যে গ্রাফিক্যাল প্রোগ্রাম চালান (যেমন xclock বা সেটিংস টুল), তার উইন্ডো দেখান। এর জন্য সেটিংসে X সার্ভার সেট করা প্রয়োজন, SSH টার্মিনাল এবং হোস্টে X11Forwarding yes থাকতে হবে।"
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "নির্বাচিত টেক্সট স্বয়ংক্রিয়ভাবে কপি করুন",
         "description": "টার্মিনালে এটি নির্বাচন করার সাথে সাথে টেক্সট কপি করে"
+      },
+      "gpuRendering": {
+        "label": "GPU রেন্ডারিং",
+        "description": "টার্মিনালটি WebGL দিয়ে আঁকুন, যা ভারী আউটপুটের সাথে তাল মিলিয়ে চলতে পারে। যদি টেক্সট ভুল দেখায় তবে এটি বন্ধ করুন।"
+      },
+      "inlineImages": {
+        "label": "ইনলাইন ইমেজ",
+        "description": "সিক্সেল বা iTerm ইমেজ ফরম্যাট ব্যবহার করে প্রোগ্রাম যে ছবি প্রিন্ট করে (যেমন chafa বা yazi প্রিভিউ), তা দেখান।"
       }
     }
   },

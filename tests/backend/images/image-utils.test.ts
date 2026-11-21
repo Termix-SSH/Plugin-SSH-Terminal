@@ -6,6 +6,7 @@ import {
   createConcurrencyLimiter,
   isExpiredImage,
   isImageFilename,
+  sanitizeUploadFilename,
 } from "../../../src/backend/images/image-utils.js";
 
 describe("terminal image utilities", () => {
@@ -72,5 +73,89 @@ describe("terminal image utilities", () => {
 
     expect(peak).toBe(1);
     expect(limiter.active).toBe(0);
+  });
+});
+
+describe("sanitizeUploadFilename", () => {
+  // What the maintainers asked for: only these characters, never a leading
+  // dot or dash, at most 100 characters.
+  const SAFE_NAME = /^[A-Za-z0-9_][A-Za-z0-9._-]{0,99}$/;
+
+  it("keeps a name that is already safe", () => {
+    expect(sanitizeUploadFilename("report-2026_v2.pdf")).toBe(
+      "report-2026_v2.pdf",
+    );
+  });
+
+  it("changes every other character to an underscore", () => {
+    expect(sanitizeUploadFilename("Q3 report (final).pdf")).toBe(
+      "Q3_report__final_.pdf",
+    );
+    expect(sanitizeUploadFilename("a'b\"c`d$e;f|g&h*i?j.txt")).toBe(
+      "a_b_c_d_e_f_g_h_i_j.txt",
+    );
+  });
+
+  it("never keeps a newline or other control character", () => {
+    expect(sanitizeUploadFilename("notes\nrm -rf ~\r\t\u0000.md")).toBe(
+      "notes_rm_-rf_____.md",
+    );
+  });
+
+  it("never keeps a path separator", () => {
+    expect(sanitizeUploadFilename("../../etc/passwd")).toBe("_.._etc_passwd");
+    expect(sanitizeUploadFilename("C:\\Windows\\win.ini")).toBe(
+      "C__Windows_win.ini",
+    );
+  });
+
+  it("turns one accented, CJK or emoji character into one underscore", () => {
+    expect(sanitizeUploadFilename("résumé 简历.pdf")).toBe("r_sum____.pdf");
+    expect(sanitizeUploadFilename("re\u0301sume\u0301.pdf")).toBe("r_sum_.pdf");
+    expect(sanitizeUploadFilename("📄.txt")).toBe("_.txt");
+  });
+
+  it("strips leading dots and dashes", () => {
+    expect(sanitizeUploadFilename(".env")).toBe("env");
+    expect(sanitizeUploadFilename("--help.txt")).toBe("help.txt");
+    expect(sanitizeUploadFilename("-.-.x")).toBe("x");
+  });
+
+  it("falls back to file when nothing is left", () => {
+    expect(sanitizeUploadFilename("")).toBe("file");
+    expect(sanitizeUploadFilename("...")).toBe("file");
+    expect(sanitizeUploadFilename("-")).toBe("file");
+  });
+
+  it("cuts a long name to 100 characters and keeps the extension", () => {
+    const name = sanitizeUploadFilename(`${"a".repeat(150)}.tar.gz`);
+    expect(name).toBe(`${"a".repeat(97)}.gz`);
+    expect(name).toHaveLength(100);
+  });
+
+  it("cuts a long name with no real extension to 100 characters", () => {
+    expect(sanitizeUploadFilename("a".repeat(120))).toBe("a".repeat(100));
+    expect(
+      sanitizeUploadFilename(`${"a".repeat(50)}.${"b".repeat(80)}`),
+    ).toHaveLength(100);
+  });
+
+  it("always returns a safe name", () => {
+    const names = [
+      "",
+      ".",
+      "..",
+      "-n",
+      " leading space",
+      "\u202Eexe.txt",
+      "$(curl evil)",
+      "a\nb",
+      "😀".repeat(200),
+      `.${"x".repeat(300)}.sh`,
+      "x.\n",
+    ];
+    for (const name of names) {
+      expect(sanitizeUploadFilename(name)).toMatch(SAFE_NAME);
+    }
   });
 });

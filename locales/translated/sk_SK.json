@@ -103,7 +103,9 @@
     "imageUploaded": "Obrázok nahraný: {{path}}",
     "imageClipboardUnavailable": "Tento prehliadač nedokáže čítať obrázky zo schránky",
     "imageClipboardEmpty": "V schránke sa nenašiel žiadny obrázok",
-    "imageDropHint": "Presuňte obrázok sem na jeho nahranie",
+    "fileDropHint": "Presuňte sem súbor na nahranie",
+    "fileDropFolder": "Priečinky nemožno nahrať. Namiesto toho presuňte súbory, ktoré v nich sú.",
+    "fileTooLarge": "{{name}} je väčší ako 50 MB. Väčšie súbory nahrajte pomocou príkazu rz alebo správcu súborov.",
     "localShell": "Lokálny terminálový shell",
     "localBackendUnreachable": "Lokálny backend nie je dostupný",
     "processExited": "Proces sa ukončil ({{code}})",
@@ -111,6 +113,9 @@
     "sessionExpiredLogin": "Vaša Termix relácia sa ukončila. Prihláste sa znova.",
     "imageUploadFailed": "Nahrávanie obrázku zlyhalo",
     "imageUploadedNotPasted": "Obrázok bol nahraný, ale terminál nebol otvorený na jeho vloženie: {{path}}",
+    "fileUploaded": "Súbor nahraný: {{path}}",
+    "fileUploadFailed": "Nahrávanie súboru zlyhalo",
+    "fileUploadedNotPasted": "Súbor bol nahraný, ale terminál nebol otvorený na vloženie: {{path}}",
     "clipboardImageReadFailed": "Nepodarilo sa prečítať schránku",
     "autocompleteHintComplete": "Tab alebo Enter na dokončenie",
     "autocompleteHintNavigate": "↑↓ na navigáciu",
@@ -123,7 +128,13 @@
     "secretCancel": "Zrušiť",
     "hideSecret": "Skryť tajný kľúč",
     "showSecret": "Zobraziť tajný kľúč",
-    "sessionEndedKeepOpen": "Relácia skončila. Stlačte Enter pre opätovné pripojenie."
+    "sessionEndedKeepOpen": "Relácia skončila. Stlačte Enter pre opätovné pripojenie.",
+    "askUsername": {
+      "title": "Prihlásiť sa ako",
+      "description": "{{host}} pri každom pripojení vyžaduje používateľské meno. Zadajte meno, pod ktorým sa chcete prihlásiť.",
+      "connect": "Pripojiť",
+      "cancelled": "Nezadalo sa žiadne používateľské meno"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Odpojiť tmux",
@@ -196,7 +207,8 @@
       "group": {
         "touch": "Dotykový vstup",
         "images": "Úložisko obrázkov",
-        "sessions": "Relácie"
+        "sessions": "Relácie",
+        "x11": "X11 preposielanie"
       },
       "sessionTimeoutMinutes": {
         "label": "Trvanie relácie terminálu",
@@ -236,6 +248,11 @@
       "sessionPersistence": {
         "label": "Udržiavať relácie po odpojení",
         "description": "Udržiavať odpojený terminál aktívny na serveri po dobu uvedenú vyššie, aby sa po opätovnom otvorení karty pokračovalo tam, kde sa zastavilo."
+      },
+      "x11Display": {
+        "label": "X server pre X11 preposielanie",
+        "description": "Kde sa zobrazia okná z hostiteľov s X11 preposielaním, napríklad localhost:0. Musí byť dostupný z Termix servera, takže sa to týka najmä desktopovej aplikácie s VcXsrv, XQuartz alebo Xwayland na tomto počítači. Ak chcete X11 preposielanie vypnúť, nechajte prázdne.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -421,6 +438,10 @@
       },
       "keepOpenOnExit": {
         "label": "Nezavrieť kartu po ukončení"
+      },
+      "forwardX11": {
+        "label": "X11 preposielanie",
+        "description": "Zobrazovať okná grafických programov, ktoré spustíte v termináli, ako napríklad xclock alebo nástroj nastavení. Vyžaduje nastavený X server v Nastaveniach, SSH Termináli a X11Forwarding yes na hostiteľovi."
       }
     },
     "user": {
@@ -458,6 +479,14 @@
       "copyOnSelect": {
         "label": "Automaticky kopírovať vybraný text",
         "description": "Text sa skopíruje hneď po jeho výbere v termináli"
+      },
+      "gpuRendering": {
+        "label": "GPU vykresľovanie",
+        "description": "Vykresľovať terminál pomocou WebGL, čo zvládne aj náročný výstup. Vypnite, ak sa text zobrazuje nesprávne."
+      },
+      "inlineImages": {
+        "label": "Vložené obrázky",
+        "description": "Zobrazovať obrázky, ktoré programy vytlačia vo formáte sixel alebo iTerm, napríklad náhľady z chafa alebo yazi."
       }
     }
   },

@@ -1,7 +1,7 @@
 {
   "id": "ssh-terminal",
   "name": "SSH Terminal",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "SSH terminal sessions with tabs, split screen, history, macros and a local terminal in the desktop app.",
   "author": {
     "name": "Termix"
@@ -122,6 +122,7 @@
     }
   ],
   "contributes": {
+    "guest": true,
     "tabs": [
       {
         "id": "terminal",
@@ -284,6 +285,14 @@
           "type": "custom",
           "component": "imageStorageTest",
           "group": "settings.admin.group.images"
+        },
+        {
+          "key": "x11Display",
+          "type": "string",
+          "labelKey": "settings.admin.x11Display.label",
+          "descriptionKey": "settings.admin.x11Display.description",
+          "placeholderKey": "settings.admin.x11Display.placeholder",
+          "group": "settings.admin.group.x11"
         }
       ],
       "host": {
@@ -388,6 +397,13 @@
             "labelKey": "settings.host.enableCommandHistory.label",
             "descriptionKey": "settings.host.enableCommandHistory.description",
             "default": true
+          },
+          {
+            "key": "forwardX11",
+            "type": "boolean",
+            "labelKey": "settings.host.forwardX11.label",
+            "descriptionKey": "settings.host.forwardX11.description",
+            "default": false
           },
           {
             "key": "connectFrom",
@@ -845,6 +861,20 @@
           "default": false
         },
         {
+          "key": "gpuRendering",
+          "type": "boolean",
+          "labelKey": "settings.user.gpuRendering.label",
+          "descriptionKey": "settings.user.gpuRendering.description",
+          "default": true
+        },
+        {
+          "key": "inlineImages",
+          "type": "boolean",
+          "labelKey": "settings.user.inlineImages.label",
+          "descriptionKey": "settings.user.inlineImages.description",
+          "default": true
+        },
+        {
           "key": "watchRules",
           "type": "json",
           "labelKey": "terminalTools.watch.title",
@@ -914,7 +944,12 @@
         "id": "toggleBroadcast"
       }
     ],
-    "uses": ["files.openEditor", "files.openHost", "snippets.startupCommand"],
+    "uses": [
+      "files.openEditor",
+      "files.openHost",
+      "session.terminalView",
+      "snippets.startupCommand"
+    ],
     "operations": {
       "actions": [
         {

@@ -103,7 +103,9 @@
     "imageUploaded": "Slika naložena: {{path}}",
     "imageClipboardUnavailable": "Ta brskalnik ne more brati slik iz odložišča",
     "imageClipboardEmpty": "V odložišču ni bilo najdene nobene slike",
-    "imageDropHint": "Spustite sliko za nalaganje",
+    "fileDropHint": "Spustite datoteko za nalaganje",
+    "fileDropFolder": "Map ni mogoče naložiti. Namesto tega spustite datoteke znotraj njih.",
+    "fileTooLarge": "{{name}} je večji od 50 MB. Večje datoteke naložite z rz ali upraviteljem datotek",
     "localShell": "Lokalna terminalna lupina",
     "localBackendUnreachable": "Lokalni strežnik ni dosegljiv",
     "processExited": "Postopek je končan ({{code}})",
@@ -111,6 +113,9 @@
     "sessionExpiredLogin": "Vaša Termix seja se je končala. Ponovno se prijavite.",
     "imageUploadFailed": "Nalaganje slike ni uspelo",
     "imageUploadedNotPasted": "Slika je naložena, vendar terminal ni bil odprt za vstavljanje: {{path}}",
+    "fileUploaded": "Datoteka naložena: {{path}}",
+    "fileUploadFailed": "Nalaganje datoteke ni uspelo",
+    "fileUploadedNotPasted": "Datoteka je naložena, vendar terminal ni bil odprt za lepljenje: {{path}}",
     "clipboardImageReadFailed": "Odložišča ni bilo mogoče prebrati",
     "autocompleteHintComplete": "Tab ali Enter za dokončanje",
     "autocompleteHintNavigate": "↑↓ za navigacijo",
@@ -123,7 +128,13 @@
     "secretCancel": "Prekliči",
     "hideSecret": "Skrij skrivnost",
     "showSecret": "Prikaži skrivnost",
-    "sessionEndedKeepOpen": "Seja je končana. Pritisnite Enter za ponovno povezavo."
+    "sessionEndedKeepOpen": "Seja je končana. Pritisnite Enter za ponovno povezavo.",
+    "askUsername": {
+      "title": "Prijava kot",
+      "description": "{{host}} vsakič zahteva uporabniško ime. Vnesite tisto, s katerim se želite prijaviti.",
+      "connect": "Poveži",
+      "cancelled": "Uporabniško ime ni bilo podano"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Loči tmux",
@@ -196,7 +207,8 @@
       "group": {
         "touch": "Dotik",
         "images": "Shranjevanje slik",
-        "sessions": "Seje"
+        "sessions": "Seje",
+        "x11": "Posredovanje X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Trajanje seje terminala",
@@ -236,6 +248,11 @@
       "sessionPersistence": {
         "label": "Ohrani seje po prekinitvi povezave",
         "description": "Ohrani prekinjeno sejo terminala aktivno na strežniku za čas zgoraj, da se ob ponovnem odprtju zavihka nadaljuje tam, kjer je ostalo."
+      },
+      "x11Display": {
+        "label": "X strežnik za posredovanje X11",
+        "description": "Kje se prikažejo okna s strežnikov z omogočenim posredovanjem X11, na primer localhost:0. Dosegljiv mora biti s strežnika Termix, zato je to večinoma za namizno aplikacijo z VcXsrv, XQuartz ali Xwayland na tem računalniku. Pustite prazno, da onemogočite posredovanje X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -421,6 +438,10 @@
       },
       "keepOpenOnExit": {
         "label": "Ohrani zavihek odprt po izhodu"
+      },
+      "forwardX11": {
+        "label": "Posredovanje X11",
+        "description": "Prikažite okna grafičnih programov, ki jih zaženete v terminalu, kot so xclock ali orodja za nastavitve. Zahteva X strežnik, nastavljen v Nastavitvah, SSH Terminal in X11Forwarding yes na gostitelju."
       }
     },
     "user": {
@@ -458,6 +479,14 @@
       "copyOnSelect": {
         "label": "Samodejno kopiraj izbrano besedilo",
         "description": "Besedilo se kopira takoj, ko ga izberete v terminalu."
+      },
+      "gpuRendering": {
+        "label": "GPU upodabljanje",
+        "description": "Upodabljanje terminala z WebGL, ki obvlada obsežen izhod. Onemogočite, če besedilo ni prikazano pravilno."
+      },
+      "inlineImages": {
+        "label": "Vdelane slike",
+        "description": "Prikažite slike, ki jih programi izpišejo s sixel ali formatom slike iTerm, kot so predogledi chafa ali yazi."
       }
     }
   },

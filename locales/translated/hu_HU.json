@@ -99,7 +99,9 @@
     "imageUploaded": "Kép feltöltve: {{path}}",
     "imageClipboardUnavailable": "Ez a böngésző nem tudja olvasni a képeket a vágólapról",
     "imageClipboardEmpty": "Nem található kép a vágólapban",
-    "imageDropHint": "Húzzon ide egy képet a feltöltéshez",
+    "fileDropHint": "Húzz ide egy fájlt a feltöltéshez",
+    "fileDropFolder": "Mappák nem tölthetők fel. Húzza ide a mappában lévő fájlokat helyette.",
+    "fileTooLarge": "A(z) {{name}} mérete meghaladja az 50 MB-ot. Nagyobb fájlokat az rz paranccsal vagy egy fájlkezelővel tölthet fel.",
     "localShell": "Helyi terminál shell",
     "localBackendUnreachable": "A helyi backend nem érhető el",
     "processExited": "A folyamat befejeződött ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "A Termix-munkamenet lejárt. Jelentkezzen be újra.",
     "imageUploadFailed": "A kép feltöltése sikertelen",
     "imageUploadedNotPasted": "A kép feltöltve, de a terminál nem volt nyitva a beillesztéshez: {{path}}",
+    "fileUploaded": "Fájl feltöltve: {{path}}",
+    "fileUploadFailed": "A fájl feltöltése sikertelen",
+    "fileUploadedNotPasted": "A fájl feltöltve, de a terminál nem volt nyitva a beillesztéshez: {{path}}",
     "clipboardImageReadFailed": "A vágólap olvasása sikertelen",
     "autocompleteHintComplete": "Tab vagy Enter a befejezéshez",
     "autocompleteHintNavigate": "↑↓ a navigáláshoz",
@@ -119,7 +124,13 @@
     "secretCancel": "Mégse",
     "hideSecret": "Titok elrejtése",
     "showSecret": "Titok megjelenítése",
-    "sessionEndedKeepOpen": "A munkamenet véget ért. Nyomja meg az Enter billentyűt az újracsatlakozáshoz."
+    "sessionEndedKeepOpen": "A munkamenet véget ért. Nyomja meg az Enter billentyűt az újracsatlakozáshoz.",
+    "askUsername": {
+      "title": "Bejelentkezés mint",
+      "description": "A(z) {{host}} minden alkalommal felhasználónevet kér. Írja be azt, aként be szeretne jelentkezni.",
+      "connect": "Csatlakozás",
+      "cancelled": "Nem adott meg felhasználónevet"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Tmux leválasztása",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Érintéses bemenet",
         "images": "Képtároló",
-        "sessions": "Munkamenetek"
+        "sessions": "Munkamenetek",
+        "x11": "X11 továbbítás"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminálmunkamenet élettartama",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Munkamenetek megtartása leválasztás után",
         "description": "A leválasztott terminál életben tartása a kiszolgálón a fenti időtartamig, így a fül újranyitásakor ott folytatja, ahol abbahagyta."
+      },
+      "x11Display": {
+        "label": "X11 továbbításhoz használt X szerver",
+        "description": "Ahol megjelennek az X11 továbbítással rendelkező hostokról érkező ablakok, például localhost:0. A Termix szerverről elérhetőnek kell lennie, ezért ez főleg az asztali alkalmazásra vonatkozik, ha a számítógépen VcXsrv, XQuartz vagy Xwayland fut. Hagyja üresen az X11 továbbítás letiltásához.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Fül megnyitva tartása kilépéskor"
+      },
+      "forwardX11": {
+        "label": "X11 továbbítás",
+        "description": "A terminálban indított grafikus programok ablakainak megjelenítése, például az xclock vagy egy beállítóeszköz. Ehhez X szervert kell beállítani a Beállításokban, SSH Terminál alatt, és az X11Forwarding yes beállításnak meg kell lennie a hoston."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Kijelölt szöveg automatikus másolása",
         "description": "A szöveget azonnal másolja, amikor kijelöli a terminálban"
+      },
+      "gpuRendering": {
+        "label": "GPU alapú megjelenítés",
+        "description": "A terminál WebGL-lel történő rajzolása, amely jól kezeli a nagy kimenetet. Kapcsolja ki, ha a szöveg helytelenül jelenik meg."
+      },
+      "inlineImages": {
+        "label": "Inline képek",
+        "description": "A sixel vagy az iTerm képformátummal nyomtatott képek megjelenítése, például a chafa vagy a yazi előnézetek."
       }
     }
   },

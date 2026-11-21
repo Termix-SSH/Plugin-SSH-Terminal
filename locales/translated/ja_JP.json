@@ -67,7 +67,7 @@
     "searchRegex": "正規表現を使用",
     "searchResultCount": "{{index}} / {{count}}",
     "searchWholeWord": "単語全体に一致",
-    "sessionTakenOver": "このセッションは、別のウィンドウまたはタブで開かれました。",
+    "sessionTakenOver": "このセッションは別のウィンドウまたはタブで開かれました。",
     "tmuxAttached": "接続中のクライアント",
     "tmuxAttachedCount_other": "{{count}} 個接続中",
     "tmuxCopyHint": "選択範囲を調整し、Enter を押してクリップボードにコピーします",
@@ -97,7 +97,9 @@
     "imageUploaded": "画像をアップロードしました: {{path}}",
     "imageClipboardUnavailable": "このブラウザはクリップボードから画像を読み取ることができません",
     "imageClipboardEmpty": "クリップボードに画像が見つかりません",
-    "imageDropHint": "画像をドロップしてアップロード",
+    "fileDropHint": "ファイルをドロップしてアップロード",
+    "fileDropFolder": "フォルダはアップロードできません。代わりに中にあるファイルをドロップしてください",
+    "fileTooLarge": "{{name}} は 50 MB を超えています。rz またはファイルマネージャーを使用して大きなファイルをアップロードしてください",
     "localShell": "ローカルターミナルシェル",
     "localBackendUnreachable": "ローカルバックエンドに接続できません",
     "processExited": "プロセスが終了しました ({{code}})",
@@ -105,6 +107,9 @@
     "sessionExpiredLogin": "Termixのセッションが終了しました。再度サインインしてください。",
     "imageUploadFailed": "画像のアップロードに失敗しました",
     "imageUploadedNotPasted": "画像はアップロードされましたが、貼り付けるためのターミナルが開いていませんでした: {{path}}",
+    "fileUploaded": "ファイルがアップロードされました: {{path}}",
+    "fileUploadFailed": "ファイルのアップロードに失敗しました",
+    "fileUploadedNotPasted": "ファイルはアップロードされましたが、貼り付けのためにターミナルが開いていませんでした: {{path}}",
     "clipboardImageReadFailed": "クリップボードを読み取れませんでした",
     "autocompleteHintComplete": "TabまたはEnterで補完",
     "autocompleteHintNavigate": "↑↓で移動",
@@ -117,7 +122,13 @@
     "secretCancel": "キャンセル",
     "hideSecret": "シークレットを隠す",
     "showSecret": "シークレットを表示",
-    "sessionEndedKeepOpen": "セッションが終了しました。Enter キーを押して再接続します。"
+    "sessionEndedKeepOpen": "セッションが終了しました。Enter キーを押して再接続します。",
+    "askUsername": {
+      "title": "ログインユーザー",
+      "description": "{{host}} は毎回ユーザー名を求めます。ログインするユーザー名を入力してください。",
+      "connect": "接続",
+      "cancelled": "ユーザー名が指定されませんでした"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmuxをデタッチ",
@@ -187,7 +198,8 @@
       "group": {
         "touch": "タッチ入力",
         "images": "画像ストレージ",
-        "sessions": "セッション"
+        "sessions": "セッション",
+        "x11": "X11 フォワーディング"
       },
       "sessionTimeoutMinutes": {
         "label": "ターミナルセッションの保持",
@@ -227,6 +239,11 @@
       "sessionPersistence": {
         "label": "切断後もセッションを保持",
         "description": "切断されたターミナルをサーバー上で上記の時間だけ保持し、タブを再度開いたときに中断したところから再開できるようにします。"
+      },
+      "x11Display": {
+        "label": "X11 フォワーディング用の X サーバー",
+        "description": "X11 フォワーディングが有効なホストからのウィンドウが表示される場所（例: localhost:0）です。Termix サーバーから到達可能である必要があるため、これは主にこのコンピューター上の VcXsrv、XQuartz、または Xwayland を備えたデスクトップアプリ向けです。X11 フォワーディングを無効にするには空白のままにしてください。",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -412,6 +429,10 @@
       },
       "keepOpenOnExit": {
         "label": "終了時にタブを開いたままにする"
+      },
+      "forwardX11": {
+        "label": "X11 フォワーディング",
+        "description": "ターミナルで起動したグラフィカルプログラムのウィンドウ（xclock や設定ツールなど）を表示します。設定で X サーバーが設定され、SSH ターミナルとホストで X11Forwarding yes が設定されている必要があります。"
       }
     },
     "user": {
@@ -449,6 +470,14 @@
       "copyOnSelect": {
         "label": "選択したテキストを自動的にコピー",
         "description": "ターミナルでテキストを選択した瞬間にコピーします。"
+      },
+      "gpuRendering": {
+        "label": "GPU レンダリング",
+        "description": "ターミナルを WebGL で描画し、大量の出力にも対応します。テキストの表示が正しくない場合は無効にしてください。"
+      },
+      "inlineImages": {
+        "label": "インライン画像",
+        "description": "chafa や yazi のプレビューなど、sixel または iTerm 画像形式で出力するプログラムが表示する画像を表示します。"
       }
     }
   },

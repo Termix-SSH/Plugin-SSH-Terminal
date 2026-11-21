@@ -103,7 +103,9 @@
     "imageUploaded": "Obraz przesłany: {{path}}",
     "imageClipboardUnavailable": "Ta przeglądarka nie może odczytywać obrazów ze schowka",
     "imageClipboardEmpty": "Nie znaleziono obrazu w schowku",
-    "imageDropHint": "Upuść obraz, aby go przesłać",
+    "fileDropHint": "Upuść plik, aby go przesłać",
+    "fileDropFolder": "Nie można przesyłać folderów. Zamiast tego upuść znajdujące się w nich pliki",
+    "fileTooLarge": "{{name}} jest większy niż 50 MB. Przesyłaj większe pliki za pomocą rz lub menedżera plików",
     "localShell": "Lokalna powłoka terminala",
     "localBackendUnreachable": "Lokalny backend jest nieosiągalny",
     "processExited": "Proces zakończony ({{code}})",
@@ -111,6 +113,9 @@
     "sessionExpiredLogin": "Twoja sesja Termix wygasła. Zaloguj się ponownie.",
     "imageUploadFailed": "Przesyłanie obrazu nie powiodło się",
     "imageUploadedNotPasted": "Obraz przesłany, ale terminal nie był otwarty, aby go wkleić: {{path}}",
+    "fileUploaded": "Plik przesłano: {{path}}",
+    "fileUploadFailed": "Przesyłanie pliku nie powiodło się",
+    "fileUploadedNotPasted": "Plik przesłano, ale terminal nie był otwarty, aby go wkleić: {{path}}",
     "clipboardImageReadFailed": "Nie udało się odczytać schowka",
     "autocompleteHintComplete": "Tab lub Enter, aby ukończyć",
     "autocompleteHintNavigate": "↑↓ aby nawigować",
@@ -123,7 +128,13 @@
     "secretCancel": "Anuluj",
     "hideSecret": "Ukryj tajny klucz",
     "showSecret": "Pokaż tajny klucz",
-    "sessionEndedKeepOpen": "Sesja zakończona. Naciśnij Enter, aby ponownie połączyć."
+    "sessionEndedKeepOpen": "Sesja zakończona. Naciśnij Enter, aby ponownie połączyć.",
+    "askUsername": {
+      "title": "Zaloguj się jako",
+      "description": "{{host}} za każdym razem prosi o podanie nazwy użytkownika. Wpisz tę, pod którą chcesz się zalogować.",
+      "connect": "Połącz",
+      "cancelled": "Nie podano nazwy użytkownika"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Odłącz tmux",
@@ -196,7 +207,8 @@
       "group": {
         "touch": "Wejście dotykowe",
         "images": "Magazyn obrazów",
-        "sessions": "Sesje"
+        "sessions": "Sesje",
+        "x11": "Przekierowanie X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Czas trwania sesji terminala",
@@ -236,6 +248,11 @@
       "sessionPersistence": {
         "label": "Zachowuj sesje po rozłączeniu",
         "description": "Utrzymuj rozłączony terminal na serwerze przez powyższy czas, aby ponowne otwarcie jego karty kontynuowało od miejsca, w którym zostało przerwane."
+      },
+      "x11Display": {
+        "label": "Serwer X dla przekierowania X11",
+        "description": "Gdzie pojawiają się okna z hostów z włączonym przekierowaniem X11, np. localhost:0. Musi być dostępny z serwera Termix, więc służy to głównie do aplikacji desktopowej z VcXsrv, XQuartz lub Xwayland na tym komputerze. Pozostaw puste, aby wyłączyć przekierowanie X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -421,6 +438,10 @@
       },
       "keepOpenOnExit": {
         "label": "Zostaw kartę otwartą po wyjściu"
+      },
+      "forwardX11": {
+        "label": "Przekierowanie X11",
+        "description": "Wyświetlaj okna programów graficznych uruchamianych w terminalu, takich jak xclock czy narzędzia konfiguracyjne. Wymaga skonfigurowanego serwera X w Ustawieniach, Terminalu SSH oraz opcji X11Forwarding yes na hoście."
       }
     },
     "user": {
@@ -458,6 +479,14 @@
       "copyOnSelect": {
         "label": "Automatycznie kopiuj zaznaczony tekst",
         "description": "Kopiuje tekst natychmiast po jego zaznaczeniu w terminalu"
+      },
+      "gpuRendering": {
+        "label": "Renderowanie GPU",
+        "description": "Rysuj terminal przy użyciu WebGL, co pozwala nadążyć przy dużym natężeniu wyjścia. Wyłącz, jeśli tekst wygląda nieprawidłowo."
+      },
+      "inlineImages": {
+        "label": "Obrazy inline",
+        "description": "Wyświetlaj obrazy drukowane przez programy w formacie sixel lub iTerm, np. podglądy z chafa lub yazi."
       }
     }
   },

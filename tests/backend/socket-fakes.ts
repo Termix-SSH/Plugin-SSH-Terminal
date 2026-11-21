@@ -21,10 +21,12 @@ export class FakeSshClient extends EventEmitter {
     return this;
   }
 
-  shell(
-    _options: unknown,
-    callback: (error: undefined, stream: EventEmitter) => void,
-  ) {
+  /** Like ssh2: (window, cb) or (window, options, cb). */
+  shell(...args: unknown[]) {
+    const callback = args[args.length - 1] as (
+      error: undefined,
+      stream: EventEmitter,
+    ) => void;
     callback(undefined, new EventEmitter());
   }
 

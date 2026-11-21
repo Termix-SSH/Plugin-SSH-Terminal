@@ -97,7 +97,9 @@
     "imageUploaded": "图像已上传：{{path}}",
     "imageClipboardUnavailable": "此浏览器无法从剪贴板读取图像",
     "imageClipboardEmpty": "剪贴板中未找到图像",
-    "imageDropHint": "拖放图片以上传",
+    "fileDropHint": "拖放文件以上传",
+    "fileDropFolder": "无法上传文件夹。请改为拖放其中的文件",
+    "fileTooLarge": "{{name}} 大于 50 MB。请使用 rz 或文件管理器上传更大的文件",
     "localShell": "本地终端 shell",
     "localBackendUnreachable": "无法连接到本地后端",
     "processExited": "进程已退出（{{code}}）",
@@ -105,6 +107,9 @@
     "sessionExpiredLogin": "您的 Termix 会话已结束。请重新登录。",
     "imageUploadFailed": "图片上传失败",
     "imageUploadedNotPasted": "图片已上传，但终端未打开，无法粘贴：{{path}}",
+    "fileUploaded": "文件已上传：{{path}}",
+    "fileUploadFailed": "文件上传失败",
+    "fileUploadedNotPasted": "文件已上传，但终端未处于可粘贴状态：{{path}}",
     "clipboardImageReadFailed": "无法读取剪贴板",
     "autocompleteHintComplete": "按 Tab 或 Enter 完成",
     "autocompleteHintNavigate": "↑↓ 导航",
@@ -117,7 +122,13 @@
     "secretCancel": "取消",
     "hideSecret": "隐藏密钥",
     "showSecret": "显示密钥",
-    "sessionEndedKeepOpen": "会话已结束。按 Enter 键重新连接。"
+    "sessionEndedKeepOpen": "会话已结束。按 Enter 键重新连接。",
+    "askUsername": {
+      "title": "登录身份",
+      "description": "{{host}} 每次都会要求输入用户名。请输入要用于登录的用户名。",
+      "connect": "连接",
+      "cancelled": "未提供用户名"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "分离 tmux",
@@ -187,7 +198,8 @@
       "group": {
         "touch": "触控输入",
         "images": "图片存储",
-        "sessions": "会话"
+        "sessions": "会话",
+        "x11": "X11 转发"
       },
       "sessionTimeoutMinutes": {
         "label": "终端会话持久化",
@@ -227,6 +239,11 @@
       "sessionPersistence": {
         "label": "断开连接后保留会话",
         "description": "在服务器上保持断开连接的终端存活上述时间，以便重新打开其标签页时可以从断点继续。"
+      },
+      "x11Display": {
+        "label": "X11 转发的 X 服务器",
+        "description": "启用 X11 转发的主机窗口显示位置，例如 localhost:0。该地址必须能从 Termix 服务器访问，因此这主要适用于在本机运行 VcXsrv、XQuartz 或 Xwayland 的桌面版应用。留空以关闭 X11 转发。",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -412,6 +429,10 @@
       },
       "keepOpenOnExit": {
         "label": "退出时保持标签页打开"
+      },
+      "forwardX11": {
+        "label": "X11 转发",
+        "description": "显示在终端中启动的图形程序窗口，如 xclock 或设置工具。需要在设置中配置 X 服务器，并在主机上启用 X11Forwarding yes。"
       }
     },
     "user": {
@@ -449,6 +470,14 @@
       "copyOnSelect": {
         "label": "自动复制选中的文本",
         "description": "在终端中选中文本后立即复制"
+      },
+      "gpuRendering": {
+        "label": "GPU 渲染",
+        "description": "使用 WebGL 绘制终端，以应对大量输出。如果文本显示异常，请关闭此选项。"
+      },
+      "inlineImages": {
+        "label": "内联图片",
+        "description": "显示程序通过 sixel 或 iTerm 图片格式输出的图片，如 chafa 或 yazi 预览。"
       }
     }
   },

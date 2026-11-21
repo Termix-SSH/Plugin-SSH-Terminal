@@ -87,6 +87,33 @@ export function isExpiredImage(
   return nowMs - modifiedAtMs > ttlMs;
 }
 
+const UPLOAD_FILENAME_MAX_LENGTH = 100;
+// A longer "extension" is part of the name, not a type to keep.
+const UPLOAD_EXTENSION_MAX_LENGTH = 16;
+
+/**
+ * The name an uploaded file is stored under. It is typed into the terminal, so
+ * it keeps only A-Z a-z 0-9 . _ - (anything else becomes `_`), loses leading
+ * dots and dashes, and is cut to 100 characters with the extension kept.
+ */
+export function sanitizeUploadFilename(name: string): string {
+  const safe = Array.from(name.normalize("NFC"), (char) =>
+    /^[A-Za-z0-9._-]$/.test(char) ? char : "_",
+  )
+    .join("")
+    .replace(/^[.-]+/, "");
+  if (!safe) return "file";
+  if (safe.length <= UPLOAD_FILENAME_MAX_LENGTH) return safe;
+  const dot = safe.lastIndexOf(".");
+  const extension = dot > 0 ? safe.slice(dot) : "";
+  if (extension.length < 2 || extension.length > UPLOAD_EXTENSION_MAX_LENGTH) {
+    return safe.slice(0, UPLOAD_FILENAME_MAX_LENGTH);
+  }
+  return (
+    safe.slice(0, UPLOAD_FILENAME_MAX_LENGTH - extension.length) + extension
+  );
+}
+
 export function exceedsImageStorageLimit(
   fileCount: number,
   totalBytes: number,

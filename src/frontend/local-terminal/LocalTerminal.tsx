@@ -3,7 +3,10 @@ import { FitAddon } from "@xterm/addon-fit";
 import { ClipboardAddon } from "@xterm/addon-clipboard";
 import { useXTerm } from "react-xtermjs";
 import { toast } from "sonner";
-import { getMacLineNavigationSequence } from "../lib/mac-line-navigation";
+import {
+  getMacLineNavigationSequence,
+  isMacClearKey,
+} from "../lib/mac-line-navigation";
 import {
   handleTerminalClipboardKeyEvent,
   createTerminalContextMenuHandler,
@@ -17,6 +20,7 @@ import {
   Select2,
   pluginWsUrl,
   ComponentSlot,
+  isElectron,
 } from "@termix-ssh/plugin-sdk/ui";
 import { resolveTermixThemeColors } from "../look/terminal-theme";
 import {
@@ -36,6 +40,8 @@ import {
 import { registerLocalSession, setActiveSession } from "../session-registry";
 import { createTerminalInputAccess } from "../terminal/terminal-input-access";
 import { applyTerminalPadding } from "../terminal/terminal-padding";
+import { loadRendererAddons } from "../terminal/terminal-renderers";
+import { peekTerminalClientSettings } from "../terminal-settings";
 
 export function LocalTerminal({
   instanceId,
@@ -126,9 +132,15 @@ export function LocalTerminal({
   }, [sessionId, label, terminal, sendFrame, isFocusedPane]);
 
   useEffect(() => {
-    window.electronAPI?.getPlatform().then((platform) => {
-      setIsWindows(platform === "win32");
-    });
+    // A plugin frame has no electronAPI; the user agent says the same.
+    const electron = window.electronAPI;
+    if (electron?.getPlatform) {
+      void electron
+        .getPlatform()
+        .then((platform) => setIsWindows(platform === "win32"));
+    } else {
+      setIsWindows(/Windows/i.test(navigator.userAgent));
+    }
   }, []);
 
   // The same overlay slot as SSH terminals, so plugins that work at the
@@ -207,13 +219,18 @@ export function LocalTerminal({
   }, [appTheme, appearance, fit, terminal]);
 
   useEffect(() => {
-    if (!terminal || !window.electronAPI?.isElectron) return;
+    if (!terminal || !isElectron()) return;
     const fitAddon = new FitAddon();
     const clipboardProvider = new RobustClipboardProvider();
     const clipboardAddon = new ClipboardAddon(undefined, clipboardProvider);
     fitAddonRef.current = fitAddon;
     terminal.loadAddon(fitAddon);
     terminal.loadAddon(clipboardAddon);
+    const userSettings = peekTerminalClientSettings()?.user;
+    const renderers = loadRendererAddons(terminal, {
+      gpuRendering: userSettings?.gpuRendering !== false,
+      inlineImages: userSettings?.inlineImages !== false,
+    });
     fitAddon.fit();
 
     async function writeTextToClipboard(text: string): Promise<boolean> {
@@ -237,6 +254,12 @@ export function LocalTerminal({
         e.preventDefault();
         e.stopPropagation();
         terminal.input(sequence, true);
+        return false;
+      }
+      if (isMacClearKey(e)) {
+        e.preventDefault();
+        e.stopPropagation();
+        terminal.clear();
         return false;
       }
       // No native "paste" event listener here (unlike the SSH terminal), so
@@ -350,6 +373,7 @@ export function LocalTerminal({
       socketRef.current = null;
       socket?.close();
       fitAddonRef.current = null;
+      renderers.dispose();
       fitAddon.dispose();
     };
   }, [

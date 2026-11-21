@@ -107,7 +107,9 @@
     "imageUploaded": "تم رفع الصورة: {{path}}",
     "imageClipboardUnavailable": "لا يمكن لهذا المتصفح قراءة الصور من الحافظة",
     "imageClipboardEmpty": "لم يتم العثور على صورة في الحافظة",
-    "imageDropHint": "أفلت صورة لرفعها",
+    "fileDropHint": "أفلت ملفًا لرفعه",
+    "fileDropFolder": "لا يمكن رفع المجلدات. أفلت الملفات الموجودة بداخلها بدلاً من ذلك",
+    "fileTooLarge": "{{name}} أكبر من 50 ميجابايت. ارفع ملفات أكبر باستخدام rz أو مدير الملفات",
     "localShell": "محطة shell المحلية",
     "localBackendUnreachable": "الخادم المحلي غير متاح",
     "processExited": "انتهت العملية ({{code}})",
@@ -115,6 +117,9 @@
     "sessionExpiredLogin": "انتهت جلسة Termix الخاصة بك. سجّل الدخول مرة أخرى.",
     "imageUploadFailed": "فشل رفع الصورة",
     "imageUploadedNotPasted": "تم رفع الصورة، لكن الطرفية لم تكن مفتوحة للصقها: {{path}}",
+    "fileUploaded": "تم رفع الملف: {{path}}",
+    "fileUploadFailed": "فشل رفع الملف",
+    "fileUploadedNotPasted": "تم رفع الملف، لكن الطرفية لم تكن مفتوحة للصق المسار: {{path}}",
     "clipboardImageReadFailed": "تعذر قراءة الحافظة",
     "autocompleteHintComplete": "Tab أو Enter للإكمال",
     "autocompleteHintNavigate": "↑↓ للتنقل",
@@ -127,7 +132,13 @@
     "secretCancel": "إلغاء",
     "hideSecret": "إخفاء السر",
     "showSecret": "إظهار السر",
-    "sessionEndedKeepOpen": "انتهت الجلسة. اضغط Enter لإعادة الاتصال."
+    "sessionEndedKeepOpen": "انتهت الجلسة. اضغط Enter لإعادة الاتصال.",
+    "askUsername": {
+      "title": "تسجيل الدخول باسم",
+      "description": "{{host}} يطلب اسم مستخدم في كل مرة. اكتب الاسم الذي تريد تسجيل الدخول به.",
+      "connect": "اتصال",
+      "cancelled": "لم يتم تقديم اسم مستخدم"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "فصل tmux",
@@ -202,7 +213,8 @@
       "group": {
         "touch": "إدخال اللمس",
         "images": "تخزين الصور",
-        "sessions": "الجلسات"
+        "sessions": "الجلسات",
+        "x11": "إعادة توجيه X11"
       },
       "sessionTimeoutMinutes": {
         "label": "استمرارية جلسة الطرفية",
@@ -242,6 +254,11 @@
       "sessionPersistence": {
         "label": "الحفاظ على الجلسات بعد قطع الاتصال",
         "description": "إبقاء الطرفية المتقطعة نشطة على الخادم للمدة المذكورة أعلاه، بحيث يعيد فتح علامة التبويب استئناف العمل من حيث توقف."
+      },
+      "x11Display": {
+        "label": "خادم X لإعادة توجيه X11",
+        "description": "المكان الذي تظهر فيه النوافذ من الأجهزة التي تستخدم إعادة توجيه X11، مثل localhost:0. يجب أن يكون هذا الخادم قابلاً للوصول من خادم Termix، لذا فهو مخصص في الغالب لتطبيق سطح المكتب مع VcXsrv أو XQuartz أو Xwayland على هذا الكمبيوتر. اتركه فارغًا لإيقاف إعادة توجيه X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -427,6 +444,10 @@
       },
       "keepOpenOnExit": {
         "label": "إبقاء علامة التبويب مفتوحة عند الخروج"
+      },
+      "forwardX11": {
+        "label": "إعادة توجيه X11",
+        "description": "عرض نوافذ البرامج الرسومية التي تبدأ تشغيلها في الطرفية، مثل xclock أو أداة الإعدادات. يتطلب إعداد خادم X في الإعدادات، وتفعيل SSH Terminal، وتعيين X11Forwarding إلى yes على الجهاز."
       }
     },
     "user": {
@@ -464,6 +485,14 @@
       "copyOnSelect": {
         "label": "نسخ النص المحدد تلقائيًا",
         "description": "ينسخ النص بمجرد تحديده في الطرفية"
+      },
+      "gpuRendering": {
+        "label": "العرض باستخدام GPU",
+        "description": "رسم الطرفية باستخدام WebGL، مما يحافظ على الأداء مع المخرجات الثقيلة. قم بإيقاف التشغيل إذا بدت النصوص بشكل خاطئ."
+      },
+      "inlineImages": {
+        "label": "الصور المضمنة",
+        "description": "عرض الصور التي تطبعها البرامج بتنسيق sixel أو iTerm، مثل chafa أو معاينات yazi."
       }
     }
   },

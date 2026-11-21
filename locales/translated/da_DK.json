@@ -99,7 +99,9 @@
     "imageUploaded": "Billede uploadet: {{path}}",
     "imageClipboardUnavailable": "Denne browser kan ikke læse billeder fra udklipsholderen",
     "imageClipboardEmpty": "Intet billede fundet i udklipsholderen",
-    "imageDropHint": "Træk et billede her for at uploade det",
+    "fileDropHint": "Slip en fil for at uploade den",
+    "fileDropFolder": "Mapper kan ikke uploades. Slip filerne i dem i stedet",
+    "fileTooLarge": "{{name}} er større end 50 MB. Upload større filer med rz eller en filhåndterer",
     "localShell": "Lokal terminal shell",
     "localBackendUnreachable": "Den lokale backend er ikke tilgængelig",
     "processExited": "Processen afsluttede ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Din Termix-session er udløbet. Log ind igen.",
     "imageUploadFailed": "Billedupload mislykkedes",
     "imageUploadedNotPasted": "Billedet blev uploadet, men terminalen var ikke åben til at indsætte det: {{path}}",
+    "fileUploaded": "Fil uploadet: {{path}}",
+    "fileUploadFailed": "Filupload mislykkedes",
+    "fileUploadedNotPasted": "Fil uploadet, men terminalen var ikke åben til at indsætte den: {{path}}",
     "clipboardImageReadFailed": "Kunne ikke læse udklipsholderen",
     "autocompleteHintComplete": "Tryk på Tab eller Enter for at fuldføre",
     "autocompleteHintNavigate": "↑↓ til navigation",
@@ -119,7 +124,13 @@
     "secretCancel": "Annuller",
     "hideSecret": "Skjul hemmelighed",
     "showSecret": "Vis hemmelighed",
-    "sessionEndedKeepOpen": "Sessionen er afsluttet. Tryk på Enter for at genoprette forbindelsen."
+    "sessionEndedKeepOpen": "Sessionen er afsluttet. Tryk på Enter for at genoprette forbindelsen.",
+    "askUsername": {
+      "title": "Log på som",
+      "description": "{{host}} beder om et brugernavn hver gang. Indtast det, du vil logge på som.",
+      "connect": "Forbind",
+      "cancelled": "Intet brugernavn blev angivet"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Afbryd tmux",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Berøringsinput",
         "images": "Billedopbevaring",
-        "sessions": "Sessioner"
+        "sessions": "Sessioner",
+        "x11": "X11-forwarding"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminalsessionsvarighed",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Behold sessioner efter afbrydelse",
         "description": "Hold en afbrudt terminal i live på serveren i den tid, der er angivet ovenfor, så genåbning af fanen fortsætter, hvor den slap."
+      },
+      "x11Display": {
+        "label": "X-server til X11-forwarding",
+        "description": "Hvor vinduer fra værter med X11-forwarding vises, f.eks. localhost:0. Den skal være tilgængelig fra Termix-serveren, så dette er primært til desktop-appen med VcXsrv, XQuartz eller Xwayland på denne computer. Lad være med at udfylde for at slå X11-forwarding fra.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Behold fanen åben ved afslutning"
+      },
+      "forwardX11": {
+        "label": "X11-forwarding",
+        "description": "Vis vinduer fra grafiske programmer, du starter i terminalen, som xclock eller et indstillingsværktøj. Kræver en X-server indstillet i Indstillinger, SSH-terminal og X11Forwarding yes på værten."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Kopier valgt tekst automatisk",
         "description": "Kopierer tekst, så snart du markerer den i terminalen"
+      },
+      "gpuRendering": {
+        "label": "GPU-rendering",
+        "description": "Tegn terminalen med WebGL, som holder trit med tung output. Slå fra, hvis teksten ser forkert ud."
+      },
+      "inlineImages": {
+        "label": "Indlejrede billeder",
+        "description": "Vis billeder, som programmer udskriver med sixel eller iTerm-billedformat, som chafa eller yazi-forhåndsvisninger."
       }
     }
   },

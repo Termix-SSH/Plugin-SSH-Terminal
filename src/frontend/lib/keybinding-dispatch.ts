@@ -26,6 +26,17 @@ export function isTerminalKeybindingAction(type: string): boolean {
   return (TERMINAL_KEYBINDING_ACTIONS as readonly string[]).includes(type);
 }
 
+/** Actions this plugin registers, which core lets its views run. */
+const OWN_KEYBINDING_ACTIONS = [
+  ...TERMINAL_KEYBINDING_ACTIONS,
+  "openLocalTerminal",
+  "toggleBroadcast",
+] as const;
+
+export function isOwnKeybindingAction(type: string): boolean {
+  return (OWN_KEYBINDING_ACTIONS as readonly string[]).includes(type);
+}
+
 export function sendRawToSocket(
   webSocketRef: React.MutableRefObject<WebSocket | null>,
   data: string,

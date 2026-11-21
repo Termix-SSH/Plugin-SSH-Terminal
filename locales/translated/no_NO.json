@@ -99,7 +99,9 @@
     "imageUploaded": "Bilde lastet opp: {{path}}",
     "imageClipboardUnavailable": "Denne nettleseren kan ikke lese bilder fra utklippstavlen",
     "imageClipboardEmpty": "Fant ingen bilder i utklippstavlen",
-    "imageDropHint": "Slipp et bilde for å laste det opp",
+    "fileDropHint": "Slipp en fil for å laste den opp",
+    "fileDropFolder": "Mapper kan ikke lastes opp. Slipp filene i dem i stedet.",
+    "fileTooLarge": "{{name}} er større enn 50 MB. Last opp større filer med rz eller en filbehandler.",
     "localShell": "Lokal terminalshell",
     "localBackendUnreachable": "Den lokale bakenden er ikke tilgjengelig",
     "processExited": "Prosessen avsluttet ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Termix-økten din har utløpt. Logg inn på nytt.",
     "imageUploadFailed": "Opplasting av bilde mislyktes",
     "imageUploadedNotPasted": "Bildet ble lastet opp, men terminalen var ikke åpen for å lime det inn: {{path}}",
+    "fileUploaded": "Fil lastet opp: {{path}}",
+    "fileUploadFailed": "Opplasting av fil mislyktes",
+    "fileUploadedNotPasted": "Fil lastet opp, men terminalen var ikke åpen for å lime den inn: {{path}}",
     "clipboardImageReadFailed": "Kunne ikke lese utklippstavlen",
     "autocompleteHintComplete": "Trykk Tab eller Enter for å fullføre",
     "autocompleteHintNavigate": "↑↓ for å navigere",
@@ -119,7 +124,13 @@
     "secretCancel": "Avbryt",
     "hideSecret": "Skjul hemmelighet",
     "showSecret": "Vis hemmelighet",
-    "sessionEndedKeepOpen": "Sesjonen er avsluttet. Trykk Enter for å koble til på nytt."
+    "sessionEndedKeepOpen": "Sesjonen er avsluttet. Trykk Enter for å koble til på nytt.",
+    "askUsername": {
+      "title": "Logg inn som",
+      "description": "{{host}} ber om et brukernavn hver gang. Skriv inn det du vil logge inn som.",
+      "connect": "Koble til",
+      "cancelled": "Ingen brukernavn ble oppgitt"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Løsfrakk tmux",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Berøring",
         "images": "Bilaglagring",
-        "sessions": "Økter"
+        "sessions": "Økter",
+        "x11": "X11-videresending"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminaløktens levetid",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Behold økter etter frakobling",
         "description": "Hold en frakoblet terminal i live på serveren i tiden over, slik at gjenåpning av fanen tar der den slapp."
+      },
+      "x11Display": {
+        "label": "X-server for X11-videresending",
+        "description": "Hvor vinduer fra vertsmaskiner med X11-videresending vises, som localhost:0. Den må være tilgjengelig fra Termix-serveren, så dette er hovedsakelig for skrivebordsappen med VcXsrv, XQuartz eller Xwayland på denne datamaskinen. La stå tomt for å slå av X11-videresending.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Hold fanen åpen ved avslutning"
+      },
+      "forwardX11": {
+        "label": "X11-videresending",
+        "description": "Vis vinduer fra grafiske programmer du starter i terminalen, som xclock eller et verktøy for innstillinger. Krever at en X-server er angitt i Innstillinger, SSH-terminal, og X11Forwarding yes på vertsmaskinen."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Kopier valgt tekst automatisk",
         "description": "Kopierer tekst så snart du velger den i terminalen"
+      },
+      "gpuRendering": {
+        "label": "GPU-gjengivelse",
+        "description": "Tegn terminalen med WebGL, som holder følge med tung utdata. Slå av hvis teksten ser feil ut."
+      },
+      "inlineImages": {
+        "label": "Innebygde bilder",
+        "description": "Vis bilder som programmer skriver ut med sixel eller iTerm-bildformatet, som chafa eller yazi-forhåndsvisninger."
       }
     }
   },

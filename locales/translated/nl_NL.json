@@ -99,7 +99,9 @@
     "imageUploaded": "Afbeelding geüpload: {{path}}",
     "imageClipboardUnavailable": "Deze browser kan geen afbeeldingen van het klembord lezen",
     "imageClipboardEmpty": "Geen afbeelding gevonden op het klembord",
-    "imageDropHint": "Sleep een afbeelding om deze te uploaden",
+    "fileDropHint": "Sleep een bestand om het te uploaden",
+    "fileDropFolder": "Mappen kunnen niet worden geüpload. Sleep in plaats daarvan de bestanden erin",
+    "fileTooLarge": "{{name}} is groter dan 50 MB. Upload grotere bestanden met rz of een bestandsbeheerder",
     "localShell": "Lokale terminalshell",
     "localBackendUnreachable": "De lokale backend is niet bereikbaar",
     "processExited": "Proces is afgesloten ({{code}})",
@@ -107,6 +109,9 @@
     "sessionExpiredLogin": "Je Termix-sessie is verlopen. Meld je opnieuw aan.",
     "imageUploadFailed": "Uploaden van afbeelding mislukt",
     "imageUploadedNotPasted": "Afbeelding geüpload, maar de terminal was niet geopend om deze te plakken: {{path}}",
+    "fileUploaded": "Bestand geüpload: {{path}}",
+    "fileUploadFailed": "Uploaden van bestand mislukt",
+    "fileUploadedNotPasted": "Bestand geüpload, maar de terminal was niet geopend om het te plakken: {{path}}",
     "clipboardImageReadFailed": "Het klembord kon niet worden gelezen",
     "autocompleteHintComplete": "Tab of Enter om te voltooien",
     "autocompleteHintNavigate": "↑↓ om te navigeren",
@@ -119,7 +124,13 @@
     "secretCancel": "Annuleren",
     "hideSecret": "Geheim verbergen",
     "showSecret": "Geheim tonen",
-    "sessionEndedKeepOpen": "Sessie beëindigd. Druk op Enter om opnieuw te verbinden."
+    "sessionEndedKeepOpen": "Sessie beëindigd. Druk op Enter om opnieuw te verbinden.",
+    "askUsername": {
+      "title": "Inloggen als",
+      "description": "{{host}} vraagt elke keer om een gebruikersnaam. Typ de naam waarmee je wilt inloggen.",
+      "connect": "Verbinden",
+      "cancelled": "Er is geen gebruikersnaam opgegeven"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "tmux loskoppelen",
@@ -190,7 +201,8 @@
       "group": {
         "touch": "Touch-invoer",
         "images": "Afbeeldingsopslag",
-        "sessions": "Sessies"
+        "sessions": "Sessies",
+        "x11": "X11-doorsturing"
       },
       "sessionTimeoutMinutes": {
         "label": "Terminalsessie-persistentie",
@@ -230,6 +242,11 @@
       "sessionPersistence": {
         "label": "Sessies behouden na loskoppeling",
         "description": "Houd een losgekoppelde terminal op de server actief voor de hierboven genoemde tijd, zodat het opnieuw openen van het tabblad voortgaat waar het was gebleven."
+      },
+      "x11Display": {
+        "label": "X-server voor X11-doorsturing",
+        "description": "Waar vensters van hosts met X11-doorsturing verschijnen, zoals localhost:0. Deze moet bereikbaar zijn vanaf de Termix-server, dus dit is voornamelijk bedoeld voor de desktop-app met VcXsrv, XQuartz of Xwayland op deze computer. Laat leeg om X11-doorsturing uit te schakelen.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -415,6 +432,10 @@
       },
       "keepOpenOnExit": {
         "label": "Tabblad openhouden bij afsluiten"
+      },
+      "forwardX11": {
+        "label": "X11-doorsturing",
+        "description": "Toon vensters van grafische programma's die je in de terminal start, zoals xclock of een instellingenprogramma. Vereist een X-server die is ingesteld in Instellingen, SSH Terminal, en X11Forwarding yes op de host."
       }
     },
     "user": {
@@ -452,6 +473,14 @@
       "copyOnSelect": {
         "label": "Geselecteerde tekst automatisch kopiëren",
         "description": "Kopieert tekst zodra je deze in de terminal selecteert"
+      },
+      "gpuRendering": {
+        "label": "GPU-weergave",
+        "description": "Teken de terminal met WebGL, wat goed omgaat met zware uitvoer. Schakel uit als tekst er verkeerd uitziet."
+      },
+      "inlineImages": {
+        "label": "Inlijn afbeeldingen",
+        "description": "Toon afbeeldingen die programma's afdrukken met sixel of het iTerm-afbeeldingsformaat, zoals chafa of yazi-voorbeelden."
       }
     }
   },

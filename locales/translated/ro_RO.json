@@ -101,7 +101,9 @@
     "imageUploaded": "Imagine încărcată: {{path}}",
     "imageClipboardUnavailable": "Acest browser nu poate citi imagini din clipboard",
     "imageClipboardEmpty": "Nicio imagine găsită în clipboard",
-    "imageDropHint": "Trageți o imagine pentru a o încărca",
+    "fileDropHint": "Plasați un fișier pentru a-l încărca",
+    "fileDropFolder": "Dosarele nu pot fi încărcate. Plasați în schimb fișierele din ele",
+    "fileTooLarge": "{{name}} este mai mare de 50 MB. Încărcați fișiere mai mari cu rz sau un manager de fișiere",
     "localShell": "Shell terminal local",
     "localBackendUnreachable": "Backend-ul local nu este accesibil",
     "processExited": "Procesul s-a încheiat ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "Sesiunea Termix a expirat. Conectează-te din nou.",
     "imageUploadFailed": "Încărcarea imaginii a eșuat",
     "imageUploadedNotPasted": "Imaginea a fost încărcată, dar terminalul nu era deschis pentru a o insera: {{path}}",
+    "fileUploaded": "Fișier încărcat: {{path}}",
+    "fileUploadFailed": "Încărcarea fișierului a eșuat",
+    "fileUploadedNotPasted": "Fișier încărcat, dar terminalul nu era deschis pentru a-l lipi: {{path}}",
     "clipboardImageReadFailed": "Nu s-a putut citi clipboard-ul",
     "autocompleteHintComplete": "Tab sau Enter pentru a completa",
     "autocompleteHintNavigate": "↑↓ pentru navigare",
@@ -121,7 +126,13 @@
     "secretCancel": "Anulează",
     "hideSecret": "Ascunde secretul",
     "showSecret": "Afișează secretul",
-    "sessionEndedKeepOpen": "Sesiunea s-a încheiat. Apasă Enter pentru a reconecta."
+    "sessionEndedKeepOpen": "Sesiunea s-a încheiat. Apasă Enter pentru a reconecta.",
+    "askUsername": {
+      "title": "Autentificare ca",
+      "description": "{{host}} cere un nume de utilizator de fiecare dată. Tastați cel cu care doriți să vă autentificați.",
+      "connect": "Conectare",
+      "cancelled": "Nu a fost furnizat niciun nume de utilizator"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Deconectare tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Intrare tactilă",
         "images": "Stocare imagini",
-        "sessions": "Sesiuni"
+        "sessions": "Sesiuni",
+        "x11": "Redirecționare X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistența sesiunii terminal",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Păstrează sesiunile după deconectare",
         "description": "Menține o sesiune terminal deconectată activă pe server pentru perioada de mai sus, astfel încât redeschiderea tab-ului său să preia de unde a rămas."
+      },
+      "x11Display": {
+        "label": "Server X pentru redirecționare X11",
+        "description": "Unde apar ferestrele de la gazdele cu redirecționare X11, de exemplu localhost:0. Trebuie să fie accesibil de la serverul Termix, așa că este folosit în principal pentru aplicația desktop cu VcXsrv, XQuartz sau Xwayland pe acest computer. Lăsați gol pentru a dezactiva redirecționarea X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Păstrează fila deschisă la ieșire"
+      },
+      "forwardX11": {
+        "label": "Redirecționare X11",
+        "description": "Afișați ferestrele programelor grafice pe care le porniți în terminal, cum ar fi xclock sau un instrument de configurare. Necesită un server X configurat în Setări, Terminal SSH și X11Forwarding yes pe gazdă."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copiază automat textul selectat",
         "description": "Copiază textul imediat ce îl selectezi în terminal"
+      },
+      "gpuRendering": {
+        "label": "Randare GPU",
+        "description": "Desenează terminalul cu WebGL, ceea ce menține performanța la ieșiri intensive. Dezactivați dacă textul nu arată corect."
+      },
+      "inlineImages": {
+        "label": "Imagini inline",
+        "description": "Afișați imaginile pe care programele le afișează cu sixel sau formatul de imagine iTerm, cum ar fi previzualizările chafa sau yazi."
       }
     }
   },

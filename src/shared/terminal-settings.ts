@@ -228,6 +228,10 @@ export interface TerminalUserSettings {
   rightClickAction: RightClickAction;
   ctrlVPaste: boolean;
   copyOnSelect: boolean;
+  /** Draw with WebGL, falling back to the DOM renderer when it fails. */
+  gpuRendering: boolean;
+  /** Show sixel and iTerm inline images. */
+  inlineImages: boolean;
 }
 
 export const DEFAULT_USER_SETTINGS: TerminalUserSettings = {
@@ -237,6 +241,8 @@ export const DEFAULT_USER_SETTINGS: TerminalUserSettings = {
   rightClickAction: "copyPaste",
   ctrlVPaste: true,
   copyOnSelect: false,
+  gpuRendering: true,
+  inlineImages: true,
 };
 
 const ENUMS: Record<string, readonly string[]> = {
@@ -397,6 +403,8 @@ export function readUserSettings(
         : "copyPaste",
     ctrlVPaste: source.ctrlVPaste !== false,
     copyOnSelect: source.copyOnSelect === true,
+    gpuRendering: source.gpuRendering !== false,
+    inlineImages: source.inlineImages !== false,
   };
 }
 

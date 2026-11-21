@@ -97,7 +97,9 @@
     "imageUploaded": "Imej dimuat naik: {{path}}",
     "imageClipboardUnavailable": "Pelayar ini tidak boleh membaca imej dari papan klip",
     "imageClipboardEmpty": "Tiada imej ditemui dalam papan klip",
-    "imageDropHint": "Lepaskan imej untuk memuat naiknya",
+    "fileDropHint": "Lepaskan fail untuk memuat naiknya",
+    "fileDropFolder": "Folder tidak boleh dimuat naik. Lepaskan fail di dalamnya sebagai gantinya",
+    "fileTooLarge": "{{name}} lebih besar daripada 50 MB. Muat naik fail yang lebih besar dengan rz atau pengurus fail",
     "localShell": "Shell terminal tempatan",
     "localBackendUnreachable": "Backend tempatan tidak boleh dicapai",
     "processExited": "Proses telah tamat ({{code}})",
@@ -105,6 +107,9 @@
     "sessionExpiredLogin": "Sesi Termix anda telah tamat. Sila log masuk semula.",
     "imageUploadFailed": "Muat naik imej gagal",
     "imageUploadedNotPasted": "Imej berjaya dimuat naik, tetapi terminal tidak dibuka untuk menampalnya: {{path}}",
+    "fileUploaded": "Fail dimuat naik: {{path}}",
+    "fileUploadFailed": "Pemuatnaikan fail gagal",
+    "fileUploadedNotPasted": "Fail dimuat naik, tetapi terminal tidak dibuka untuk menampalnya: {{path}}",
     "clipboardImageReadFailed": "Tidak dapat membaca papan klip",
     "autocompleteHintComplete": "Tab atau Enter untuk lengkapkan",
     "autocompleteHintNavigate": "↑↓ untuk navigasi",
@@ -117,7 +122,13 @@
     "secretCancel": "Batal",
     "hideSecret": "Sembunyikan rahsia",
     "showSecret": "Tunjukkan rahsia",
-    "sessionEndedKeepOpen": "Sesi tamat. Tekan Enter untuk menyambung semula."
+    "sessionEndedKeepOpen": "Sesi tamat. Tekan Enter untuk menyambung semula.",
+    "askUsername": {
+      "title": "Log masuk sebagai",
+      "description": "{{host}} meminta nama pengguna setiap kali. Taipkan nama pengguna untuk log masuk.",
+      "connect": "Sambung",
+      "cancelled": "Tiada nama pengguna diberikan"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Lepaskan tmux",
@@ -187,7 +198,8 @@
       "group": {
         "touch": "Input Sentuh",
         "images": "Storan Imej",
-        "sessions": "Sesi"
+        "sessions": "Sesi",
+        "x11": "Pengehalaan X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Ketahanan Sesi Terminal",
@@ -227,6 +239,11 @@
       "sessionPersistence": {
         "label": "Kekalkan sesi selepas terputus",
         "description": "Kekalkan terminal yang terputus hidup pada pelayan untuk tempoh di atas, supaya membuka semula tabnya sambung dari tempat ia berhenti."
+      },
+      "x11Display": {
+        "label": "Pelayan X untuk pengehalaan X11",
+        "description": "Di mana tetingkap dari hos dengan pengehalaan X11 muncul, seperti localhost:0. Ia mesti boleh dicapai dari pelayan Termix, jadi ini kebanyakannya untuk aplikasi desktop dengan VcXsrv, XQuartz atau Xwayland pada komputer ini. Kosongkan untuk mematikan pengehalaan X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -412,6 +429,10 @@
       },
       "keepOpenOnExit": {
         "label": "Kekalkan tab terbuka semasa keluar"
+      },
+      "forwardX11": {
+        "label": "Pengehalaan X11",
+        "description": "Paparkan tetingkap program grafik yang anda mulakan dalam terminal, seperti xclock atau alat tetapan. Memerlukan pelayan X ditetapkan dalam Tetapan, Terminal SSH, dan X11Forwarding yes pada hos."
       }
     },
     "user": {
@@ -449,6 +470,14 @@
       "copyOnSelect": {
         "label": "Salin teks yang dipilih secara automatik",
         "description": "Menyalin teks sebaik sahaja anda memilihnya dalam terminal"
+      },
+      "gpuRendering": {
+        "label": "Pemaparan GPU",
+        "description": "Lukis terminal dengan WebGL, yang dapat mengikut output yang berat. Matikan jika teks kelihatan salah."
+      },
+      "inlineImages": {
+        "label": "Imej sebaris",
+        "description": "Paparkan gambar yang dicetak oleh program dengan sixel atau format imej iTerm, seperti pratonton chafa atau yazi."
       }
     }
   },

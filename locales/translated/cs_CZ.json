@@ -103,7 +103,9 @@
     "imageUploaded": "Obrázek nahrán: {{path}}",
     "imageClipboardUnavailable": "Tento prohlížeč neumí číst obrázky ze schránky",
     "imageClipboardEmpty": "Ve schránce nebyl nalezen žádný obrázek",
-    "imageDropHint": "Přetáhněte obrázek pro nahrání",
+    "fileDropHint": "Přetáhněte soubor pro nahrání",
+    "fileDropFolder": "Složky nelze nahrát. Místo toho přetáhněte soubory, které v nich jsou.",
+    "fileTooLarge": "Soubor {{name}} je větší než 50 MB. Větší soubory nahrajte pomocí příkazu rz nebo správce souborů.",
     "localShell": "Místní terminálový shell",
     "localBackendUnreachable": "Lokální backend není dostupný",
     "processExited": "Proces ukončen ({{code}})",
@@ -111,6 +113,9 @@
     "sessionExpiredLogin": "Vaše relace Termix skončila. Přihlaste se znovu.",
     "imageUploadFailed": "Nahrání obrázku selhalo",
     "imageUploadedNotPasted": "Obrázek byl nahrán, ale terminál nebyl otevřený pro vložení: {{path}}",
+    "fileUploaded": "Soubor nahrán: {{path}}",
+    "fileUploadFailed": "Nahrávání souboru selhalo",
+    "fileUploadedNotPasted": "Soubor byl nahrán, ale terminál nebyl otevřený pro vložení: {{path}}",
     "clipboardImageReadFailed": "Nelze přečíst schránku",
     "autocompleteHintComplete": "Tab nebo Enter pro dokončení",
     "autocompleteHintNavigate": "↑↓ pro navigaci",
@@ -123,7 +128,13 @@
     "secretCancel": "Zrušit",
     "hideSecret": "Skrýt tajný klíč",
     "showSecret": "Zobrazit tajný klíč",
-    "sessionEndedKeepOpen": "Relace skončila. Stiskněte Enter pro připojení."
+    "sessionEndedKeepOpen": "Relace skončila. Stiskněte Enter pro připojení.",
+    "askUsername": {
+      "title": "Přihlásit se jako",
+      "description": "{{host}} pokaždé žádá o uživatelské jméno. Zadejte jméno, pod kterým se chcete přihlásit.",
+      "connect": "Připojit",
+      "cancelled": "Nebylo zadáno žádné uživatelské jméno"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Odpojit tmux",
@@ -196,7 +207,8 @@
       "group": {
         "touch": "Dotykový vstup",
         "images": "Úložiště obrázků",
-        "sessions": "Relace"
+        "sessions": "Relace",
+        "x11": "Přeposílání X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Trvalost relace terminálu",
@@ -236,6 +248,11 @@
       "sessionPersistence": {
         "label": "Udržovat relace po odpojení",
         "description": "Udržovat odpojený terminál aktivní na serveru po dobu uvedenou výše, takže při opětovném otevření záložky pokračujete tam, kde jste skončili."
+      },
+      "x11Display": {
+        "label": "X server pro přeposílání X11",
+        "description": "Kde se zobrazí okna z hostitelů s povoleným přeposíláním X11, například localhost:0. Musí být dostupný z Termix serveru, takže se to týká hlavně desktopové aplikace s VcXsrv, XQuartz nebo Xwayland na tomto počítači. Nechte prázdné pro vypnutí přeposílání X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -421,6 +438,10 @@
       },
       "keepOpenOnExit": {
         "label": "Ponechat kartu otevřenou po ukončení"
+      },
+      "forwardX11": {
+        "label": "Přeposílání X11",
+        "description": "Zobrazovat okna grafických programů, které spustíte v terminálu, jako xclock nebo nástroj pro nastavení. Vyžaduje nastavený X server v Nastavení, SSH Terminálu a X11Forwarding yes na hostiteli."
       }
     },
     "user": {
@@ -458,6 +479,14 @@
       "copyOnSelect": {
         "label": "Automaticky kopírovat vybraný text",
         "description": "Text se zkopíruje ihned po jeho výběru v terminálu"
+      },
+      "gpuRendering": {
+        "label": "Grafické vykreslování",
+        "description": "Vykreslovat terminál pomocí WebGL, což lépe zvládá velké množství výstupu. Vypněte, pokud se text zobrazuje nesprávně."
+      },
+      "inlineImages": {
+        "label": "Obrazy v textu",
+        "description": "Zobrazovat obrázky, které programy vytisknou ve formátu sixel nebo iTerm, jako náhledy z chafa nebo yazi."
       }
     }
   },

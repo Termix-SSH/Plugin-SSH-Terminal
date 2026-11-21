@@ -97,7 +97,9 @@
     "imageUploaded": "Đã tải lên hình ảnh: {{path}}",
     "imageClipboardUnavailable": "Trình duyệt này không thể đọc hình ảnh từ clipboard",
     "imageClipboardEmpty": "Không tìm thấy hình ảnh trong clipboard",
-    "imageDropHint": "Thả hình ảnh để tải lên",
+    "fileDropHint": "Thả tệp vào đây để tải lên",
+    "fileDropFolder": "Không thể tải lên thư mục. Hãy thả các tệp bên trong thư mục đó vào đây thay thế",
+    "fileTooLarge": "{{name}} lớn hơn 50 MB. Hãy dùng rz hoặc trình quản lý tệp để tải các tệp lớn hơn",
     "localShell": "Shell terminal cục bộ",
     "localBackendUnreachable": "Không thể kết nối đến backend cục bộ",
     "processExited": "Quá trình đã thoát ({{code}})",
@@ -105,6 +107,9 @@
     "sessionExpiredLogin": "Phiên Termix của bạn đã kết thúc. Vui lòng đăng nhập lại.",
     "imageUploadFailed": "Tải ảnh lên thất bại",
     "imageUploadedNotPasted": "Đã tải ảnh lên, nhưng terminal không mở để dán: {{path}}",
+    "fileUploaded": "Đã tải lên tệp: {{path}}",
+    "fileUploadFailed": "Tải lên tệp thất bại",
+    "fileUploadedNotPasted": "Đã tải lên tệp, nhưng terminal không mở để dán nội dung: {{path}}",
     "clipboardImageReadFailed": "Không thể đọc clipboard",
     "autocompleteHintComplete": "Nhấn Tab hoặc Enter để hoàn thành",
     "autocompleteHintNavigate": "↑↓ để di chuyển",
@@ -117,7 +122,13 @@
     "secretCancel": "Hủy",
     "hideSecret": "Ẩn bí mật",
     "showSecret": "Hiển thị bí mật",
-    "sessionEndedKeepOpen": "Phiên đã kết thúc. Nhấn Enter để kết nối lại."
+    "sessionEndedKeepOpen": "Phiên đã kết thúc. Nhấn Enter để kết nối lại.",
+    "askUsername": {
+      "title": "Đăng nhập với tư cách",
+      "description": "{{host}} yêu cầu nhập tên người dùng mỗi lần. Hãy nhập tên người dùng để đăng nhập.",
+      "connect": "Kết nối",
+      "cancelled": "Không cung cấp tên người dùng"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Tách tmux",
@@ -187,7 +198,8 @@
       "group": {
         "touch": "Đầu vào cảm ứng",
         "images": "Bộ lưu trữ hình ảnh",
-        "sessions": "Phiên làm việc"
+        "sessions": "Phiên làm việc",
+        "x11": "Chuyển tiếp X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Thời gian duy trì phiên terminal",
@@ -227,6 +239,11 @@
       "sessionPersistence": {
         "label": "Giữ phiên làm việc sau khi ngắt kết nối",
         "description": "Giữ phiên terminal ngắt kết nối còn sống trên máy chủ trong thời gian trên, để khi mở lại tab sẽ tiếp tục từ nơi đã dừng."
+      },
+      "x11Display": {
+        "label": "Máy chủ X cho chuyển tiếp X11",
+        "description": "Vị trí hiển thị các cửa sổ từ các host có bật chuyển tiếp X11, ví dụ: localhost:0. Địa chỉ này phải có thể truy cập được từ máy chủ Termix, nên thường dùng cho ứng dụng desktop với VcXsrv, XQuartz hoặc Xwayland trên máy tính này. Để trống để tắt chuyển tiếp X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -412,6 +429,10 @@
       },
       "keepOpenOnExit": {
         "label": "Giữ tab mở khi thoát"
+      },
+      "forwardX11": {
+        "label": "Chuyển tiếp X11",
+        "description": "Hiển thị cửa sổ của các chương trình đồ họa bạn khởi chạy trong terminal, như xclock hoặc công cụ cài đặt. Cần cấu hình máy chủ X trong Cài đặt, SSH Terminal, và bật X11Forwarding yes trên host."
       }
     },
     "user": {
@@ -449,6 +470,14 @@
       "copyOnSelect": {
         "label": "Tự động sao chép văn bản đã chọn",
         "description": "Sao chép văn bản ngay khi bạn chọn nó trong terminal"
+      },
+      "gpuRendering": {
+        "label": "Kết xuất bằng GPU",
+        "description": "Vẽ terminal bằng WebGL, giúp xử lý tốt lượng đầu ra lớn. Tắt nếu văn bản hiển thị sai."
+      },
+      "inlineImages": {
+        "label": "Hình ảnh nội tuyến",
+        "description": "Hiển thị hình ảnh do chương trình in ra dưới dạng sixel hoặc định dạng hình ảnh iTerm, như chafa hoặc bản xem trước của yazi."
       }
     }
   },

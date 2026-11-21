@@ -85,6 +85,8 @@ describe("readUserSettings", () => {
       rightClickAction: "copyPaste",
       ctrlVPaste: true,
       copyOnSelect: false,
+      gpuRendering: true,
+      inlineImages: true,
     });
   });
 
@@ -100,6 +102,9 @@ describe("readUserSettings", () => {
       ctrlVPaste: false,
       copyOnSelect: true,
     });
+    expect(
+      readUserSettings({ gpuRendering: false, inlineImages: false }),
+    ).toMatchObject({ gpuRendering: false, inlineImages: false });
     expect(readUserSettings({ rightClickAction: "x" }).rightClickAction).toBe(
       "copyPaste",
     );

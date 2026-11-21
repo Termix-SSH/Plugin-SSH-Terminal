@@ -101,7 +101,9 @@
     "imageUploaded": "Slika je otpremljena: {{path}}",
     "imageClipboardUnavailable": "Ovaj preglednik ne može čitati slike iz međuspremnika",
     "imageClipboardEmpty": "Nema slike u međuspremniku",
-    "imageDropHint": "Ispustite sliku za otpremanje",
+    "fileDropHint": "Spustite datoteku za otpremanje",
+    "fileDropFolder": "Mapa se ne mogu otpremati. Umjesto toga spustite datoteke iz njih.",
+    "fileTooLarge": "{{name}} je veći od 50 MB. Otpremite veće datoteke pomoću rz ili upravitelja datoteka",
     "localShell": "Lokalni terminalni shell",
     "localBackendUnreachable": "Lokalni pozadinski servis nije dostupan",
     "processExited": "Proces je završio ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "Vaša Termix sesija je istekla. Ponovno se prijavite.",
     "imageUploadFailed": "Prijenos slike nije uspio",
     "imageUploadedNotPasted": "Slika je prenesena, ali terminal nije bio otvoren za lijepljenje: {{path}}",
+    "fileUploaded": "Datoteka je otpremljena: {{path}}",
+    "fileUploadFailed": "Otpremanje datoteke nije uspjelo",
+    "fileUploadedNotPasted": "Datoteka je otpremljena, ali terminal nije bio otvoren za lijepljenje: {{path}}",
     "clipboardImageReadFailed": "Nije moguće pročitati međuspremnik",
     "autocompleteHintComplete": "Tab ili Enter za dovršetak",
     "autocompleteHintNavigate": "↑↓ za navigaciju",
@@ -121,7 +126,13 @@
     "secretCancel": "Otkaži",
     "hideSecret": "Sakrij tajnu",
     "showSecret": "Prikaži tajnu",
-    "sessionEndedKeepOpen": "Sesija je završena. Pritisnite Enter za ponovno povezivanje."
+    "sessionEndedKeepOpen": "Sesija je završena. Pritisnite Enter za ponovno povezivanje.",
+    "askUsername": {
+      "title": "Prijava kao",
+      "description": "{{host}} traži korisničko ime svaki put. Unesite ono za koje se želite prijaviti.",
+      "connect": "Poveži",
+      "cancelled": "Nije navedeno korisničko ime"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Odspoji tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Dodirni unos",
         "images": "Pohrana slika",
-        "sessions": "Sesije"
+        "sessions": "Sesije",
+        "x11": "X11 preusmjeravanje"
       },
       "sessionTimeoutMinutes": {
         "label": "Trajanje sesije terminala",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Zadrži sesije nakon prekida veze",
         "description": "Održavajte prekinuti terminal aktivnim na poslužitelju za vrijeme iznad, tako da ponovno otvaranje njegove kartice nastavi tamo gdje je stalo."
+      },
+      "x11Display": {
+        "label": "X poslužitelj za X11 preusmjeravanje",
+        "description": "Gdje se pojavljuju prozori s poslužitelja s X11 preusmjeravanjem, poput localhost:0. Mora biti dostupan s Termix poslužitelja, pa se ovo uglavnom odnosi na desktop aplikaciju s VcXsrv, XQuartz ili Xwayland na ovom računalu. Ostavite prazno za isključivanje X11 preusmjeravanja.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Ostavi karticu otvorenu pri izlasku"
+      },
+      "forwardX11": {
+        "label": "X11 preusmjeravanje",
+        "description": "Prikažite prozore grafičkih programa koje pokrenete u terminalu, poput xclock ili alata za postavke. Zahtijeva X poslužitelj postavljen u Postavkama, SSH Terminal i X11Forwarding yes na poslužitelju."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Automatsko kopiranje odabranog teksta",
         "description": "Kopira tekst čim ga odaberete u terminalu"
+      },
+      "gpuRendering": {
+        "label": "GPU renderiranje",
+        "description": "Crtajte terminal pomoću WebGL-a, što prati intenzivan izlaz. Isključite ako tekst izgleda pogrešno."
+      },
+      "inlineImages": {
+        "label": "Ugradbene slike",
+        "description": "Prikažite slike koje programi ispisuju pomoću sixel ili iTerm format slike, poput chafa ili yazi pregleda."
       }
     }
   },

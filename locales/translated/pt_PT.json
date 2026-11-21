@@ -101,7 +101,9 @@
     "imageUploaded": "Imagem carregada: {{path}}",
     "imageClipboardUnavailable": "Este navegador não consegue ler imagens da área de transferência",
     "imageClipboardEmpty": "Nenhuma imagem encontrada na área de transferência",
-    "imageDropHint": "Largue uma imagem para a carregar",
+    "fileDropHint": "Largue um ficheiro para o carregar",
+    "fileDropFolder": "Não é possível carregar pastas. Largue os ficheiros que contêm em vez disso",
+    "fileTooLarge": "{{name}} tem mais de 50 MB. Carregue ficheiros maiores com rz ou um gestor de ficheiros",
     "localShell": "Shell do terminal local",
     "localBackendUnreachable": "O backend local não está acessível",
     "processExited": "O processo terminou ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "A sua sessão do Termix expirou. Inicie sessão novamente.",
     "imageUploadFailed": "Falha no envio da imagem",
     "imageUploadedNotPasted": "Imagem enviada, mas o terminal não estava aberto para a colar: {{path}}",
+    "fileUploaded": "Ficheiro carregado: {{path}}",
+    "fileUploadFailed": "Falha no carregamento do ficheiro",
+    "fileUploadedNotPasted": "Ficheiro carregado, mas o terminal não estava aberto para o colar: {{path}}",
     "clipboardImageReadFailed": "Não foi possível ler a área de transferência",
     "autocompleteHintComplete": "Tab ou Enter para completar",
     "autocompleteHintNavigate": "↑↓ para navegar",
@@ -121,7 +126,13 @@
     "secretCancel": "Cancelar",
     "hideSecret": "Ocultar segredo",
     "showSecret": "Mostrar segredo",
-    "sessionEndedKeepOpen": "Sessão terminada. Prima Enter para reconectar."
+    "sessionEndedKeepOpen": "Sessão terminada. Prima Enter para reconectar.",
+    "askUsername": {
+      "title": "Iniciar sessão como",
+      "description": "{{host}} pede um nome de utilizador cada vez. Escreva o que deseja usar para iniciar sessão.",
+      "connect": "Ligar",
+      "cancelled": "Nenhum nome de utilizador foi fornecido"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Desligar tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Entrada por toque",
         "images": "Armazenamento de imagens",
-        "sessions": "Sessões"
+        "sessions": "Sessões",
+        "x11": "Encaminhamento X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistência da sessão do terminal",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Manter sessões após desconexão",
         "description": "Manter um terminal desconectado ativo no servidor pelo tempo acima, para que ao reabrir a sua aba continue de onde parou."
+      },
+      "x11Display": {
+        "label": "Servidor X para encaminhamento X11",
+        "description": "Onde aparecem as janelas de hosts com encaminhamento X11, como localhost:0. Deve ser acessível a partir do servidor Termix, por isso serve principalmente para a aplicação de desktop com VcXsrv, XQuartz ou Xwayland neste computador. Deixe em branco para desativar o encaminhamento X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Manter a aba aberta ao sair"
+      },
+      "forwardX11": {
+        "label": "Encaminhamento X11",
+        "description": "Mostra as janelas de programas gráficos que iniciar no terminal, como xclock ou uma ferramenta de definições. Requer um servidor X definido em Definições, Terminal SSH e X11Forwarding yes no host."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copiar texto selecionado automaticamente",
         "description": "Copia o texto assim que o selecionar no terminal"
+      },
+      "gpuRendering": {
+        "label": "Renderização GPU",
+        "description": "Desenha o terminal com WebGL, o que mantém o ritmo com saídas intensivas. Desative se o texto parecer incorreto."
+      },
+      "inlineImages": {
+        "label": "Imagens em linha",
+        "description": "Mostra imagens que os programas imprimem com sixel ou o formato de imagem iTerm, como pré-visualizações do chafa ou yazi."
       }
     }
   },

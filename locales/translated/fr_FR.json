@@ -101,7 +101,9 @@
     "imageUploaded": "Image téléchargée : {{path}}",
     "imageClipboardUnavailable": "Ce navigateur ne peut pas lire les images depuis le presse-papiers",
     "imageClipboardEmpty": "Aucune image trouvée dans le presse-papiers",
-    "imageDropHint": "Déposez une image pour la télécharger",
+    "fileDropHint": "Déposez un fichier pour le télécharger",
+    "fileDropFolder": "Les dossiers ne peuvent pas être téléchargés. Déposez plutôt les fichiers qu'ils contiennent",
+    "fileTooLarge": "{{name}} est supérieur à 50 Mo. Téléchargez des fichiers plus volumineux avec rz ou un gestionnaire de fichiers",
     "localShell": "Shell du terminal local",
     "localBackendUnreachable": "Le backend local n'est pas accessible",
     "processExited": "Le processus s'est terminé ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "Votre session Termix a expiré. Connectez-vous à nouveau.",
     "imageUploadFailed": "Échec du téléchargement de l'image",
     "imageUploadedNotPasted": "Image téléchargée, mais le terminal n'était pas ouvert pour la coller : {{path}}",
+    "fileUploaded": "Fichier téléchargé : {{path}}",
+    "fileUploadFailed": "Échec du téléchargement du fichier",
+    "fileUploadedNotPasted": "Fichier téléchargé, mais le terminal n'était pas ouvert pour le coller : {{path}}",
     "clipboardImageReadFailed": "Impossible de lire le presse-papiers",
     "autocompleteHintComplete": "Tab ou Entrée pour compléter",
     "autocompleteHintNavigate": "↑↓ pour naviguer",
@@ -121,7 +126,13 @@
     "secretCancel": "Annuler",
     "hideSecret": "Masquer le secret",
     "showSecret": "Afficher le secret",
-    "sessionEndedKeepOpen": "Session terminée. Appuyez sur Entrée pour vous reconnecter."
+    "sessionEndedKeepOpen": "Session terminée. Appuyez sur Entrée pour vous reconnecter.",
+    "askUsername": {
+      "title": "Se connecter en tant que",
+      "description": "{{host}} demande un nom d'utilisateur à chaque fois. Tapez celui avec lequel vous souhaitez vous connecter.",
+      "connect": "Se connecter",
+      "cancelled": "Aucun nom d'utilisateur n'a été fourni"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Détacher tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Entrée tactile",
         "images": "Stockage d'images",
-        "sessions": "Sessions"
+        "sessions": "Sessions",
+        "x11": "Transparence X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistance des sessions du terminal",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Conserver les sessions après déconnexion",
         "description": "Garder un terminal déconnecté actif sur le serveur pendant la durée ci-dessus, afin que la réouverture de son onglet reprenne là où il s'était arrêté."
+      },
+      "x11Display": {
+        "label": "Serveur X pour la transparence X11",
+        "description": "L'endroit où apparaissent les fenêtres des hôtes avec transparence X11, comme localhost:0. Il doit être accessible depuis le serveur Termix, donc cela concerne principalement l'application de bureau avec VcXsrv, XQuartz ou Xwayland sur cet ordinateur. Laissez vide pour désactiver la transparence X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Garder l'onglet ouvert à la fermeture"
+      },
+      "forwardX11": {
+        "label": "Transparence X11",
+        "description": "Affiche les fenêtres des programmes graphiques que vous lancez dans le terminal, comme xclock ou un outil de configuration. Nécessite un serveur X défini dans Paramètres, Terminal SSH, et X11Forwarding yes sur l'hôte."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copier automatiquement le texte sélectionné",
         "description": "Copie le texte dès que vous le sélectionnez dans le terminal"
+      },
+      "gpuRendering": {
+        "label": "Rendu GPU",
+        "description": "Dessine le terminal avec WebGL, ce qui permet de suivre les sorties importantes. Désactivez si le texte apparaît incorrectement."
+      },
+      "inlineImages": {
+        "label": "Images en ligne",
+        "description": "Affiche les images imprimées par les programmes avec sixel ou le format d'image iTerm, comme chafa ou les aperçus yazi."
       }
     }
   },

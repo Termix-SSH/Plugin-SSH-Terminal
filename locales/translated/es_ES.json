@@ -101,7 +101,9 @@
     "imageUploaded": "Imagen subida: {{path}}",
     "imageClipboardUnavailable": "Este navegador no puede leer imágenes del portapapeles",
     "imageClipboardEmpty": "No se ha encontrado ninguna imagen en el portapapeles",
-    "imageDropHint": "Suelta una imagen para subirla",
+    "fileDropHint": "Suelta un archivo para subirlo",
+    "fileDropFolder": "No se pueden subir carpetas. Suelta los archivos que contiene en su lugar",
+    "fileTooLarge": "{{name}} es mayor de 50 MB. Sube archivos más grandes con rz o un administrador de archivos",
     "localShell": "Shell de terminal local",
     "localBackendUnreachable": "El backend local no es accesible",
     "processExited": "El proceso ha finalizado ({{code}})",
@@ -109,6 +111,9 @@
     "sessionExpiredLogin": "Tu sesión de Termix ha finalizado. Inicia sesión de nuevo.",
     "imageUploadFailed": "Error al subir la imagen",
     "imageUploadedNotPasted": "Imagen subida, pero el terminal no estaba abierto para pegarla: {{path}}",
+    "fileUploaded": "Archivo subido: {{path}}",
+    "fileUploadFailed": "Error al subir el archivo",
+    "fileUploadedNotPasted": "Archivo subido, pero el terminal no estaba abierto para pegarlo: {{path}}",
     "clipboardImageReadFailed": "No se ha podido leer el portapapeles",
     "autocompleteHintComplete": "Tabulador o Intro para completar",
     "autocompleteHintNavigate": "↑↓ para navegar",
@@ -121,7 +126,13 @@
     "secretCancel": "Cancelar",
     "hideSecret": "Ocultar secreto",
     "showSecret": "Mostrar secreto",
-    "sessionEndedKeepOpen": "Sesión finalizada. Pulse Intro para volver a conectar."
+    "sessionEndedKeepOpen": "Sesión finalizada. Pulse Intro para volver a conectar.",
+    "askUsername": {
+      "title": "Iniciar sesión como",
+      "description": "{{host}} solicita un nombre de usuario cada vez. Escribe el que deseas usar para iniciar sesión.",
+      "connect": "Conectar",
+      "cancelled": "No se proporcionó ningún nombre de usuario"
+    }
   },
   "terminalToolbar": {
     "detachTmux": "Desconectar tmux",
@@ -193,7 +204,8 @@
       "group": {
         "touch": "Entrada táctil",
         "images": "Almacenamiento de imágenes",
-        "sessions": "Sesiones"
+        "sessions": "Sesiones",
+        "x11": "Reenvío X11"
       },
       "sessionTimeoutMinutes": {
         "label": "Persistencia de la sesión de terminal",
@@ -233,6 +245,11 @@
       "sessionPersistence": {
         "label": "Mantener sesiones tras desconectar",
         "description": "Mantener una terminal desconectada activa en el servidor durante el tiempo indicado, para que al volver a abrir su pestaña continúe donde se quedó."
+      },
+      "x11Display": {
+        "label": "Servidor X para reenvío X11",
+        "description": "Dónde aparecen las ventanas de los hosts con reenvío X11, como localhost:0. Debe ser accesible desde el servidor de Termix, por lo que esto es principalmente para la aplicación de escritorio con VcXsrv, XQuartz o Xwayland en este equipo. Déjalo vacío para desactivar el reenvío X11.",
+        "placeholder": "localhost:0"
       }
     },
     "host": {
@@ -418,6 +435,10 @@
       },
       "keepOpenOnExit": {
         "label": "Mantener la pestaña abierta al salir"
+      },
+      "forwardX11": {
+        "label": "Reenvío X11",
+        "description": "Muestra las ventanas de los programas gráficos que inicies en el terminal, como xclock o una herramienta de configuración. Requiere un servidor X configurado en Configuración, Terminal SSH y X11Forwarding yes en el host."
       }
     },
     "user": {
@@ -455,6 +476,14 @@
       "copyOnSelect": {
         "label": "Copiar texto seleccionado automáticamente",
         "description": "Copia el texto en cuanto lo seleccionas en la terminal"
+      },
+      "gpuRendering": {
+        "label": "Renderizado por GPU",
+        "description": "Dibuja el terminal con WebGL, lo que mantiene el rendimiento con una salida intensa. Desactívalo si el texto se ve incorrecto."
+      },
+      "inlineImages": {
+        "label": "Imágenes en línea",
+        "description": "Muestra imágenes que los programas imprimen con sixel o el formato de imagen de iTerm, como las vistas previas de chafa o yazi."
       }
     }
   },

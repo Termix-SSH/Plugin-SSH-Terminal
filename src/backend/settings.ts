@@ -30,6 +30,7 @@ export const ADMIN_KEYS = {
   imageTtlMs: "imageTtlMs",
   imageMaxCount: "imageMaxCount",
   imageMaxBytes: "imageMaxBytes",
+  x11Display: "x11Display",
 } as const;
 
 export const HOST_KEYS = {
@@ -43,6 +44,7 @@ export const HOST_KEYS = {
   enableCommandHistory: "enableCommandHistory",
   autoTmux: "autoTmux",
   autoTmuxAskWhenOne: "autoTmuxAskWhenOne",
+  forwardX11: "forwardX11",
   cloudflareTunnelEnabled: "cloudflareTunnelEnabled",
   cloudflareTunnelHostname: "cloudflareTunnelHostname",
   cloudflareTunnelPort: "cloudflareTunnelPort",

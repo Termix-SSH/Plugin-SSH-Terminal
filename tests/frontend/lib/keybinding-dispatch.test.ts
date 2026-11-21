@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   dispatchKeybindingAction,
+  isOwnKeybindingAction,
   isTerminalKeybindingAction,
   validateSendControlCode,
   validateSendText,
@@ -131,5 +132,29 @@ describe("keybinding validators", () => {
     expect(
       validateSendControlCode({ type: "sendControlCode", controlCode: "w" }),
     ).toBeNull();
+  });
+});
+
+describe("isOwnKeybindingAction", () => {
+  it("knows the actions this plugin registers", () => {
+    for (const type of [
+      "copy",
+      "sendText",
+      "openLocalTerminal",
+      "toggleBroadcast",
+    ]) {
+      expect(isOwnKeybindingAction(type)).toBe(true);
+    }
+  });
+
+  it("leaves other plugins' and the shell's actions to the shell", () => {
+    for (const type of [
+      "nextTab",
+      "openCommandPalette",
+      "runSnippet",
+      "terminal-layout.prefix",
+    ]) {
+      expect(isOwnKeybindingAction(type)).toBe(false);
+    }
   });
 });

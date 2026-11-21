@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { getMacLineNavigationSequence } from "../../../src/frontend/lib/mac-line-navigation";
+import {
+  getMacLineNavigationSequence,
+  isMacClearKey,
+} from "../../../src/frontend/lib/mac-line-navigation";
 
 function keyEvent(
   init: Partial<KeyboardEvent> & Pick<KeyboardEvent, "code">,
@@ -45,6 +48,26 @@ describe("getMacLineNavigationSequence", () => {
         keyEvent({ code: "ArrowLeft", metaKey: true }),
       ),
     ).toBeNull();
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("isMacClearKey", () => {
+  it("matches Cmd+K on macOS only", () => {
+    vi.stubGlobal("navigator", { platform: "MacIntel" });
+    expect(isMacClearKey(keyEvent({ code: "KeyK", metaKey: true }))).toBe(true);
+    expect(isMacClearKey(keyEvent({ code: "KeyK", ctrlKey: true }))).toBe(
+      false,
+    );
+    expect(
+      isMacClearKey(keyEvent({ code: "KeyK", metaKey: true, shiftKey: true })),
+    ).toBe(false);
+    vi.unstubAllGlobals();
+
+    vi.stubGlobal("navigator", { platform: "Win32" });
+    expect(isMacClearKey(keyEvent({ code: "KeyK", metaKey: true }))).toBe(
+      false,
+    );
     vi.unstubAllGlobals();
   });
 });
