@@ -237,6 +237,10 @@ export function normalizeImage(
       "Image exceeds the pixel limit",
     );
   }
+  // The route refuses a file over the size limit, so don't spend time decoding it.
+  if (exceedsNormalizedImageSize(bytes.length, maxBytes)) {
+    return { data: bytes, extension };
+  }
   const image = decode(bytes, extension, orientation);
   // Sized after construction, so PNG doesn't allocate a second pixel buffer.
   const png = new PNG();

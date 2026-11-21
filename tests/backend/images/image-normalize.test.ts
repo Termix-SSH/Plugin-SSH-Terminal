@@ -86,6 +86,15 @@ describe("normalizeImage", () => {
     expect(normalizeImage(png, 16)).toEqual({ data: png, extension: "png" });
   });
 
+  it("doesn't decode an image that is over the size limit as it came", () => {
+    // Broken after the header, so decoding them would fail.
+    const png = pngImage(4, 4, halves(4, 4)).subarray(0, 40);
+    expect(normalizeImage(png, 32)).toEqual({ data: png, extension: "png" });
+    const full = jpegImage(16, 16);
+    const jpeg = full.subarray(0, full.length - 200);
+    expect(normalizeImage(jpeg, 64)).toEqual({ data: jpeg, extension: "jpg" });
+  });
+
   it("refuses a file that is not an image it knows", () => {
     for (const bytes of [
       Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"/>'),

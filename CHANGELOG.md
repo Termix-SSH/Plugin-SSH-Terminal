@@ -6,6 +6,7 @@
 
 - A JPEG over 16 megapixels is stored as it came instead of as an upright PNG, because converting a photo that size could run the terminal's backend out of memory
 - An image that would be over the 10 MB limit as a PNG, like most phone photos, is stored as it came instead of being refused, as long as the file itself is under 10 MB
+- An image file over 10 MB is refused right away instead of being converted first, even if it would fit as a PNG
 
 ### Fixed
 

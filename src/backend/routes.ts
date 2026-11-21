@@ -236,7 +236,7 @@ export function registerTerminalRoutes(
    * /plugin-api/ssh-terminal/image-upload:
    *   post:
    *     summary: Upload an image into a terminal session
-   *     description: Stores an uploaded or pasted image where the terminal's programs can read it, over SFTP on the connected host or in the backend's mapped local storage, depending on the image storage settings. A PNG, or a JPEG of up to 16 megapixels, is stored as an upright PNG without its metadata, or as it came when that PNG would be over the size limit; a larger JPEG, GIF, WebP, AVIF, HEIC/HEIF, TIFF, JPEG 2000 and JPEG XL are stored as they came. Returns the path to hand to the program.
+   *     description: Stores an uploaded or pasted image where the terminal's programs can read it, over SFTP on the connected host or in the backend's mapped local storage, depending on the image storage settings. A PNG, or a JPEG of up to 16 megapixels, is stored as an upright PNG without its metadata, or as it came when that PNG would be over the size limit; a larger JPEG, GIF, WebP, AVIF, HEIC/HEIF, TIFF, JPEG 2000 and JPEG XL are stored as they came. A file over the size limit is refused. Returns the path to hand to the program.
    *     tags:
    *       - Terminal
    *     requestBody:
@@ -264,7 +264,7 @@ export function registerTerminalRoutes(
    *       409:
    *         description: The terminal is not connected.
    *       413:
-   *         description: The image is over the size limit, as a PNG and as it came.
+   *         description: The image file is over the size limit.
    *       502:
    *         description: Writing to the remote host failed.
    *       503:

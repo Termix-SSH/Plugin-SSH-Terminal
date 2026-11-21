@@ -241,7 +241,10 @@ describe("image upload", () => {
 
   /** Uploads one image with storage in a local folder; returns the stored file. */
   async function uploadImage(bytes: Buffer, name: string) {
-    dir = await fs.mkdtemp(path.join(os.tmpdir(), "termix-image-upload-"));
+    // Forward slashes: the storage settings refuse a path with a backslash.
+    dir = (
+      await fs.mkdtemp(path.join(os.tmpdir(), "termix-image-upload-"))
+    ).replaceAll("\\", "/");
     server = await startServer({
       settings: {
         imageStorageMode: "local",
@@ -310,10 +313,10 @@ describe("image upload", () => {
     expect(result.stored!.equals(jpeg)).toBe(true);
   });
 
-  it("refuses an image over 10 MB as it came", async () => {
-    // Over 16 MP, so kept as it came, and padded past 10 MB.
+  it("refuses an image over 10 MB without converting it", async () => {
+    // A small picture with 11 MB after it, like a photo with a video inside.
     const jpeg = Buffer.concat([
-      jpegClaiming(4200, 4000),
+      jpegImage(32, 16, 6),
       Buffer.alloc(11 * 1024 * 1024),
     ]);
     const result = await uploadImage(jpeg, "photo.jpg");
