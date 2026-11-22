@@ -62,10 +62,30 @@ describe("normalizeImage", () => {
     });
   });
 
-  it("refuses a PNG over the pixel limit before decoding it", () => {
-    const error = normalizeError(pngClaiming(8_000, 8_000));
-    expect(error.code).toBe("IMAGE_DECODE_FAILED");
-    expect(error.message).toBe("Image exceeds the pixel limit");
+  it("stores a PNG too big to decode as it came, without decoding it", () => {
+    for (const png of [
+      // 36 MP and 64 MP.
+      pngClaiming(6000, 6000),
+      pngClaiming(8000, 8000),
+      // 9 MP at 16 bits.
+      pngClaiming(3000, 3000, { bitDepth: 16 }),
+      // 16.8 MP at 1 bit grey, decoded as 8 bits RGBA all the same.
+      pngClaiming(4100, 4100, { bitDepth: 1, colorType: 0 }),
+      // Any size when interlaced.
+      pngClaiming(1, 1, { interlace: 1 }),
+    ]) {
+      expect(normalizeImage(png)).toEqual({ data: png, extension: "png" });
+    }
+  });
+
+  it("decodes a PNG right at its limit", () => {
+    // 16 MP at 8 bits and 8 MP at 16; decoding these claims fails.
+    for (const png of [
+      pngClaiming(4000, 4000),
+      pngClaiming(2000, 4000, { bitDepth: 16 }),
+    ]) {
+      expect(normalizeError(png).code).toBe("IMAGE_DECODE_FAILED");
+    }
   });
 
   it("stores a JPEG over its pixel limit as it came, without decoding it", () => {

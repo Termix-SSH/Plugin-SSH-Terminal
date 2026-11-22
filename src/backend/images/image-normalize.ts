@@ -6,8 +6,13 @@ import {
   type ImageExtension,
 } from "./image-utils.js";
 
-/** Most pixels decoded from a PNG, checked from the header first. */
-export const MAX_PNG_INPUT_PIXELS = 40_000_000;
+/**
+ * Most bytes of pixels decoded from a PNG; a larger one is stored as it came.
+ * pngjs gives every PNG four channels, two bytes each at 16 bits, whatever its
+ * type, so a file of a few hundred KB can decode to hundreds of MB. This is
+ * 16 MP at 8 bits and 8 MP at 16.
+ */
+export const MAX_PNG_DECODED_BYTES = 64_000_000;
 
 /**
  * Most pixels decoded from a JPEG; a larger one is stored as it came. jpeg-js
@@ -49,7 +54,7 @@ interface Pixels {
 
 /** Width and height from a PNG's IHDR. */
 function pngInfo(bytes: Buffer): HeaderInfo | null {
-  if (bytes.length < 24 || bytes.toString("latin1", 12, 16) !== "IHDR") {
+  if (bytes.length < 29 || bytes.toString("latin1", 12, 16) !== "IHDR") {
     return null;
   }
   return {
@@ -57,6 +62,22 @@ function pngInfo(bytes: Buffer): HeaderInfo | null {
     height: bytes.readUInt32BE(20),
     orientation: 1,
   };
+}
+
+/**
+ * Whether pngjs would decode a PNG to more than MAX_PNG_DECODED_BYTES, from
+ * its IHDR. An interlaced PNG counts as too big: pngjs inflates it without a
+ * limit.
+ */
+function pngOverDecodeLimit(
+  bytes: Buffer,
+  width: number,
+  height: number,
+): boolean {
+  const bytesPerPixel = bytes[24] === 16 ? 8 : 4;
+  return (
+    bytes[28] !== 0 || width * height * bytesPerPixel > MAX_PNG_DECODED_BYTES
+  );
 }
 
 /** The EXIF orientation (1 to 8) in a TIFF-structured EXIF block. */
@@ -210,7 +231,7 @@ function decode(
 /**
  * Turns a PNG or JPEG upload into an upright PNG without its metadata, in
  * plain JavaScript (plugins can't load native modules). Other image formats,
- * a JPEG over its pixel limit, and an image whose PNG would be over the size
+ * a PNG or JPEG over its limit, and an image whose PNG would be over the size
  * limit are kept as they came, under the extension their first bytes give.
  */
 export function normalizeImage(
@@ -231,11 +252,8 @@ export function normalizeImage(
   if (extension === "jpg" && width * height > MAX_JPEG_INPUT_PIXELS) {
     return { data: bytes, extension };
   }
-  if (width * height > MAX_PNG_INPUT_PIXELS) {
-    throw new ImageNormalizeError(
-      "IMAGE_DECODE_FAILED",
-      "Image exceeds the pixel limit",
-    );
+  if (extension === "png" && pngOverDecodeLimit(bytes, width, height)) {
+    return { data: bytes, extension };
   }
   // The route refuses a file over the size limit, so don't spend time decoding it.
   if (exceedsNormalizedImageSize(bytes.length, maxBytes)) {

@@ -53,11 +53,21 @@ export function jpegImage(
   ]);
 }
 
-/** A PNG whose header claims a size, with no real pixels behind it. */
-export function pngClaiming(width: number, height: number): Buffer {
+/**
+ * A PNG whose header claims a size, and a bit depth, colour type and
+ * interlace method when given, with no real pixels behind it.
+ */
+export function pngClaiming(
+  width: number,
+  height: number,
+  { bitDepth = 8, colorType = 6, interlace = 0 } = {},
+): Buffer {
   const png = pngImage(1, 1, Buffer.from(RED));
   png.writeUInt32BE(width, 16);
   png.writeUInt32BE(height, 20);
+  png[24] = bitDepth;
+  png[25] = colorType;
+  png[28] = interlace;
   return png;
 }
 
