@@ -88,7 +88,7 @@ export function parseTerminalImageStorageMode(
 export function parseImageLocalDir(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
-  if (!trimmed || hasUnsafePathSyntax(trimmed)) return null;
+  if (!trimmed || hasUnsafePathSyntax(trimmed, path.sep)) return null;
   if (!path.isAbsolute(trimmed)) return null;
   return path.resolve(trimmed);
 }
@@ -121,12 +121,13 @@ export interface SettingSource {
   warn?: (message: string) => void;
 }
 
-function hasUnsafePathSyntax(value: string): boolean {
+// A backslash is a separator only where the path module says so (Windows).
+function hasUnsafePathSyntax(value: string, separator = "/"): boolean {
   return (
     /[\u0000-\u001f\u007f]/.test(value) ||
     value.split(/[\\/]+/).some((segment) => segment === "..") ||
     value.includes("//") ||
-    value.includes("\\")
+    (separator !== "\\" && value.includes("\\"))
   );
 }
 
