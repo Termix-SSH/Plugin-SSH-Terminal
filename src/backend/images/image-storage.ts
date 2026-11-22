@@ -3,6 +3,7 @@ import path from "path";
 import { randomUUID } from "crypto";
 import {
   exceedsImageStorageLimit,
+  IMAGE_EXTENSIONS,
   isExpiredImage,
   isImageFilename,
   sanitizeUploadFilename,
@@ -134,6 +135,7 @@ async function getActiveImageStorageUsage(
 export async function storeImageLocally(
   image: Buffer,
   settings: TerminalImageStorageSettings,
+  extension = "png",
 ): Promise<StoredTerminalImage> {
   return withImageStorageLock(async () => {
     let usage: { fileCount: number; totalBytes: number };
@@ -167,7 +169,7 @@ export async function storeImageLocally(
     }
 
     const id = randomUUID();
-    const filename = `${id}.png`;
+    const filename = `${id}.${extension}`;
     try {
       await fs.writeFile(path.join(settings.localDir, filename), image);
     } catch (error) {
@@ -488,6 +490,11 @@ function sftpWriteFile(
   });
 }
 
+const REMOTE_IMAGE_NAME_PATTERN = new RegExp(
+  `^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\.(?:${IMAGE_EXTENSIONS.join("|")})$`,
+  "i",
+);
+
 async function cleanupExpiredRemoteImages(
   sftp: ImageSftpClient,
   ttlMs: number | undefined,
@@ -501,13 +508,11 @@ async function cleanupExpiredRemoteImages(
     });
   });
   const cutoffSeconds = (nowMs - ttlMs) / 1000;
-  const uuidPng =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.png$/i;
   await Promise.all(
     entries
       .filter(
         (entry) =>
-          uuidPng.test(entry.filename) &&
+          REMOTE_IMAGE_NAME_PATTERN.test(entry.filename) &&
           typeof entry.attrs?.mtime === "number" &&
           entry.attrs.mtime < cutoffSeconds,
       )
@@ -522,9 +527,6 @@ async function cleanupExpiredRemoteImages(
       ),
   );
 }
-
-const REMOTE_UUID_PNG_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.png$/i;
 
 async function enforceRemoteImageLimits(
   sftp: ImageSftpClient,
@@ -555,7 +557,7 @@ async function enforceRemoteImageLimits(
     );
   }
   const images = entries.filter((entry) =>
-    REMOTE_UUID_PNG_PATTERN.test(entry.filename),
+    REMOTE_IMAGE_NAME_PATTERN.test(entry.filename),
   );
   const totalBytes = images.reduce((sum, entry) => {
     if (typeof entry.attrs?.size !== "number") {
@@ -634,16 +636,18 @@ interface RemoteStoreOptions {
   nowMs?: number;
 }
 
-const REMOTE_IMAGE_LAYOUT: RemoteUploadLayout = {
-  dirName: "termix-images",
-  entryPath: (id) => `${id}.png`,
-  cleanupExpired: (sftp, remoteDir, ttlMs, nowMs) =>
-    cleanupExpiredRemoteImages(sftp, ttlMs, nowMs, remoteDir),
-  enforceLimits: (sftp, remoteDir, bytes, maxCount, maxBytes) =>
-    enforceRemoteImageLimits(sftp, bytes, maxCount, maxBytes, remoteDir),
-  removeEntry: (sftp, remoteDir, id) =>
-    removeRemoteEntry(sftp, "unlink", `${remoteDir}/${id}.png`),
-};
+function remoteImageLayout(extension: string): RemoteUploadLayout {
+  return {
+    dirName: "termix-images",
+    entryPath: (id) => `${id}.${extension}`,
+    cleanupExpired: (sftp, remoteDir, ttlMs, nowMs) =>
+      cleanupExpiredRemoteImages(sftp, ttlMs, nowMs, remoteDir),
+    enforceLimits: (sftp, remoteDir, bytes, maxCount, maxBytes) =>
+      enforceRemoteImageLimits(sftp, bytes, maxCount, maxBytes, remoteDir),
+    removeEntry: (sftp, remoteDir, id) =>
+      removeRemoteEntry(sftp, "unlink", `${remoteDir}/${id}.${extension}`),
+  };
+}
 
 async function storeViaSftpUnlocked(
   sftp: ImageSftpClient,
@@ -754,18 +758,24 @@ function toShellPath(remotePath: string): string {
 export function storeImageViaSftp(
   sftp: ImageSftpClient,
   image: Buffer,
-  options: RemoteStoreOptions = {},
+  {
+    extension = "png",
+    ...options
+  }: RemoteStoreOptions & { extension?: string } = {},
 ): Promise<StoredTerminalImage> {
   return withImageStorageLock(() =>
     withTimeout(
-      storeViaSftpUnlocked(sftp, image, REMOTE_IMAGE_LAYOUT, options).then(
-        ({ id, remotePath }) => ({
-          id,
-          filename: `${id}.png`,
-          shellPath: toShellPath(remotePath),
-          storage: "remote-sftp" as const,
-        }),
-      ),
+      storeViaSftpUnlocked(
+        sftp,
+        image,
+        remoteImageLayout(extension),
+        options,
+      ).then(({ id, remotePath }) => ({
+        id,
+        filename: `${id}.${extension}`,
+        shellPath: toShellPath(remotePath),
+        storage: "remote-sftp" as const,
+      })),
       20_000,
       "SFTP image operation timed out",
     ),

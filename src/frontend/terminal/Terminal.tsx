@@ -4178,8 +4178,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
           // Preserve native PNG clipboard bytes. Some browser/platform
           // clipboard implementations decode transparent PNGs incorrectly
           // through canvas, producing an all-black/transparent re-encode.
-          // Only rasterize formats that need conversion; Sharp validates the
-          // resulting image server-side.
+          // Only rasterize formats that need conversion; the backend checks
+          // the resulting image.
           if (
             imageType !== "image/png" &&
             typeof createImageBitmap === "function"

@@ -25,8 +25,12 @@ import { TERMINAL_UPLOAD_MAX_BYTES } from "../shared/terminal-upload.js";
 import {
   createConcurrencyLimiter,
   exceedsNormalizedImageSize,
-  imageExtensionForFormat,
 } from "./images/image-utils.js";
+import {
+  ImageNormalizeError,
+  normalizeImage,
+  type NormalizedImage,
+} from "./images/image-normalize.js";
 import {
   selectImageStorageMode,
   probeLocalImageVisibility,
@@ -96,8 +100,6 @@ const SENSITIVE_COMMAND_PATTERNS = [
   /export\b.*(?:PASSWORD|SECRET|TOKEN|KEY)=/i,
 ];
 
-type SharpFactory = typeof import("sharp").default;
-
 export interface TerminalRouteDeps {
   ctx: PluginContext;
   log: TerminalLogger;
@@ -137,24 +139,6 @@ export function registerTerminalRoutes(
     defParamCharset: "utf8",
   });
   const fileUploadMiddleware = fileUpload.single("file");
-
-  let sharpFactory: SharpFactory | null = null;
-  let sharpLoadFailure: string | null = null;
-
-  // A static import of sharp takes the plugin down with it when the native
-  // binary for the running architecture is missing. Resolve on first use so
-  // only image upload is lost.
-  async function loadSharp(): Promise<SharpFactory> {
-    if (sharpFactory) return sharpFactory;
-    if (sharpLoadFailure !== null) throw new Error(sharpLoadFailure);
-    try {
-      sharpFactory = (await import("sharp")).default;
-      return sharpFactory;
-    } catch (error) {
-      sharpLoadFailure = getErrorMessage(error, "unknown");
-      throw new Error(sharpLoadFailure);
-    }
-  }
 
   const imageProcessingLimiter = createConcurrencyLimiter(4, 4);
   const imageMultipartAdmissionLimiter = createConcurrencyLimiter(4, 4);
@@ -252,7 +236,7 @@ export function registerTerminalRoutes(
    * /plugin-api/ssh-terminal/image-upload:
    *   post:
    *     summary: Upload an image into a terminal session
-   *     description: Normalizes an uploaded or pasted image to PNG and stores it where the terminal's programs can read it, over SFTP on the connected host or in the backend's mapped local storage, depending on the image storage settings. Returns the path to hand to the program.
+   *     description: Stores an uploaded or pasted image where the terminal's programs can read it, over SFTP on the connected host or in the backend's mapped local storage, depending on the image storage settings. A PNG or JPEG of up to 16 megapixels (8 for a 16-bit PNG) is stored as an upright PNG without its metadata, or as it came when that PNG would be over the size limit; a larger PNG or JPEG, an interlaced PNG, GIF, WebP, AVIF, HEIC/HEIF, TIFF, JPEG 2000 and JPEG XL are stored as they came. A file over the size limit is refused. Returns the path to hand to the program.
    *     tags:
    *       - Terminal
    *     requestBody:
@@ -280,11 +264,11 @@ export function registerTerminalRoutes(
    *       409:
    *         description: The terminal is not connected.
    *       413:
-   *         description: The normalized image is too large.
+   *         description: The image file is over the size limit.
    *       502:
    *         description: Writing to the remote host failed.
    *       503:
-   *         description: Image storage or processing is unavailable.
+   *         description: Image storage is unavailable or upload capacity is exhausted.
    *       507:
    *         description: The image storage limit was reached.
    */
@@ -374,21 +358,7 @@ export function registerTerminalRoutes(
         }
       }
 
-      let sharp: SharpFactory;
-      try {
-        sharp = await loadSharp();
-      } catch (error) {
-        log.error("Image processing unavailable: sharp failed to load", error, {
-          operation: "terminal_image_upload_sharp_unavailable",
-          reason: getErrorMessage(error, "unknown"),
-        });
-        return res.status(503).json({
-          error: "Image processing is unavailable on this installation",
-          code: "IMAGE_PROCESSING_UNAVAILABLE",
-        });
-      }
-
-      let normalizedImage: Buffer;
+      let normalizedImage: NormalizedImage;
       let releaseImageProcessingSlot: (() => void) | undefined;
       try {
         releaseImageProcessingSlot = await imageProcessingLimiter.acquire();
@@ -399,25 +369,23 @@ export function registerTerminalRoutes(
         });
       }
       try {
-        const image = sharp(req.file.buffer, {
-          failOn: "error",
-          limitInputPixels: 40_000_000,
-        });
-        const { format } = await image.metadata();
-        if (!imageExtensionForFormat(format)) {
+        normalizedImage = normalizeImage(req.file.buffer);
+        if (exceedsNormalizedImageSize(normalizedImage.data.length)) {
+          return res.status(413).json({
+            error: "Image is larger than 10 MB",
+            code: "IMAGE_NORMALIZED_SIZE_LIMIT",
+          });
+        }
+      } catch (error) {
+        if (
+          error instanceof ImageNormalizeError &&
+          error.code === "IMAGE_FORMAT_UNSUPPORTED"
+        ) {
           return res.status(400).json({
             error: "Unsupported image format",
             code: "IMAGE_FORMAT_UNSUPPORTED",
           });
         }
-        normalizedImage = await image.rotate().png().toBuffer();
-        if (exceedsNormalizedImageSize(normalizedImage.length)) {
-          return res.status(413).json({
-            error: "Normalized image is too large",
-            code: "IMAGE_NORMALIZED_SIZE_LIMIT",
-          });
-        }
-      } catch (error) {
         log.warn("Image upload failed image decoding", {
           operation: "terminal_image_upload_decode",
           mimeType: req.file.mimetype,
@@ -438,13 +406,18 @@ export function registerTerminalRoutes(
           storageMode === "remote-sftp"
             ? await (async () => {
                 remoteSftp = await openSessionSftp(session!.sshConn!);
-                return storeImageViaSftp(remoteSftp, normalizedImage, {
+                return storeImageViaSftp(remoteSftp, normalizedImage.data, {
                   ttlMs: storageSettings.ttlMs,
                   maxCount: storageSettings.maxCount,
                   maxBytes: storageSettings.maxBytes,
+                  extension: normalizedImage.extension,
                 });
               })()
-            : await storeImageLocally(normalizedImage, storageSettings);
+            : await storeImageLocally(
+                normalizedImage.data,
+                storageSettings,
+                normalizedImage.extension,
+              );
 
         res.json(stored);
       } catch (error) {
