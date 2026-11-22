@@ -27,7 +27,10 @@ import {
   DEFAULT_TERMINAL_CONFIG,
   TERMINAL_FONTS,
 } from "../look/terminal-themes";
-import { ensureTerminalFontsLoaded } from "../look/terminal-global-styles";
+import {
+  ensureTerminalFontsLoaded,
+  repaintTerminal,
+} from "../look/terminal-global-styles";
 import { usePluginApi, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import { TerminalContextMenu } from "../terminal-tools/TerminalContextMenu";
 import { getDefaultAppearance } from "../terminal-api";
@@ -191,14 +194,18 @@ export function LocalTerminal({
       const font = TERMINAL_FONTS.find(
         (item) => item.value === DEFAULT_TERMINAL_CONFIG.fontFamily,
       );
-      ensureTerminalFontsLoaded(font?.value ?? TERMINAL_FONTS[0].value);
+      void ensureTerminalFontsLoaded(
+        font?.value ?? TERMINAL_FONTS[0].value,
+      ).then(() => repaintTerminal(terminal));
       terminal.options.theme = resolveTermixThemeColors("termix", appTheme);
       terminal.options.fontFamily =
         font?.fallback ?? TERMINAL_FONTS[0].fallback;
       terminal.options.fontSize = DEFAULT_TERMINAL_CONFIG.fontSize;
       return;
     }
-    ensureTerminalFontsLoaded(appearance.fontFamily || TERMINAL_FONTS[0].value);
+    void ensureTerminalFontsLoaded(
+      appearance.fontFamily || TERMINAL_FONTS[0].value,
+    ).then(() => repaintTerminal(terminal));
     terminal.options.theme = resolveTermixThemeColors(
       appearance.theme,
       appTheme,

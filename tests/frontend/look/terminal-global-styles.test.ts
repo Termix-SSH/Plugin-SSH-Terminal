@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   ensureTerminalFontsLoaded,
   installTerminalGlobalStyles,
+  repaintTerminal,
 } from "../../../src/frontend/look/terminal-global-styles";
 
 describe("installTerminalGlobalStyles", () => {
@@ -85,5 +86,58 @@ describe("ensureTerminalFontsLoaded", () => {
         value: originalFonts,
       });
     }
+  });
+});
+
+describe("terminal font loading in Chrome", () => {
+  it("resolves only once every face has loaded, even when one fails", async () => {
+    const pending: Array<(value: unknown) => void> = [];
+    const load = vi.fn(
+      () => new Promise((resolve) => pending.push(resolve as never)),
+    );
+    const originalFonts = document.fonts;
+    Object.defineProperty(document, "fonts", {
+      configurable: true,
+      value: { load },
+    });
+    try {
+      let done = false;
+      const loaded = ensureTerminalFontsLoaded("Caskaydia Cove Nerd Font Mono");
+      void loaded.then(() => (done = true));
+      await Promise.resolve();
+      expect(done).toBe(false);
+      pending.forEach((resolve) => resolve([]));
+      await loaded;
+      expect(done).toBe(true);
+
+      load.mockImplementation(() => Promise.resolve([]));
+      load.mockImplementationOnce(() => Promise.reject(new Error("404")));
+      await expect(
+        ensureTerminalFontsLoaded("Caskaydia Cove Nerd Font Mono"),
+      ).resolves.toBeUndefined();
+    } finally {
+      Object.defineProperty(document, "fonts", {
+        configurable: true,
+        value: originalFonts,
+      });
+    }
+  });
+
+  it("drops glyphs cached before the font arrived and redraws", () => {
+    const terminal = { rows: 24, clearTextureAtlas: vi.fn(), refresh: vi.fn() };
+    repaintTerminal(terminal);
+    expect(terminal.clearTextureAtlas).toHaveBeenCalledOnce();
+    expect(terminal.refresh).toHaveBeenCalledWith(0, 23);
+  });
+
+  it("ignores a terminal that closed before the font arrived", () => {
+    const terminal = {
+      rows: 24,
+      clearTextureAtlas: () => {
+        throw new Error("disposed");
+      },
+      refresh: vi.fn(),
+    };
+    expect(() => repaintTerminal(terminal)).not.toThrow();
   });
 });

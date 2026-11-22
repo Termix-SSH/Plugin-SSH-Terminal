@@ -41,7 +41,10 @@ import {
   resolveTerminalFontFamily,
 } from "../look/terminal-themes";
 import { resolveTermixThemeColors } from "../look/terminal-theme";
-import { ensureTerminalFontsLoaded } from "../look/terminal-global-styles";
+import {
+  ensureTerminalFontsLoaded,
+  repaintTerminal,
+} from "../look/terminal-global-styles";
 import {
   getNextTerminalFontSize,
   getTerminalFontZoomDirection,
@@ -3090,7 +3093,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       );
 
       const fontFamily = resolveTerminalFontFamily(config.fontFamily);
-      ensureTerminalFontsLoaded(config.fontFamily || TERMINAL_FONTS[0].value);
+      void ensureTerminalFontsLoaded(
+        config.fontFamily || TERMINAL_FONTS[0].value,
+      ).then(() => repaintTerminal(terminal));
 
       // Resolve the effective font size: a persisted zoom override wins, but if
       // the configured font size itself changed (e.g. user edited it in
@@ -3154,7 +3159,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       const config = termSettingsRef.current;
 
       const fontFamily = resolveTerminalFontFamily(config.fontFamily);
-      ensureTerminalFontsLoaded(config.fontFamily || TERMINAL_FONTS[0].value);
+      const fontsLoaded = ensureTerminalFontsLoaded(
+        config.fontFamily || TERMINAL_FONTS[0].value,
+      );
 
       const activeTheme = previewTheme || config.theme;
       const themeColors = resolveTermixThemeColors(
@@ -3267,8 +3274,8 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
       terminal.onTitleChange((title) => {
         if (title) onTitleChange?.(title);
       });
-      document.fonts.ready.then(() => {
-        terminal.refresh(0, terminal.rows - 1);
+      void fontsLoaded.then(() => {
+        repaintTerminal(terminal);
         fitTerminal();
       });
 
