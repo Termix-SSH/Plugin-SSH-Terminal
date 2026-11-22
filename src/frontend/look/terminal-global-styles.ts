@@ -92,16 +92,37 @@ export function installTerminalGlobalStyles(): () => void {
 // does. xterm.js draws glyphs to a <canvas>, so without an explicit load the
 // terminal can keep painting the fallback font's tofu boxes even after
 // document.fonts.ready resolves. Forcing the load here ensures the glyph
-// data is actually fetched before the terminal renders with it.
-export function ensureTerminalFontsLoaded(fontFamily: string): void {
-  if (typeof document === "undefined" || !document.fonts) return;
+// data is actually fetched before the terminal renders with it. Resolves once
+// the faces have loaded, so the terminal can redraw with them.
+export function ensureTerminalFontsLoaded(fontFamily: string): Promise<void> {
+  if (typeof document === "undefined" || !document.fonts) {
+    return Promise.resolve();
+  }
   const specs = [
     `400 16px "${fontFamily}"`,
     `700 16px "${fontFamily}"`,
     `italic 400 16px "${fontFamily}"`,
     `italic 700 16px "${fontFamily}"`,
   ];
-  for (const spec of specs) {
-    document.fonts.load(spec).catch(() => {});
+  return Promise.all(
+    specs.map((spec) => document.fonts.load(spec).catch(() => [])),
+  ).then(() => {});
+}
+
+/**
+ * Redraws a terminal with the fonts it has now. Glyphs drawn before a font
+ * arrived stay cached in the renderer's atlas as boxes (Chrome) until it is
+ * cleared.
+ */
+export function repaintTerminal(terminal: {
+  rows: number;
+  clearTextureAtlas: () => void;
+  refresh: (start: number, end: number) => void;
+}): void {
+  try {
+    terminal.clearTextureAtlas();
+    terminal.refresh(0, terminal.rows - 1);
+  } catch {
+    // The terminal closed before the font arrived.
   }
 }

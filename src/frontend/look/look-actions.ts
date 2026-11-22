@@ -47,7 +47,7 @@ export function resolveTerminalLook(
 ): ResolvedTerminalLook {
   const config = resolveForHost(request.host ?? null);
   const themeId = request.theme || config.theme;
-  ensureTerminalFontsLoaded(config.fontFamily);
+  void ensureTerminalFontsLoaded(config.fontFamily);
   return {
     themeId,
     colors: resolveTermixThemeColors(
