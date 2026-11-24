@@ -1295,6 +1295,10 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               break;
             }
 
+            // Answered by core's host key check, which listens on this socket.
+            case "host_key_verification_response":
+              break;
+
             default:
               if (await handleSignInMessage(type, data)) break;
               sshLogger.warn("Unknown message type received", {
@@ -2104,12 +2108,22 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
             ip,
           });
 
-          void ctx.audit.record({
-            action: "ssh_connect",
-            resourceType: "host",
-            resourceId: String(id),
-            resourceName: `${username}@${ip}:${port}`,
-            success: true,
+          // Crosses to core in a plugin process, so a refusal arrives later
+          // as a rejection: catch it rather than leave it unhandled.
+          Promise.resolve(
+            ctx.audit.record({
+              action: "ssh_connect",
+              resourceType: "host",
+              resourceId: String(id),
+              resourceName: `${username}@${ip}:${port}`,
+              success: true,
+            }),
+          ).catch((error) => {
+            sshLogger.warn("Failed to record the SSH connect audit entry", {
+              operation: "audit_record_error",
+              hostId: id,
+              error: getErrorMessage(error),
+            });
           });
           if (totpPromptSent) {
             authLogger.success("TOTP verification successful for SSH session", {
@@ -2717,20 +2731,24 @@ export function createTerminalSocket(deps: TerminalSocketDeps) {
               );
 
               if (id && hostConfig.userId) {
-                try {
-                  ctx.events.emit("host.login", {
-                    hostId: id,
-                    userId: hostConfig.userId,
-                    sshUser: username,
-                    fromIp: connection.clientIp,
+                // A plugin process gets a promise back, so a sync try/catch
+                // would miss its rejection.
+                Promise.resolve()
+                  .then(() =>
+                    ctx.events.emit("host.login", {
+                      hostId: id,
+                      userId: hostConfig.userId,
+                      sshUser: username,
+                      fromIp: connection.clientIp,
+                    }),
+                  )
+                  .catch((error) => {
+                    sshLogger.warn("Failed to dispatch login event", {
+                      operation: "login_event_dispatch_error",
+                      hostId: id,
+                      error: getErrorMessage(error),
+                    });
                   });
-                } catch (error) {
-                  sshLogger.warn("Failed to dispatch login event", {
-                    operation: "login_event_dispatch_error",
-                    hostId: id,
-                    error: getErrorMessage(error),
-                  });
-                }
 
                 const hostName =
                   resolvedHostData?.userId === hostConfig.userId &&
