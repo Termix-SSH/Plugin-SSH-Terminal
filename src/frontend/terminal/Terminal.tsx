@@ -4723,6 +4723,9 @@ const TerminalInner = forwardRef<TerminalHandle, SSHTerminalProps>(
 
           <PanePrompt
             open={askingUsername}
+            // Above the connection screen, like the other sign in prompts.
+            layer="connection"
+            backgroundColor={backgroundColor}
             title={t("terminal.askUsername.title")}
             description={t("terminal.askUsername.description", {
               host: hostConfig.name || hostConfig.ip,
