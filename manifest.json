@@ -107,7 +107,7 @@
   "requires": [
     {
       "service": "tmux.sessions",
-      "versionRange": "^1.0.0",
+      "versionRange": "^2.0.0",
       "optional": true
     },
     {
