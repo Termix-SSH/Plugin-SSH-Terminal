@@ -27,6 +27,8 @@ interface TerminalTabRecord {
     initialPath?: string;
     joinSharedSessionId?: string | null;
     joinShareId?: string | null;
+    /** A session already open on the server, such as one a model opened. */
+    attachSessionId?: string;
   };
 }
 
@@ -111,7 +113,8 @@ export function TerminalTabContent({
                   ...sshHost,
                   sshPort: host.sshPort ?? host.port,
                   instanceId: tab.instanceId ?? tab.id,
-                  restoredSessionId: tab.restoredSessionId ?? null,
+                  restoredSessionId:
+                    tab.data?.attachSessionId ?? tab.restoredSessionId ?? null,
                   joinSharedSessionId:
                     tab.data?.joinSharedSessionId ??
                     tab.joinSharedSessionId ??

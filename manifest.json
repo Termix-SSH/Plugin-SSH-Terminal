@@ -971,6 +971,148 @@
           }
         },
         {
+          "id": "ssh-terminal.run-command",
+          "titleKey": "operations.run.title",
+          "descriptionKey": "operations.run.description",
+          "icon": "TerminalSquare",
+          "scope": "host",
+          "risk": "change",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "timeoutMs": 630000,
+          "inputs": [
+            {
+              "key": "command",
+              "type": "textarea",
+              "labelKey": "operations.run.command",
+              "required": true
+            },
+            {
+              "key": "timeoutSec",
+              "type": "number",
+              "labelKey": "operations.run.timeout",
+              "default": 60,
+              "min": 1,
+              "max": 600
+            }
+          ],
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "ssh-terminal.open-session",
+          "titleKey": "operations.open.title",
+          "descriptionKey": "operations.open.description",
+          "icon": "SquareTerminal",
+          "scope": "host",
+          "risk": "change",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "ssh-terminal.send-input",
+          "titleKey": "operations.send.title",
+          "descriptionKey": "operations.send.description",
+          "icon": "SquareTerminal",
+          "scope": "resource",
+          "resource": "ssh-terminal.session",
+          "risk": "change",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "inputs": [
+            {
+              "key": "text",
+              "type": "textarea",
+              "labelKey": "operations.send.text",
+              "required": true
+            },
+            {
+              "key": "enter",
+              "type": "boolean",
+              "labelKey": "operations.send.enter",
+              "default": true
+            },
+            {
+              "key": "waitSec",
+              "type": "number",
+              "labelKey": "operations.send.wait",
+              "default": 3,
+              "min": 1,
+              "max": 30
+            }
+          ],
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "ssh-terminal.read-screen",
+          "titleKey": "operations.screen.title",
+          "descriptionKey": "operations.screen.description",
+          "icon": "SquareTerminal",
+          "scope": "resource",
+          "resource": "ssh-terminal.session",
+          "risk": "read",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "ssh-terminal.close-session",
+          "titleKey": "operations.close.title",
+          "descriptionKey": "operations.close.description",
+          "icon": "SquareTerminal",
+          "scope": "resource",
+          "resource": "ssh-terminal.session",
+          "risk": "change",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableTerminal": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
           "id": "ssh-terminal.recent-commands",
           "titleKey": "operations.history.title",
           "icon": "History",

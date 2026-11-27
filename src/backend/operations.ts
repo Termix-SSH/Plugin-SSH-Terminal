@@ -3,6 +3,7 @@ import type {
   PluginOperationContext,
 } from "@termix-ssh/plugin-sdk/backend";
 import type { createHistoryRepository } from "./history-repository.js";
+import type { AgentSessions } from "./agent-sessions.js";
 import type { LiveSessionRow } from "./live-list.js";
 
 type History = ReturnType<typeof createHistoryRepository>;
@@ -12,11 +13,15 @@ function requireHost(context: PluginOperationContext): number {
   return context.hostId;
 }
 
+// Per stream. The reader is often a model, so keep it well under a context.
+const MAX_COMMAND_OUTPUT = 64 * 1024;
+
 /** Terminal actions that need no open terminal. */
 export function registerOperations(
   ctx: PluginContext,
   history: History,
   listSessions: (userId: string) => LiveSessionRow[] = () => [],
+  agent?: AgentSessions,
 ): void {
   if (typeof ctx.operations?.register !== "function") return;
 
@@ -54,6 +59,63 @@ export function registerOperations(
           data: { value: null, status: "fail", label },
         };
       }
+    },
+  });
+
+  ctx.operations.register("ssh-terminal.run-command", {
+    run: async (input, context) => {
+      const result = await ctx.ssh.exec(
+        requireHost(context),
+        String(input.command),
+        {
+          purpose: "run-command",
+          timeoutMs: Number(input.timeoutSec) * 1000,
+          maxOutputBytes: MAX_COMMAND_OUTPUT,
+        },
+      );
+      const summary = result.timedOut
+        ? "Timed out"
+        : `Exit ${result.code ?? "unknown"}`;
+      return { summary, changed: true, data: result };
+    },
+  });
+
+  ctx.operations.register("ssh-terminal.open-session", {
+    run: async (_input, context) => {
+      const sessionId = await agent!.open(requireHost(context));
+      return {
+        summary: "Opened a terminal session",
+        changed: true,
+        data: { sessionId },
+      };
+    },
+  });
+
+  ctx.operations.register("ssh-terminal.send-input", {
+    run: async (input, context) => {
+      const text = String(input.text) + (input.enter === false ? "" : "\r");
+      const output = await agent!.send(
+        context.resourceKey,
+        requireHost(context),
+        text,
+        Number(input.waitSec) * 1000,
+        context.signal,
+      );
+      return { summary: "Sent", changed: true, data: { output } };
+    },
+  });
+
+  ctx.operations.register("ssh-terminal.read-screen", {
+    run: (_input, context) => ({
+      summary: "Read the terminal",
+      data: { output: agent!.read(context.resourceKey, requireHost(context)) },
+    }),
+  });
+
+  ctx.operations.register("ssh-terminal.close-session", {
+    run: (_input, context) => {
+      agent!.close(context.resourceKey, requireHost(context));
+      return { summary: "Closed the terminal session", changed: true };
     },
   });
 

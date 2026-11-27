@@ -22,6 +22,7 @@ interface LiveRow {
   connected: boolean;
   createdAt: number;
   tmuxSessionName: string | null;
+  agent?: boolean;
 }
 
 const POLL_MS = 30_000;
@@ -72,16 +73,31 @@ export function SessionsCard({ isVisible }: DashboardCardProps) {
             icon={<SquareTerminal className="size-3.5" />}
             title={host?.name || row.hostName}
             badges={
-              <ListBadge tone={row.connected ? "success" : "warning"}>
-                {row.connected ? t("card.connected") : t("card.detached")}
-              </ListBadge>
+              <>
+                {row.agent && (
+                  <ListBadge tone="brand">{t("card.agent")}</ListBadge>
+                )}
+                <ListBadge tone={row.connected ? "success" : "warning"}>
+                  {row.connected ? t("card.connected") : t("card.detached")}
+                </ListBadge>
+              </>
             }
             meta={
               row.tmuxSessionName
                 ? t("card.tmux", { name: row.tmuxSessionName })
                 : new Date(row.createdAt).toLocaleString()
             }
-            onClick={() => host && tabs.openTab(host, "terminal")}
+            onClick={() =>
+              host &&
+              tabs.openTab(
+                host,
+                "terminal",
+                // A session a model opened has no tab yet: watch that one.
+                row.agent
+                  ? { forceNewTab: true, data: { attachSessionId: row.id } }
+                  : undefined,
+              )
+            }
           />
         );
       })}

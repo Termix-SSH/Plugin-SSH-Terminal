@@ -26,6 +26,7 @@ describe("ssh-terminal.sessions", () => {
         createdAt: 0,
         lastDetachedAt: null,
         tmuxSessionName: null,
+        agent: false,
       },
       {
         id: "b",
@@ -35,6 +36,7 @@ describe("ssh-terminal.sessions", () => {
         createdAt: 0,
         lastDetachedAt: 5,
         tmuxSessionName: "main",
+        agent: false,
       },
     ]);
     const result = (await handlers
