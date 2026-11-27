@@ -888,6 +888,31 @@
     "history": {
       "title": "Recent commands"
     },
+    "open": {
+      "title": "Open a terminal session",
+      "description": "Opens a real terminal on the host that stays open between calls, for programs that ask questions or keep running. Returns a sessionId. The user can open the same session in a tab to watch or take over. For one command, Run a command is simpler."
+    },
+    "send": {
+      "title": "Type into a terminal session",
+      "description": "Types text into a session from Open a terminal session and returns what the host printed after it. resourceKey is the sessionId.",
+      "text": "Text",
+      "enter": "Press Enter after it",
+      "wait": "Wait for output (seconds)"
+    },
+    "screen": {
+      "title": "Read a terminal session",
+      "description": "Returns the latest output of a session from Open a terminal session, as plain text. resourceKey is the sessionId."
+    },
+    "close": {
+      "title": "Close a terminal session",
+      "description": "Ends a session from Open a terminal session. resourceKey is the sessionId."
+    },
+    "run": {
+      "title": "Run a command",
+      "description": "Runs a shell command on the host over SSH and returns its output and exit code. No terminal, so programs that ask questions get no answer.",
+      "command": "Command",
+      "timeout": "Stop after (seconds)"
+    },
     "login": {
       "title": "SSH login"
     },
@@ -904,6 +929,7 @@
     "title": "Open terminals",
     "loading": "Loading...",
     "empty": "No open terminal sessions",
+    "agent": "AI",
     "connected": "Connected",
     "detached": "Detached",
     "tmux": "tmux {{name}}",

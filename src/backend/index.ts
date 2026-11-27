@@ -5,6 +5,7 @@ import { hostImportNormalizer, hostPayloadLegacy } from "./host-import.js";
 import { createHistoryRepository } from "./history-repository.js";
 import { registerOperations } from "./operations.js";
 import { toLiveRow } from "./live-list.js";
+import { createAgentSessions } from "./agent-sessions.js";
 import { createLiveSessions } from "./live-sessions.js";
 import { registerTerminalRoutes } from "./routes.js";
 import { registerCloudflareTransport } from "./cloudflare-transport.js";
@@ -49,8 +50,11 @@ export async function activate(ctx: PluginContext) {
 
   const table = await ctx.db.define(commandHistory);
   const history = createHistoryRepository(ctx.db, table);
-  registerOperations(ctx, history, (userId) =>
-    sessionManager.getUserSessions(userId).map(toLiveRow),
+  registerOperations(
+    ctx,
+    history,
+    (userId) => sessionManager.getUserSessions(userId).map(toLiveRow),
+    createAgentSessions(ctx, () => sessionManager),
   );
 
   // Read on every detach, so it is kept current rather than awaited there.

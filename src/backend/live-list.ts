@@ -8,6 +8,7 @@ export interface LiveSessionRow {
   createdAt: number;
   lastDetachedAt: number | null;
   tmuxSessionName: string | null;
+  agent: boolean;
 }
 
 export function toLiveRow(session: TerminalSession): LiveSessionRow {
@@ -19,5 +20,6 @@ export function toLiveRow(session: TerminalSession): LiveSessionRow {
     createdAt: session.createdAt,
     lastDetachedAt: session.lastDetachedAt,
     tmuxSessionName: session.tmuxSessionName,
+    agent: session.agent,
   };
 }

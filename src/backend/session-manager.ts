@@ -38,6 +38,8 @@ export interface TerminalSession {
   hostName: string;
   tabInstanceId?: string;
   attachedTabInstanceId?: string;
+  /** Opened by a model through an action, not by a browser tab. */
+  agent: boolean;
 
   sshConn: Client | null;
   sshStream: ClientChannel | null;
@@ -224,6 +226,7 @@ export class TerminalSessionManager {
       hostId,
       hostName,
       tabInstanceId,
+      agent: false,
       sshConn: null,
       sshStream: null,
       jumpClient: null,
@@ -299,6 +302,19 @@ export class TerminalSessionManager {
     session.sshStream = stream;
     session.jumpClient = jumpClient ?? null;
     session.isConnected = true;
+  }
+
+  markAgent(sessionId: string): void {
+    const session = this.sessions.get(sessionId);
+    if (session) session.agent = true;
+  }
+
+  /** Restarts the idle timer of a session no tab is attached to. */
+  keepAlive(sessionId: string): void {
+    const session = this.sessions.get(sessionId);
+    if (session && !this.getOwnerParticipant(session)) {
+      this.detachWs(sessionId);
+    }
   }
 
   /** Finds the owner's participant entry, if currently attached. */
